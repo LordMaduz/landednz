@@ -1,0 +1,46 @@
+{
+  "model": "claude-sonnet-4-20250514",
+  "plansDirectory": "./rpi",
+  "permissions": {
+    "allow": [
+      "Bash(npm test*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run typecheck*)",
+      "Bash(npx tsc*)",
+      "Bash(npx prisma generate*)",
+      "Bash(npx prisma migrate dev*)",
+      "Bash(npx prisma studio*)",
+      "Bash(docker compose up*)",
+      "Bash(docker compose down*)",
+      "Bash(docker compose ps*)",
+      "Bash(supabase start*)",
+      "Bash(supabase stop*)",
+      "Bash(supabase status*)",
+      "Bash(npx expo start*)",
+      "Edit(*)"
+    ],
+    "ask": [
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(npm install*)",
+      "Bash(npx prisma db push*)",
+      "Bash(npx prisma migrate reset*)",
+      "Bash(curl*)",
+      "Bash(npx eas*)",
+      "Bash(eas*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const f = process.env.CLAUDE_TOOL_INPUT_FILE_PATH || ''; if(f.includes('core/priority/scoring') || f.includes('core/priority/filter') || f.includes('core/dependencies/resolver')) { console.log('⚡ GOLDEN EXAMPLES: Running after scoring/resolver change'); require('child_process').execSync('npm test -- golden-examples/priority-scoring.ts', {stdio: 'inherit', cwd: 'apps/api'}); }\""
+          }
+        ]
+      }
+    ]
+  }
+}
