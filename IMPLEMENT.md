@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 1 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 2 / 14 | — |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -27,7 +27,7 @@
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-1-01 | pgvector available after docker compose up | PASS | Docker + pgvector working |
-| AC-1-02 | prisma migrate dev clean, all tables exist | — | |
+| AC-1-02 | prisma migrate dev clean, all tables exist | PASS | 11 tables + _prisma_migrations, Prisma client generated |
 | AC-1-03 | GET /health → 200 { status: "ok", dbConnected: true } | — | |
 | AC-1-04 | GET /health → 503 when DB unreachable | — | |
 | AC-1-05 | supabase start — all services running | — | |

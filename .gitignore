@@ -49,6 +49,3 @@ Thumbs.db
 # Expo (React Native)
 .expo/
 web-build/
-
-# Prisma
-prisma/migrations/migration_lock.toml

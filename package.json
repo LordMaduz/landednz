@@ -1,0 +1,15 @@
+{
+  "name": "landednz",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/mobile",
+    "packages/types"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=apps/api"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
