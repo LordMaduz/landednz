@@ -82,6 +82,9 @@ Full conventions: `.claude/rules/git-workflow.md`
 - **Agent files need proper frontmatter to be recognized.**
   Files in `.claude/agents/` must have YAML frontmatter with `name`, `model`, `description`, `tools`, and `color` fields. Without this, the agent exists as a file but isn't registered with the system. Always fix missing frontmatter rather than working around with different agents.
 
+- **Agent file changes require session restart.**
+  The agent registry loads at session startup, not dynamically. After fixing agent frontmatter or making changes to `.claude/agents/` files, restart the session for changes to be recognized.
+
 ## Compounding Engineering
 
 After every correction: `/learn [what was learned]` to update relevant CLAUDE.md.
