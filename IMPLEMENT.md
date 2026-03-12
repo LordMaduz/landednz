@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 4 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 5 / 14 | — |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -30,7 +30,7 @@
 | AC-1-02 | prisma migrate dev clean, all tables exist | PASS | 11 tables + _prisma_migrations, Prisma client generated |
 | AC-1-03 | GET /health → 200 { status: "ok", dbConnected: true } | PASS | Fastify scaffold + health route |
 | AC-1-04 | GET /health → 503 when DB unreachable | PASS | Same handler, 503 on DB failure |
-| AC-1-05 | supabase start — all services running | — | |
+| AC-1-05 | supabase start — all services running | PASS | supabase init + start, all core services running |
 | AC-1-06 | Google OAuth end-to-end on Expo Go | — | |
 | AC-1-07 | Apple Sign-In configured in app.json | — | |
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | — | |
@@ -163,5 +163,6 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-1-05] Supabase CLI v2.75.0 uses ES256 JWKS — no JWT_SECRET. AC-1-08 must use JWKS verification via `jose` library, not symmetric HS256 secret.
 - [AC-1-03/04] Fastify v5 used (v4 had high severity CVE). BigInt replacer applied on $queryRaw SELECT 1 per C10. 503 returned directly (not via AppError) for infrastructure failures per C13.
 - [AC-1-03/04] registerHealthRoutes is sync (not async) — route handler inside is async. Graceful shutdown via SIGTERM/SIGINT calls db.$disconnect() before exit.

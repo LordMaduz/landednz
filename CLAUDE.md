@@ -85,6 +85,15 @@ Full conventions: `.claude/rules/git-workflow.md`
 - **Agent file changes require session restart.**
   The agent registry loads at session startup, not dynamically. After fixing agent frontmatter or making changes to `.claude/agents/` files, restart the session for changes to be recognized.
 
+### Supabase Auth — JWT Signing (CLI v2+)
+
+- **Supabase CLI v2 uses ES256 (ECDSA P-256), not HS256.**
+  There is no `SUPABASE_JWT_SECRET`. The "JWT secret from supabase status" gotcha is stale for CLI v2+.
+- **AC-1-08 JWT verification must use JWKS endpoint discovery.**
+  Local: `http://127.0.0.1:54321/auth/v1/.well-known/jwks.json`
+  Use the `jose` library (ESM-native, supports ES256).
+  Do NOT use symmetric `jsonwebtoken.verify(token, secret)` — it will fail.
+
 ## Compounding Engineering
 
 After every correction: `/learn [what was learned]` to update relevant CLAUDE.md.
