@@ -11,6 +11,7 @@ function requireEnv(name: string): string {
 
 export const config = {
   databaseUrl: requireEnv('DATABASE_URL'),
+  supabaseUrl: requireEnv('SUPABASE_URL'),
   port: parseInt(process.env['PORT'] ?? '3000', 10),
   nodeEnv: process.env['NODE_ENV'] ?? 'development',
 }

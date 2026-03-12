@@ -4,12 +4,14 @@ import { logger } from './shared/logger'
 import { db } from './shared/db'
 import { registerErrorHandler } from './shared/plugins/error-handler'
 import { registerHealthRoutes } from './features/health/health.route'
+import { registerAuthRoutes } from './features/auth/auth.route'
 
 function buildApp() {
   const app = Fastify({ logger: false })
 
   registerErrorHandler(app)
   registerHealthRoutes(app)
+  registerAuthRoutes(app)
 
   return app
 }
