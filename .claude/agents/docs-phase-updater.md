@@ -69,12 +69,19 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 
 ## Execution Process
 
-### Step 1: Phase Validation
+### Step 1: Phase Validation (CRITICAL PREREQUISITE)
 ```
 1. Parse phase argument (e.g., "phase1" → Phase 1)
-2. Read IMPLEMENT.md — verify phase gate status
-3. Check that all ACs for that phase show PASS
-4. If incomplete: error with specific missing ACs
+2. Read IMPLEMENT.md — locate phase section
+3. VERIFY phase gate status:
+   - Look for "Phase [N] Gate: COMPLETE" or similar completion marker
+   - Check that ALL ACs for that phase show "PASS" (not "FAIL" or "—")
+   - Verify overall phase progress shows "[total]/[total] ACs complete"
+4. If gate incomplete:
+   - Error with specific message: "Phase [N] gate has not passed"
+   - List remaining FAIL or pending ACs
+   - Instruct to run `/rpi:gate phase[N]` first
+5. If gate passed: proceed to documentation update
 ```
 
 ### Step 2: Documentation Discovery
@@ -122,12 +129,35 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 
 ## Error Handling
 
-### Phase Not Complete
+### Phase Gate Not Complete
 ```
-Error: Phase 1 gate has not passed.
-Current status: 5/14 ACs complete
-Missing ACs: AC-1-06, AC-1-07, AC-1-08, AC-1-09, AC-1-10, AC-1-11, AC-1-12, AC-1-13, AC-1-14
-Run `/rpi:gate phase1` first.
+❌ Error: Phase 1 gate has not passed.
+
+Current status in IMPLEMENT.md:
+- Phase 1 Progress: 5/14 ACs complete
+- Phase 1 Gate: PENDING
+
+Failed/Pending ACs:
+- AC-1-06: Google OAuth login completes end-to-end — FAIL
+- AC-1-07: Apple Sign-In configured in app.json — —
+- AC-1-08: POST /auth/verify valid JWT → 200 — —
+- [... remaining pending ACs]
+
+Required action: Complete all ACs for Phase 1, then run `/rpi:gate phase1` before documentation update.
+```
+
+### Phase Gate Incomplete But Some ACs Pass
+```
+❌ Error: Phase 1 gate verification incomplete.
+
+Phase 1 Progress: 12/14 ACs complete
+Failed ACs requiring fixes:
+- AC-1-11: TypeScript compiles with zero errors — FAIL (apps/mobile has type errors)
+- AC-1-13: .env.example complete — FAIL (missing CLAUDE_API_KEY)
+
+Phase 1 Gate: Has not been run yet.
+
+Required action: Fix failing ACs, then run `/rpi:gate phase1` for full verification.
 ```
 
 ### No Implementation Details Found
