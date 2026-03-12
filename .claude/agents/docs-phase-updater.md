@@ -1,6 +1,6 @@
 ---
 name: docs-phase-updater
-model: sonnet
+model: claude-sonnet-4-20250514
 description: Systematically fills architecture documentation placeholders after phase completion
 tools: [Read, Edit, Glob, Grep]
 color: blue
@@ -14,11 +14,11 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 ## Command Pattern
 
 ```
-/rpi:docs phase1
-/rpi:docs phase2
-/rpi:docs phase3
-/rpi:docs phase4
-/rpi:docs phase5
+/docs:phase phase1
+/docs:phase phase2
+/docs:phase phase3
+/docs:phase phase4
+/docs:phase phase5
 ```
 
 ## What This Agent Does
@@ -69,19 +69,12 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 
 ## Execution Process
 
-### Step 1: Phase Validation (CRITICAL PREREQUISITE)
+### Step 1: Phase Validation
 ```
 1. Parse phase argument (e.g., "phase1" → Phase 1)
-2. Read IMPLEMENT.md — locate phase section
-3. VERIFY phase gate status:
-   - Look for "Phase [N] Gate: COMPLETE" or similar completion marker
-   - Check that ALL ACs for that phase show "PASS" (not "FAIL" or "—")
-   - Verify overall phase progress shows "[total]/[total] ACs complete"
-4. If gate incomplete:
-   - Error with specific message: "Phase [N] gate has not passed"
-   - List remaining FAIL or pending ACs
-   - Instruct to run `/rpi:gate phase[N]` first
-5. If gate passed: proceed to documentation update
+2. Read IMPLEMENT.md — verify phase gate status
+3. Check that all ACs for that phase show PASS
+4. If incomplete: error with specific missing ACs
 ```
 
 ### Step 2: Documentation Discovery
@@ -129,35 +122,12 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 
 ## Error Handling
 
-### Phase Gate Not Complete
+### Phase Not Complete
 ```
-❌ Error: Phase 1 gate has not passed.
-
-Current status in IMPLEMENT.md:
-- Phase 1 Progress: 5/14 ACs complete
-- Phase 1 Gate: PENDING
-
-Failed/Pending ACs:
-- AC-1-06: Google OAuth login completes end-to-end — FAIL
-- AC-1-07: Apple Sign-In configured in app.json — —
-- AC-1-08: POST /auth/verify valid JWT → 200 — —
-- [... remaining pending ACs]
-
-Required action: Complete all ACs for Phase 1, then run `/rpi:gate phase1` before documentation update.
-```
-
-### Phase Gate Incomplete But Some ACs Pass
-```
-❌ Error: Phase 1 gate verification incomplete.
-
-Phase 1 Progress: 12/14 ACs complete
-Failed ACs requiring fixes:
-- AC-1-11: TypeScript compiles with zero errors — FAIL (apps/mobile has type errors)
-- AC-1-13: .env.example complete — FAIL (missing CLAUDE_API_KEY)
-
-Phase 1 Gate: Has not been run yet.
-
-Required action: Fix failing ACs, then run `/rpi:gate phase1` for full verification.
+Error: Phase 1 gate has not passed.
+Current status: 5/14 ACs complete
+Missing ACs: AC-1-06, AC-1-07, AC-1-08, AC-1-09, AC-1-10, AC-1-11, AC-1-12, AC-1-13, AC-1-14
+Run `/rpi:gate phase1` first.
 ```
 
 ### No Implementation Details Found
@@ -225,19 +195,8 @@ Ensure all documented patterns align with `.claude/constitution.md`:
 
 ## Usage Notes
 
-- **Part of RPI workflow** — Step 5 after `/rpi:gate [phase]` passes
-- **Run immediately after** phase gate completion
+- **Run immediately after** `/rpi:gate [phase]` passes
 - **Human review recommended** for complex architectural decisions
 - **Progressive enhancement** — fills what can be automated, flags what needs human input
 - **Maintains quality** — preserves existing document structure and voice
 - **Phase deliverable** — documentation completion is part of phase definition of done
-
-## RPI Workflow Integration
-
-```
-1. /rpi:research [phase] [ac-id]  → Research AC requirements
-2. /rpi:plan [phase] [ac-id]      → Create implementation plan
-3. /rpi:implement [phase] [ac-id] → Execute plan + tests + review
-4. /rpi:gate [phase]              → Verify all ACs pass + update CLAUDE.md
-5. /rpi:docs [phase]              → Fill architecture documentation
-```
