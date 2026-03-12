@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 8 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 9 / 14 | — |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -36,7 +36,7 @@
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | PASS | ES256 JWKS verification, user upsert, isNewUser detection |
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | PASS | Same endpoint, error handling for invalid JWT/headers |
 | AC-1-10 | App shell launches + bottom tabs on Expo Go | PASS | Expo project bootstrap, 3 placeholder screens + bottom tab nav |
-| AC-1-11 | tsc --noEmit zero errors both workspaces | — | |
+| AC-1-11 | tsc --noEmit zero errors both workspaces | PASS | Zero errors: apps/api + apps/mobile both clean |
 | AC-1-12 | packages/types imported by both apps | — | |
 | AC-1-13 | .env.example complete, .env.local gitignored | — | |
 | AC-1-14 | seed scaffold runs without error | — | |
