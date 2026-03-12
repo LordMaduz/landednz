@@ -9,6 +9,7 @@
     "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@landednz/types": "*",
     "@prisma/client": "^5.22.0",
     "fastify": "^5.7.2",
     "jose": "^6.2.1",

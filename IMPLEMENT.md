@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 9 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 10 / 14 | — |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -37,7 +37,7 @@
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | PASS | Same endpoint, error handling for invalid JWT/headers |
 | AC-1-10 | App shell launches + bottom tabs on Expo Go | PASS | Expo project bootstrap, 3 placeholder screens + bottom tab nav |
 | AC-1-11 | tsc --noEmit zero errors both workspaces | PASS | Zero errors: apps/api + apps/mobile both clean |
-| AC-1-12 | packages/types imported by both apps | — | |
+| AC-1-12 | packages/types imported by both apps | PASS | @landednz/types package + 9 types + workspace linkage complete |
 | AC-1-13 | .env.example complete, .env.local gitignored | — | |
 | AC-1-14 | seed scaffold runs without error | — | |
 
@@ -163,6 +163,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-1-12] @landednz/types package created with 9 types + ApiError from spec §3.2.3. npm workspaces linking + TypeScript paths in both apps. API: shared/types.ts re-export hub. Mobile: services/api.ts imports. rootDir removed from API tsconfig for cross-package imports.
 - [AC-1-10] Expo project bootstrap from scratch. bundleIdentifier com.landednz.app set from start per CLAUDE.md gotcha (painful to change later). Bottom tabs: Roadmap, Chat, Profile. TypeScript paths for @landednz/types removed (AC-1-12 will add).
 - [AC-1-08/09] JWT verification via ES256 JWKS works correctly with `jose` library. User upsert with Prisma P2002 catch provides race-safe isNewUser detection. Both AC-1-08 (valid JWT) and AC-1-09 (invalid JWT) implemented in same handler.
 - [AC-1-05] Supabase CLI v2.75.0 uses ES256 JWKS — no JWT_SECRET. AC-1-08 must use JWKS verification via `jose` library, not symmetric HS256 secret.
