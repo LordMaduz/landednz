@@ -1,15 +1,16 @@
-# docs-phase
+# rpi-docs
 
 Systematically fills architecture documentation placeholders after phase gate completion.
+**Part of RPI workflow** — runs after `/rpi:gate` to complete phase deliverables.
 
 ## Usage
 
 ```bash
-/docs:phase phase1
-/docs:phase phase2
-/docs:phase phase3
-/docs:phase phase4
-/docs:phase phase5
+/rpi:docs phase1
+/rpi:docs phase2
+/rpi:docs phase3
+/rpi:docs phase4
+/rpi:docs phase5
 ```
 
 ## What This Does
@@ -19,16 +20,28 @@ Systematically fills architecture documentation placeholders after phase gate co
 3. **Updates architecture overview** — maintains ARCHITECTURE.md consistency
 4. **Reports completion** — summary of documentation updates made
 
+## RPI Workflow Integration
+
+```bash
+# Complete RPI workflow for a phase:
+/rpi:research phase1 AC-1-03   # Step 1: Research
+/rpi:plan phase1 AC-1-03       # Step 2: Plan
+/rpi:implement phase1 AC-1-03  # Step 3: Implement
+# ... (repeat for all ACs)
+/rpi:gate phase1               # Step 4: Verify phase completion
+/rpi:docs phase1               # Step 5: Document phase architecture
+```
+
 ## Examples
 
 ```bash
 # After completing Phase 1
 /rpi:gate phase1        # ✅ All 14 ACs pass
-/docs:phase phase1      # 📝 Fill auth, API, mobile architecture docs
+/rpi:docs phase1        # 📝 Fill auth, API, mobile architecture docs
 
 # After completing Phase 2
 /rpi:gate phase2        # ✅ All 15 ACs pass
-/docs:phase phase2      # 📝 Fill AI architecture (Job A), roadmap API docs
+/rpi:docs phase2        # 📝 Fill AI architecture (Job A), roadmap API docs
 ```
 
 ## Prerequisites
@@ -39,4 +52,4 @@ Systematically fills architecture documentation placeholders after phase gate co
 
 ## Agent
 
-This skill invokes the `docs-phase-updater` agent with the specified phase parameter.
+This command invokes the `docs-phase-updater` agent with the specified phase parameter.

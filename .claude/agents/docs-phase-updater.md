@@ -14,11 +14,11 @@ Treats documentation as a phase deliverable, ensuring comprehensive coverage.
 ## Command Pattern
 
 ```
-/docs:phase phase1
-/docs:phase phase2
-/docs:phase phase3
-/docs:phase phase4
-/docs:phase phase5
+/rpi:docs phase1
+/rpi:docs phase2
+/rpi:docs phase3
+/rpi:docs phase4
+/rpi:docs phase5
 ```
 
 ## What This Agent Does
@@ -225,8 +225,19 @@ Ensure all documented patterns align with `.claude/constitution.md`:
 
 ## Usage Notes
 
-- **Run immediately after** `/rpi:gate [phase]` passes
+- **Part of RPI workflow** — Step 5 after `/rpi:gate [phase]` passes
+- **Run immediately after** phase gate completion
 - **Human review recommended** for complex architectural decisions
 - **Progressive enhancement** — fills what can be automated, flags what needs human input
 - **Maintains quality** — preserves existing document structure and voice
 - **Phase deliverable** — documentation completion is part of phase definition of done
+
+## RPI Workflow Integration
+
+```
+1. /rpi:research [phase] [ac-id]  → Research AC requirements
+2. /rpi:plan [phase] [ac-id]      → Create implementation plan
+3. /rpi:implement [phase] [ac-id] → Execute plan + tests + review
+4. /rpi:gate [phase]              → Verify all ACs pass + update CLAUDE.md
+5. /rpi:docs [phase]              → Fill architecture documentation
+```
