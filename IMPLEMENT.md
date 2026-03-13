@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 13 / 15 | PENDING gate |
+| 1 — Foundation (~60h) | IN PROGRESS | 14 / 15 | PENDING gate |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -32,7 +32,7 @@
 | AC-1-04 | GET /health → 503 when DB unreachable | PASS | Same handler, 503 on DB failure |
 | AC-1-05 | supabase start — all services running | PASS | supabase init + start, all core services running |
 | AC-1-06 | Google OAuth end-to-end on iOS Simulator | PASS | React Native CLI + Supabase OAuth + Linking API, direct Xcode build successful |
-| AC-1-07 | Apple Sign-In configured in iOS project | — | |
+| AC-1-07 | Apple Sign-In configured in iOS project | PASS | @invertase/react-native-apple-authentication + LandedNZ.entitlements + CODE_SIGN_ENTITLEMENTS in pbxproj, pod install clean |
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | PASS | ES256 JWKS verification, user upsert, isNewUser detection |
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | PASS | Same endpoint, error handling for invalid JWT/headers |
 | AC-1-10 | App shell launches + bottom tabs on iOS Simulator | PASS | iOS Xcode project + NavigationContainer + 3-tab navigator (Roadmap/Chat/Profile) |
@@ -44,7 +44,7 @@
 | AC-1-13 | .env.example complete, .env.local gitignored | PASS | All 7 required env vars documented, .env.local gitignored, no secrets tracked |
 | AC-1-14 | seed scaffold runs without error | PASS | TypeScript scaffold at apps/api/scripts/seed-knowledge-base.ts — connects to DB, processes empty tasks array, exits cleanly |
 
-**Phase 1 Gate:** PENDING
+**Phase 1 Gate:** PENDING (14/15 ACs passed)
 
 ---
 
