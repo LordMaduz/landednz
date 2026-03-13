@@ -5,13 +5,13 @@
 
 ## Overall Progress
 
-**Active Phase:** Phase 1 — Foundation
-**Phases Complete:** 0 / 5
+**Active Phase:** Phase 2 — Roadmap Engine
+**Phases Complete:** 1 / 5
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 14 / 15 | PENDING gate |
-| 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
+| 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 0 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -20,7 +20,7 @@
 
 ## Phase 1 — Foundation
 
-**Status:** IN PROGRESS
+**Status:** COMPLETE — Gate passed 2026-03-14
 **Research dir:** `rpi/phase1-foundation/research/`
 **Plans dir:** `rpi/phase1-foundation/plans/`
 
@@ -41,16 +41,14 @@
 | AC-1-13 | npm run seed + verification golden examples | PASS | Seed script scaffold created with TaskSeedEntry interface |
 | AC-1-14 | .env.example complete with all required vars | PASS | All required environment variables documented |
 | AC-1-15 | **ALL Expo dependencies removed from docs** | PASS | 25 files updated across docs/config/source; zero grep matches for Expo imports/prefixes |
-| AC-1-13 | .env.example complete, .env.local gitignored | PASS | All 7 required env vars documented, .env.local gitignored, no secrets tracked |
-| AC-1-14 | seed scaffold runs without error | PASS | TypeScript scaffold at apps/api/scripts/seed-knowledge-base.ts — connects to DB, processes empty tasks array, exits cleanly |
 
-**Phase 1 Gate:** PENDING (14/15 ACs passed)
+**Phase 1 Gate:** PASS — 2026-03-14. All services verified: Docker/pgvector, Prisma migrations, Supabase, GET /health → 200.
 
 ---
 
 ## Phase 2 — Roadmap Engine
 
-**Status:** BLOCKED (Phase 1 not complete)
+**Status:** IN PROGRESS
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|

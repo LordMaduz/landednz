@@ -77,9 +77,13 @@ React Native CLI uses `.env` files (via react-native-dotenv or direct process.en
 
 ### Supabase OAuth
 
-- **React Native OAuth requires manual deep link handling.**
-  `detectSessionInUrl: true` doesn't work with custom schemes like `landednz://auth/callback`.
-  Must manually extract `access_token` from URL fragment and call `supabase.auth.setSession()` to create session.
+- **Google OAuth React Native CLI requires complete manual deep link flow.**
+  `detectSessionInUrl: true` doesn't work with custom schemes. Full pattern:
+  1. `supabase.auth.signInWithOAuth()` → opens Safari
+  2. Deep link returns to `landednz://auth/callback` with URL fragment
+  3. Extract `access_token` from fragment manually
+  4. Call `supabase.auth.setSession({ access_token, refresh_token })` to create session
+  Required: babel.config.js, react-native-dotenv for env vars, CFBundleURLTypes in Info.plist
 
 - **iOS Simulator networking uses 127.0.0.1 not localhost.**
   API calls to `http://localhost:3000` fail from iOS Simulator — use `http://127.0.0.1:3000` instead.
@@ -103,6 +107,12 @@ React Native CLI uses `.env` files (via react-native-dotenv or direct process.en
   Create the sandbox Apple ID in App Store Connect before testing.
 
 ### Apple Sign-In
+
+- **Apple Sign-In setup requires three components in React Native CLI:**
+  1. `@invertase/react-native-apple-authentication` package
+  2. `LandedNZ.entitlements` file with com.apple.developer.applesignin capability
+  3. `CODE_SIGN_ENTITLEMENTS` in LandedNZ.pbxproj pointing to entitlements file
+  Auto-linking handles AppDelegate.mm — no manual changes needed.
 
 - **Apple Sign-In is mandatory if Google Sign-In is offered.**
   App Store guideline 4.8. Configure both from Phase 1.

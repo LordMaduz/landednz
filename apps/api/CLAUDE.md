@@ -101,12 +101,17 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 
 ### Supabase Auth
 
+- **Supabase CLI v2+ uses ES256 JWKS, not HS256 secret.**
+  There is no `SUPABASE_JWT_SECRET` variable. JWT verification must use JWKS endpoint discovery
+  with the `jose` library: `http://127.0.0.1:54321/auth/v1/.well-known/jwks.json`
+  Do NOT use symmetric `jsonwebtoken.verify(token, secret)` — it will fail.
+
 - **Local Supabase: `supabase start` — NOT docker-compose.**
   Supabase CLI manages its own containers. Do NOT add to `docker-compose.yml`.
   `docker-compose.yml` is for the application PostgreSQL only.
 
-- **JWT secret from `supabase status` → `.env.local` as `SUPABASE_JWT_SECRET`.**
-  Mismatch = all auth silently fails with 401.
+- **User upsert with Prisma P2002 handling provides race-safe isNewUser detection.**
+  Catch unique constraint violation on email during user creation to determine if user is new.
 
 - **Local and production anon keys are different.** Never mix them.
 
