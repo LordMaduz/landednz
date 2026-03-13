@@ -12,6 +12,6 @@
       "@landednz/types": ["../../packages/types"]
     }
   },
-  "include": ["src", "index.js", "App.tsx"],
+  "include": ["src", "index.js", "App.tsx", "env.d.ts"],
   "exclude": ["node_modules"]
 }

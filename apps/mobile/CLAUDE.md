@@ -30,14 +30,14 @@ apps/mobile/src/
 # Install iOS dependencies (run after npm install)
 cd ios && pod install
 
-# Run on iOS Simulator
-npx react-native run-ios
+# RELIABLE iOS Simulator Build (ALWAYS USE THIS)
+cd ios && xcodebuild -workspace LandedNZ.xcworkspace -scheme LandedNZ -configuration Release -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+xcrun simctl boot "iPhone 17 Pro"
+xcrun simctl install "iPhone 17 Pro" /Users/ruchira/Library/Developer/Xcode/DerivedData/LandedNZ-*/Build/Products/Release-iphonesimulator/LandedNZ.app
+xcrun simctl launch "iPhone 17 Pro" com.landednz.app
 
-# Run on Android Emulator
+# Android (if needed)
 npx react-native run-android
-
-# Start Metro bundler only
-npx react-native start
 ```
 
 ---
@@ -64,6 +64,30 @@ React Native CLI uses `.env` files (via react-native-dotenv or direct process.en
 
 - **Metro cache can cause stale bundle issues.**
   Run `npx react-native start --reset-cache` to force clean rebuild.
+
+- **React Native CLI with Metro bundler is unreliable — NEVER use for iOS Simulator.**
+  `npx react-native run-ios` fails with Metro TurboModule crashes and "Cannot read properties of undefined" errors.
+  ALWAYS use direct Xcode release builds: xcodebuild → xcrun simctl install → xcrun simctl launch.
+  Release builds embed JS bundle = zero Metro dependency. This approach is 100% reliable.
+
+- **Simulator window visibility issues after app launch.**
+  App may launch successfully but Simulator window not visible to user.
+  Open Simulator app first (`open -a Simulator`) before launching the app to ensure window visibility.
+  iPhone 17 Pro is the standard device — provides better testing environment than older simulators.
+
+### Supabase OAuth
+
+- **React Native OAuth requires manual deep link handling.**
+  `detectSessionInUrl: true` doesn't work with custom schemes like `landednz://auth/callback`.
+  Must manually extract `access_token` from URL fragment and call `supabase.auth.setSession()` to create session.
+
+- **iOS Simulator networking uses 127.0.0.1 not localhost.**
+  API calls to `http://localhost:3000` fail from iOS Simulator — use `http://127.0.0.1:3000` instead.
+  Simulator's localhost refers to simulator itself, not Mac host machine.
+
+- **URL polyfill required for Supabase SDK.**
+  Add `react-native-url-polyfill/auto` import in `index.js` to prevent "URL.protocol is not implemented" errors.
+  Supabase SDK uses web URL APIs not available in React Native by default.
 
 ### RevenueCat SDK
 

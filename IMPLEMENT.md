@@ -31,7 +31,7 @@
 | AC-1-03 | GET /health → 200 { status: "ok", dbConnected: true } | PASS | Fastify scaffold + health route |
 | AC-1-04 | GET /health → 503 when DB unreachable | PASS | Same handler, 503 on DB failure |
 | AC-1-05 | supabase start — all services running | PASS | supabase init + start, all core services running |
-| AC-1-06 | Google OAuth end-to-end on iOS Simulator | — | |
+| AC-1-06 | Google OAuth end-to-end on iOS Simulator | PASS | React Native CLI + Supabase OAuth + Linking API, direct Xcode build successful |
 | AC-1-07 | Apple Sign-In configured in iOS project | — | |
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | PASS | ES256 JWKS verification, user upsert, isNewUser detection |
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | PASS | Same endpoint, error handling for invalid JWT/headers |
@@ -166,6 +166,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-1-06] Google OAuth working via React Native CLI + Supabase + Linking API. Key fixes: babel.config.js required (was missing), react-native-dotenv for env vars, .env var names fixed (removed EXPO_PUBLIC_ prefix), CFBundleURLTypes in Info.plist, openURL handler in AppDelegate.mm. React Native CLI build failed (code signing), direct Xcode build successful. OAuth flow: Supabase signInWithOAuth → Linking.openURL(Safari) → landednz://auth/callback deep link → session + authVerify.
 - [AC-1-10] iOS native project generated via `react-native@0.76.1 init`, bundle ID `com.landednz.app`, CocoaPods installed (68 deps). App.tsx: NavigationContainer + createBottomTabNavigator (Roadmap/Chat/Profile). react-native-screens@3.34.0 for RN 0.76.1 compatibility. Build reaches code signing (requires Apple Developer setup).
 - [AC-1-15] Full Expo → React Native CLI migration: 25 files updated across docs, config, source. EXPO_PUBLIC_ prefix removed from env vars. .expo/ directory deleted, .expo/ added to .gitignore. index.js uses AppRegistry (not registerRootComponent). Zero grep matches for Expo imports/prefixes after migration.
 - [AC-1-14] Seed script scaffold created at apps/api/scripts/seed-knowledge-base.ts. Complete TaskSeedEntry interface per spec §2.3, empty tasks array for Phase 1, proper DB connection/disconnection pattern. Uses logger (not console.log), structured error handling with process.exit(1), runs successfully with npx ts-node.

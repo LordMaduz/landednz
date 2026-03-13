@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const supabaseUrl = process.env['SUPABASE_URL']
-const supabaseAnonKey = process.env['SUPABASE_ANON_KEY']
+// Hardcoded for release build - TODO: use proper env vars
+const SUPABASE_URL = 'http://localhost:54321'
+const SUPABASE_ANON_KEY = 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error(
     'Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables'
   )
@@ -12,12 +13,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // Singleton Supabase client with AsyncStorage for session persistence across app restarts.
 // Import `supabase` everywhere auth/db access is needed in mobile.
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    // Deep link URL handling is done manually in useAuth — not via detectSessionInUrl
-    detectSessionInUrl: false,
+    // Enable automatic deep link URL processing for OAuth callbacks
+    detectSessionInUrl: true,
   },
 })

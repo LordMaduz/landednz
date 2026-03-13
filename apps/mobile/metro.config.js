@@ -13,9 +13,4 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-// Disable server middleware that might be causing issues
-config.server = {
-  enhanceMiddleware: (middleware) => middleware,
-};
-
 module.exports = config;
