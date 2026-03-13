@@ -4,7 +4,8 @@ import { View, Text, StyleSheet } from 'react-native'
 export function ChatScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Chat</Text>
+      <Text style={styles.title}>Chat</Text>
+      <Text style={styles.subtitle}>Coming soon...</Text>
     </View>
   )
 }
@@ -16,9 +17,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
-  text: {
+  title: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#333',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
   },
 })

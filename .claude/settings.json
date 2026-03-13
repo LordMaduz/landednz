@@ -16,7 +16,10 @@
       "Bash(supabase start*)",
       "Bash(supabase stop*)",
       "Bash(supabase status*)",
-      "Bash(npx expo start*)",
+      "Bash(npx react-native*)",
+      "Bash(npx react-native run-ios*)",
+      "Bash(cd apps/mobile/ios && pod install*)",
+      "Bash(xcodebuild*)",
       "Edit(*)"
     ],
     "ask": [
@@ -25,9 +28,7 @@
       "Bash(npm install*)",
       "Bash(npx prisma db push*)",
       "Bash(npx prisma migrate reset*)",
-      "Bash(curl*)",
-      "Bash(npx eas*)",
-      "Bash(eas*)"
+      "Bash(curl*)"
     ]
   },
   "hooks": {

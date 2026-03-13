@@ -244,7 +244,7 @@ Nobody tells migrants what to do first, what depends on what, or how long each s
 | Data model | Conceptual only — final schema deferred to Section 7 | Requires tech stack decision before schema can be finalised |
 | Tech stack in AI design | Framework-agnostic | Stack decision belongs in Section 7 |
 | Claude Code handoff | Dedicated Build Specification after Section 8 (Option A) | Product design docs for understanding; build spec for execution |
-| Frontend | React Native with Expo | Cross-platform iOS + Android, single codebase, target demographic is 55-70% Android |
+| Frontend | React Native CLI | Cross-platform iOS + Android, single codebase, target demographic is 55-70% Android |
 | PWA rejected | Not native enough for LandedNZ UX requirements | Bottom sheets, animations, micro-interactions require native quality |
 | iOS Native rejected | Excludes majority of target users | Indian + Filipino migrant demographic predominantly Android |
 | Backend | Node.js with TypeScript + Fastify | Shared language with frontend, TypeScript-first Anthropic SDK, native SSE streaming |
@@ -257,7 +257,7 @@ Nobody tells migrants what to do first, what depends on what, or how long each s
 | Email | Resend + React Email | TypeScript-first, React component templates, excellent deliverability |
 | Payments | RevenueCat | App Store compliance — Stripe cannot be used for in-app subscriptions |
 | Stripe rejected | App Store does not permit | Apple requires StoreKit for in-app digital subscriptions |
-| Local dev | Docker Compose + Expo Go | Zero-config local Postgres, instant device testing |
+| Local dev | Docker Compose + iOS Simulator | Zero-config local Postgres, instant device testing |
 | Cloud backend | Railway | Zero infrastructure config, auto-deploy, SSE streaming support |
 | Cloud database | Supabase | Managed PostgreSQL + pgvector + Auth, same schema as local |
 | Repo structure | Monorepo with npm workspaces | Shared TypeScript types between mobile and backend |

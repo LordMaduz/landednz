@@ -202,7 +202,7 @@ landednz/
 
 ```markdown
 # LandedNZ
-# Stack: React Native (Expo) · Node.js/Fastify · PostgreSQL/pgvector · Claude API
+# Stack: React Native CLI · Node.js/Fastify · PostgreSQL/pgvector · Claude API
 # Environment: macOS · Node.js · Claude Code
 
 ## Architecture Overview
@@ -235,7 +235,7 @@ landednz/
 │   └── skills/                  ← domain knowledge (priority-engine, kb-schema, guardrails, chat-prompt)
 ├── apps/
 │   ├── api/                     ← Fastify backend — see apps/api/CLAUDE.md
-│   └── mobile/                  ← Expo React Native — see apps/mobile/CLAUDE.md
+│   └── mobile/                  ← React Native CLI — see apps/mobile/CLAUDE.md
 ├── packages/types/              ← Shared TypeScript types (mobile + api)
 ├── emails/                      ← React Email templates
 ├── rpi/                         ← RPI build execution folders (one per phase)
@@ -432,7 +432,7 @@ LOG_LEVEL=info
 
 ```markdown
 # LandedNZ Mobile — Claude Code Memory
-# React Native (Expo) · iOS · Android
+# React Native CLI · iOS · Android
 
 ## Directory Structure
 
@@ -444,11 +444,11 @@ apps/mobile/src/
 └── services/        ← API client calls
 ```
 
-## Known Gotchas — Expo / React Native
+## Known Gotchas — React Native CLI
 
-- **RevenueCat requires a development build — NOT Expo Go**
-  `eas build --profile development --platform ios` before testing any payment flow.
-  RevenueCat will never work in Expo Go. Do not debug there.
+- **RevenueCat requires a native build**
+  Build via Xcode to simulator or device before testing any payment flow.
+  RevenueCat cannot be tested in Metro-only mode.
 
 - **SSE streaming differs between iOS and Android**
   Test on real iOS device AND real Android device before Phase 4 is considered complete.
@@ -460,19 +460,20 @@ apps/mobile/src/
 - **iOS simulator cannot test App Store payment flow**
   Use real device + sandbox Apple ID. Create sandbox ID in App Store Connect first.
 
-- **EAS Build free tier queues builds**
-  Upgrade to EAS Production plan at least one week before submission deadline.
+- **CocoaPods must be installed and up to date**
+  Run `cd ios && pod install` after every `npm install`.
+  Stale pods cause cryptic Xcode build failures.
 
-- **app.json bundleIdentifier must match App Store Connect exactly**
-  Register `com.landednz.app` in App Store Connect before `eas submit` works.
+- **Bundle ID `com.landednz.app` must match App Store Connect exactly**
+  Register `com.landednz.app` in App Store Connect before submission.
   Do this in Week 15 — not Week 16.
 
 ## Commands
 
 ```bash
-npx expo start              # start dev server
-eas build --profile development --platform ios   # dev build for RevenueCat testing
-eas submit --platform ios   # app store submission
+npx react-native run-ios    # start app in iOS Simulator
+cd ios && pod install        # install/update iOS native dependencies
+xcodebuild -workspace ios/LandedNZ.xcworkspace -scheme LandedNZ -configuration Release archive  # production build
 ```
 
 ## Shared Types
@@ -1638,11 +1639,11 @@ Cannot be expressed in Prisma schema syntax. Always raw SQL in migration file.
 | AC-1-03 | GET /health → 200 { status: "ok", dbConnected: true } | — | |
 | AC-1-04 | GET /health → 503 when DB unreachable | — | |
 | AC-1-05 | supabase start — all services running | — | |
-| AC-1-06 | Google OAuth end-to-end on Expo Go | — | |
-| AC-1-07 | Apple Sign-In configured in app.json | — | |
+| AC-1-06 | Google OAuth end-to-end on iOS Simulator | — | |
+| AC-1-07 | Apple Sign-In configured in iOS project | — | |
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | — | |
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | — | |
-| AC-1-10 | App shell launches + bottom tabs on Expo Go | — | |
+| AC-1-10 | App shell launches + bottom tabs on iOS Simulator | — | |
 | AC-1-11 | tsc --noEmit zero errors both workspaces | — | |
 | AC-1-12 | packages/types imported by both apps | — | |
 | AC-1-13 | .env.example complete, .env.local gitignored | — | |
@@ -1750,7 +1751,7 @@ Empty React Native screens navigable. Phase 1 = user can create account + see em
 ## Scope
 Builds: monorepo (npm workspaces), Docker Compose (PostgreSQL 16 + pgvector),
 full Prisma schema migration (Section 1), Supabase Auth (Google + Apple OAuth),
-Fastify server (health check only), React Native app shell (Expo + navigation),
+Fastify server (health check only), React Native CLI app shell (navigation),
 packages/types/ (shared TS types), seed script scaffold (structure only), env wiring.
 
 Does NOT build: any product feature, AI, payments, KB content.
@@ -1761,11 +1762,11 @@ AC-1-02: `npx prisma migrate dev` clean on fresh DB — all Section 1 tables exi
 AC-1-03: GET /health → 200 `{ status: "ok", dbConnected: true }`
 AC-1-04: GET /health → 503 when DB unreachable (stop Docker, hit endpoint)
 AC-1-05: `supabase start` — all services up per `supabase status`
-AC-1-06: Google OAuth login end-to-end on Expo Go — User record in app DB
-AC-1-07: Apple Sign-In configured in app.json + app delegate (simulator not required)
+AC-1-06: Google OAuth login end-to-end on iOS Simulator — User record in app DB
+AC-1-07: Apple Sign-In configured in iOS project + Xcode capabilities (simulator not required)
 AC-1-08: POST /auth/verify valid JWT → 200 with correct isNewUser + hasProfile
 AC-1-09: POST /auth/verify invalid JWT → 401
-AC-1-10: App shell launches on Expo Go — placeholder screen + bottom tab navigation
+AC-1-10: React Native CLI app shell launches on iOS Simulator — placeholder screen + bottom tab navigation
 AC-1-11: `npx tsc --noEmit` zero errors in both apps/api and apps/mobile
 AC-1-12: packages/types imported by both apps without type errors
 AC-1-13: .env.example complete, .env.local in .gitignore, no secrets committed
@@ -1778,7 +1779,7 @@ ALL 14 AC must pass. Mark each in IMPLEMENT.md. No exceptions.
 - pgvector: use ankane/pgvector or pgvector/pgvector:pg16 Docker image
 - Supabase JWT secret mismatch between local instance and .env.local
 - packages/types workspace not linked in root package.json
-- Apple Sign-In missing before EAS build (App Store rejection)
+- Apple Sign-In missing before production build (App Store rejection)
 
 ## Skills to Load
 None — Phase 1 has no AI, no scoring, no guardrails.
@@ -1847,8 +1848,8 @@ Premium gate implemented. RevenueCat working end-to-end.
 Users can upgrade, payment processes, premium content unlocks. Subscription persists.
 
 ## Critical Pre-Condition
-RevenueCat SDK requires a DEVELOPMENT BUILD — NOT Expo Go.
-Build development client before ANY payment flow testing. Never debug RevenueCat in Expo Go.
+RevenueCat SDK requires a native build via Xcode — cannot be tested in Metro-only mode.
+Build to simulator or device via Xcode before ANY payment flow testing.
 
 ## Acceptance Criteria
 AC-3-01: RevenueCat SDK initialises in dev build (iOS + Android) — customer ID in RC dashboard
@@ -2008,7 +2009,7 @@ ALL 13 AC must pass. Full launch checklist in build spec §7.4.
       "Bash(supabase start*)",
       "Bash(supabase stop*)",
       "Bash(supabase status*)",
-      "Bash(npx expo start*)",
+      "Bash(npx react-native run-ios*)",
       "Edit(*)"
     ],
     "ask": [

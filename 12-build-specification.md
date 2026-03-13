@@ -557,7 +557,7 @@ Phase 1 builds:
 3. Prisma schema migration (full schema from Section 1)
 4. Supabase Auth integration (Google + Apple OAuth)
 5. Fastify API server (empty routes, health check)
-6. React Native app shell (Expo, navigation, empty screens)
+6. React Native app shell (React Native CLI, navigation, empty screens)
 7. Shared TypeScript types (`packages/types/`)
 8. Seed script scaffolding (structure only — content filled in Phase 2)
 9. Environment variable wiring (local dev only)
@@ -714,12 +714,13 @@ AC-1-04  GET /health returns 503 with { status: "error" } when DB is unreachable
 AC-1-05  Supabase Auth local instance starts via 'supabase start' with no errors.
          supabase status shows all services running.
 
-AC-1-06  Google OAuth login completes end-to-end on Expo Go (iOS simulator or device).
+AC-1-06  Google OAuth login completes end-to-end on iOS Simulator or device.
          User record created in Supabase auth.users. Corresponding User record
          created in application DB via POST /auth/verify.
 
-AC-1-07  Apple Sign-In configured in app.json and app delegate. Does not need to
-         work in simulator — configuration must be present for EAS build.
+AC-1-07  Apple Sign-In configured in iOS project (Xcode capabilities + app delegate).
+         Does not need to work in simulator — configuration must be present for
+         production build.
 
 AC-1-08  POST /auth/verify with a valid Supabase JWT returns 200 with correct
          isNewUser and hasProfile values. Second call for same user returns
@@ -727,7 +728,7 @@ AC-1-08  POST /auth/verify with a valid Supabase JWT returns 200 with correct
 
 AC-1-09  POST /auth/verify with an invalid or expired JWT returns 401.
 
-AC-1-10  React Native app shell launches on Expo Go with a placeholder screen.
+AC-1-10  React Native CLI app shell launches on iOS Simulator with a placeholder screen.
          Bottom tab navigation present (placeholders acceptable — no content required).
 
 AC-1-11  TypeScript compiles with zero errors in both apps/api and apps/mobile.
@@ -742,6 +743,11 @@ AC-1-13  .env.example contains all required environment variables listed in CLAU
 AC-1-14  npx ts-node scripts/seed-knowledge-base.ts runs without error.
          (Script is scaffolded — seed data content is placeholder at this phase.
          The script must connect to DB and execute without crashing.)
+
+AC-1-15  ALL Expo dependencies removed from project documentation and configuration.
+         MANDATORY VERIFICATION: grep -r "expo\|eas\|EXPO_PUBLIC_\|app\.json" across entire
+         codebase returns ZERO results in documentation files (.md, .json, .ts config files).
+         React Native CLI architecture fully documented. No Expo references remain anywhere.
 ```
 
 ---
@@ -756,7 +762,7 @@ Do not proceed to Phase 2 with any failing AC. Fix and re-verify.
 Common Phase 1 failure points:
 - pgvector extension not enabled in Docker image (use `ankane/pgvector` or `pgvector/pgvector:pg16`)
 - Supabase JWT secret mismatch between local Supabase and `.env.local`
-- Apple Sign-In not configured before EAS build needed (causes rejection)
+- Apple Sign-In not configured before production build needed (causes App Store rejection)
 - `packages/types` workspace not linked correctly in root `package.json`
 
 ---
@@ -1352,7 +1358,7 @@ interface PremiumGateResponse {
 ### 5.3 Acceptance criteria
 
 ```
-AC-3-01  RevenueCat SDK initialises in a development build (NOT Expo Go).
+AC-3-01  RevenueCat SDK initialises in a development build (React Native CLI).
          iOS and Android both initialised. Verify: RevenueCat customer ID
          appears in RevenueCat dashboard after app launch.
 
@@ -1400,7 +1406,7 @@ AC-3-12  Account creation gate: user without User record cannot complete
 **ALL 12 acceptance criteria must pass before Phase 4 begins.**
 
 Critical: RevenueCat requires a development build — test AC-3-01 through AC-3-06
-on a real device with a sandbox Apple ID. Do not attempt in Expo Go. See CLAUDE.md Known Gotchas.
+on a real device with a sandbox Apple ID. Build via Xcode. See CLAUDE.md Known Gotchas.
 
 ---
 

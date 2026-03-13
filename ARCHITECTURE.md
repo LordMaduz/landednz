@@ -1,6 +1,6 @@
 # LandedNZ Architecture
 
-**Stack:** React Native (Expo) · Node.js/Fastify · PostgreSQL/pgvector · Supabase Auth · Claude API
+**Stack:** React Native CLI · Node.js/Fastify · PostgreSQL/pgvector · Supabase Auth · Claude API
 **Environment:** macOS · Node.js · Docker · Railway · Claude Code
 
 ---
@@ -46,7 +46,7 @@ LandedNZ helps skilled migrants navigate NZ settlement through two distinct AI-p
 - **Why**: Separation of concerns + leverage Supabase's auth expertise
 
 ### 3. **Mobile-First Design**
-- React Native + Expo for cross-platform consistency
+- React Native CLI for cross-platform iOS and Android
 - API designed around mobile data usage patterns
 - Offline-capable roadmap viewing
 

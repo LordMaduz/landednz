@@ -46,6 +46,7 @@ Thumbs.db
 # Docker
 .dockerignore
 
-# Expo (React Native)
+# React Native build artifacts
+.react-native/
+android/build/
 .expo/
-web-build/

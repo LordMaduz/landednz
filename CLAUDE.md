@@ -1,6 +1,6 @@
 # LandedNZ
-# Stack: React Native (Expo) · Node.js/Fastify · PostgreSQL/pgvector · Claude API
-# Environment: macOS · Node.js · Claude Code
+# Stack: React Native CLI · Node.js/Fastify · PostgreSQL/pgvector · Claude API
+# Environment: macOS · Node.js 22 LTS · Claude Code
 
 ## Architecture Overview
 
@@ -22,6 +22,7 @@ See `.claude/constitution.md` for all non-negotiable architectural constraints.
     landednz/
     ├── CLAUDE.md                    ← this file (project-level memory)
     ├── IMPLEMENT.md                 ← execution state tracker (AC pass/fail per phase)
+    ├── docs/                        ← external setup guides (Google OAuth, etc.)
     ├── .claude/                     ← all Claude Code config
     │   ├── constitution.md          ← architectural non-negotiables
     │   ├── agents/                  ← specialised subagents
@@ -31,7 +32,7 @@ See `.claude/constitution.md` for all non-negotiable architectural constraints.
     │   └── skills/                  ← domain knowledge (priority-engine, kb-schema, guardrails, chat-prompt)
     ├── apps/
     │   ├── api/                     ← Fastify backend — see apps/api/CLAUDE.md
-    │   └── mobile/                  ← Expo React Native — see apps/mobile/CLAUDE.md
+    │   └── mobile/                  ← React Native CLI — see apps/mobile/CLAUDE.md
     ├── packages/types/              ← Shared TypeScript types (mobile + api)
     ├── emails/                      ← React Email templates
     ├── rpi/                         ← RPI build execution folders (one per phase)
@@ -60,7 +61,7 @@ Phase sequence: 1 (Foundation) → 2 (Roadmap Engine) → 3 (Monetisation) → 4
 
 | Phase | Focus | Hours | AC Count |
 |---|---|---|---|
-| 1 | Foundation — monorepo, schema, auth | ~60h | 14 |
+| 1 | Foundation — monorepo, schema, auth | ~60h | 15 |
 | 2 | Roadmap Engine — priority scoring, tasks | ~100h | 15 |
 | 3 | Monetisation — RevenueCat, premium gate | ~55h | 12 |
 | 4 | AI Chat Basic — SSE, system prompt, guardrails | ~40h | 15 |

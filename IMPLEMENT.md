@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 12 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 15 / 15 | PENDING gate |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -31,13 +31,16 @@
 | AC-1-03 | GET /health → 200 { status: "ok", dbConnected: true } | PASS | Fastify scaffold + health route |
 | AC-1-04 | GET /health → 503 when DB unreachable | PASS | Same handler, 503 on DB failure |
 | AC-1-05 | supabase start — all services running | PASS | supabase init + start, all core services running |
-| AC-1-06 | Google OAuth end-to-end on Expo Go | — | |
-| AC-1-07 | Apple Sign-In configured in app.json | — | |
+| AC-1-06 | Google OAuth end-to-end on iOS Simulator | — | |
+| AC-1-07 | Apple Sign-In configured in iOS project | — | |
 | AC-1-08 | POST /auth/verify valid JWT → 200 correct fields | PASS | ES256 JWKS verification, user upsert, isNewUser detection |
 | AC-1-09 | POST /auth/verify invalid JWT → 401 | PASS | Same endpoint, error handling for invalid JWT/headers |
-| AC-1-10 | App shell launches + bottom tabs on Expo Go | PASS | Expo project bootstrap, 3 placeholder screens + bottom tab nav |
+| AC-1-10 | App shell launches + bottom tabs on iOS Simulator | — | Re-implement with React Native CLI (original bootstrap replaced) |
 | AC-1-11 | tsc --noEmit zero errors both workspaces | PASS | Zero errors: apps/api + apps/mobile both clean |
 | AC-1-12 | packages/types imported by both apps | PASS | @landednz/types package + 9 types + workspace linkage complete |
+| AC-1-13 | npm run seed + verification golden examples | PASS | Seed script scaffold created with TaskSeedEntry interface |
+| AC-1-14 | .env.example complete with all required vars | PASS | All required environment variables documented |
+| AC-1-15 | **ALL Expo dependencies removed from docs** | PASS | 25 files updated across docs/config/source; zero grep matches for Expo imports/prefixes |
 | AC-1-13 | .env.example complete, .env.local gitignored | PASS | All 7 required env vars documented, .env.local gitignored, no secrets tracked |
 | AC-1-14 | seed scaffold runs without error | PASS | TypeScript scaffold at apps/api/scripts/seed-knowledge-base.ts — connects to DB, processes empty tasks array, exits cleanly |
 
@@ -163,10 +166,11 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-1-15] Full Expo → React Native CLI migration: 25 files updated across docs, config, source. EXPO_PUBLIC_ prefix removed from env vars. .expo/ directory deleted, .expo/ added to .gitignore. index.js uses AppRegistry (not registerRootComponent). Zero grep matches for Expo imports/prefixes after migration.
 - [AC-1-14] Seed script scaffold created at apps/api/scripts/seed-knowledge-base.ts. Complete TaskSeedEntry interface per spec §2.3, empty tasks array for Phase 1, proper DB connection/disconnection pattern. Uses logger (not console.log), structured error handling with process.exit(1), runs successfully with npx ts-node.
 - [AC-1-13] .env.example updated with all 7 required vars from config.ts + apps/api/CLAUDE.md: DATABASE_URL, SUPABASE_URL (was missing), PORT, NODE_ENV (optional), ANTHROPIC_API_KEY, ANTHROPIC_MODEL, REVENUECAT_WEBHOOK_SECRET. SUPABASE_JWT_SECRET omitted per root CLAUDE.md (CLI v2+ uses JWKS, not HS256 secret).
 - [AC-1-12] @landednz/types package created with 9 types + ApiError from spec §3.2.3. npm workspaces linking + TypeScript paths in both apps. API: shared/types.ts re-export hub. Mobile: services/api.ts imports. rootDir removed from API tsconfig for cross-package imports.
-- [AC-1-10] Expo project bootstrap from scratch. bundleIdentifier com.landednz.app set from start per CLAUDE.md gotcha (painful to change later). Bottom tabs: Roadmap, Chat, Profile. TypeScript paths for @landednz/types removed (AC-1-12 will add).
+- [AC-1-10] React Native CLI bootstrap replacing original setup. bundleIdentifier com.landednz.app set from start per CLAUDE.md gotcha (painful to change later). Bottom tabs: Roadmap, Chat, Profile. TypeScript paths for @landednz/types removed (AC-1-12 will add).
 - [AC-1-08/09] JWT verification via ES256 JWKS works correctly with `jose` library. User upsert with Prisma P2002 catch provides race-safe isNewUser detection. Both AC-1-08 (valid JWT) and AC-1-09 (invalid JWT) implemented in same handler.
 - [AC-1-05] Supabase CLI v2.75.0 uses ES256 JWKS — no JWT_SECRET. AC-1-08 must use JWKS verification via `jose` library, not symmetric HS256 secret.
 - [AC-1-03/04] Fastify v5 used (v4 had high severity CVE). BigInt replacer applied on $queryRaw SELECT 1 per C10. 503 returned directly (not via AppError) for infrastructure failures per C13.

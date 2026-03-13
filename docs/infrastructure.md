@@ -82,7 +82,7 @@ services:
 - [ ] Backup and disaster recovery
 
 ### Mobile Distribution
-- [ ] EAS Build configuration
+- [ ] Xcode build and archive configuration
 - [ ] App Store submission process
 - [ ] Google Play Store submission
 - [ ] Certificate management (iOS)

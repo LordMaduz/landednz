@@ -58,15 +58,14 @@ Android market share). An Android version would require a complete
 rebuild in Kotlin. Wrong for this product's user demographic.
 Eliminated.
 
-**React Native with Expo**
+**React Native CLI**
 Builds genuine native iOS and Android apps from a single TypeScript
 codebase. Not a web wrapper — produces real native components.
-Expo abstracts the painful parts (Xcode configuration, provisioning
-profiles, app store submission). Expo Go enables instant physical
-device testing without a full Xcode build — scan a QR code, app
-runs on device immediately.
+React Native CLI provides direct Xcode and Android Studio integration,
+full control over native dependencies and build process.
+iOS Simulator provides instant device testing via `npx react-native run-ios`.
 
-### Decision: React Native with Expo
+### Decision: React Native CLI
 
 **Market coverage rationale:**
 LandedNZ's primary users are Indian, Filipino, and South/Southeast
@@ -379,7 +378,7 @@ dependencies except the Claude API (requires internet).
 ┌─────────────────────────────────────────────┐
 │  LOCAL DEVELOPMENT ENVIRONMENT               │
 │                                             │
-│  Expo Go (iPhone)                           │
+│  iOS Simulator / Real Device                │
 │       ↕ HTTP / SSE                          │
 │  Fastify server (localhost:3000)            │
 │       ↕ Prisma                              │
@@ -440,7 +439,7 @@ differ.
 | Layer | Technology | Version target | Purpose |
 |---|---|---|---|
 | Mobile app | React Native | Latest stable | Cross-platform iOS + Android |
-| App platform | Expo | SDK 52+ | Build tooling, device testing, app store submission |
+| App toolchain | React Native CLI | Latest | Build tooling, Xcode integration, app store submission |
 | Language (all) | TypeScript | 5.x | Type safety across full stack |
 | Backend framework | Fastify | 4.x | API server, SSE streaming |
 | ORM | Prisma | 5.x | Type-safe database access, migrations |
@@ -451,7 +450,7 @@ differ.
 | Email | Resend + React Email | Latest | Transactional emails |
 | Payments | RevenueCat | Latest | In-app subscriptions (iOS + Android) |
 | Local database | Docker + docker-compose | Latest | Zero-config local PostgreSQL |
-| Mobile dev | Expo Go | Latest | Instant device testing |
+| Mobile dev | iOS Simulator + Android Emulator | Latest | Instant device testing |
 | Cloud backend | Railway | — | Node.js hosting, auto-deploy |
 | Cloud database | Supabase | — | Managed PostgreSQL + pgvector + Auth |
 
@@ -498,9 +497,9 @@ stack running locally for the first time:
    # Fastify server on localhost:3000
 
 9. Start mobile app
-   cd apps/mobile
-   npx expo start
-   # Scan QR code with Expo Go on iPhone or Android device
+   cd apps/mobile/ios && pod install
+   cd .. && npx react-native run-ios
+   # App launches in iOS Simulator
 ```
 
 Full local environment running in under 15 minutes on a clean machine.
@@ -515,13 +514,14 @@ Shared TypeScript types used by both mobile app and backend.
 ```
 landednz/
 ├── apps/
-│   ├── mobile/          # React Native (Expo) app
+│   ├── mobile/          # React Native CLI app
 │   │   ├── src/
 │   │   │   ├── screens/     # Flow screens (entry, onboarding, etc.)
 │   │   │   ├── components/  # Shared UI components
 │   │   │   ├── hooks/       # Custom React hooks
 │   │   │   └── services/    # API client, auth, storage
-│   │   └── app.json         # Expo configuration
+│   │   ├── ios/             # Xcode project
+│   │   └── android/         # Android project
 │   │
 │   └── api/             # Fastify backend
 │       ├── src/
@@ -644,7 +644,7 @@ async function checkRoadmapDelta(userId: string, cachedVersion: number) {
 
 | Decision | What | Why |
 |---|---|---|
-| Frontend | React Native with Expo | Cross-platform from Day 1, target demographic is 55-70% Android, single codebase for one developer |
+| Frontend | React Native CLI | Cross-platform from Day 1, target demographic is 55-70% Android, single codebase for one developer |
 | PWA rejected | Not native enough | Bottom sheet, animations, micro-interactions require native quality |
 | iOS Native rejected | Excludes majority of target users | Indian + Filipino migrant demographic is predominantly Android |
 | Backend | Node.js with TypeScript + Fastify | Shared language with frontend, TypeScript-first Anthropic SDK, native SSE streaming |

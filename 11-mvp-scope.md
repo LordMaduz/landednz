@@ -282,8 +282,8 @@ source URL validator, and preview: **v2**
 | AI chat (Phase B — RAG) | pgvector retrieval + guardrails | 20 |
 | Returning user Scenario 1 | Welcome banner only | 5 |
 | Email (manual trigger) | Templates + Resend API | 5 |
-| Stack setup + infra | Docker, Expo, Fastify, Prisma | 20 |
-| App Store + Play Store setup | EAS Build, listings | 15 |
+| Stack setup + infra | Docker, React Native CLI, Fastify, Prisma | 20 |
+| App Store + Play Store setup | Xcode build, listings | 15 |
 | Auth | Supabase Auth + OAuth | 15 |
 | DB schema + migrations | All Section 6 entities | 20 |
 | Knowledge base content | 21 tasks × 2 variants | 40 |
@@ -392,7 +392,7 @@ Week 1 (~20 hours):
 
 Week 2 (~20 hours):
 - Supabase Auth integration (email, Google OAuth, Apple Sign-In)
-- React Native Expo project, navigation shell
+- React Native CLI project, navigation shell
 - Auth screens (sign up, sign in, sign out)
 - API connection verified — mobile app calls backend, auth works
 
@@ -526,11 +526,11 @@ Week 15 (~20 hours):
   GateDefer, manual send via Resend API
 - App Store submission preparation — screenshots, metadata,
   privacy policy, App Store Connect setup
-- Expo EAS Build configuration — production build pipeline
+- Xcode build configuration — production build pipeline
 
 Week 16 (~20 hours):
-- App Store submission (iOS) via Expo EAS
-- Play Store submission (Android) via Expo EAS
+- App Store submission (iOS) via Xcode + App Store Connect
+- Play Store submission (Android) via Android Studio + Play Console
 - Beta testing with 5–10 real users (friends, network, community)
 - Critical bug fixes from beta feedback
 
@@ -559,7 +559,7 @@ Impact: High (delays launch past June deadline)
 Mitigation:
 - Submit at end of Week 14 — two weeks before the build window ends
 - Follow Apple's Human Interface Guidelines for payment integration precisely
-- Use Expo EAS Build which has established App Store approval patterns
+- Use Xcode build which has established App Store approval patterns
 - Prepare rejection response plan — most common reasons are
   metadata issues or payment flow violations, both fixable in 1–2 days
 
@@ -587,7 +587,7 @@ Mitigation:
 **Risk 3 — React Native learning curve overrun**
 
 Estimated 2–4 weeks of ramp-up. Could extend to 6–8 weeks
-if unexpected complexity arises (Expo EAS quirks, iOS-specific
+if unexpected complexity arises (Xcode build quirks, iOS-specific
 behaviour, native module issues).
 
 Probability: Medium (new framework, new platform ecosystem)
@@ -598,8 +598,8 @@ Mitigation:
   absorbed here without delaying product feature delivery.
 - If Phase 1 takes an extra week, Phase 2 starts a week later —
   but nothing is blocked because Phase 1 has no product feature dependencies.
-- Expo's documentation and community are excellent. Most React Native
-  issues have well-documented solutions in the Expo forums.
+- React Native CLI has excellent documentation and community. Most React Native
+  issues have well-documented solutions across GitHub and Stack Overflow.
 - Claude Code is the build partner — architectural questions can be
   resolved quickly without context-switching to Stack Overflow.
 

@@ -193,10 +193,10 @@ landednz/                                          ← repo root
 │   │   ├── jest.config.ts
 │   │   └── package.json
 │   │
-│   └── mobile/                                    ← React Native (Expo) — iOS + Android
-│       ├── CLAUDE.md                              ← mobile-specific gotchas: Expo, EAS Build,
-│       │                                            RevenueCat SDK, Apple Sign-In, SSE streaming (~80 lines)
-│       ├── app.json                               ← bundleIdentifier: com.landednz.app
+│   └── mobile/                                    ← React Native CLI — iOS + Android
+│       ├── CLAUDE.md                              ← mobile-specific gotchas: Xcode, CocoaPods,
+│       │                                            RevenueCat SDK, Apple Sign-In, SSE streaming (~90 lines)
+│       ├── react-native.config.js                 ← React Native CLI configuration
 │       ├── src/
 │       │   ├── screens/
 │       │   │   ├── OnboardingScreen.tsx
