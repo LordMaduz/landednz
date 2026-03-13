@@ -50,3 +50,50 @@ Thumbs.db
 .react-native/
 android/build/
 .expo/
+
+# iOS build artifacts
+ios/Pods/
+ios/build/
+ios/.xcodebuild.plist
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Metro bundler cache
+.metro-health-check*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node.js version manager
+.nvmrc.bak
+
+# CocoaPods
+ios/Podfile.lock.diff
+ios/Podfile.lock.orig
+
+# Flipper
+ios/Flipper/
+
+# Fastlane
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/screenshots
+ios/fastlane/test_output
+
+# Bundle artifacts
+*.jsbundle
+
+# Testing
+coverage/
+*.coverage
+test-results/
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
