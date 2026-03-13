@@ -52,7 +52,7 @@ android/build/
 .expo/
 
 # iOS build artifacts
-ios/Pods/
+**/ios/Pods/
 ios/build/
 ios/.xcodebuild.plist
 *.xcworkspace/xcuserdata/
