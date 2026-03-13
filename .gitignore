@@ -97,3 +97,9 @@ test-results/
 # Supabase
 supabase/.branches/
 supabase/.temp/
+# User notes
+Commands.txt
+OAuth.txt
+Superbase_Endpoints.txt
+# Xcode user data
+**/*.xcworkspace/xcuserdata/
