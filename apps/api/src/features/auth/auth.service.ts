@@ -1,5 +1,6 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose'
 import { Prisma } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { config } from '../../shared/config'
 import { db } from '../../shared/db'
 import { logger } from '../../shared/logger'
@@ -16,7 +17,7 @@ interface AuthVerifyResult {
 const JWKS = createRemoteJWKSet(new URL(`${config.supabaseUrl}/auth/v1/.well-known/jwks.json`))
 
 export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResult> {
-  let payload: any
+  let payload: any // any: jose jwtVerify returns JWTPayload which needs extension access for email/sub
 
   try {
     // Verify JWT using ES256 JWKS (not HS256 secret)
@@ -48,7 +49,7 @@ export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResu
     isNewUser = true
     logger.info({ userId, email }, 'New user created from JWT')
   } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+    if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
       // Unique constraint violation — user already exists
       isNewUser = false
       logger.debug({ userId }, 'User already exists')

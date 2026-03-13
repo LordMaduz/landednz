@@ -12,4 +12,5 @@ export type {
   PersonaKey,
   ChatEntryPoint,
   ApiError,
+  AuthVerifyResponse,
 } from '@landednz/types'

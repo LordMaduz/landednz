@@ -1,14 +1,8 @@
 import { FastifyInstance } from 'fastify'
 import { logger } from '../../shared/logger'
 import { AppError } from '../../shared/errors'
+import type { AuthVerifyResponse } from '../../shared/types'
 import { verifyAndUpsertUser } from './auth.service'
-
-interface AuthVerifyResponse {
-  userId: string
-  email: string
-  isNewUser: boolean
-  hasProfile: boolean
-}
 
 export function registerAuthRoutes(app: FastifyInstance): void {
   app.post('/auth/verify', async (request, reply) => {
