@@ -10,7 +10,7 @@
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
-| 1 — Foundation (~60h) | IN PROGRESS | 11 / 14 | — |
+| 1 — Foundation (~60h) | IN PROGRESS | 12 / 14 | — |
 | 2 — Roadmap Engine (~100h) | BLOCKED | 0 / 15 | Requires Phase 1 PASS |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
@@ -39,7 +39,7 @@
 | AC-1-11 | tsc --noEmit zero errors both workspaces | PASS | Zero errors: apps/api + apps/mobile both clean |
 | AC-1-12 | packages/types imported by both apps | PASS | @landednz/types package + 9 types + workspace linkage complete |
 | AC-1-13 | .env.example complete, .env.local gitignored | PASS | All 7 required env vars documented, .env.local gitignored, no secrets tracked |
-| AC-1-14 | seed scaffold runs without error | — | |
+| AC-1-14 | seed scaffold runs without error | PASS | TypeScript scaffold at apps/api/scripts/seed-knowledge-base.ts — connects to DB, processes empty tasks array, exits cleanly |
 
 **Phase 1 Gate:** PENDING
 
@@ -163,6 +163,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-1-14] Seed script scaffold created at apps/api/scripts/seed-knowledge-base.ts. Complete TaskSeedEntry interface per spec §2.3, empty tasks array for Phase 1, proper DB connection/disconnection pattern. Uses logger (not console.log), structured error handling with process.exit(1), runs successfully with npx ts-node.
 - [AC-1-13] .env.example updated with all 7 required vars from config.ts + apps/api/CLAUDE.md: DATABASE_URL, SUPABASE_URL (was missing), PORT, NODE_ENV (optional), ANTHROPIC_API_KEY, ANTHROPIC_MODEL, REVENUECAT_WEBHOOK_SECRET. SUPABASE_JWT_SECRET omitted per root CLAUDE.md (CLI v2+ uses JWKS, not HS256 secret).
 - [AC-1-12] @landednz/types package created with 9 types + ApiError from spec §3.2.3. npm workspaces linking + TypeScript paths in both apps. API: shared/types.ts re-export hub. Mobile: services/api.ts imports. rootDir removed from API tsconfig for cross-package imports.
 - [AC-1-10] Expo project bootstrap from scratch. bundleIdentifier com.landednz.app set from start per CLAUDE.md gotcha (painful to change later). Bottom tabs: Roadmap, Chat, Profile. TypeScript paths for @landednz/types removed (AC-1-12 will add).
