@@ -10,6 +10,6 @@
     "dev:api": "npm run dev --workspace=apps/api"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   }
 }

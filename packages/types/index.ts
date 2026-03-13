@@ -42,3 +42,11 @@ export interface ApiError {
   message: string;     // human-readable description
   statusCode: number;
 }
+
+// Response from POST /auth/verify
+export interface AuthVerifyResponse {
+  userId: string;
+  email: string;
+  isNewUser: boolean;
+  hasProfile: boolean;
+}
