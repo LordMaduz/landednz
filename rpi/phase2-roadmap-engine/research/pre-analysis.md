@@ -127,26 +127,27 @@ IMPACT: T08 is never blocked by T07. T08 score at Day 2 with no completions =
 
 ---
 
-### Issue 2 — Golden 1 third position (RESOLVED)
+### Issue 2 — Golden 1 blocking logic (RESOLVED)
 
 CONFLICT:
 - 12-build-specification.md: topThreeIds = ["T06", "T07", "T03"]
-- Actual scores: T08 = 118 at Day 2, T03 = 82. T08 beats T03 by 36 points.
+- Scoring unit test (AC-2-01): assumes all tasks isBlocked=false → ["T06", "T07", "T08"]
+- Actual dependency resolution: T06→T07 is HARD, T06 incomplete → T07 blocked
 
-RESOLUTION: Golden 1 third position is **T08**, not T03.
+RESOLUTION: Golden 1 applies actual blocking logic. T07 is **HARD blocked**.
 
 PROOF (constrained_couple, Day 2, no completions):
 ```
-T06 = 98 + 0  + 30 + 0 = 128  ← first
-T07 = 95 + 0  + 30 + 0 = 125  ← second
-T08 = 98 + 20 + 0  + 0 = 118  ← third (SOFT dep on T07 — no penalty)
-T03 = 82 + 0  + 0  + 0 = 82   ← fourth (pre-arrival task, no urgency)
+T06 = 98 + 0  + 30 - 0  = 128  ← first (no prerequisites)
+T07 = 95 + 0  + 30 - 50 = 75   ← HARD blocked (T06 incomplete, excluded from topThree)
+T08 = 98 + 20 + 0  - 0  = 118  ← second (SOFT dep on T07 — no penalty)
+T03 = 82 + 0  + 0  - 0  = 82   ← third (pre-arrival task, no urgency)
 ```
 
 Note: T08 urgency (+25) does NOT fire on Day 2 — the condition is Days 4–14.
-Day 2 falls inside the T06/T07 urgency window (Days 1–3) not the T08 window.
+Note: T07 has HARD dependency on T06. With T06 incomplete, T07 gets -50 penalty and isBlocked=true.
 
-CORRECTED: topThreeIds = **["T06", "T07", "T08"]**
+CORRECTED: topThreeIds = **["T06", "T08", "T03"]**
 
 ---
 
@@ -217,9 +218,9 @@ Note: T09 urgency (+28) does NOT fire — T08 not yet applied. Correct.
 
 ```typescript
 // GOLDEN 1: constrained_couple, Day 2, no completions
-// T06=128, T07=125, T08=118
+// T06=128, T07=75 (HARD blocked), T08=118, T03=82
 const golden1Expected = {
-  topThreeIds: ["T06", "T07", "T08"],
+  topThreeIds: ["T06", "T08", "T03"],
 };
 
 // GOLDEN 2: constrained_couple, Day 2, completedTaskIds=["T06","T07"]
@@ -260,7 +261,13 @@ const golden4Expected = {
 | T06 | Dependency Penalty | 0 | Section 3: T06 has no HARD deps | ✓ | No prerequisites |
 | T06 | **Final Score** | **128** | 98 + 0 + 30 - 0 | ✓ | **Validated** |
 | T07 | Time Urgency | +30 | Section 5: Days 1-3, T07 incomplete | ✓ | Day 2 in range, rule applies |
-| T07 | **Final Score** | **125** | 95 + 0 + 30 - 0 | ✓ | **Validated** |
+| T07 | Dependency Penalty | 50 | Section 3: T06→T07 HARD, T06 incomplete | ✓ | T06 not in completedTaskIds |
+| T07 | **Final Score** | **75** | 95 + 0 + 30 - 50 | ✓ | **Validated — HARD blocked** |
+| T03 | Base Priority | 82 | Section 1: T03 = 82 | ✓ | Canonical value confirmed |
+| T03 | Persona Weight | 0 | Section 4: T03 not in persona table | ✓ | Unlisted task = 0 weight |
+| T03 | Time Urgency | 0 | Section 5: No urgency rules for T03 | ✓ | Pre-arrival task, no urgency |
+| T03 | Dependency Penalty | 0 | Section 3: T03 has no HARD deps | ✓ | No prerequisites |
+| T03 | **Final Score** | **82** | 82 + 0 + 0 - 0 | ✓ | **Validated** |
 | T08 | Time Urgency | 0 | Section 5: Days 4-14, T08 not applied | ✓ | **Day 2 NOT in Days 4-14** |
 | T08 | **Final Score** | **118** | 98 + 20 + 0 - 0 | ✓ | **Validated** |
 

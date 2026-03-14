@@ -6,6 +6,7 @@ import { registerErrorHandler } from './shared/plugins/error-handler'
 import { registerHealthRoutes } from './features/health/health.route'
 import { registerAuthRoutes } from './features/auth/auth.route'
 import { registerOnboardingRoutes } from './features/onboarding/onboarding.route'
+import { registerRoadmapRoutes } from './features/roadmap/roadmap.route'
 import { registerAuthDecoration } from './shared/middleware/auth'
 
 function buildApp() {
@@ -16,6 +17,7 @@ function buildApp() {
   registerHealthRoutes(app)
   registerAuthRoutes(app)
   registerOnboardingRoutes(app)
+  registerRoadmapRoutes(app)
 
   return app
 }
