@@ -1,7 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { authenticateRequest } from '../../shared/middleware/auth';
 import { getRoadmap, completeTask, bulkOverride, getTaskDetail } from './roadmap.service';
-import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types';
+import { recalculateAllRoadmaps } from './roadmap.recalculate';
+import { config } from '../../shared/config';
+import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse, RecalculateResponse } from './roadmap.types';
 
 export function registerRoadmapRoutes(app: FastifyInstance): void {
   // GET /roadmap
@@ -42,6 +44,26 @@ export function registerRoadmapRoutes(app: FastifyInstance): void {
     async (request, reply) => {
       const { taskId } = request.params;
       const result = await getTaskDetail(request.userId, taskId);
+      reply.status(200).send(result);
+    },
+  );
+
+  // POST /admin/recalculate
+  // Triggers full priority recalculation for all users' roadmap entries.
+  // Uses today's currentDate so time-sensitive urgency bonuses stay accurate.
+  // Protected by X-Admin-Key header (checked against ADMIN_API_KEY env var).
+  // If ADMIN_API_KEY is not set, check is skipped (dev convenience).
+  app.post<{ Reply: RecalculateResponse }>(
+    '/admin/recalculate',
+    async (request, reply) => {
+      if (config.adminApiKey) {
+        const key = request.headers['x-admin-key'];
+        if (key !== config.adminApiKey) {
+          reply.status(401).send({ error: 'UNAUTHORIZED', message: 'Invalid or missing X-Admin-Key' } as never);
+          return;
+        }
+      }
+      const result = await recalculateAllRoadmaps();
       reply.status(200).send(result);
     },
   );

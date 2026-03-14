@@ -41,6 +41,11 @@ export interface BulkOverrideResponse {
   newTopThree: RoadmapTask[];
 }
 
+export interface RecalculateResponse {
+  usersProcessed: number;
+  entriesUpdated: number;
+}
+
 export interface TaskDetailResponse {
   taskId: string;
   name: string;

@@ -14,4 +14,7 @@ export const config = {
   supabaseUrl: requireEnv('SUPABASE_URL'),
   port: parseInt(process.env['PORT'] ?? '3000', 10),
   nodeEnv: process.env['NODE_ENV'] ?? 'development',
+  // Optional — if set, POST /admin/recalculate requires X-Admin-Key header to match.
+  // If not set (local dev), the check is skipped.
+  adminApiKey: process.env['ADMIN_API_KEY'],
 }
