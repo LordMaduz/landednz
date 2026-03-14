@@ -16,11 +16,12 @@ Human must review and confirm before /rpi:plan proceeds.
 
 **Step 1 — Orient**
 Read in this order:
-1. `IMPLEMENT.md` — current state, any prior notes on this phase
-2. `rpi/$0/REQUEST.md` — scope, AC list, failure points, skills to load
-3. The relevant AC definition from REQUEST.md for the specific AC being researched
-4. Referenced sections of `12-build-specification.md` (the functional contract for this AC)
-5. Relevant sections of `apps/api/CLAUDE.md` or `apps/mobile/CLAUDE.md`
+1. `rpi/[phase]/research/pre-analysis.md` — if exists, read FIRST for pre-resolved ambiguities and canonical values
+2. `IMPLEMENT.md` — current state, any prior notes on this phase
+3. `rpi/$0/REQUEST.md` — scope, AC list, failure points, skills to load
+4. The relevant AC definition from REQUEST.md for the specific AC being researched
+5. Referenced sections of `12-build-specification.md` (the functional contract for this AC)
+6. Relevant sections of `apps/api/CLAUDE.md` or `apps/mobile/CLAUDE.md`
 
 **Step 2 — Research**
 For the specific AC:
@@ -50,6 +51,7 @@ Format:
 
     ## Constraints That Apply
     [Relevant constitution.md constraints for this AC]
+    [Pre-analysis.md findings that apply to this AC, if any]
 
     ## Skills Loaded
     [Which skills are relevant and loaded]

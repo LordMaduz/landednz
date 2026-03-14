@@ -11,7 +11,7 @@
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
-| 2 — Roadmap Engine (~100h) | IN PROGRESS | 0 / 15 | — |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 1 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -52,7 +52,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-2-01 | scoreTask() passes all 4 golden examples | — | |
+| AC-2-01 | scoreTask() passes all 4 golden examples | PASS | TDD implementation, corrected golden examples vs pre-analysis |
 | AC-2-02 | resolveBlockedTasks() — T08 blocked when T07 incomplete | — | |
 | AC-2-03 | resolveBlockedTasks() — T08 unblocked after T07 complete | — | |
 | AC-2-04 | filterApplicableTasks() excludes school tasks for non-family | — | |
@@ -149,10 +149,10 @@
 
 | Example | File | Last Run | Result |
 |---------|------|----------|--------|
-| Priority GOLDEN 1 | golden-examples/priority-scoring.ts | — | — |
-| Priority GOLDEN 2 | golden-examples/priority-scoring.ts | — | — |
-| Priority GOLDEN 3 | golden-examples/priority-scoring.ts | — | — |
-| Priority GOLDEN 4 | golden-examples/priority-scoring.ts | — | — |
+| Priority GOLDEN 1 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
+| Priority GOLDEN 2 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
+| Priority GOLDEN 3 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
+| Priority GOLDEN 4 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
 | RAG GOLDEN 1 | golden-examples/rag-retrieval.ts | — | — |
 | RAG GOLDEN 2 | golden-examples/rag-retrieval.ts | — | — |
 | RAG GOLDEN 3 | golden-examples/rag-retrieval.ts | — | — |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-2-01] scoreTask() TDD implementation complete. Key corrections: Golden 2 expected T08=118 (not 143) — Day 2 is not in T08 urgency range (Days 4-14). Month 10-11 T16 bonus uses accurate day range 275-336 days. February-March tax bonus only applies after first year. All 20 tests pass including 4 golden examples. Vitest setup added to API workspace.
 - [AC-1-06] Google OAuth working via React Native CLI + Supabase + Linking API. Key fixes: babel.config.js required (was missing), react-native-dotenv for env vars, .env var names fixed (removed EXPO_PUBLIC_ prefix), CFBundleURLTypes in Info.plist, openURL handler in AppDelegate.mm. React Native CLI build failed (code signing), direct Xcode build successful. OAuth flow: Supabase signInWithOAuth → Linking.openURL(Safari) → landednz://auth/callback deep link → session + authVerify.
 - [AC-1-10] iOS native project generated via `react-native@0.76.1 init`, bundle ID `com.landednz.app`, CocoaPods installed (68 deps). App.tsx: NavigationContainer + createBottomTabNavigator (Roadmap/Chat/Profile). react-native-screens@3.34.0 for RN 0.76.1 compatibility. Build reaches code signing (requires Apple Developer setup).
 - [AC-1-15] Full Expo → React Native CLI migration: 25 files updated across docs, config, source. EXPO_PUBLIC_ prefix removed from env vars. .expo/ directory deleted, .expo/ added to .gitignore. index.js uses AppRegistry (not registerRootComponent). Zero grep matches for Expo imports/prefixes after migration.
