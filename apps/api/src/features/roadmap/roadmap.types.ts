@@ -23,3 +23,10 @@ export interface RoadmapResponse {
   phases: RoadmapPhase[];
   lastComputedAt: string;
 }
+
+export interface TaskCompleteResponse {
+  taskId: string;
+  status: 'COMPLETE';
+  newTopThree: RoadmapTask[];
+  unlockedTasks: string[];  // Task IDs that transitioned isBlocked true → false
+}

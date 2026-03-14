@@ -8,5 +8,8 @@ config({ path: resolve(__dirname, '.env.local') });
 export default defineConfig({
   test: {
     environment: 'node',
+    // Integration tests share canonical task IDs in the DB — run files sequentially
+    // to prevent concurrent CREATE conflicts between test files.
+    fileParallelism: false,
   },
 });

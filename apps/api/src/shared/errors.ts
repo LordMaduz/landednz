@@ -11,6 +11,7 @@ export type ErrorCode =
   | 'UNAUTHORIZED'
   | 'VALIDATION_ERROR'
   | 'PROFILE_EXISTS'
+  | 'TASK_ALREADY_COMPLETE'
   | 'INTERNAL_ERROR'
 
 export class AppError extends Error {

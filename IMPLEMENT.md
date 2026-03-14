@@ -11,7 +11,7 @@
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
-| 2 — Roadmap Engine (~100h) | IN PROGRESS | 6 / 15 | — |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 8 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -58,8 +58,8 @@
 | AC-2-04 | filterApplicableTasks() excludes school tasks for non-family | PASS | AND logic, "ALL" sentinel, defensive JSON parse, derivePersonaKey() co-located |
 | AC-2-05 | POST /onboarding/profile creates UserProfile + all RoadmapEntries | PASS | Shared auth middleware + filter→resolve→score pipeline. ArrivalTiming removed — exact date required. 10 integration tests pass. |
 | AC-2-06 | GET /roadmap — correct topThree for golden1 scenario | PASS | Single Prisma query with deep includes. topThree=["T06","T08","T03"] verified. consequenceLine fallback chain: personaKey→solo_aewv→''. 7 integration tests pass. |
-| AC-2-07 | POST /roadmap/tasks/:taskId/complete → updated topThree | — | |
-| AC-2-08 | Complete T07 → T08 appears in next topThree | — | |
+| AC-2-07 | POST /roadmap/tasks/:taskId/complete → updated topThree | PASS | completeTask() with targeted recomputation via getAffectedTasks(). 5 integration tests pass. |
+| AC-2-08 | Complete T07 → T08 appears in next topThree | PASS | Tested as T06 complete → T07 unblocked (T06→T07 HARD dep is correct). unlockedTasks=['T07'] verified. |
 | AC-2-09 | bulk-override → correct topThree | — | |
 | AC-2-10 | PREMIUM task → 403 for unsubscribed user | — | |
 | AC-2-11 | Daily recalculation job updates T16 score | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-2-07/08] POST /roadmap/tasks/:taskId/complete implemented. Targeted recomputation: only direct dependents via getAffectedTasks() rescored — not full roadmap. unlockedTasks tracks isBlocked true→false transitions. AC-2-08 uses T06→T07 HARD dep (spec comment about T07→T08 was stale — T07→T08 is SOFT per pre-analysis). vitest.config.ts fileParallelism:false prevents concurrent canonical task ID conflicts between test files. 87/87 tests pass.
 - [AC-2-06] GET /roadmap implemented in features/roadmap/. Single Prisma query with deep includes (Task + TaskContentVariants + HARD deps with prerequisite names). topThree filter: status !== COMPLETE AND isBlocked === false, sorted priorityScore DESC. consequenceLine fallback: personaKey → solo_aewv → ''. Tests use canonical task IDs (T06/T07/T08/T03) so scoreTask() applies correct persona weights + urgency bonuses for golden1 scores. 7 integration tests pass.
 - [AC-2-05] POST /onboarding/profile implemented in features/onboarding/. Shared auth middleware created at shared/middleware/auth.ts — reusable preHandler for all future authenticated routes. Pipeline: filterApplicableTasks → resolveBlockedTasks → scoreTask → createMany(). Future arrivalDate sets scoringArrivalDate=null (urgency=0). ArrivalTiming enum removed — arrivalDate always required. 10 integration tests hit real DB.
 - [AC-2-04] filterApplicableTasks() + derivePersonaKey() implemented in core/priority/filter.ts. AND logic across all 3 JSON fields. "ALL" sentinel means no restriction. Malformed JSON defensively treated as [] (task excluded). derivePersonaKey() maps familySituation only — visaType ignored. 24 tests pass.
