@@ -70,15 +70,14 @@ model UserProfile {
   userId            String          @unique
   user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Five onboarding answers — stored as enum strings
+  // Four onboarding answers — stored as enum strings
   visaType          VisaType
   city              City
   familySituation   FamilySituation
   occupation        Occupation
-  arrivalTiming     ArrivalTiming
 
-  // Derived from arrivalTiming — calculated once at onboarding, updated if user corrects
-  arrivalDate       DateTime?
+  // User-provided exact arrival date — always required
+  arrivalDate       DateTime
 
   // Persona key derived from visaType + familySituation — used for KB pre-filtering
   // Values: constrained_couple | solo_aewv | family_with_children
@@ -960,7 +959,7 @@ export function buildChatOpeningMessage(
 
 ```typescript
 // Creates UserProfile from onboarding answers.
-// Called after user completes all 5 onboarding questions.
+// Called after user completes 4 onboarding questions + arrival date.
 // Requires auth (JWT header).
 
 // Request body:
@@ -969,8 +968,7 @@ interface CreateProfileRequest {
   city: City;
   familySituation: FamilySituation;
   occupation: Occupation;
-  arrivalTiming: ArrivalTiming;
-  arrivalDate?: string;  // ISO date — required if arrivalTiming === "PRE_ARRIVAL"
+  arrivalDate: string;  // ISO date — always required (past or future)
 }
 
 // Response 201:
@@ -981,7 +979,7 @@ interface CreateProfileResponse {
 }
 
 // Validations:
-// - arrivalDate required and must be a future date if arrivalTiming === PRE_ARRIVAL
+// - arrivalDate required and must be a valid ISO date
 // - Profile must not already exist for this user (409 if duplicate)
 // - personaKey derived via core/priority/filter.ts derivePersonaKey()
 // - Roadmap generated and stored immediately after profile creation

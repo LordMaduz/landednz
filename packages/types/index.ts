@@ -25,11 +25,6 @@ export type Occupation =
   | "OTHER_PROFESSIONAL"
   | "SEEKING_WORK";
 
-export type ArrivalTiming =
-  | "PRE_ARRIVAL"
-  | "RECENT"
-  | "WEEKS_TWO_TO_EIGHT"
-  | "OVER_TWO_MONTHS";
 
 export type TaskStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETE" | "SKIPPED";
 export type DependencyType = "HARD" | "SOFT";
