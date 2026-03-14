@@ -6,7 +6,6 @@ export type {
   City,
   FamilySituation,
   Occupation,
-  ArrivalTiming,
   TaskStatus,
   DependencyType,
   PersonaKey,

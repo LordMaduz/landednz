@@ -31,15 +31,14 @@ model UserProfile {
   userId            String          @unique
   user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Five onboarding answers — stored as enum strings
+  // Four onboarding answers — stored as enum strings
   visaType          VisaType
   city              City
   familySituation   FamilySituation
   occupation        Occupation
-  arrivalTiming     ArrivalTiming
 
-  // Derived from arrivalTiming — calculated once at onboarding, updated if user corrects
-  arrivalDate       DateTime?
+  // User-provided exact arrival date — always required
+  arrivalDate       DateTime
 
   // Persona key derived from visaType + familySituation — used for KB pre-filtering
   // Values: constrained_couple | solo_aewv | family_with_children
@@ -81,12 +80,6 @@ enum Occupation {
   SEEKING_WORK
 }
 
-enum ArrivalTiming {
-  PRE_ARRIVAL         // hasn't arrived yet
-  RECENT              // last 2 weeks
-  WEEKS_TWO_TO_EIGHT  // 2–8 weeks ago
-  OVER_TWO_MONTHS     // more than 2 months ago
-}
 
 // ─── TASK GRAPH ──────────────────────────────────────────────────────────────
 
