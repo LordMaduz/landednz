@@ -9,6 +9,8 @@ export type ErrorCode =
   | 'PREMIUM_REQUIRED'
   | 'INVALID_TOKEN'
   | 'UNAUTHORIZED'
+  | 'VALIDATION_ERROR'
+  | 'PROFILE_EXISTS'
   | 'INTERNAL_ERROR'
 
 export class AppError extends Error {

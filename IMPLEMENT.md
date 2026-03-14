@@ -11,7 +11,7 @@
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
-| 2 — Roadmap Engine (~100h) | IN PROGRESS | 4 / 15 | — |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 5 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -56,7 +56,7 @@
 | AC-2-02 | resolveBlockedTasks() — T08 blocked when T07 incomplete | PASS | T08→T09 HARD dep used (T07→T08 is SOFT, confirmed) |
 | AC-2-03 | resolveBlockedTasks() — T08 unblocked after T07 complete | PASS | Same function, same test file as AC-2-02 |
 | AC-2-04 | filterApplicableTasks() excludes school tasks for non-family | PASS | AND logic, "ALL" sentinel, defensive JSON parse, derivePersonaKey() co-located |
-| AC-2-05 | POST /onboarding/profile creates UserProfile + all RoadmapEntries | — | |
+| AC-2-05 | POST /onboarding/profile creates UserProfile + all RoadmapEntries | PASS | Shared auth middleware + filter→resolve→score pipeline. ArrivalTiming removed — exact date required. 10 integration tests pass. |
 | AC-2-06 | GET /roadmap — correct topThree for golden1 scenario | — | |
 | AC-2-07 | POST /roadmap/tasks/:taskId/complete → updated topThree | — | |
 | AC-2-08 | Complete T07 → T08 appears in next topThree | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-2-05] POST /onboarding/profile implemented in features/onboarding/. Shared auth middleware created at shared/middleware/auth.ts — reusable preHandler for all future authenticated routes. Pipeline: filterApplicableTasks → resolveBlockedTasks → scoreTask → createMany(). Future arrivalDate sets scoringArrivalDate=null (urgency=0). ArrivalTiming enum removed — arrivalDate always required. 10 integration tests hit real DB.
 - [AC-2-04] filterApplicableTasks() + derivePersonaKey() implemented in core/priority/filter.ts. AND logic across all 3 JSON fields. "ALL" sentinel means no restriction. Malformed JSON defensively treated as [] (task excluded). derivePersonaKey() maps familySituation only — visaType ignored. 24 tests pass.
 - [AC-2-02/03] resolveBlockedTasks() and getAffectedTasks() implemented in core/dependencies/resolver.ts. Key: T07→T08 is SOFT (confirmed by domain expert — IRD can be applied with overseas bank details). AC-2-02/03 test T08→T09 HARD dep instead. getAffectedTasks() returns direct dependents only (not transitive). 21 tests pass.
 - [AC-2-01] scoreTask() TDD implementation complete. Key corrections: Golden 2 expected T08=118 (not 143) — Day 2 is not in T08 urgency range (Days 4-14). Month 10-11 T16 bonus uses accurate day range 275-336 days. February-March tax bonus only applies after first year. All 20 tests pass including 4 golden examples. Vitest setup added to API workspace.

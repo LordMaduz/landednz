@@ -5,13 +5,17 @@ import { db } from './shared/db'
 import { registerErrorHandler } from './shared/plugins/error-handler'
 import { registerHealthRoutes } from './features/health/health.route'
 import { registerAuthRoutes } from './features/auth/auth.route'
+import { registerOnboardingRoutes } from './features/onboarding/onboarding.route'
+import { registerAuthDecoration } from './shared/middleware/auth'
 
 function buildApp() {
   const app = Fastify({ logger: false })
 
   registerErrorHandler(app)
+  registerAuthDecoration(app) // must register before any route that uses authenticateRequest
   registerHealthRoutes(app)
   registerAuthRoutes(app)
+  registerOnboardingRoutes(app)
 
   return app
 }
