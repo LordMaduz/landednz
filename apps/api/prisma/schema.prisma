@@ -142,7 +142,10 @@ model TaskContentVariant {
   steps             String          // JSON array of ordered step strings
   documentsRequired String          // JSON array of document strings
   commonMistakes    String          // JSON array of mistake strings
+  watchOuts         String          @default("[]") // JSON array of watch-out strings
   cost              String?         // "Free" | "NZD $XX" | null
+  professionalAdviceRequired Boolean @default(false)
+  professionalAdviceNote     String?
   sourceUrl         String          // Required — save blocked if empty
   contentVersion    Int             @default(1)
 

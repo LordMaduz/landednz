@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { authenticateRequest } from '../../shared/middleware/auth';
-import { getRoadmap, completeTask, bulkOverride } from './roadmap.service';
-import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse } from './roadmap.types';
+import { getRoadmap, completeTask, bulkOverride, getTaskDetail } from './roadmap.service';
+import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types';
 
 export function registerRoadmapRoutes(app: FastifyInstance): void {
   // GET /roadmap
@@ -28,6 +28,20 @@ export function registerRoadmapRoutes(app: FastifyInstance): void {
     async (request, reply) => {
       const { completedTaskIds } = request.body;
       const result = await bulkOverride(request.userId, completedTaskIds ?? []);
+      reply.status(200).send(result);
+    },
+  );
+
+  // GET /roadmap/tasks/:taskId
+  // Returns full task detail for Layer 2 (expanded task card).
+  // 403 if task is PREMIUM and user has no active subscription.
+  // 404 if task not in user's roadmap.
+  app.get<{ Params: { taskId: string }; Reply: TaskDetailResponse }>(
+    '/roadmap/tasks/:taskId',
+    { preHandler: authenticateRequest },
+    async (request, reply) => {
+      const { taskId } = request.params;
+      const result = await getTaskDetail(request.userId, taskId);
       reply.status(200).send(result);
     },
   );

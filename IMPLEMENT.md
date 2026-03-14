@@ -11,7 +11,7 @@
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
-| 2 — Roadmap Engine (~100h) | IN PROGRESS | 9 / 15 | — |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 10 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -61,7 +61,7 @@
 | AC-2-07 | POST /roadmap/tasks/:taskId/complete → updated topThree | PASS | completeTask() with targeted recomputation via getAffectedTasks(). 5 integration tests pass. |
 | AC-2-08 | Complete T07 → T08 appears in next topThree | PASS | Tested as T06 complete → T07 unblocked (T06→T07 HARD dep is correct). unlockedTasks=['T07'] verified. |
 | AC-2-09 | bulk-override → correct topThree | PASS | bulkOverride() with updateMany + full recomputation. 6 integration tests. IDs not in roadmap silently ignored. |
-| AC-2-10 | PREMIUM task → 403 for unsubscribed user | — | |
+| AC-2-10 | PREMIUM task → 403 for unsubscribed user | PASS | GET /roadmap/tasks/:taskId with PREMIUM gate. Schema migrated: watchOuts + professionalAdviceRequired + professionalAdviceNote added to TaskContentVariant. 5 integration tests pass. |
 | AC-2-11 | Daily recalculation job updates T16 score | — | |
 | AC-2-12 | Roadmap reveal screen layout correct | — | |
 | AC-2-13 | Task card all 7 states render without crash | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-2-10] GET /roadmap/tasks/:taskId: PREMIUM gate checks Subscription.isActive — 403 PREMIUM_REQUIRED if no record or isActive:false. Schema migrated: watchOuts (JSON array, default "[]"), professionalAdviceRequired (boolean, default false), professionalAdviceNote (nullable string) added to TaskContentVariant. relatedTasks always [] in MVP (no join model). personaKey fallback chain: personaKey → solo_aewv. 98/98 tests pass.
 - [AC-2-09] POST /roadmap/bulk-override: updateMany for atomic bulk mark, full recomputation (resolveBlockedTasks + scoreTask for ALL non-COMPLETE tasks — not targeted). completionMethod=BULK_OVERRIDE. Task IDs not in roadmap silently ignored (Option A — keeps `skipped` semantically clean). 93/93 tests pass.
 - [AC-2-07/08] POST /roadmap/tasks/:taskId/complete implemented. Targeted recomputation: only direct dependents via getAffectedTasks() rescored — not full roadmap. unlockedTasks tracks isBlocked true→false transitions. AC-2-08 uses T06→T07 HARD dep (spec comment about T07→T08 was stale — T07→T08 is SOFT per pre-analysis). vitest.config.ts fileParallelism:false prevents concurrent canonical task ID conflicts between test files. 87/87 tests pass.
 - [AC-2-06] GET /roadmap implemented in features/roadmap/. Single Prisma query with deep includes (Task + TaskContentVariants + HARD deps with prerequisite names). topThree filter: status !== COMPLETE AND isBlocked === false, sorted priorityScore DESC. consequenceLine fallback: personaKey → solo_aewv → ''. Tests use canonical task IDs (T06/T07/T08/T03) so scoreTask() applies correct persona weights + urgency bonuses for golden1 scores. 7 integration tests pass.

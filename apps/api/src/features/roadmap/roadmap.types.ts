@@ -40,3 +40,25 @@ export interface BulkOverrideResponse {
   skipped: string[];       // Task IDs already COMPLETE — silently skipped
   newTopThree: RoadmapTask[];
 }
+
+export interface TaskDetailResponse {
+  taskId: string;
+  name: string;
+  status: TaskStatus;
+  isBlocked: boolean;
+  estimatedDuration: string;
+  processingTime: string | null;
+  governmentSourceUrl: string;
+  taskType: TaskType;
+
+  // From TaskContentVariant for user's personaKey (fallback: solo_aewv)
+  consequenceLine: string;
+  steps: string[];
+  documentsRequired: string[];
+  commonMistakes: string[];
+  watchOuts: string[];
+  cost: string | null;
+  relatedTasks: { taskId: string; name: string; relationship: string }[];  // always [] in MVP
+  professionalAdviceRequired: boolean;
+  professionalAdviceNote: string | null;
+}

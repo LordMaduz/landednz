@@ -8,7 +8,7 @@ import { AppError } from '../../shared/errors';
 import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver';
 import { scoreTask } from '../../core/priority/scoring';
 import type { PersonaKey } from '../../shared/types';
-import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse } from './roadmap.types';
+import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types';
 
 export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
   // 1. Look up UserProfile — need personaKey for consequenceLine resolution
@@ -329,5 +329,78 @@ export async function bulkOverride(
     marked: toMark,
     skipped,
     newTopThree: roadmap.topThree,
+  };
+}
+
+// ─── getTaskDetail() ──────────────────────────────────────────────────────────
+
+export async function getTaskDetail(
+  userId: string,
+  taskId: string,
+): Promise<TaskDetailResponse> {
+  // 1. Fetch UserRoadmapEntry with Task + content variants in one query
+  const entry = await db.userRoadmapEntry.findUnique({
+    where: { userId_taskId: { userId, taskId } },
+    include: {
+      task: {
+        include: { contentVariants: true },
+      },
+    },
+  });
+
+  if (!entry) {
+    throw new AppError('TASK_NOT_FOUND', `Task ${taskId} not found in user roadmap`, 404);
+  }
+
+  const { task } = entry;
+
+  // 2. PREMIUM gate — check subscription before returning any detail
+  if (task.taskType === 'PREMIUM') {
+    const sub = await db.subscription.findUnique({ where: { userId } });
+    if (!sub || !sub.isActive) {
+      throw new AppError('PREMIUM_REQUIRED', 'An active subscription is required to view this task', 403);
+    }
+  }
+
+  // 3. Resolve content variant: personaKey match → fallback to solo_aewv
+  const profile = await db.userProfile.findUnique({ where: { userId } });
+  if (!profile) {
+    throw new AppError('PROFILE_NOT_FOUND', 'No profile found for this user', 404);
+  }
+
+  const variant =
+    task.contentVariants.find(v => v.personaKey === profile.personaKey) ??
+    task.contentVariants.find(v => v.personaKey === 'solo_aewv');
+
+  // 4. Parse JSON array fields; fall back to empty arrays if no variant exists
+  const parseJsonArray = (raw: string | undefined): string[] => {
+    if (!raw) return [];
+    try {
+      return JSON.parse(raw) as string[];
+    } catch {
+      return [];
+    }
+  };
+
+  logger.info({ userId, taskId, taskType: task.taskType }, 'getTaskDetail fetched');
+
+  return {
+    taskId: task.id,
+    name: task.name,
+    status: entry.status,
+    isBlocked: entry.isBlocked,
+    estimatedDuration: task.estimatedDuration,
+    processingTime: task.processingTime ?? null,
+    governmentSourceUrl: task.governmentSourceUrl,
+    taskType: task.taskType,
+    consequenceLine: variant?.consequenceLine ?? '',
+    steps: parseJsonArray(variant?.steps),
+    documentsRequired: parseJsonArray(variant?.documentsRequired),
+    commonMistakes: parseJsonArray(variant?.commonMistakes),
+    watchOuts: parseJsonArray(variant?.watchOuts),
+    cost: variant?.cost ?? null,
+    relatedTasks: [],  // no join model in MVP — deferred to v2
+    professionalAdviceRequired: variant?.professionalAdviceRequired ?? false,
+    professionalAdviceNote: variant?.professionalAdviceNote ?? null,
   };
 }
