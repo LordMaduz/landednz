@@ -8,7 +8,7 @@ import { AppError } from '../../shared/errors';
 import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver';
 import { scoreTask } from '../../core/priority/scoring';
 import type { PersonaKey } from '../../shared/types';
-import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse } from './roadmap.types';
+import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse } from './roadmap.types';
 
 export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
   // 1. Look up UserProfile — need personaKey for consequenceLine resolution
@@ -221,5 +221,113 @@ export async function completeTask(
     status: 'COMPLETE',
     newTopThree: roadmap.topThree,
     unlockedTasks,
+  };
+}
+
+// ─── bulkOverride() ───────────────────────────────────────────────────────────
+
+export async function bulkOverride(
+  userId: string,
+  taskIds: string[],
+  currentDate: Date = new Date(),
+): Promise<BulkOverrideResponse> {
+  // 1. Fetch all current entries to classify the requested task IDs
+  const allEntries = await db.userRoadmapEntry.findMany({ where: { userId } });
+  const entryMap = new Map(allEntries.map(e => [e.taskId, e]));
+
+  // 2. Split requested IDs — silently ignore any not in user's roadmap
+  const toMark: string[] = [];
+  const skipped: string[] = [];
+  for (const taskId of taskIds) {
+    const entry = entryMap.get(taskId);
+    if (!entry) continue; // not in roadmap — silently ignore per design decision
+    if (entry.status === 'COMPLETE') {
+      skipped.push(taskId);
+    } else {
+      toMark.push(taskId);
+    }
+  }
+
+  // 3. Bulk mark toMark entries COMPLETE with BULK_OVERRIDE in one query
+  if (toMark.length > 0) {
+    await db.userRoadmapEntry.updateMany({
+      where: { userId, taskId: { in: toMark } },
+      data: {
+        status: 'COMPLETE',
+        completedAt: currentDate,
+        completionMethod: 'BULK_OVERRIDE',
+      },
+    });
+  }
+
+  // 4. Fetch profile and fresh entries (reflecting new completions) in parallel
+  const [profile, freshEntries] = await Promise.all([
+    db.userProfile.findUnique({ where: { userId } }),
+    db.userRoadmapEntry.findMany({ where: { userId } }),
+  ]);
+
+  if (!profile) {
+    throw new AppError('PROFILE_NOT_FOUND', 'No profile found for this user', 404);
+  }
+
+  // 5. Build updated completedTaskIds set
+  const completedTaskIds = freshEntries
+    .filter(e => e.status === 'COMPLETE')
+    .map(e => e.taskId);
+
+  // 6. Full recomputation — all non-COMPLETE tasks rescored
+  // Multiple simultaneous completions can cascade through the dependency graph
+  // in ways that targeted per-task recomputation would miss.
+  const roadmapTaskIds = allEntries.map(e => e.taskId);
+  const allTasks = await db.task.findMany({
+    where: { id: { in: roadmapTaskIds } },
+    include: {
+      dependencies: {
+        select: { prerequisiteId: true, dependencyType: true },
+      },
+    },
+  });
+
+  const isPreArrival = profile.arrivalDate > currentDate;
+  const scoringArrivalDate = isPreArrival ? null : profile.arrivalDate;
+
+  // Resolve blocked status for all tasks at once (efficient — single pass)
+  const resolvedTasks = resolveBlockedTasks({
+    tasks: allTasks.map(t => ({ id: t.id, dependencies: t.dependencies })),
+    completedTaskIds,
+  });
+  const resolvedMap = new Map(resolvedTasks.map(r => [r.taskId, r]));
+
+  // Rescore and update each non-COMPLETE task
+  const nonCompleteTasks = allTasks.filter(t => !completedTaskIds.includes(t.id));
+  for (const task of nonCompleteTasks) {
+    const resolved = resolvedMap.get(task.id)!;
+    const scored = scoreTask({
+      task: { id: task.id, basePriority: task.basePriority, phase: task.phase },
+      personaKey: profile.personaKey as PersonaKey,
+      arrivalDate: scoringArrivalDate,
+      currentDate,
+      isBlocked: resolved.isBlocked,
+      isComplete: false,
+    });
+
+    await db.userRoadmapEntry.update({
+      where: { userId_taskId: { userId, taskId: task.id } },
+      data: { isBlocked: resolved.isBlocked, priorityScore: scored.finalPriority },
+    });
+  }
+
+  logger.info(
+    { userId, marked: toMark.length, skipped: skipped.length, recomputed: nonCompleteTasks.length },
+    'Bulk override complete, full recomputation done',
+  );
+
+  // 7. Get updated topThree
+  const roadmap = await getRoadmap(userId);
+
+  return {
+    marked: toMark,
+    skipped,
+    newTopThree: roadmap.topThree,
   };
 }

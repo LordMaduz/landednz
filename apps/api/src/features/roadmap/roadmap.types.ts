@@ -30,3 +30,13 @@ export interface TaskCompleteResponse {
   newTopThree: RoadmapTask[];
   unlockedTasks: string[];  // Task IDs that transitioned isBlocked true → false
 }
+
+export interface BulkOverrideRequest {
+  completedTaskIds: string[];
+}
+
+export interface BulkOverrideResponse {
+  marked: string[];        // Task IDs successfully marked COMPLETE in this request
+  skipped: string[];       // Task IDs already COMPLETE — silently skipped
+  newTopThree: RoadmapTask[];
+}
