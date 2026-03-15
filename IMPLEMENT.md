@@ -11,7 +11,7 @@
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
-| 2 — Roadmap Engine (~100h) | IN PROGRESS | 11 / 15 | — |
+| 2 — Roadmap Engine (~100h) | IN PROGRESS | 12 / 15 | — |
 | 3 — Monetisation (~55h) | BLOCKED | 0 / 12 | Requires Phase 2 PASS |
 | 4 — AI Chat Basic (~40h) | BLOCKED | 0 / 15 | Requires Phase 3 PASS |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
@@ -66,7 +66,7 @@
 | AC-2-12 | Roadmap reveal screen layout correct | — | |
 | AC-2-13 | Task card all 7 states render without crash | — | |
 | AC-2-14 | Task completion micro-animation works | — | |
-| AC-2-15 | KB seed: Task count = 21, Variant count >= 42 | — | |
+| AC-2-15 | KB seed: Task count = 21, Variant count >= 42 | PASS | seed-knowledge-base.ts populated with verified T01-T21 content from manual verification. 21 tasks, 12 dependencies, 42 content variants. validate-seed-content.ts created for post-seed validation. All URL corrections applied. |
 
 **Phase 2 Gate:** BLOCKED
 
