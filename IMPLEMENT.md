@@ -13,7 +13,7 @@
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
-| 4 — AI Chat Basic (~40h) | IN PROGRESS | 0 / 15 | — |
+| 4 — AI Chat Basic (~40h) | IN PROGRESS | 1 / 15 | — |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
 
 ---
@@ -101,7 +101,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-4-01 | POST /chat/sessions → entry-point-specific opening message | — | |
+| AC-4-01 | POST /chat/sessions → entry-point-specific opening message | PASS | TDD implementation: buildChatOpeningMessage() + createChatSession() + subscription gate. 12/12 tests pass. TASK_CARD T08 → mentions IRD. AC-4-13 subscription 403 verified. |
 | AC-4-02 | Messages endpoint streams valid SSE events | — | |
 | AC-4-03 | SSE chunks arrive progressively — not buffered | — | |
 | AC-4-04 | CRISIS_SIGNAL → Lifeline NZ leads response | — | |
@@ -113,7 +113,7 @@
 | AC-4-10 | buildChatOpeningMessage() entry-point-specific (no generic "Hi!") | — | |
 | AC-4-11 | AIFailureError → SSE error event, not 500 crash | — | |
 | AC-4-12 | Chat UI — streaming progressive, citation tappable | — | |
-| AC-4-13 | POST /chat/sessions → 403 for unsubscribed | — | |
+| AC-4-13 | POST /chat/sessions → 403 for unsubscribed | PASS | Subscription gate implemented in routes.ts. Returns 403 SUBSCRIPTION_REQUIRED for users without active subscription. Verified with real HTTP testing. |
 | AC-4-14 | Conversation history included on subsequent turns | — | |
 | AC-4-15 | ChatMessage persisted both roles — retrievedChunks + guardrailFlags populated | — | |
 
@@ -164,6 +164,8 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-4-01/13] Code-reviewer: PASS — Implementation verified with real Supabase Auth-generated JWT tokens and HTTP requests. Zero constitutional violations (C01/C03/C04/C07). Excellent error handling, comprehensive test coverage (12/12 pass), production-ready code. Real HTTP verification: AC-4-01 (subscribed user + T09 → tax opening message), AC-4-13 (unsubscribed user → 403 SUBSCRIPTION_REQUIRED). Manual verification achieved "real confidence" without test manipulation.
+- [AC-4-01] buildChatOpeningMessage(): Core prompt function created in core/prompts/registry.ts (pure function, zero deps). Entry-point-specific messages: TASK_CARD/EMAIL_DEEPLINK reference task name + persona context, ROADMAP/NAVIGATION reference completion count + city. Opening message is static text (no Claude API call). createChatSession() fetches user profile + task name, creates DB session. Route includes subscription gate (AC-4-13): checks Subscription.isActive, returns 403 SUBSCRIPTION_REQUIRED if false. Constitutional compliance: C04 (all prompts in registry), C01 (no feature cross-imports), C03 (no SDK import for this AC). 12/12 tests pass including T08 IRD verification.
 - [AC-2-11] recalculateAllRoadmaps(): processes all users sequentially, re-runs resolveBlockedTasks + scoreTask with currentDate for all non-COMPLETE entries. POST /admin/recalculate protected by optional ADMIN_API_KEY env var (X-Admin-Key header). If ADMIN_API_KEY not set, check skipped (dev convenience). Must use canonical task ID T16 in tests — scoreTask() checks taskId === 'T16' for persona weights + urgency bonuses. 101/101 tests pass.
 - [AC-2-10] GET /roadmap/tasks/:taskId: PREMIUM gate checks Subscription.isActive — 403 PREMIUM_REQUIRED if no record or isActive:false. Schema migrated: watchOuts (JSON array, default "[]"), professionalAdviceRequired (boolean, default false), professionalAdviceNote (nullable string) added to TaskContentVariant. relatedTasks always [] in MVP (no join model). personaKey fallback chain: personaKey → solo_aewv. 98/98 tests pass.
 - [AC-2-09] POST /roadmap/bulk-override: updateMany for atomic bulk mark, full recomputation (resolveBlockedTasks + scoreTask for ALL non-COMPLETE tasks — not targeted). completionMethod=BULK_OVERRIDE. Task IDs not in roadmap silently ignored (Option A — keeps `skipped` semantically clean). 93/93 tests pass.

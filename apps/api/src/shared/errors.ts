@@ -13,6 +13,8 @@ export type ErrorCode =
   | 'PROFILE_EXISTS'
   | 'TASK_ALREADY_COMPLETE'
   | 'INTERNAL_ERROR'
+  | 'USER_NOT_FOUND'
+  | 'SUBSCRIPTION_REQUIRED'
 
 export class AppError extends Error {
   constructor(
