@@ -16,12 +16,21 @@ Human must review and confirm before /rpi:plan proceeds.
 
 **Step 1 — Orient**
 Read in this order:
-1. `rpi/[phase]/research/pre-analysis.md` — if exists, read FIRST for pre-resolved ambiguities and canonical values
-2. `IMPLEMENT.md` — current state, any prior notes on this phase
-3. `rpi/$0/REQUEST.md` — scope, AC list, failure points, skills to load
-4. The relevant AC definition from REQUEST.md for the specific AC being researched
-5. Referenced sections of `12-build-specification.md` (the functional contract for this AC)
-6. Relevant sections of `apps/api/CLAUDE.md` or `apps/mobile/CLAUDE.md`
+1. `rpi/$0/research/pre-analysis.md` — if exists, read FIRST for pre-resolved ambiguities and canonical values
+2. `rpi/$0/research/$1-instructions.md` — if this file exists, read it immediately. It contains AC-specific requirements that override standard research behaviour. Follow its instructions exactly for this AC.
+3. `IMPLEMENT.md` — current state, any prior notes on this phase
+4. `rpi/$0/REQUEST.md` — scope, AC list, failure points, skills to load
+5. The relevant AC definition from REQUEST.md for the specific AC being researched
+6. Referenced sections of `12-build-specification.md` (the functional contract for this AC)
+7. Relevant sections of `apps/api/CLAUDE.md` or `apps/mobile/CLAUDE.md`
+
+**Step 2 — AC-2-15 Automation (if applicable)**
+If researching AC-2-15, run automation before standard research:
+1. Generate URL checker script: `apps/api/scripts/check-ac-2-15-urls.ts`
+2. Run URL liveness check against all source URLs in landednz_kb_master_COMPLETE_v1.md
+3. Generate verification report template: `rpi/phase2-roadmap-engine/research/AC-2-15-verification-report.md`
+4. Present findings and template to human
+5. Continue with standard research below
 
 **Step 2 — Research**
 For the specific AC:
