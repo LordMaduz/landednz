@@ -57,6 +57,10 @@ Commands:
 
 Phase sequence: 1 (Foundation) → 2 (Roadmap Engine) → 3 (Monetisation) → 4 (AI Chat) → 5 (RAG + Launch)
 
+### RPI Workflow Optimizations
+
+- **AC-2-15 research automation** — `/rpi:research phase2 AC-2-15` auto-generates URL liveness checker and verification report template. Reduces manual URL checking time while preserving sequential task verification approach required for knowledge base content accuracy.
+
 ## Phase Reference
 
 | Phase | Status | Focus | Hours | AC Count |

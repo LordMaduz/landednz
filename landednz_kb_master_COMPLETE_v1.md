@@ -147,7 +147,7 @@ Auckland is New Zealand's largest city and geographically sprawling — the dist
 WHAT_AND_WHY:
 Auckland sits on a narrow isthmus between two harbours, which means its road network has natural pinch points — particularly the Auckland Harbour Bridge connecting the North Shore to the CBD, and the city centre motorway network. Peak hour traffic (7–9am and 4–6:30pm) on these corridors can turn a 15km drive into a 45–60 minute commute.
 
-Unlike Singapore or Mumbai, Auckland has limited public transport outside the main rail corridors and a few busway routes. Most residents depend on cars for suburb-to-suburb trips. The public transport network is strongest along: the Southern Line (Papakura to Britomart), the Western Line (Swanson to Britomart), the Eastern Line (Manukau/Onehunga to Britomart), and the Northern Busway (Albany to Britomart via the North Shore).
+Unlike Singapore or Mumbai, Auckland has limited public transport outside the main rail corridors and a few busway routes. Most residents depend on cars for suburb-to-suburb trips. The public transport network is strongest along: the South City Line (Papakura to Britomart), the East West Line (Swanson to Britomart), the Eastern Line (Manukau/Onehunga to Britomart), and the Northern Busway (Albany to Britomart via the North Shore). Note: Train line names changed in 2026 with City Rail Link opening.
 
 For migrants arriving without a car, proximity to a rail station or the Northern Busway significantly improves mobility during the first weeks. For migrants with a car, commute research by Google Maps in peak hour mode is essential before committing to a suburb.
 
@@ -188,7 +188,7 @@ KEY_FACTS:
 - Auckland peak hour traffic (7–9am, 4–6:30pm) can double or triple off-peak commute times on motorway corridors [Type C — market/infrastructure conditions]
 - University of Auckland main campus is in Grafton / city centre — central suburbs minimise Karthik's commute [Type C — geographic fact]
 - Auckland weekly rents for 2-bedroom properties range approximately $550–$1,100/week depending on suburb [Type C — market, check trademe.co.nz for current rates]
-- Auckland's public transport is strongest along rail lines (Southern, Western, Eastern) and the Northern Busway [Type C — infrastructure, check at.govt.nz]
+- Auckland's public transport is strongest along rail lines (South City, East West, Eastern) and the Northern Busway [Type C — infrastructure, check at.govt.nz] — line names updated 2026 with City Rail Link opening
 - South Asian community concentrations: Botany/Howick (East), Papatoetoe/Manurewa (South), Henderson/Massey (West), Albany (North Shore) [Type C — community, verify via local community groups]
 - Google Maps peak hour simulation (set future departure time) is the most reliable free tool for Auckland commute research [Type C — advisory]
 
@@ -315,7 +315,7 @@ Options in order of suitability for a 2–4 week stay:
 
 - **Serviced apartments (best):** Kitchen, laundry, weekly rates. Quest Serviced Apartments, Adina Apartment Hotels, and Barclay Suites in Auckland CBD are established options. Weekly rates approximately $700–$1,200/week for a 1-bedroom. Book direct for best rates.
 - **Airbnb weekly rentals:** Good value for 2+ weeks. Filter for "entire place" with kitchen. Set weekly view for pricing. CBD, Newmarket, Parnell, and Mt Eden have good supply.
-- **University of Auckland transitional accommodation:** UoA offers short-term accommodation for new students in some periods. Contact UoA Accommodation Office (accommodation@auckland.ac.nz) before departure — options not always publicly advertised.
+- **University of Auckland transitional accommodation:** UoA offers short-term accommodation for new students in some periods. Contact UoA Accommodation Office (accom@auckland.ac.nz) before departure — options not always publicly advertised.
 - **Community homestay:** Indian and Sri Lankan community networks (Facebook groups: "Indians in Auckland NZ", "Sri Lankans in New Zealand") sometimes offer homestay accommodation. Cheaper and culturally familiar. Less reliable to book in advance.
 
 **Step 3 — Confirm key requirements before booking**
@@ -333,7 +333,7 @@ Save your booking confirmation as a PDF. This document is your proof of NZ addre
 - SIM card (T06 — no address required but useful to have)
 
 **Step 5 — Note check-in logistics for arrival day**
-Confirm: airport transfer options, check-in time (especially for late evening flights), key collection process. Auckland Airport (AKL) is in Mangere, South Auckland — approximately 25–35 minutes from CBD by car off-peak, longer in traffic. Super Shuttle and SkyBus are standard airport transfer options.
+Confirm: airport transfer options, check-in time (especially for late evening flights), key collection process. Auckland Airport (AKL) is in Mangere, South Auckland — approximately 25–35 minutes from CBD by car off-peak, longer in traffic. AirportLink bus and Super Shuttle are standard airport transfer options.
 
 ---
 
@@ -367,7 +367,7 @@ NUMBER_TYPES:
 PERSONA_CONSTRAINED_COUPLE:
   Priya and Karthik need a 1-bedroom or studio serviced apartment for 2–4 weeks. A fully-equipped kitchen is important — cooking at home during the temporary stay significantly reduces daily costs versus eating out in Auckland (restaurant meals $20–40/person). Book in the CBD or Newmarket fringe: this gives Karthik easy access to University of Auckland campus for orientation tasks and Priya easy access to bank branches and CBD employers for networking/job search.
 
-  Karthik should contact the University of Auckland Accommodation Office (accommodation@auckland.ac.nz) before departure. UoA sometimes has transitional rooms available for new postgraduate students arriving mid-year. If available, this could reduce temporary accommodation costs significantly and place Karthik close to campus from Day 1.
+  Karthik should contact the University of Auckland Accommodation Office (accom@auckland.ac.nz) before departure. UoA sometimes has transitional rooms available for new postgraduate students arriving mid-year. If available, this could reduce temporary accommodation costs significantly and place Karthik close to campus from Day 1.
 
   The booking confirmation document must clearly show both Priya's and Karthik's names if possible — both will need a NZ address for their respective bank account openings and IRD applications.
 
@@ -413,14 +413,14 @@ SOURCES:
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
-    notes: "Contact point for UoA transitional accommodation. Email: accommodation@auckland.ac.nz"
+    notes: "Contact point for UoA transitional accommodation. Email: accom@auckland.ac.nz"
 
   - title: "Auckland Transport — Getting to Auckland from the airport"
     url: "https://at.govt.nz/bus-train-ferry/bus-services/airport-services"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
-    notes: "SkyBus and other airport PT options."
+    notes: "AirportLink bus and other airport PT options."
 
   - title: "Airbnb Auckland"
     url: "https://www.airbnb.co.nz"
@@ -1601,7 +1601,7 @@ KiwiSaver is a defined contribution retirement savings scheme established under 
 
 **Key mechanics for skilled migrants:**
 
-Employee contributions: 3%, 4%, 6%, 8%, or 10% of gross salary — your choice. The default if you do not specify is 3%.
+Employee contributions: 3%, 4%, 6%, 8%, or 10% of gross salary — your choice. The default if you do not specify is 3.5% (increased from 3% effective April 1, 2026).
 
 Employer contributions: Your employer must contribute a minimum of 3% of your gross salary — this is on top of your salary, not deducted from it. It is effectively a 3% salary top-up that you receive only if you are in KiwiSaver.
 
@@ -1630,7 +1630,7 @@ Key criteria when choosing:
 If you do not choose, you will be assigned to your employer's default provider.
 
 **Step 3 — Choose your contribution rate**
-Options: 3%, 4%, 6%, 8%, 10% of gross salary. 3% is the minimum and the default. Your employer's 3% is on top of whichever rate you choose.
+Options: 3%, 4%, 6%, 8%, 10% of gross salary. 3% is the minimum; 3.5% is the default (increased from 3% effective April 1, 2026). Your employer's 3% is on top of whichever rate you choose.
 
 **Step 4 — Complete the KS2 form (if choosing your own provider)**
 Download the KS2 form: https://www.ird.govt.nz/forms-guides/number/forms-100-199/ks2-kiwisaver-deduction-notice
@@ -2207,7 +2207,7 @@ Because ACC provides universal accident cover, NZ law prevents most personal inj
 
 **Levies:**
 ACC is funded through three levies:
-1. Earner levy: deducted from your salary by your employer — approximately 1.53% of earnings up to a maximum [Type B — ACC levy schedule, reviewed annually]
+1. Earner levy: deducted from your salary by your employer — approximately 1.45% of earnings up to a maximum [Type B — ACC levy schedule, reviewed annually]
 2. Employer levy: paid by your employer — varies by industry risk classification [Type B — ACC levy schedule]
 3. Motor vehicle levy: included in vehicle registration fees [Type B — NZTA/ACC]
 
@@ -2242,7 +2242,7 @@ KEY_FACTS:
 - ACC does NOT cover illness, disease, or gradual conditions — only accident-related injuries [Type A — Accident Compensation Act 2001]
 - ACC weekly compensation for work-incapacity is approximately 80% of pre-injury earnings up to the maximum liable earnings [Type A — Accident Compensation Act 2001, Section 103]
 - ACC earner levy is automatically deducted from salary — no enrolment needed [Type B — ACC administrative]
-- ACC earner levy rate: approximately 1.53% of earnings (subject to annual review) [Type B — ACC levy schedule, reviewed annually]
+- ACC earner levy rate: approximately 1.45% of earnings (subject to annual review) [Type B — ACC levy schedule, reviewed annually]
 - Claims are lodged by your healthcare provider, not directly by you in most cases [Type B — ACC administrative process]
 - Maximum earner levy applies to earnings up to a legislated cap [Type A — Accident Compensation Act 2001, Section 168]
 - Private health insurance is recommended to cover illness, specialists, and elective treatment not covered by ACC [Type C — market]
@@ -2257,7 +2257,7 @@ NUMBER_TYPES:
     caveat: "State as confirmed fact. Subject to maximum liable earnings cap — confirm current cap at acc.co.nz."
     last_confirmed: 2026-03-03
 
-  - figure: "1.53% earner levy rate"
+  - figure: "1.45% earner levy rate"
     type: B
     type_label: Administrative
     source: ACC levy schedule (reviewed annually)
@@ -2380,7 +2380,7 @@ Unlawful rent increases or excessive bond: You can dispute these through Tenancy
 **Dispute resolution pathway:**
 1. Raise issue with landlord/property manager in writing first — keep records.
 2. If unresolved, contact Tenancy Services mediation (free): 0800 836 262 or online at tenancy.govt.nz.
-3. If mediation fails, apply to the Tenancy Tribunal (hearing fee $20.44 [Type B — Tenancy Services, subject to revision]).
+3. If mediation fails, apply to the Tenancy Tribunal (hearing fee $28 [Type B — Tenancy Services, subject to revision]).
 4. Tenancy Tribunal is a quasi-judicial body that can order rent repayment, compensation, repairs, and penalties against landlords.
 
 ---
@@ -2403,7 +2403,7 @@ HOW_TO:
 1. Document everything — dates, communications, photos if relevant.
 2. Contact Tenancy Services mediation: tenancy.govt.nz or 0800 836 262.
 3. A mediator will contact both parties and attempt to resolve the dispute. Mediation is free and confidential.
-4. If mediation fails, apply to the Tenancy Tribunal online at tenancy.govt.nz/disputes/apply-to-tribunal. Hearing fee: $20.44 [Type B].
+4. If mediation fails, apply to the Tenancy Tribunal online at tenancy.govt.nz/disputes/apply-to-tribunal. Hearing fee: $28 [Type B].
 5. Tribunal hearings are held in person (or by AVL). Both parties present their case. Decisions are legally binding.
 
 **At end of tenancy:**
@@ -2421,7 +2421,7 @@ KEY_FACTS:
 - Tenant notice to end periodic tenancy: 28 days [Type A — RTA Section 51]
 - Landlord notice to end periodic tenancy: 63 days (no reason) or 42 days (property sale) [Type A — RTA Section 53]
 - Tenancy Services mediation is free [Type B — Tenancy Services administrative]
-- Tenancy Tribunal application fee: $20.44 [Type B — Tenancy Services, subject to revision]
+- Tenancy Tribunal application fee: $28 [Type B — Tenancy Services, subject to revision]
 - Retaliatory notice (landlord evicting tenant for asserting rights) is unlawful [Type A — RTA Section 54A]
 - Healthy homes standards must be met by all rental properties [Type A — Healthy Homes Standards 2019]
 
@@ -2449,7 +2449,7 @@ NUMBER_TYPES:
     caveat: "State as confirmed fact."
     last_confirmed: 2026-03-03
 
-  - figure: "$20.44 Tenancy Tribunal fee"
+  - figure: "$28 Tenancy Tribunal fee"
     type: B
     type_label: Administrative
     source: Tenancy Services fee schedule
@@ -2767,7 +2767,7 @@ A basic vision test is conducted at the licensing agent. Standard vision require
 Multiple-choice test on a computer terminal. 35 questions — must pass with 32/35 correct (32 correct or more). Test takes approximately 30 minutes. If you fail, you can resit after a waiting period.
 
 **Step 6 — Pay conversion fees and receive your NZ licence**
-Current conversion fee: approximately $51.10 [Type B — NZTA fee schedule, subject to revision]. Your NZ licence is mailed to your registered address within 5–10 working days [Type B — NZTA processing time].
+Current conversion fee: approximately $52.10 [Type B — NZTA fee schedule, subject to revision]. Your NZ licence is mailed to your registered address within 5–10 working days [Type B — NZTA processing time].
 
 ---
 
@@ -2777,7 +2777,7 @@ KEY_FACTS:
 - Indian and Sri Lankan licence holders must pass a knowledge test (no practical road test required for conversion) [Type B — NZTA administrative policy]
 - Singapore licence holders may convert without a knowledge test (on NZTA recognised list) [Type B — NZTA policy, confirm current list]
 - Knowledge test: 35 questions, 32 correct required to pass [Type B — NZTA test standard]
-- Conversion fee: approximately $51.10 [Type B — NZTA fee schedule, confirm at nzta.govt.nz]
+- Conversion fee: approximately $52.10 [Type B — NZTA fee schedule, confirm at nzta.govt.nz]
 - Open road speed limit: 100 km/h [Type A — Land Transport Rule: Speed Limits 2022]
 - Urban speed limit: 50 km/h unless otherwise signed [Type A — Land Transport Rule: Speed Limits 2022]
 
@@ -2798,7 +2798,7 @@ NUMBER_TYPES:
     caveat: "Confirm current pass mark at nzta.govt.nz as test standards are subject to administrative review."
     last_confirmed: 2026-03-03
 
-  - figure: "$51.10 conversion fee"
+  - figure: "$52.10 conversion fee"
     type: B
     type_label: Administrative
     source: NZTA fee schedule
@@ -2891,7 +2891,7 @@ NEXT_REVIEW_TRIGGER: Review if NZQA changes the International Qualifications Ass
 METADATA:
   phase: Month 1–3
   timing: Apply within first 3 months if your occupation requires formal recognition, or if you intend to apply for NZ residency. Not required for all AEWV workers — assess need based on occupation and future plans.
-  time_required: 2–4 hours (application preparation); 25–40 working days (NZQA processing)
+  time_required: 2–4 hours (application preparation); 10 weeks (increased from 25-40 working days due to high demand) (NZQA processing)
   priority_score: 60
   task_type: Paid
   professional_advice_required: false
@@ -2939,7 +2939,7 @@ URL: https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-quali
 Complete the International Qualification Assessment (IQA) application online. Upload certified transcripts and certificates. Pay the assessment fee: $755 [Type B — NZQA fee schedule, confirm at nzqa.govt.nz].
 
 **Step 5 — Wait for assessment**
-Processing time: 25–40 working days [Type B — NZQA processing standard]. NZQA may request additional documents during assessment. Respond promptly to any requests.
+Processing time: 10 weeks (increased from 25-40 working days due to high demand) [Type B — NZQA processing standard]. NZQA may request additional documents during assessment. Respond promptly to any requests.
 
 **Step 6 — Receive and record your NZQA assessment outcome**
 You will receive a formal letter confirming your qualification's NZQF level equivalence. Store this document securely — it is required for residency applications and regulated occupation registration.
@@ -2949,7 +2949,7 @@ You will receive a formal letter confirming your qualification's NZQF level equi
 KEY_FACTS:
 - NZQA formal assessment is required for Skilled Migrant Category residency points claims [Type B — Immigration NZ, SMC instructions]
 - Assessment fee: $755 for International Qualification Assessment (IQA) [Type B — NZQA fee schedule, confirm at nzqa.govt.nz]
-- Processing time: 25–40 working days [Type B — NZQA administrative standard]
+- Processing time: 10 weeks (increased from 25-40 working days due to high demand) [Type B — NZQA administrative standard]
 - A 3-year bachelor's degree from a recognised Indian/Sri Lankan university typically maps to NZQF Level 7 [Type B — NZQA assessment guidelines]
 - NZQA assessment does not replace regulated occupation body assessments (nursing, teaching, engineering) [Type B — respective professional bodies]
 - Certifying documents via a NZ Justice of the Peace (JP) is free [Type B — JP services]
@@ -2965,7 +2965,7 @@ NUMBER_TYPES:
     caveat: "Confirm current fee at nzqa.govt.nz as fees are subject to periodic revision."
     last_confirmed: 2026-03-03
 
-  - figure: "25–40 working days processing time"
+  - figure: "10 weeks (increased from 25-40 working days due to high demand) processing time"
     type: B
     type_label: Administrative
     source: NZQA processing standard
@@ -3003,7 +3003,7 @@ CROSS_REFERENCES:
 WATCH_OUTS:
   - NZQA assessment is of your qualification only — it does not assess your skills, work experience, or professional registration. Do not conflate a NZQA assessment with professional body registration.
   - If you are a registered engineer, nurse, or teacher in your home country, contact the relevant NZ professional body (Engineering NZ, Nursing Council, Teaching Council) directly — they have separate and specific assessment processes.
-  - Processing time of 25–40 working days is the standard — do not apply at the last minute before a residency application deadline. Apply well in advance.
+  - Processing time of 10 weeks (increased from 25-40 working days due to high demand) is the standard — do not apply at the last minute before a residency application deadline. Apply well in advance.
   - NZQA only assesses qualifications at degree level and above. Vocational qualifications, certificates, and diplomas below bachelor's level have a separate assessment pathway.
   - A NZQA assessment result is not the same as having a NZ qualification — it is an equivalence assessment only. This is sufficient for most immigration and employment purposes.
 
@@ -3815,13 +3815,13 @@ This appendix provides a machine-readable consolidated register of all numbers, 
 | Kiwibank requires work visa >1 year | T07 | Kiwibank policy | "Confirm current policy at kiwibank.co.nz" |
 | KiwiSaver contribution rate change: next pay period | T20 | IRD administrative | "Confirm timing with your employer payroll" |
 | KiwiSaver provider switch: 5–10 business days | T20 | Provider standard | "Confirm with new provider" |
-| NZQA IQA processing time: 25–40 working days | T17 | NZQA processing standard | "Confirm current time at nzqa.govt.nz" |
+| NZQA IQA processing time: 10 weeks (increased from 25-40 working days due to high demand) | T17 | NZQA processing standard | "Confirm current time at nzqa.govt.nz" |
 | Enrolled GP consultation: $20–$60 | T12 | Health NZ practice funding | "Confirm current fee with your GP practice at enrolment" |
-| ACC earner levy rate: ~1.53% | T13 | ACC levy schedule | "Confirm current rate at acc.co.nz — reviewed annually" |
+| ACC earner levy rate: ~1.45% | T13 | ACC levy schedule | "Confirm current rate at acc.co.nz — reviewed annually" |
 | NZTA knowledge test: 32/35 pass mark | T16 | NZTA test standard | "Confirm at nzta.govt.nz" |
-| NZTA licence conversion fee: ~$51.10 | T16 | NZTA fee schedule | "Confirm current fee at nzta.govt.nz" |
+| NZTA licence conversion fee: ~$52.10 | T16 | NZTA fee schedule | "Confirm current fee at nzta.govt.nz" |
 | NZQA IQA fee: $755 | T17 | NZQA fee schedule | "Confirm current fee at nzqa.govt.nz" |
-| Tenancy Tribunal application fee: $20.44 | T14 | Tenancy Services fee schedule | "Confirm current fee at tenancy.govt.nz" |
+| Tenancy Tribunal application fee: $28 | T14 | Tenancy Services fee schedule | "Confirm current fee at tenancy.govt.nz" |
 | NZ bank SWIFT wire fee: $15–$30 | T15 | Bank fee schedules | "Confirm current fee with your bank" |
 | Bond lodgement portal | T11 | Tenancy Services | "Confirm current portal at tenancy.govt.nz" |
 | Singapore licence — no knowledge test required | T16 | NZTA recognised list | "Confirm Singapore remains on NZTA recognised list at nzta.govt.nz" |
@@ -4061,7 +4061,7 @@ Government-funded independent personal finance resource. Includes KiwiSaver fund
 NZ government agency administering the Residential Tenancies Act. Provides mediation services and the Tenancy Tribunal. Contact: 0800 836 262 or tenancy.govt.nz.
 
 **Tenancy Tribunal**
-Quasi-judicial body that resolves disputes between landlords and tenants under the RTA. Application fee: $20.44. Decisions are legally binding. See T14.
+Quasi-judicial body that resolves disputes between landlords and tenants under the RTA. Application fee: $28. Decisions are legally binding. See T14.
 
 **Transitional resident exemption**
 4-year automatic NZ tax exemption on most foreign passive income (interest, dividends, overseas rental income) for new NZ tax residents. Starts from 183 days of NZ residency. Highly valuable for migrants with overseas assets. See T05.
