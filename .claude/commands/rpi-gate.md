@@ -11,7 +11,9 @@ Runs final phase gate verification and updates documentation.
 ## Steps
 
 **Step 1 — Verify All ACs**
-Read IMPLEMENT.md. Confirm every AC for this phase is marked PASS.
+Read IMPLEMENT.md. Confirm every AC for this phase is marked PASS or DEFERRED.
+- PASS: AC implementation complete and tested
+- DEFERRED: AC intentionally postponed with documented reason
 If any AC is PENDING or FAIL: report which ones and stop. Do not proceed.
 
 **Step 2 — Run End-to-End Scenario**

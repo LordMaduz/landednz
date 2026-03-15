@@ -66,7 +66,7 @@ Phase sequence: 1 (Foundation) → 2 (Roadmap Engine) → 3 (Monetisation) → 4
 | Phase | Status | Focus | Hours | AC Count |
 |---|---|---|---|---|
 | 1 | COMPLETE | Foundation — monorepo, schema, auth | ~60h | 15 |
-| 2 | BLOCKED | Roadmap Engine — priority scoring, tasks | ~100h | 15 |
+| 2 | COMPLETE | Roadmap Engine — priority scoring, tasks | ~100h | 15 |
 | 3 | BLOCKED | Monetisation — RevenueCat, premium gate | ~55h | 12 |
 | 4 | BLOCKED | AI Chat Basic — SSE, system prompt, guardrails | ~40h | 15 |
 | 5 | BLOCKED | RAG + Launch — embeddings, app store | ~60h | 13 |

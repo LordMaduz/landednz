@@ -40,7 +40,7 @@ beforeAll(async () => {
   }
   await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
   await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: 'T06', dependentId: 'T07' }] },
+    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
   });
   await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
 
@@ -161,7 +161,7 @@ afterAll(async () => {
   }
   await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
   await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: 'T06', dependentId: 'T07' }] },
+    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
   });
   await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
   await db.$disconnect();

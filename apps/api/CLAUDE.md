@@ -113,12 +113,10 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 - **User upsert with Prisma P2002 handling provides race-safe isNewUser detection.**
   Catch unique constraint violation on email during user creation to determine if user is new.
 
-- **Local and production anon keys are different.** Never mix them.
 
 ### Claude API
 
 - **Model string via env var — never hardcode.**
-  `ANTHROPIC_MODEL=claude-sonnet-4-20250514`
 
 - **Streaming errors are chunks, not rejected promises.**
   Check each event: `if (event.type === 'error') { throw new AIFailureError(event.error); }`
@@ -135,6 +133,43 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 
 - **EXPIRATION → isActive: false. CANCELLATION → no action.**
   Users retain access from cancellation until expiration. Wrong event = wrong revocation.
+
+### Testing & Dependencies
+
+- **Integration test cleanup with canonical task IDs requires comprehensive deletion.**
+  Delete ALL TaskDependency records referencing canonical IDs (T06/T07/T08 etc.) as both prerequisiteId and dependentId.
+  AC-2-15 seed data introduces real dependencies for all 21 tasks — narrow cleanup queries miss these.
+  ```typescript
+  await db.taskDependency.deleteMany({
+    where: {
+      OR: [
+        { prerequisiteId: { in: ['T06', 'T07', 'T08'] } },
+        { dependentId: { in: ['T06', 'T07', 'T08'] } }
+      ]
+    }
+  });
+  ```
+
+- **vitest.config.ts fileParallelism:false required for canonical task ID tests.**
+  Concurrent tests using the same canonical task IDs (T06/T07/T08) create conflicts.
+  Set `fileParallelism: false` to run test files sequentially.
+
+- **ADMIN_API_KEY env var pattern for admin endpoints.**
+  Protect admin routes with optional ADMIN_API_KEY check via X-Admin-Key header.
+  If env var not set, check is skipped (dev convenience). If set, header must match.
+
+### Business Logic Patterns
+
+- **Targeted recomputation pattern: completeTask() rescores only direct dependents.**
+  Use getAffectedTasks() to identify tasks that need rescoring after completion.
+  Never rescore the entire roadmap — only tasks whose blocking status changed.
+
+- **consequenceLine fallback chain: personaKey → solo_aewv → empty string.**
+  If no content for user's persona, try solo_aewv default. If still missing, use empty string.
+  Never crash on missing consequence lines.
+
+- **arrivalDate always required — no ArrivalTiming enum.**
+  Phase 2 removed the ArrivalTiming approach. scoringArrivalDate field handles future arrivals (null = urgency 0).
 
 ### General TypeScript
 
