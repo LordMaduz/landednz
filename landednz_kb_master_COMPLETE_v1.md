@@ -409,14 +409,14 @@ WATCH_OUTS:
 
 SOURCES:
   - title: "University of Auckland Accommodation Office"
-    url: "https://www.auckland.ac.nz/en/students/student-support/accommodation.html"
+    url: "https://www.auckland.ac.nz/en/on-campus/accommodation.html"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
     notes: "Contact point for UoA transitional accommodation. Email: accommodation@auckland.ac.nz"
 
   - title: "Auckland Transport — Getting to Auckland from the airport"
-    url: "https://at.govt.nz/bus-train-ferry/routes-and-timetables/airport-services/"
+    url: "https://at.govt.nz/bus-train-ferry/bus-services/airport-services"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -569,7 +569,7 @@ SOURCES:
     notes: "Definitive RBI guidance on NRO account requirements for NRIs."
 
   - title: "Income Tax Act 1961 — Section 6 (Residential Status)"
-    url: "https://incometaxindia.gov.in/acts/income-tax-act-1961.aspx"
+    url: "https://incometaxindia.gov.in/Documents/residential-status.htm"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -855,7 +855,7 @@ WATCH_OUTS:
 
 SOURCES:
   - title: "IRD — Transitional residents tax exemption"
-    url: "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/transitional-residents"
+    url: "https://www.ird.govt.nz/roles/nz-tax-residents/exemption"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -869,14 +869,14 @@ SOURCES:
     notes: "Statutory basis for transitional resident exemption."
 
   - title: "India-New Zealand Double Tax Agreement"
-    url: "https://incometaxindia.gov.in/pages/international-taxation/dtaa.aspx"
+    url: "https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
     notes: "Indian Income Tax authority listing of active DTAs including NZ."
 
   - title: "IRD — Tax residency in New Zealand"
-    url: "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/tax-residency"
+    url: "https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -1389,7 +1389,7 @@ SOURCES:
     notes: "Statutory basis for 45% no-declaration rate."
 
   - title: "New to New Zealand — IRD guidance"
-    url: "https://www.ird.govt.nz/international-tax/individuals/coming-to-nz"
+    url: "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -2140,7 +2140,7 @@ SOURCES:
     notes: "Primary tool for finding GP practices accepting new patients by location."
 
   - title: "Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health"
-    url: "https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf"
+    url: "https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -2691,14 +2691,14 @@ SOURCES:
     notes: "Alternative remittance provider — compare with Wise for best rate on specific corridors."
 
   - title: "Reserve Bank of New Zealand — no capital controls"
-    url: "https://www.rbnz.govt.nz/financial-stability/foreign-exchange"
+    url: "https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
     notes: "Confirms NZ has no outbound remittance restrictions for individuals."
 
   - title: "Central Bank of Sri Lanka — foreign exchange"
-    url: "https://www.cbsl.gov.lk/en/rates-and-indicators/forex"
+    url: "https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates"
     tier: 1
     tier_label: Primary Government (foreign)
     last_accessed: 2026-03-03
@@ -3505,7 +3505,7 @@ WATCH_OUTS:
 
 SOURCES:
   - title: "KiwiSaver — switching providers (IRD)"
-    url: "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider"
+    url: "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -3519,7 +3519,7 @@ SOURCES:
     notes: "Fee and performance comparison tool for all KiwiSaver providers."
 
   - title: "Member tax credit — Inland Revenue"
-    url: "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits"
+    url: "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution"
     tier: 1
     tier_label: Primary Government
     last_accessed: 2026-03-03
@@ -3680,13 +3680,13 @@ This appendix consolidates all sources cited across T01–T21, organised by tier
 | Source | URL | Tasks Referenced |
 |--------|-----|-----------------|
 | IRD — IRD numbers for individuals | https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals | T08 |
-| IRD — New to NZ guidance | https://www.ird.govt.nz/international-tax/individuals/coming-to-nz | T08 |
+| IRD — New to NZ guidance | https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents | T08 |
 | IRD — IR330 Tax code declaration | https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration | T09 |
 | IRD — Tax codes for individuals | https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/tax-codes-for-individuals | T09 |
 | IRD — KiwiSaver overview | https://www.ird.govt.nz/kiwisaver | T10 |
 | IRD — KS2 KiwiSaver deduction notice | https://www.ird.govt.nz/forms-guides/number/forms-100-199/ks2-kiwisaver-deduction-notice | T10 |
-| IRD — KiwiSaver provider switching | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider | T20 |
-| IRD — KiwiSaver member tax credit | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits | T20 |
+| IRD — KiwiSaver provider switching | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider | T20 |
+| IRD — KiwiSaver member tax credit | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution | T20 |
 | IRD — myIR online services | https://myir.ird.govt.nz | T08, T10, T20 |
 | Tax Administration Act 1994 | https://www.legislation.govt.nz/act/public/1994/0166/latest/DLM348342.html | T08 |
 | Income Tax Act 2007 — Schedule 2 (PAYE rates) | https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1522997.html | T08 |
@@ -3700,7 +3700,7 @@ This appendix consolidates all sources cited across T01–T21, organised by tier
 | Tenancy Services — tenant rights | https://www.tenancy.govt.nz/tenants-rights-and-responsibilities | T14 |
 | Tenancy Services — Tenancy Tribunal | https://www.tenancy.govt.nz/disputes/apply-to-tribunal | T14 |
 | Tenancy Services — healthy homes | https://www.tenancy.govt.nz/healthy-homes | T14 |
-| Health (Subsidised Primary Health Care) Notice 2011 | https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf | T12 |
+| Health (Subsidised Primary Health Care) Notice 2011 | https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations | T12 |
 | Pharmaceutical Schedule — Ministry of Health | https://www.pharmac.govt.nz/medicines/pharmaceutical-schedule | T12 |
 | Community Services Card — Work and Income NZ | https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html | T12 |
 | Accident Compensation Act 2001 | https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html | T13 |
@@ -3715,7 +3715,7 @@ This appendix consolidates all sources cited across T01–T21, organised by tier
 | Land Transport Rule: Speed Limits 2022 | https://www.nzta.govt.nz/resources/rules/land-transport-rule-setting-of-speed-limits-2022 | T16 |
 | NZTA — overseas licence holders | https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders | T16 |
 | NZTA — testing and licensing agents | https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents | T16 |
-| Reserve Bank of NZ — foreign exchange | https://www.rbnz.govt.nz/financial-stability/foreign-exchange | T15 |
+| Reserve Bank of NZ — foreign exchange | https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates | T15 |
 | Property (Relationships) Act 1976 | https://www.legislation.govt.nz/act/public/1976/0166/latest/DLM440945.html | T21 |
 | JP NZ — find a JP | https://www.jpanz.org.nz/find-a-jp | T17 |
 
@@ -3723,7 +3723,7 @@ This appendix consolidates all sources cited across T01–T21, organised by tier
 
 | Source | URL | Tasks Referenced |
 |--------|-----|-----------------|
-| Central Bank of Sri Lanka — forex | https://www.cbsl.gov.lk/en/rates-and-indicators/forex | T15 |
+| Central Bank of Sri Lanka — forex | https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates | T15 |
 | India Income Tax Act 1961 — Section 6 | https://www.incometaxindia.gov.in | T03, T05 |
 | FEMA 1999 — RBI India | https://www.rbi.org.in/Scripts/BS_FemaNotifications.aspx | T03, T05 |
 

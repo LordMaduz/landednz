@@ -1,5 +1,5 @@
 # AC-2-15 Verification Report
-*Generated: 2026-03-15T05:08:55.924Z*
+*Generated: 2026-03-15T07:21:17.138Z*
 *KB source: landednz_kb_master_COMPLETE_v1.md (written 2026-03-03)*
 *Status: ☐ TEMPLATE — human must complete manual verification*
 
@@ -11,7 +11,7 @@
 |------|--------|
 | Tasks in KB | 21 / 21 expected |
 | Tier 1 URLs auto-checked | 47 |
-| URL issues found | ❌ 41 — see table below |
+| URL issues found | ❌ 32 — see table below |
 | Ready to proceed | ❌ Resolve URL issues first |
 
 ---
@@ -22,22 +22,22 @@
 |------|--------|--------------|-----|-------|
 | T01 | ✅ success | Auckland Transport Journey Planner | https://at.govt.nz/bus-train-ferry/journey-planner/ | 200 |
 | T01 | ✅ success | Auckland Council — Suburbs and localities | https://www.aucklandcouncil.govt.nz | 200 |
-| T02 | ❌ error | University of Auckland Accommodation Office | https://www.auckland.ac.nz/en/students/student-support/accommodation.html | HTTP 404 |
-| T02 | ❌ error | Auckland Transport — Getting to Auckland from the airport | https://at.govt.nz/bus-train-ferry/routes-and-timetables/airport-services/ | HTTP 404 |
+| T02 | ✅ success | University of Auckland Accommodation Office | https://www.auckland.ac.nz/en/on-campus/accommodation.html | 200 |
+| T02 | ✅ success | Auckland Transport — Getting to Auckland from the airport | https://at.govt.nz/bus-train-ferry/bus-services/airport-services | 200 |
 | T03 | ✅ success | FEMA 1999 — Ministry of Finance India | https://www.rbi.org.in/Scripts/BS_FemaNotifications.aspx | 200 |
 | T03 | ✅ success | RBI Master Direction — Non-Resident Ordinary Rupee (NRO) Account | https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10272 | 200 |
-| T03 | ❌ error | Income Tax Act 1961 — Section 6 (Residential Status) | https://incometaxindia.gov.in/acts/income-tax-act-1961.aspx | HTTP 503 |
+| T03 | ❌ error | Income Tax Act 1961 — Section 6 (Residential Status) | https://incometaxindia.gov.in/Documents/residential-status.htm | HTTP 503 |
 | T04 | ❓ unchecked | — | No Tier 1 URL |
-| T05 | ❌ error | IRD — Transitional residents tax exemption | https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/transitional-residents | HTTP 404 |
+| T05 | ✅ success | IRD — Transitional residents tax exemption | https://www.ird.govt.nz/roles/nz-tax-residents/exemption | 200 |
 | T05 | ⚠️ redirect | Income Tax Act 2007 — Section CW 27 (transitional resident exemption) | https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1512300.html | https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1512300 |
-| T05 | ❌ error | India-New Zealand Double Tax Agreement | https://incometaxindia.gov.in/pages/international-taxation/dtaa.aspx | HTTP 503 |
-| T05 | ❌ error | IRD — Tax residency in New Zealand | https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/tax-residency | HTTP 404 |
+| T05 | ❌ error | India-New Zealand Double Tax Agreement | https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm | HTTP 503 |
+| T05 | ✅ success | IRD — Tax residency in New Zealand | https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals | 200 |
 | T06 | ❓ unchecked | — | No Tier 1 URL |
 | T07 | ❓ unchecked | — | No Tier 1 URL |
 | T08 | ✅ success | IRD numbers for individuals — Inland Revenue | https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals | 200 |
 | T08 | ⚠️ redirect | Tax Administration Act 1994 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/1994/0166/latest/DLM348342.html | https://www.legislation.govt.nz/act/public/1994/166/en/latest/#DLM348342 |
 | T08 | ⚠️ redirect | Income Tax Act 2007 — Schedule 2 (PAYE rates) | https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1522997.html | https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1522997 |
-| T08 | ❌ error | New to New Zealand — IRD guidance | https://www.ird.govt.nz/international-tax/individuals/coming-to-nz | HTTP 404 |
+| T08 | ✅ success | New to New Zealand — IRD guidance | https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents | 200 |
 | T09 | ⚠️ redirect | IR330 Tax code declaration — Inland Revenue | https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration | https://www.ird.govt.nz/index/all-forms-and-guides |
 | T09 | ⚠️ redirect | Tax codes for individuals — Inland Revenue | https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/tax-codes-for-individuals | /income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/about-tax-codes |
 | T09 | ⚠️ redirect | Income Tax Act 2007 — Schedule 1 (Tax rates) | https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1523176.html | https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1523176 |
@@ -47,18 +47,18 @@
 | T11 | ⚠️ redirect | Residential Tenancies Act 1986 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/1986/0120/latest/DLM94278.html | https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278 |
 | T11 | ⚠️ redirect | Tenancy Services — bonds | https://www.tenancy.govt.nz/bonds | https://www.tenancy.govt.nz/bonds/ |
 | T11 | ⚠️ redirect | Tenancy Services — starting a tenancy | https://www.tenancy.govt.nz/starting-a-tenancy | https://www.tenancy.govt.nz/starting-a-tenancy/ |
-| T12 | ❌ error | Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health | https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf | HTTP 404 |
+| T12 | ❌ error | Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health | https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations | HTTP 403 |
 | T12 | ⚠️ redirect | Pharmaceutical Schedule — Ministry of Health | https://www.pharmac.govt.nz/medicines/pharmaceutical-schedule | /medicine-funding-and-supply/pharmaceutical-schedule |
-| T12 | ⏱️ timeout | Community Services Card — Work and Income NZ | https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html | Timeout after 10s |
+| T12 | ✅ success | Community Services Card — Work and Income NZ | https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html | 200 |
 | T13 | ⚠️ redirect | Accident Compensation Act 2001 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html | https://www.legislation.govt.nz/act/public/2001/49/en/latest/#DLM99494 |
-| T13 | ⏱️ timeout | ACC — what we cover | https://www.acc.co.nz/im-injured/what-we-cover | Timeout after 10s |
-| T13 | ⏱️ timeout | ACC levies — earner levy rates | https://www.acc.co.nz/im-a-business/levies/earner-levies | Timeout after 10s |
+| T13 | ❌ error | ACC — what we cover | https://www.acc.co.nz/im-injured/what-we-cover | HTTP 403 |
+| T13 | ❌ error | ACC levies — earner levy rates | https://www.acc.co.nz/im-a-business/levies/earner-levies | HTTP 403 |
 | T14 | ⚠️ redirect | Residential Tenancies Act 1986 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/1986/0120/latest/DLM94278.html | https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278 |
 | T14 | ⚠️ redirect | Tenancy Services — tenant rights and responsibilities | https://www.tenancy.govt.nz/tenants-rights-and-responsibilities | https://www.tenancy.govt.nz/tenants-rights-and-responsibilities/ |
 | T14 | ⚠️ redirect | Tenancy Tribunal — applying to the Tribunal | https://www.tenancy.govt.nz/disputes/apply-to-tribunal | https://www.tenancy.govt.nz/disputes/apply-to-tribunal/ |
 | T14 | ⚠️ redirect | Healthy Homes Standards — Tenancy Services | https://www.tenancy.govt.nz/healthy-homes | https://www.tenancy.govt.nz/healthy-homes/ |
-| T15 | ❌ error | Reserve Bank of New Zealand — no capital controls | https://www.rbnz.govt.nz/financial-stability/foreign-exchange | HTTP 403 |
-| T15 | ❌ error | Central Bank of Sri Lanka — foreign exchange | https://www.cbsl.gov.lk/en/rates-and-indicators/forex | HTTP 404 |
+| T15 | ❌ error | Reserve Bank of New Zealand — no capital controls | https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates | HTTP 403 |
+| T15 | ✅ success | Central Bank of Sri Lanka — foreign exchange | https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates | 200 |
 | T16 | ⚠️ redirect | Overseas licence holders — NZTA | https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders | https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders |
 | T16 | ⚠️ redirect | Land Transport Act 1998 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/1998/0110/latest/DLM433613.html | https://www.legislation.govt.nz/act/public/1998/110/en/latest/#DLM433613 |
 | T16 | ⚠️ redirect | NZTA testing and licensing agents | https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents | https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents |
@@ -67,8 +67,8 @@
 | T17 | ⚠️ redirect | Skilled Migrant Category — Immigration NZ | https://www.immigration.govt.nz/new-zealand-visas/visa-alternates/skilled-migrant-category-resident-visa | https://www.immigration.govt.nz/new-zealand-visas/visa-alternates/skilled-migrant-category-resident-visa/ |
 | T18 | ⚠️ redirect | Credit Reporting Privacy Code 2004 — Office of the Privacy Commissioner | https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020 | https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020/ |
 | T19 | ⚠️ redirect | Immigration NZ — AEWV conditions | https://www.immigration.govt.nz/new-zealand-visas/visas/visa/accredited-employer-work-visa | https://www.immigration.govt.nz/new-zealand-visas/visas/visa/accredited-employer-work-visa/ |
-| T20 | ❌ error | KiwiSaver — switching providers (IRD) | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider | HTTP 404 |
-| T20 | ❌ error | Member tax credit — Inland Revenue | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits | HTTP 404 |
+| T20 | ✅ success | KiwiSaver — switching providers (IRD) | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider | 200 |
+| T20 | ✅ success | Member tax credit — Inland Revenue | https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution | 200 |
 | T21 | ⚠️ redirect | Property (Relationships) Act 1976 — New Zealand Legislation | https://www.legislation.govt.nz/act/public/1976/0166/latest/DLM440945.html | https://www.legislation.govt.nz/act/public/1976/166/en/latest/#DLM440945 |
 
 ---
@@ -108,15 +108,15 @@ Mark PASS only when all checkboxes in a section are confirmed.
 
 ---
 
-### T02 — Temporary Accommodation Booking ⚠️ URL ISSUE — resolve before seeding
+### T02 — Temporary Accommodation Booking
 
 **Manual verification status:** ☐ PENDING / ☐ PASS / ☐ FAIL
 
 **Tier 1 URL status (auto-checked):**
-  - University of Auckland Accommodation Office: ❌ error
-    URL: https://www.auckland.ac.nz/en/students/student-support/accommodation.html
-  - Auckland Transport — Getting to Auckland from the airport: ❌ error
-    URL: https://at.govt.nz/bus-train-ferry/routes-and-timetables/airport-services/
+  - University of Auckland Accommodation Office: ✅ success
+    URL: https://www.auckland.ac.nz/en/on-campus/accommodation.html
+  - Auckland Transport — Getting to Auckland from the airport: ✅ success
+    URL: https://at.govt.nz/bus-train-ferry/bus-services/airport-services
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page
@@ -148,7 +148,7 @@ Mark PASS only when all checkboxes in a section are confirmed.
   - RBI Master Direction — Non-Resident Ordinary Rupee (NRO) Account: ✅ success
     URL: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10272
   - Income Tax Act 1961 — Section 6 (Residential Status): ❌ error
-    URL: https://incometaxindia.gov.in/acts/income-tax-act-1961.aspx
+    URL: https://incometaxindia.gov.in/Documents/residential-status.htm
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page
@@ -202,14 +202,14 @@ Mark PASS only when all checkboxes in a section are confirmed.
 **Manual verification status:** ☐ PENDING / ☐ PASS / ☐ FAIL
 
 **Tier 1 URL status (auto-checked):**
-  - IRD — Transitional residents tax exemption: ❌ error
-    URL: https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/transitional-residents
+  - IRD — Transitional residents tax exemption: ✅ success
+    URL: https://www.ird.govt.nz/roles/nz-tax-residents/exemption
   - Income Tax Act 2007 — Section CW 27 (transitional resident exemption): ⚠️ redirect
     URL: https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1512300.html
   - India-New Zealand Double Tax Agreement: ❌ error
-    URL: https://incometaxindia.gov.in/pages/international-taxation/dtaa.aspx
-  - IRD — Tax residency in New Zealand: ❌ error
-    URL: https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/tax-residency
+    URL: https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm
+  - IRD — Tax residency in New Zealand: ✅ success
+    URL: https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page
@@ -297,8 +297,8 @@ Mark PASS only when all checkboxes in a section are confirmed.
     URL: https://www.legislation.govt.nz/act/public/1994/0166/latest/DLM348342.html
   - Income Tax Act 2007 — Schedule 2 (PAYE rates): ⚠️ redirect
     URL: https://www.legislation.govt.nz/act/public/2007/0097/latest/DLM1522997.html
-  - New to New Zealand — IRD guidance: ❌ error
-    URL: https://www.ird.govt.nz/international-tax/individuals/coming-to-nz
+  - New to New Zealand — IRD guidance: ✅ success
+    URL: https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page
@@ -422,10 +422,10 @@ Mark PASS only when all checkboxes in a section are confirmed.
 
 **Tier 1 URL status (auto-checked):**
   - Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health: ❌ error
-    URL: https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf
+    URL: https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations
   - Pharmaceutical Schedule — Ministry of Health: ⚠️ redirect
     URL: https://www.pharmac.govt.nz/medicines/pharmaceutical-schedule
-  - Community Services Card — Work and Income NZ: ⏱️ timeout
+  - Community Services Card — Work and Income NZ: ✅ success
     URL: https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html
 
 **Content verification:**
@@ -455,9 +455,9 @@ Mark PASS only when all checkboxes in a section are confirmed.
 **Tier 1 URL status (auto-checked):**
   - Accident Compensation Act 2001 — New Zealand Legislation: ⚠️ redirect
     URL: https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html
-  - ACC — what we cover: ⏱️ timeout
+  - ACC — what we cover: ❌ error
     URL: https://www.acc.co.nz/im-injured/what-we-cover
-  - ACC levies — earner levy rates: ⏱️ timeout
+  - ACC levies — earner levy rates: ❌ error
     URL: https://www.acc.co.nz/im-a-business/levies/earner-levies
 
 **Content verification:**
@@ -520,9 +520,9 @@ Mark PASS only when all checkboxes in a section are confirmed.
 
 **Tier 1 URL status (auto-checked):**
   - Reserve Bank of New Zealand — no capital controls: ❌ error
-    URL: https://www.rbnz.govt.nz/financial-stability/foreign-exchange
-  - Central Bank of Sri Lanka — foreign exchange: ❌ error
-    URL: https://www.cbsl.gov.lk/en/rates-and-indicators/forex
+    URL: https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates
+  - Central Bank of Sri Lanka — foreign exchange: ✅ success
+    URL: https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page
@@ -666,15 +666,15 @@ Mark PASS only when all checkboxes in a section are confirmed.
 
 ---
 
-### T20 — KiwiSaver Confirmation and Fund Review ⚠️ URL ISSUE — resolve before seeding
+### T20 — KiwiSaver Confirmation and Fund Review
 
 **Manual verification status:** ☐ PENDING / ☐ PASS / ☐ FAIL
 
 **Tier 1 URL status (auto-checked):**
-  - KiwiSaver — switching providers (IRD): ❌ error
-    URL: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider
-  - Member tax credit — Inland Revenue: ❌ error
-    URL: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits
+  - KiwiSaver — switching providers (IRD): ✅ success
+    URL: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider
+  - Member tax credit — Inland Revenue: ✅ success
+    URL: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution
 
 **Content verification:**
 - ☐ WHAT_AND_WHY facts match live government page

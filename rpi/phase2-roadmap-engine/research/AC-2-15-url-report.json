@@ -1,57 +1,24 @@
 {
-  "checkedAt": "2026-03-15T05:08:16.148Z",
+  "checkedAt": "2026-03-15T07:21:04.106Z",
   "totalTasks": 21,
   "totalUrlsChecked": 47,
   "summary": {
-    "success": 6,
-    "error": 12,
+    "success": 15,
+    "error": 6,
     "redirect": 26,
-    "timeout": 3
+    "timeout": 0
   },
   "tier1Issues": [
-    {
-      "taskId": "T02",
-      "taskName": "Temporary Accommodation Booking",
-      "title": "University of Auckland Accommodation Office",
-      "url": "https://www.auckland.ac.nz/en/students/student-support/accommodation.html",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 878
-    },
-    {
-      "taskId": "T02",
-      "taskName": "Temporary Accommodation Booking",
-      "title": "Auckland Transport — Getting to Auckland from the airport",
-      "url": "https://at.govt.nz/bus-train-ferry/routes-and-timetables/airport-services/",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 663
-    },
     {
       "taskId": "T03",
       "taskName": "Overseas Bank Account — Final Preparation",
       "title": "Income Tax Act 1961 — Section 6 (Residential Status)",
-      "url": "https://incometaxindia.gov.in/acts/income-tax-act-1961.aspx",
+      "url": "https://incometaxindia.gov.in/Documents/residential-status.htm",
       "tier": 1,
       "status": "error",
       "statusCode": 503,
       "errorMessage": "HTTP 503",
-      "responseTime": 232
-    },
-    {
-      "taskId": "T05",
-      "taskName": "Home Country Tax — Final Year Considerations",
-      "title": "IRD — Transitional residents tax exemption",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/transitional-residents",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 821
+      "responseTime": 227
     },
     {
       "taskId": "T05",
@@ -62,29 +29,18 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1512300",
-      "responseTime": 509
+      "responseTime": 586
     },
     {
       "taskId": "T05",
       "taskName": "Home Country Tax — Final Year Considerations",
       "title": "India-New Zealand Double Tax Agreement",
-      "url": "https://incometaxindia.gov.in/pages/international-taxation/dtaa.aspx",
+      "url": "https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm",
       "tier": 1,
       "status": "error",
       "statusCode": 503,
       "errorMessage": "HTTP 503",
       "responseTime": 224
-    },
-    {
-      "taskId": "T05",
-      "taskName": "Home Country Tax — Final Year Considerations",
-      "title": "IRD — Tax residency in New Zealand",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/tax-residency",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 663
     },
     {
       "taskId": "T08",
@@ -95,7 +51,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1994/166/en/latest/#DLM348342",
-      "responseTime": 247
+      "responseTime": 263
     },
     {
       "taskId": "T08",
@@ -106,18 +62,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1522997",
-      "responseTime": 369
-    },
-    {
-      "taskId": "T08",
-      "taskName": "IRD Number Application",
-      "title": "New to New Zealand — IRD guidance",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/coming-to-nz",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 619
+      "responseTime": 337
     },
     {
       "taskId": "T09",
@@ -128,7 +73,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.ird.govt.nz/index/all-forms-and-guides",
-      "responseTime": 433
+      "responseTime": 177
     },
     {
       "taskId": "T09",
@@ -139,7 +84,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/about-tax-codes",
-      "responseTime": 115
+      "responseTime": 501
     },
     {
       "taskId": "T09",
@@ -150,7 +95,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1523176",
-      "responseTime": 594
+      "responseTime": 321
     },
     {
       "taskId": "T10",
@@ -161,7 +106,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2006/40/en/latest/#DLM378372",
-      "responseTime": 210
+      "responseTime": 199
     },
     {
       "taskId": "T10",
@@ -172,7 +117,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.ird.govt.nz/index/all-forms-and-guides",
-      "responseTime": 656
+      "responseTime": 303
     },
     {
       "taskId": "T11",
@@ -183,7 +128,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278",
-      "responseTime": 197
+      "responseTime": 200
     },
     {
       "taskId": "T11",
@@ -194,7 +139,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/bonds/",
-      "responseTime": 1680
+      "responseTime": 1119
     },
     {
       "taskId": "T11",
@@ -205,18 +150,18 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/starting-a-tenancy/",
-      "responseTime": 1010
+      "responseTime": 478
     },
     {
       "taskId": "T12",
       "taskName": "GP Registration and Primary Healthcare",
       "title": "Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health",
-      "url": "https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf",
+      "url": "https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations",
       "tier": 1,
       "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 1050
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 286
     },
     {
       "taskId": "T12",
@@ -227,17 +172,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "/medicine-funding-and-supply/pharmaceutical-schedule",
-      "responseTime": 7857
-    },
-    {
-      "taskId": "T12",
-      "taskName": "GP Registration and Primary Healthcare",
-      "title": "Community Services Card — Work and Income NZ",
-      "url": "https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html",
-      "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10002
+      "responseTime": 913
     },
     {
       "taskId": "T13",
@@ -248,7 +183,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2001/49/en/latest/#DLM99494",
-      "responseTime": 196
+      "responseTime": 198
     },
     {
       "taskId": "T13",
@@ -256,9 +191,10 @@
       "title": "ACC — what we cover",
       "url": "https://www.acc.co.nz/im-injured/what-we-cover",
       "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10000
+      "status": "error",
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 409
     },
     {
       "taskId": "T13",
@@ -266,9 +202,10 @@
       "title": "ACC levies — earner levy rates",
       "url": "https://www.acc.co.nz/im-a-business/levies/earner-levies",
       "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10001
+      "status": "error",
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 47
     },
     {
       "taskId": "T14",
@@ -279,7 +216,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278",
-      "responseTime": 9598
+      "responseTime": 444
     },
     {
       "taskId": "T14",
@@ -290,7 +227,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/tenants-rights-and-responsibilities/",
-      "responseTime": 1210
+      "responseTime": 229
     },
     {
       "taskId": "T14",
@@ -301,7 +238,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/disputes/apply-to-tribunal/",
-      "responseTime": 210
+      "responseTime": 246
     },
     {
       "taskId": "T14",
@@ -312,29 +249,18 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/healthy-homes/",
-      "responseTime": 204
+      "responseTime": 257
     },
     {
       "taskId": "T15",
       "taskName": "International Remittances Setup",
       "title": "Reserve Bank of New Zealand — no capital controls",
-      "url": "https://www.rbnz.govt.nz/financial-stability/foreign-exchange",
+      "url": "https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates",
       "tier": 1,
       "status": "error",
       "statusCode": 403,
       "errorMessage": "HTTP 403",
-      "responseTime": 214
-    },
-    {
-      "taskId": "T15",
-      "taskName": "International Remittances Setup",
-      "title": "Central Bank of Sri Lanka — foreign exchange",
-      "url": "https://www.cbsl.gov.lk/en/rates-and-indicators/forex",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 1388
+      "responseTime": 113
     },
     {
       "taskId": "T16",
@@ -345,7 +271,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders",
-      "responseTime": 172
+      "responseTime": 416
     },
     {
       "taskId": "T16",
@@ -356,7 +282,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1998/110/en/latest/#DLM433613",
-      "responseTime": 216
+      "responseTime": 211
     },
     {
       "taskId": "T16",
@@ -367,7 +293,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents",
-      "responseTime": 36
+      "responseTime": 68
     },
     {
       "taskId": "T17",
@@ -378,7 +304,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/international-qualifications/",
-      "responseTime": 663
+      "responseTime": 927
     },
     {
       "taskId": "T17",
@@ -389,7 +315,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/nzqf/",
-      "responseTime": 428
+      "responseTime": 416
     },
     {
       "taskId": "T17",
@@ -400,7 +326,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.immigration.govt.nz/new-zealand-visas/visa-alternates/skilled-migrant-category-resident-visa/",
-      "responseTime": 1305
+      "responseTime": 2062
     },
     {
       "taskId": "T18",
@@ -411,7 +337,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020/",
-      "responseTime": 896
+      "responseTime": 613
     },
     {
       "taskId": "T19",
@@ -422,29 +348,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.immigration.govt.nz/new-zealand-visas/visas/visa/accredited-employer-work-visa/",
-      "responseTime": 858
-    },
-    {
-      "taskId": "T20",
-      "taskName": "KiwiSaver Confirmation and Fund Review",
-      "title": "KiwiSaver — switching providers (IRD)",
-      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 679
-    },
-    {
-      "taskId": "T20",
-      "taskName": "KiwiSaver Confirmation and Fund Review",
-      "title": "Member tax credit — Inland Revenue",
-      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits",
-      "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 620
+      "responseTime": 885
     },
     {
       "taskId": "T21",
@@ -455,7 +359,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1976/166/en/latest/#DLM440945",
-      "responseTime": 184
+      "responseTime": 196
     }
   ],
   "results": [
@@ -467,7 +371,7 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 666
+      "responseTime": 702
     },
     {
       "taskId": "T01",
@@ -477,29 +381,27 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 1125
+      "responseTime": 239
     },
     {
       "taskId": "T02",
       "taskName": "Temporary Accommodation Booking",
       "title": "University of Auckland Accommodation Office",
-      "url": "https://www.auckland.ac.nz/en/students/student-support/accommodation.html",
+      "url": "https://www.auckland.ac.nz/en/on-campus/accommodation.html",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 878
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 538
     },
     {
       "taskId": "T02",
       "taskName": "Temporary Accommodation Booking",
       "title": "Auckland Transport — Getting to Auckland from the airport",
-      "url": "https://at.govt.nz/bus-train-ferry/routes-and-timetables/airport-services/",
+      "url": "https://at.govt.nz/bus-train-ferry/bus-services/airport-services",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 663
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 340
     },
     {
       "taskId": "T03",
@@ -509,7 +411,7 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 721
+      "responseTime": 442
     },
     {
       "taskId": "T03",
@@ -519,29 +421,28 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 525
+      "responseTime": 405
     },
     {
       "taskId": "T03",
       "taskName": "Overseas Bank Account — Final Preparation",
       "title": "Income Tax Act 1961 — Section 6 (Residential Status)",
-      "url": "https://incometaxindia.gov.in/acts/income-tax-act-1961.aspx",
+      "url": "https://incometaxindia.gov.in/Documents/residential-status.htm",
       "tier": 1,
       "status": "error",
       "statusCode": 503,
       "errorMessage": "HTTP 503",
-      "responseTime": 232
+      "responseTime": 227
     },
     {
       "taskId": "T05",
       "taskName": "Home Country Tax — Final Year Considerations",
       "title": "IRD — Transitional residents tax exemption",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/transitional-residents",
+      "url": "https://www.ird.govt.nz/roles/nz-tax-residents/exemption",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 821
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 85
     },
     {
       "taskId": "T05",
@@ -552,13 +453,13 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1512300",
-      "responseTime": 509
+      "responseTime": 586
     },
     {
       "taskId": "T05",
       "taskName": "Home Country Tax — Final Year Considerations",
       "title": "India-New Zealand Double Tax Agreement",
-      "url": "https://incometaxindia.gov.in/pages/international-taxation/dtaa.aspx",
+      "url": "https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm",
       "tier": 1,
       "status": "error",
       "statusCode": 503,
@@ -569,12 +470,11 @@
       "taskId": "T05",
       "taskName": "Home Country Tax — Final Year Considerations",
       "title": "IRD — Tax residency in New Zealand",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-residents/tax-residency",
+      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 663
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 603
     },
     {
       "taskId": "T08",
@@ -584,7 +484,7 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 56
+      "responseTime": 55
     },
     {
       "taskId": "T08",
@@ -595,7 +495,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1994/166/en/latest/#DLM348342",
-      "responseTime": 247
+      "responseTime": 263
     },
     {
       "taskId": "T08",
@@ -606,18 +506,17 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1522997",
-      "responseTime": 369
+      "responseTime": 337
     },
     {
       "taskId": "T08",
       "taskName": "IRD Number Application",
       "title": "New to New Zealand — IRD guidance",
-      "url": "https://www.ird.govt.nz/international-tax/individuals/coming-to-nz",
+      "url": "https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 619
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 250
     },
     {
       "taskId": "T09",
@@ -628,7 +527,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.ird.govt.nz/index/all-forms-and-guides",
-      "responseTime": 433
+      "responseTime": 177
     },
     {
       "taskId": "T09",
@@ -639,7 +538,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/about-tax-codes",
-      "responseTime": 115
+      "responseTime": 501
     },
     {
       "taskId": "T09",
@@ -650,7 +549,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2007/97/en/latest/#DLM1523176",
-      "responseTime": 594
+      "responseTime": 321
     },
     {
       "taskId": "T10",
@@ -660,7 +559,7 @@
       "tier": 1,
       "status": "success",
       "statusCode": 200,
-      "responseTime": 51
+      "responseTime": 63
     },
     {
       "taskId": "T10",
@@ -671,7 +570,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2006/40/en/latest/#DLM378372",
-      "responseTime": 210
+      "responseTime": 199
     },
     {
       "taskId": "T10",
@@ -682,7 +581,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.ird.govt.nz/index/all-forms-and-guides",
-      "responseTime": 656
+      "responseTime": 303
     },
     {
       "taskId": "T11",
@@ -693,7 +592,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278",
-      "responseTime": 197
+      "responseTime": 200
     },
     {
       "taskId": "T11",
@@ -704,7 +603,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/bonds/",
-      "responseTime": 1680
+      "responseTime": 1119
     },
     {
       "taskId": "T11",
@@ -715,18 +614,18 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/starting-a-tenancy/",
-      "responseTime": 1010
+      "responseTime": 478
     },
     {
       "taskId": "T12",
       "taskName": "GP Registration and Primary Healthcare",
       "title": "Health (Subsidised Primary Health Care) Notice 2011 — Ministry of Health",
-      "url": "https://www.health.govt.nz/system/files/documents/pages/health-subsidised-primary-health-care-notice-2011.pdf",
+      "url": "https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations",
       "tier": 1,
       "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 1050
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 286
     },
     {
       "taskId": "T12",
@@ -737,7 +636,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "/medicine-funding-and-supply/pharmaceutical-schedule",
-      "responseTime": 7857
+      "responseTime": 913
     },
     {
       "taskId": "T12",
@@ -745,9 +644,9 @@
       "title": "Community Services Card — Work and Income NZ",
       "url": "https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html",
       "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10002
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 2258
     },
     {
       "taskId": "T13",
@@ -758,7 +657,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/2001/49/en/latest/#DLM99494",
-      "responseTime": 196
+      "responseTime": 198
     },
     {
       "taskId": "T13",
@@ -766,9 +665,10 @@
       "title": "ACC — what we cover",
       "url": "https://www.acc.co.nz/im-injured/what-we-cover",
       "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10000
+      "status": "error",
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 409
     },
     {
       "taskId": "T13",
@@ -776,9 +676,10 @@
       "title": "ACC levies — earner levy rates",
       "url": "https://www.acc.co.nz/im-a-business/levies/earner-levies",
       "tier": 1,
-      "status": "timeout",
-      "errorMessage": "Timeout after 10s",
-      "responseTime": 10001
+      "status": "error",
+      "statusCode": 403,
+      "errorMessage": "HTTP 403",
+      "responseTime": 47
     },
     {
       "taskId": "T14",
@@ -789,7 +690,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1986/120/en/latest/#DLM94278",
-      "responseTime": 9598
+      "responseTime": 444
     },
     {
       "taskId": "T14",
@@ -800,7 +701,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/tenants-rights-and-responsibilities/",
-      "responseTime": 1210
+      "responseTime": 229
     },
     {
       "taskId": "T14",
@@ -811,7 +712,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/disputes/apply-to-tribunal/",
-      "responseTime": 210
+      "responseTime": 246
     },
     {
       "taskId": "T14",
@@ -822,29 +723,28 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.tenancy.govt.nz/healthy-homes/",
-      "responseTime": 204
+      "responseTime": 257
     },
     {
       "taskId": "T15",
       "taskName": "International Remittances Setup",
       "title": "Reserve Bank of New Zealand — no capital controls",
-      "url": "https://www.rbnz.govt.nz/financial-stability/foreign-exchange",
+      "url": "https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates",
       "tier": 1,
       "status": "error",
       "statusCode": 403,
       "errorMessage": "HTTP 403",
-      "responseTime": 214
+      "responseTime": 113
     },
     {
       "taskId": "T15",
       "taskName": "International Remittances Setup",
       "title": "Central Bank of Sri Lanka — foreign exchange",
-      "url": "https://www.cbsl.gov.lk/en/rates-and-indicators/forex",
+      "url": "https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 1388
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 658
     },
     {
       "taskId": "T16",
@@ -855,7 +755,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders",
-      "responseTime": 172
+      "responseTime": 416
     },
     {
       "taskId": "T16",
@@ -866,7 +766,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1998/110/en/latest/#DLM433613",
-      "responseTime": 216
+      "responseTime": 211
     },
     {
       "taskId": "T16",
@@ -877,7 +777,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents",
-      "responseTime": 36
+      "responseTime": 68
     },
     {
       "taskId": "T17",
@@ -888,7 +788,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/international-qualifications/",
-      "responseTime": 663
+      "responseTime": 927
     },
     {
       "taskId": "T17",
@@ -899,7 +799,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/nzqf/",
-      "responseTime": 428
+      "responseTime": 416
     },
     {
       "taskId": "T17",
@@ -910,7 +810,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.immigration.govt.nz/new-zealand-visas/visa-alternates/skilled-migrant-category-resident-visa/",
-      "responseTime": 1305
+      "responseTime": 2062
     },
     {
       "taskId": "T18",
@@ -921,7 +821,7 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020/",
-      "responseTime": 896
+      "responseTime": 613
     },
     {
       "taskId": "T19",
@@ -932,29 +832,27 @@
       "status": "redirect",
       "statusCode": 301,
       "redirectUrl": "https://www.immigration.govt.nz/new-zealand-visas/visas/visa/accredited-employer-work-visa/",
-      "responseTime": 858
+      "responseTime": 885
     },
     {
       "taskId": "T20",
       "taskName": "KiwiSaver Confirmation and Fund Review",
       "title": "KiwiSaver — switching providers (IRD)",
-      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/changing-your-kiwisaver-details/changing-your-kiwisaver-provider",
+      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 679
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 58
     },
     {
       "taskId": "T20",
       "taskName": "KiwiSaver Confirmation and Fund Review",
       "title": "Member tax credit — Inland Revenue",
-      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/government-contributions-to-your-kiwisaver/member-tax-credits",
+      "url": "https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution",
       "tier": 1,
-      "status": "error",
-      "statusCode": 404,
-      "errorMessage": "HTTP 404",
-      "responseTime": 620
+      "status": "success",
+      "statusCode": 200,
+      "responseTime": 509
     },
     {
       "taskId": "T21",
@@ -965,7 +863,7 @@
       "status": "redirect",
       "statusCode": 302,
       "redirectUrl": "https://www.legislation.govt.nz/act/public/1976/166/en/latest/#DLM440945",
-      "responseTime": 184
+      "responseTime": 196
     }
   ]
 }
