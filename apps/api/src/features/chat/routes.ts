@@ -5,8 +5,8 @@ import { db } from '../../shared/db';
 import { logger } from '../../shared/logger';
 import { AppError } from '../../shared/errors';
 import { authenticateRequest } from '../../shared/middleware/auth';
-import { createChatSession } from './service';
-import type { CreateSessionRequest, CreateSessionResponse } from './chat.types';
+import { createChatSession, sendMessage } from './service';
+import type { CreateSessionRequest, CreateSessionResponse, SendMessageRequest } from './chat.types';
 
 export function registerChatRoutes(app: FastifyInstance): void {
   // POST /chat/sessions
@@ -62,6 +62,27 @@ export function registerChatRoutes(app: FastifyInstance): void {
       };
 
       reply.status(201).send(response);
+    },
+  );
+
+  // POST /chat/sessions/:sessionId/messages
+  // Streams assistant response as SSE events.
+  // Implements 10-step pipeline per constitutional constraint C06.
+  app.post<{ Params: { sessionId: string }; Body: SendMessageRequest }>(
+    '/chat/sessions/:sessionId/messages',
+    { preHandler: authenticateRequest },
+    async (request, reply) => {
+      const { sessionId } = request.params;
+      const { body } = request;
+
+      // Validate required fields
+      if (!body.content) {
+        throw new AppError('VALIDATION_ERROR', 'Missing required field: content', 400);
+      }
+
+      // Call service with reply for SSE streaming
+      // SSE headers will be set inside service after validation
+      await sendMessage(request.userId, sessionId, body.content, reply);
     },
   );
 }

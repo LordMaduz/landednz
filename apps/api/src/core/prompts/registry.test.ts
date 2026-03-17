@@ -1,9 +1,11 @@
 // Unit tests for core/prompts/registry.ts
 // TDD for buildChatOpeningMessage() — all 4 entry points covered
+// TDD for buildChatSystemPrompt() — all 7 components + token count
 
 import { describe, expect, test } from 'vitest';
-import { buildChatOpeningMessage } from './registry';
+import { buildChatOpeningMessage, buildChatSystemPrompt } from './registry';
 import type { ChatEntryPoint } from '@landednz/types';
+import type { BuildSystemPromptParams, ChatKbChunk } from '../../features/chat/chat.types';
 
 // Mock user data for tests
 const mockUser = {
@@ -86,5 +88,150 @@ describe('buildChatOpeningMessage()', () => {
     // Should not crash, but format might vary without task name
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThan(0);
+  });
+});
+
+// Mock data for buildChatSystemPrompt() tests
+const mockSystemPromptParams: BuildSystemPromptParams = {
+  user: {
+    name: 'Alex Chen',
+    visaType: 'AEWV',
+    familySituation: 'COUPLE_CONSTRAINED',
+    city: 'AUCKLAND',
+    occupation: 'TECHNOLOGY',
+    arrivalDaysAgo: 45,
+    personaKey: 'constrained_couple',
+    recentCompletions: ['NZ SIM card', 'Bank account', 'IRD number application'],
+  },
+  entryPoint: 'TASK_CARD',
+  taskName: 'IRD number application',
+  consequenceLine: 'Without this, first paycheck taxed at 45%',
+  kbChunks: [
+    {
+      chunkKey: 'T08-constrained_couple',
+      personaKey: 'constrained_couple',
+      content: 'Apply for IRD number within first week. Bring passport and bank details.',
+      sourceName: 'IRD number application',
+      sourceUrl: 'https://ird.govt.nz/individual/ird-numbers',
+    },
+  ],
+  guardrailAugmentations: [],
+};
+
+// Helper function to count approximate tokens (rough estimation: 1 token ≈ 4 chars)
+function estimateTokenCount(text: string): number {
+  return Math.ceil(text.length / 4);
+}
+
+describe('buildChatSystemPrompt()', () => {
+  test('Token count between 800 and 3,500', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+    const tokenCount = estimateTokenCount(result);
+
+    expect(tokenCount).toBeGreaterThanOrEqual(800);
+    expect(tokenCount).toBeLessThanOrEqual(3500);
+  });
+
+  test('Contains user profile data (name, visa, family, city, arrival)', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    expect(result).toContain('Alex Chen');
+    expect(result).toContain('AEWV');
+    expect(result).toContain('COUPLE_CONSTRAINED');
+    expect(result).toContain('AUCKLAND');
+    expect(result).toContain('45 days ago');
+  });
+
+  test('All 7 components present in correct order', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    // Component 1: Identity
+    expect(result).toMatch(/You are LandedNZ/);
+
+    // Component 2: User profile injection
+    expect(result).toMatch(/THE PERSON YOU ARE HELPING:/);
+
+    // Component 3: Persona anchor TOP
+    expect(result).toMatch(/PERSONA ANCHOR — READ BEFORE EVERY RESPONSE:/);
+
+    // Component 4: Behavioural constraints
+    expect(result).toMatch(/BEHAVIOURAL CONSTRAINTS:/);
+    expect(result).toMatch(/1\. GROUNDING:/);
+
+    // Component 5: Scope boundaries
+    expect(result).toMatch(/SCOPE BOUNDARIES:/);
+
+    // Component 6: Retrieved KB chunks
+    expect(result).toMatch(/RETRIEVED KNOWLEDGE BASE CONTENT:/);
+
+    // Component 7: Persona anchor BOTTOM
+    expect(result).toMatch(/FINAL REMINDER: You are speaking with/);
+  });
+
+  test('Both persona anchors present with user name', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    // TOP anchor
+    expect(result).toMatch(/PERSONA ANCHOR — READ BEFORE EVERY RESPONSE:.*Alex Chen/s);
+
+    // BOTTOM anchor
+    expect(result).toMatch(/FINAL REMINDER: You are speaking with Alex Chen/);
+  });
+
+  test('COUPLE_CONSTRAINED includes partner visa and 20hr work limit text', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    expect(result).toMatch(/Partner situation:.*student visa.*20hr work limit/s);
+    expect(result).toMatch(/Income constraint:.*Single income/);
+  });
+
+  test('Guardrail augmentations appended when non-empty', () => {
+    const paramsWithAugmentations: BuildSystemPromptParams = {
+      ...mockSystemPromptParams,
+      guardrailAugmentations: [
+        'CRISIS RESOURCE — RESPOND WITH THIS FIRST: Lifeline NZ is available 24/7: 0800 543 354',
+      ],
+    };
+
+    const result = buildChatSystemPrompt(paramsWithAugmentations);
+
+    expect(result).toMatch(/BEHAVIOURAL CONSTRAINTS:.*8\. NEVER FABRICATE:.*CRISIS RESOURCE/s);
+  });
+
+  test('Empty guardrail augmentations does not affect structure', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    // Should still have all 8 behavioural rules, just no augmentations after
+    expect(result).toMatch(/8\. NEVER FABRICATE:/);
+    expect(result).not.toMatch(/CRISIS RESOURCE/);
+  });
+
+  test('TASK_CARD entry point includes task context block', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    expect(result).toMatch(/CURRENT TASK CONTEXT:/);
+    expect(result).toMatch(/Task: IRD number application/);
+    expect(result).toMatch(/Without this, first paycheck taxed at 45%/);
+  });
+
+  test('ROADMAP entry point excludes task context block', () => {
+    const roadmapParams: BuildSystemPromptParams = {
+      ...mockSystemPromptParams,
+      entryPoint: 'ROADMAP',
+      taskName: null,
+      consequenceLine: null,
+    };
+
+    const result = buildChatSystemPrompt(roadmapParams);
+
+    expect(result).not.toMatch(/CURRENT TASK CONTEXT:/);
+  });
+
+  test('KB chunks formatted correctly', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    expect(result).toMatch(/\[CHUNK 1 — T08-constrained_couple — constrained_couple\]/);
+    expect(result).toMatch(/Apply for IRD number within first week/);
+    expect(result).toMatch(/Source: IRD number application — https:\/\/ird\.govt\.nz/);
   });
 });

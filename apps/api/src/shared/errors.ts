@@ -15,6 +15,9 @@ export type ErrorCode =
   | 'INTERNAL_ERROR'
   | 'USER_NOT_FOUND'
   | 'SUBSCRIPTION_REQUIRED'
+  | 'AI_FAILURE'
+  | 'SESSION_NOT_FOUND'
+  | 'SESSION_ACCESS_DENIED'
 
 export class AppError extends Error {
   constructor(
@@ -24,5 +27,14 @@ export class AppError extends Error {
   ) {
     super(message)
     this.name = 'AppError'
+  }
+}
+
+// AIFailureError: for Claude API failures.
+// Caught INSIDE chat service, never reaches global handler (C13).
+export class AIFailureError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'AIFailureError'
   }
 }

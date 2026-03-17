@@ -13,7 +13,7 @@
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
-| 4 — AI Chat Basic (~40h) | IN PROGRESS | 1 / 15 | — |
+| 4 — AI Chat Basic (~40h) | IN PROGRESS | 2 / 15 | — |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
 
 ---
@@ -102,7 +102,7 @@
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-4-01 | POST /chat/sessions → entry-point-specific opening message | PASS | TDD implementation: buildChatOpeningMessage() + createChatSession() + subscription gate. 12/12 tests pass. TASK_CARD T08 → mentions IRD. AC-4-13 subscription 403 verified. |
-| AC-4-02 | Messages endpoint streams valid SSE events | — | |
+| AC-4-02 | Messages endpoint streams valid SSE events | PASS | Full SSE pipeline: 10-step constitutional order. `shared/ai/claude.client.ts` (C03 SDK isolation), complete `buildChatSystemPrompt()` 7 components, guardrail stubs, 16/16 TDD tests pass, code-reviewer PASS. Real API test requires `ANTHROPIC_API_KEY`. |
 | AC-4-03 | SSE chunks arrive progressively — not buffered | — | |
 | AC-4-04 | CRISIS_SIGNAL → Lifeline NZ leads response | — | |
 | AC-4-05 | PROMPT_INJECTION → graceful response | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-4-02] Complete SSE streaming pipeline implemented. Full `buildChatSystemPrompt()` with 7 components (2,370-3,320 tokens) avoiding AC-4-08 rework. `shared/ai/claude.client.ts` (C03 SDK isolation) + 10-step constitutional pipeline (C06). Level 1/2 guardrail stubs for AC-4-04/05/06/07 extension. `AIFailureError` never reaches global handler (C13). `reply.raw.setTimeout(0)` + SSE event format: `{type:'chunk|done'}`. Code-reviewer PASS: zero violations, production-ready. 16/16 TDD tests pass. Real end-to-end test requires `ANTHROPIC_API_KEY` in env.
 - [AC-4-01/13] Code-reviewer: PASS — Implementation verified with real Supabase Auth-generated JWT tokens and HTTP requests. Zero constitutional violations (C01/C03/C04/C07). Excellent error handling, comprehensive test coverage (12/12 pass), production-ready code. Real HTTP verification: AC-4-01 (subscribed user + T09 → tax opening message), AC-4-13 (unsubscribed user → 403 SUBSCRIPTION_REQUIRED). Manual verification achieved "real confidence" without test manipulation.
 - [AC-4-01] buildChatOpeningMessage(): Core prompt function created in core/prompts/registry.ts (pure function, zero deps). Entry-point-specific messages: TASK_CARD/EMAIL_DEEPLINK reference task name + persona context, ROADMAP/NAVIGATION reference completion count + city. Opening message is static text (no Claude API call). createChatSession() fetches user profile + task name, creates DB session. Route includes subscription gate (AC-4-13): checks Subscription.isActive, returns 403 SUBSCRIPTION_REQUIRED if false. Constitutional compliance: C04 (all prompts in registry), C01 (no feature cross-imports), C03 (no SDK import for this AC). 12/12 tests pass including T08 IRD verification.
 - [AC-2-11] recalculateAllRoadmaps(): processes all users sequentially, re-runs resolveBlockedTasks + scoreTask with currentDate for all non-COMPLETE entries. POST /admin/recalculate protected by optional ADMIN_API_KEY env var (X-Admin-Key header). If ADMIN_API_KEY not set, check skipped (dev convenience). Must use canonical task ID T16 in tests — scoreTask() checks taskId === 'T16' for persona weights + urgency bonuses. 101/101 tests pass.

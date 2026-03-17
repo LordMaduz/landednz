@@ -17,4 +17,7 @@ export const config = {
   // Optional — if set, POST /admin/recalculate requires X-Admin-Key header to match.
   // If not set (local dev), the check is skipped.
   adminApiKey: process.env['ADMIN_API_KEY'],
+  // Anthropic API — required for chat advisor (Job B)
+  anthropicApiKey: requireEnv('ANTHROPIC_API_KEY'),
+  anthropicModel: requireEnv('ANTHROPIC_MODEL'),
 }
