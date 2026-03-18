@@ -104,6 +104,14 @@ Full conventions: `.claude/rules/git-workflow.md`
 - **Never mock authentication in integration tests.**
   Always use real Supabase auth flow: create test users via Supabase, retrieve their actual JWT tokens, use those tokens in Authorization headers for tests, then clean up test users after verification. This approach gives "real confidence" without test manipulation and was successfully used in AC-4-01. Mocking auth leads to 401 errors and doesn't test the actual auth flow.
 
+- **onRoute hooks cannot override preHandlers after route registration.**
+  Route registration happens immediately when `registerChatRoutes()` is called. The `onRoute` hook fires during registration but cannot modify the already-set `preHandler`. Use real Supabase auth in tests instead of mock auth hooks.
+
+### SSE Testing
+
+- **app.inject() buffers entire SSE responses.**
+  Cannot prove progressive delivery with Fastify's `inject()` method. Use standalone scripts with `fetch()` + `ReadableStream` against real servers to verify streaming. Test both success chunks and error events to prove non-buffering in both scenarios.
+
 ## Compounding Engineering
 
 After every correction: `/learn [what was learned]` to update relevant CLAUDE.md.
