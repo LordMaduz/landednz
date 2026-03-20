@@ -234,4 +234,23 @@ describe('buildChatSystemPrompt()', () => {
     expect(result).toMatch(/Apply for IRD number within first week/);
     expect(result).toMatch(/Source: IRD number application — https:\/\/ird\.govt\.nz/);
   });
+
+  test('Components appear in correct order: Identity → Profile → AnchorTop → Constraints → Scope → KB → AnchorBottom', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams);
+
+    const idxIdentity     = result.indexOf('You are LandedNZ');
+    const idxProfile      = result.indexOf('THE PERSON YOU ARE HELPING:');
+    const idxAnchorTop    = result.indexOf('PERSONA ANCHOR — READ BEFORE EVERY RESPONSE:');
+    const idxConstraints  = result.indexOf('BEHAVIOURAL CONSTRAINTS:');
+    const idxScope        = result.indexOf('SCOPE BOUNDARIES:');
+    const idxKb           = result.indexOf('RETRIEVED KNOWLEDGE BASE CONTENT:');
+    const idxAnchorBottom = result.indexOf('FINAL REMINDER: You are speaking with');
+
+    expect(idxIdentity).toBeLessThan(idxProfile);
+    expect(idxProfile).toBeLessThan(idxAnchorTop);
+    expect(idxAnchorTop).toBeLessThan(idxConstraints);
+    expect(idxConstraints).toBeLessThan(idxScope);
+    expect(idxScope).toBeLessThan(idxKb);
+    expect(idxKb).toBeLessThan(idxAnchorBottom);
+  });
 });
