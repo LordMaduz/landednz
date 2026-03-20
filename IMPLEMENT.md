@@ -13,7 +13,7 @@
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
-| 4 — AI Chat Basic (~40h) | IN PROGRESS | 7 / 15 | — |
+| 4 — AI Chat Basic (~40h) | IN PROGRESS | 8 / 15 | — |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
 
 ---
@@ -107,7 +107,7 @@
 | AC-4-04 | CRISIS_SIGNAL → Lifeline NZ leads response | PASS | CRISIS_SIGNAL patterns + Lifeline NZ augmentation. Unit tests: 6/6 pass. Augmentation forces Lifeline NZ before settlement info (C08). |
 | AC-4-05 | PROMPT_INJECTION → graceful response | PASS | TDD implementation: 14 injection patterns (refined "act as a"/"act as an" to avoid false positives). User-friendly augmentation. 6/6 unit tests pass. Code-reviewer PASS: zero violations. |
 | AC-4-06 | OUT_OF_SCOPE_IMMIGRATION → redirect to immigration.govt.nz | PASS | TDD implementation: 9 patterns (added "visa was breached" for past-tense form — spec "visa breach" doesn't match AC test input). Empathetic redirect to immigration.govt.nz/find-an-adviser. 6/6 unit tests pass. Code-reviewer CONDITIONAL PASS. |
-| AC-4-07 | MISSING_CITATION logged in level2Flags — not blocked | — | |
+| AC-4-07 | MISSING_CITATION logged in level2Flags — not blocked | PASS | TDD implementation: MISSING_CITATION + SPECIFIC_NUMBER detection. Flexible "Source:" + URL matching (anywhere after "Source:"). POTENTIAL_OUT_OF_SCOPE as documented stub to avoid false positives. 12/12 unit tests pass. Code-reviewer PASS. |
 | AC-4-08 | buildChatSystemPrompt() 800–3,500 tokens, all 5 components | — | |
 | AC-4-09 | System prompt has correct COUPLE_CONSTRAINED user fields | — | |
 | AC-4-10 | buildChatOpeningMessage() entry-point-specific (no generic "Hi!") | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-4-07] Level 2 MISSING_CITATION guardrail implemented with perfect TDD cycle (9/12 failed → 12/12 pass). Key difference from Level 1: output validator (runs on complete response) vs input classifier. Flexible "Source:" + URL detection prioritizes UX — URL anywhere after "Source:" accommodates different citation formats. POTENTIAL_OUT_OF_SCOPE left as documented stub to avoid false positives without Level 1 context. DB storage via service.ts pipeline already wired from AC-4-02.
 - [AC-4-06] OUT_OF_SCOPE_IMMIGRATION Level 1 guardrail implemented with TDD. Spec inconsistency found: pattern "visa breach" does not match AC test input "my visa was breached" (substring mismatch — "visa " is followed by "was", not "breach"). Fix: added "visa was breached" as an additional pattern. "breached" alone rejected as too broad (fires on tenancy/employment). Redirect to immigration.govt.nz/find-an-adviser. 6/6 unit tests pass.
 - [AC-4-05] PROMPT_INJECTION Level 1 guardrail implemented with TDD. 14 injection patterns with refined "act as a"/"act as an" to avoid false positives on legitimate settlement questions. User-friendly augmentation redirects to settlement help without confrontation. Code-reviewer PASS with zero violations. Constitutional constraint C04 clarified: augmentation strings in level1.ts are guardrail output data, not prompt definitions — moving to registry.ts would violate C02.
 - [AC-4-04] CRISIS_SIGNAL Level 1 guardrail implemented with TDD. 10 patterns detect crisis signals case-insensitively. Verbatim augmentation string includes "RESPOND WITH THIS FIRST" instruction to force Lifeline NZ (0800 543 354) before settlement info, ensuring C08 compliance. Production-ready implementation: 6/6 unit tests pass, zero TypeScript errors, follows all code quality rules.
