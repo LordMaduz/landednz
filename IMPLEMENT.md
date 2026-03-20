@@ -13,7 +13,7 @@
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
-| 4 — AI Chat Basic (~40h) | IN PROGRESS | 3 / 15 | — |
+| 4 — AI Chat Basic (~40h) | IN PROGRESS | 6 / 15 | — |
 | 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
 
 ---
@@ -105,7 +105,7 @@
 | AC-4-02 | Messages endpoint streams valid SSE events | PASS | Full SSE pipeline: 10-step constitutional order. `shared/ai/claude.client.ts` (C03 SDK isolation), complete `buildChatSystemPrompt()` 7 components, guardrail stubs, 16/16 TDD tests pass, code-reviewer PASS. Real API test requires `ANTHROPIC_API_KEY`. |
 | AC-4-03 | SSE chunks arrive progressively — not buffered | PASS | Headers: Connection: keep-alive + X-Accel-Buffering: no added. Verification script at scripts/test-sse-streaming.ts. |
 | AC-4-04 | CRISIS_SIGNAL → Lifeline NZ leads response | PASS | CRISIS_SIGNAL patterns + Lifeline NZ augmentation. Unit tests: 6/6 pass. Augmentation forces Lifeline NZ before settlement info (C08). |
-| AC-4-05 | PROMPT_INJECTION → graceful response | — | |
+| AC-4-05 | PROMPT_INJECTION → graceful response | PASS | TDD implementation: 14 injection patterns (refined "act as a"/"act as an" to avoid false positives). User-friendly augmentation. 6/6 unit tests pass. Code-reviewer PASS: zero violations. |
 | AC-4-06 | OUT_OF_SCOPE_IMMIGRATION → redirect to immigration.govt.nz | — | |
 | AC-4-07 | MISSING_CITATION logged in level2Flags — not blocked | — | |
 | AC-4-08 | buildChatSystemPrompt() 800–3,500 tokens, all 5 components | — | |
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-4-05] PROMPT_INJECTION Level 1 guardrail implemented with TDD. 14 injection patterns with refined "act as a"/"act as an" to avoid false positives on legitimate settlement questions. User-friendly augmentation redirects to settlement help without confrontation. Code-reviewer PASS with zero violations. Constitutional constraint C04 clarified: augmentation strings in level1.ts are guardrail output data, not prompt definitions — moving to registry.ts would violate C02.
 - [AC-4-04] CRISIS_SIGNAL Level 1 guardrail implemented with TDD. 10 patterns detect crisis signals case-insensitively. Verbatim augmentation string includes "RESPOND WITH THIS FIRST" instruction to force Lifeline NZ (0800 543 354) before settlement info, ensuring C08 compliance. Production-ready implementation: 6/6 unit tests pass, zero TypeScript errors, follows all code quality rules.
 - [AC-4-03] End-to-end verification required for AC completion — assumptions not sufficient. Mock auth in routes.test.ts fails due to onRoute hook timing (preHandler already set). Real Supabase auth in messages.test.ts works correctly. SSE progressive delivery verified via scripts/test-sse-streaming.ts using fetch() + ReadableStream against real server. Even error events prove non-buffering if immediate vs delayed.
 
