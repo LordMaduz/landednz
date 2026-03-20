@@ -110,7 +110,7 @@
 | AC-4-07 | MISSING_CITATION logged in level2Flags — not blocked | PASS | TDD implementation: MISSING_CITATION + SPECIFIC_NUMBER detection. Flexible "Source:" + URL matching (anywhere after "Source:"). POTENTIAL_OUT_OF_SCOPE as documented stub to avoid false positives. 12/12 unit tests pass. Code-reviewer PASS. |
 | AC-4-08 | buildChatSystemPrompt() 800–3,500 tokens, all 5 components | PASS | TDD implementation: strict component order verification test added. Tests constitutional 7-component sequence using indexOf() assertions. Code-reviewer PASS. |
 | AC-4-09 | System prompt has correct COUPLE_CONSTRAINED user fields | PASS | Verification-only AC. Added AC-4-09 labelled test: all 5 fields (name/visaType/familySituation/city/arrivalDaysAgo) + COUPLE_CONSTRAINED conditional content. 18/18 tests pass. |
-| AC-4-10 | buildChatOpeningMessage() entry-point-specific (no generic "Hi!") | — | |
+| AC-4-10 | buildChatOpeningMessage() entry-point-specific (no generic "Hi!") | PASS | Verification-only AC. Added AC-4-10 labelled test: TASK_CARD → task name, ROADMAP → completion count, no generic greetings. 19/19 tests pass. |
 | AC-4-11 | AIFailureError → SSE error event, not 500 crash | — | |
 | AC-4-12 | Chat UI — streaming progressive, citation tappable | — | |
 | AC-4-13 | POST /chat/sessions → 403 for unsubscribed | PASS | Subscription gate implemented in routes.ts. Returns 403 SUBSCRIPTION_REQUIRED for users without active subscription. Verified with real HTTP testing. |

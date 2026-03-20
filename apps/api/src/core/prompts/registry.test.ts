@@ -254,6 +254,22 @@ describe('buildChatSystemPrompt()', () => {
     expect(idxKb).toBeLessThan(idxAnchorBottom);
   });
 
+  test('AC-4-10: entry-point-specific messages — no generic "Hi! How can I help?"', () => {
+    // TASK_CARD → task name reference
+    const taskCardResult = buildChatOpeningMessage('TASK_CARD', mockUser, mockTaskContext);
+    expect(taskCardResult.toLowerCase()).toContain('ird number application');
+    expect(taskCardResult.toLowerCase()).not.toContain('hi! how can i help');
+
+    // ROADMAP → completion count reference
+    const roadmapResult = buildChatOpeningMessage('ROADMAP', mockUser, null);
+    expect(roadmapResult).toContain('5'); // completedTaskCount
+    expect(roadmapResult.toLowerCase()).not.toContain('hi! how can i help');
+
+    // All results should be contextual, never generic
+    expect(taskCardResult.toLowerCase()).not.toContain('hello');
+    expect(roadmapResult.toLowerCase()).not.toContain('hello');
+  });
+
   test('AC-4-09: COUPLE_CONSTRAINED user — all 5 profile fields injected correctly', () => {
     const result = buildChatSystemPrompt(mockSystemPromptParams); // familySituation: COUPLE_CONSTRAINED
 
