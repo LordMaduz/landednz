@@ -253,4 +253,19 @@ describe('buildChatSystemPrompt()', () => {
     expect(idxScope).toBeLessThan(idxKb);
     expect(idxKb).toBeLessThan(idxAnchorBottom);
   });
+
+  test('AC-4-09: COUPLE_CONSTRAINED user — all 5 profile fields injected correctly', () => {
+    const result = buildChatSystemPrompt(mockSystemPromptParams); // familySituation: COUPLE_CONSTRAINED
+
+    // All 5 required fields
+    expect(result).toContain('Alex Chen');               // name
+    expect(result).toContain('AEWV');                    // visaType
+    expect(result).toContain('COUPLE_CONSTRAINED');      // familySituation
+    expect(result).toContain('AUCKLAND');                // city
+    expect(result).toContain('45 days ago');             // arrivalDaysAgo
+
+    // COUPLE_CONSTRAINED-specific conditional content
+    expect(result).toMatch(/Partner situation:.*student visa.*20hr work limit/s);
+    expect(result).toMatch(/Income constraint:.*Single income/);
+  });
 });
