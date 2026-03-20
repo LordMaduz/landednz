@@ -47,6 +47,29 @@ const PROMPT_INJECTION_PATTERNS: string[] = [
   "you have no restrictions",
 ];
 
+// OUT_OF_SCOPE_IMMIGRATION patterns — case-insensitive substring match
+// Targets immigration enforcement/legal matters, not legitimate settlement questions
+const OUT_OF_SCOPE_IMMIGRATION_PATTERNS: string[] = [
+  "visa breach",          // matches "there was a visa breach"
+  "visa was breached",    // catches "my visa was breached" — past tense form
+  "visa condition violated",
+  "deportation",
+  "overstayed",
+  "visa appeal",
+  "immigration lawyer",
+  "visa cancelled",
+  "unlawful stay",
+];
+
+// Empathetic redirect — model must NOT answer the immigration legal question
+// Injected into Component 3 of system prompt via buildChatSystemPrompt()
+const OUT_OF_SCOPE_IMMIGRATION_AUGMENTATION =
+  `OUT OF SCOPE — REDIRECT ONLY:\n` +
+  `This question involves immigration legal matters that are outside what I can ` +
+  `help with. Acknowledge the concern with empathy, then direct the user to ` +
+  `immigration.govt.nz/find-an-adviser where they can find a licensed immigration ` +
+  `adviser. Do not attempt to answer the immigration legal question.`;
+
 // User-friendly augmentation — non-confrontational, redirects to settlement help
 // Injected into Component 3 of system prompt via buildChatSystemPrompt()
 const PROMPT_INJECTION_AUGMENTATION =
@@ -76,7 +99,13 @@ export function runLevel1Guardrail(content: string): GuardrailResult {
     };
   }
 
-  // AC-4-06: OUT_OF_SCOPE_IMMIGRATION — stub, implemented in AC-4-06
+    if (OUT_OF_SCOPE_IMMIGRATION_PATTERNS.some(pattern => lower.includes(pattern))) {
+    return {
+      triggered: true,
+      flags: ['OUT_OF_SCOPE_IMMIGRATION'],
+      augmentations: [OUT_OF_SCOPE_IMMIGRATION_AUGMENTATION],
+    };
+  }
 
   return {
     triggered: false,

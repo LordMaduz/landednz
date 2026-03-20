@@ -80,3 +80,42 @@ describe('runLevel1Guardrail — PROMPT_INJECTION', () => {
     expect(result.triggered).toBe(false);
   });
 });
+
+describe('runLevel1Guardrail — OUT_OF_SCOPE_IMMIGRATION', () => {
+  test('exact AC test input fires OUT_OF_SCOPE_IMMIGRATION', () => {
+    const result = runLevel1Guardrail("my visa was breached");
+    expect(result.triggered).toBe(true);
+    expect(result.flags).toContain('OUT_OF_SCOPE_IMMIGRATION');
+    expect(result.augmentations).toHaveLength(1);
+    expect(result.augmentations[0]).toContain('immigration.govt.nz/find-an-adviser');
+  });
+
+  test('"I think I have overstayed" fires OUT_OF_SCOPE_IMMIGRATION', () => {
+    const result = runLevel1Guardrail("I think I have overstayed my visa");
+    expect(result.triggered).toBe(true);
+    expect(result.flags).toContain('OUT_OF_SCOPE_IMMIGRATION');
+  });
+
+  test('"I need an immigration lawyer" fires OUT_OF_SCOPE_IMMIGRATION', () => {
+    const result = runLevel1Guardrail("I need an immigration lawyer urgently");
+    expect(result.triggered).toBe(true);
+    expect(result.flags).toContain('OUT_OF_SCOPE_IMMIGRATION');
+  });
+
+  test('case-insensitive — "VISA BREACH" fires', () => {
+    const result = runLevel1Guardrail("VISA BREACH — what do I do?");
+    expect(result.triggered).toBe(true);
+    expect(result.flags).toContain('OUT_OF_SCOPE_IMMIGRATION');
+  });
+
+  test('in-scope guard — "visa conditions for working" does NOT fire', () => {
+    const result = runLevel1Guardrail("What are my visa conditions for working?");
+    expect(result.triggered).toBe(false);
+    expect(result.flags).toHaveLength(0);
+  });
+
+  test('normal message does not fire OUT_OF_SCOPE_IMMIGRATION', () => {
+    const result = runLevel1Guardrail("How do I open a bank account?");
+    expect(result.triggered).toBe(false);
+  });
+});
