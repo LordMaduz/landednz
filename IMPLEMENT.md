@@ -112,9 +112,9 @@
 | AC-4-09 | System prompt has correct COUPLE_CONSTRAINED user fields | PASS | Verification-only AC. Added AC-4-09 labelled test: all 5 fields (name/visaType/familySituation/city/arrivalDaysAgo) + COUPLE_CONSTRAINED conditional content. 18/18 tests pass. |
 | AC-4-10 | buildChatOpeningMessage() entry-point-specific (no generic "Hi!") | PASS | Verification-only AC. Added AC-4-10 labelled test: TASK_CARD → task name, ROADMAP → completion count, no generic greetings. 19/19 tests pass. |
 | AC-4-11 | AIFailureError → SSE error event, not 500 crash | PASS | Verification AC. Dedicated test file with vi.mock() forces AIFailureError deterministically. 2/2 tests pass: status 200, {"type":"error","message":"AI service unavailable"} in-stream. Code-reviewer PASS. |
-| AC-4-12 | Chat UI — streaming progressive, citation tappable | — | |
+| AC-4-12 | Chat UI — streaming progressive, citation tappable | DEFERRED | UI implementation — ChatScreen.tsx mobile build deferred to dedicated UI phase |
 | AC-4-13 | POST /chat/sessions → 403 for unsubscribed | PASS | Subscription gate implemented in routes.ts. Returns 403 SUBSCRIPTION_REQUIRED for users without active subscription. Verified with real HTTP testing. |
-| AC-4-14 | Conversation history included on subsequent turns | — | |
+| AC-4-14 | Conversation history included on subsequent turns | PASS | Verification AC. History mechanism already correct in service.ts (step 3 fetches all messages, step 6 passes to streamMessage). New test verifies full conversation history passed on turn 2. 2/2 tests pass. Code-reviewer PASS. |
 | AC-4-15 | ChatMessage persisted both roles — retrievedChunks + guardrailFlags populated | — | |
 
 **Phase 4 Gate:** BLOCKED
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-4-14] Conversation history verification AC. No implementation changes — history mechanism already correct in service.ts from AC-4-02. Step 3 fetches ALL session messages (including just-persisted current message), step 6 passes to streamMessage(). New test file service.history.test.ts pre-seeds prior USER+ASSISTANT exchange, sends turn 2, verifies streamMessage receives full conversation history in chronological order. 2/2 tests pass. Code-reviewer PASS.
 - [AC-4-11] AIFailureError verification AC. No implementation changes — error path already in service.ts from AC-4-02. New test file service.ai-failure.test.ts uses vi.mock() on claude.client to force AIFailureError deterministically. Real Supabase auth + real DB (auth never mocked). 2/2 tests pass. Code-reviewer PASS.
 - [AC-4-08] buildChatSystemPrompt() verification completed — pure verification AC with no implementation changes. Added strict component order test using indexOf() comparisons to verify constitutional 7-component sequence: Identity → Profile → AnchorTop → Constraints → Scope → KB → AnchorBottom. All existing tests continue passing (baseline was 17 tests, not 10 as originally expected from AC-4-02 expansion). Code-reviewer PASS: zero violations. Test count discrepancy explained — AC-4-02 implementation already included comprehensive coverage.
 - [AC-4-07] Level 2 MISSING_CITATION guardrail implemented with perfect TDD cycle (9/12 failed → 12/12 pass). Key difference from Level 1: output validator (runs on complete response) vs input classifier. Flexible "Source:" + URL detection prioritizes UX — URL anywhere after "Source:" accommodates different citation formats. POTENTIAL_OUT_OF_SCOPE left as documented stub to avoid false positives without Level 1 context. DB storage via service.ts pipeline already wired from AC-4-02.
