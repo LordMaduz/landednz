@@ -14,7 +14,7 @@
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
 | 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
-| 5 — RAG + Launch (~60h) | IN PROGRESS | 1 / 13 | Requires Phase 4 PASS |
+| 5 — RAG + Launch (~60h) | IN PROGRESS | 2 / 13 | In progress |
 
 ---
 
@@ -123,12 +123,12 @@
 
 ## Phase 5 — RAG + Launch
 
-**Status:** BLOCKED (Phase 4 not complete)
+**Status:** IN PROGRESS — 2 / 13 ACs complete
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-5-01 | generate-embeddings.ts — zero NULL embeddings after run | PASS | OpenAI text-embedding-3-small (1536 dims), 42/42 chunks processed successfully. Raw SQL migration + openai package isolated in embeddings.client.ts. Script respects C05 (no ivfflat). Verification: 0 NULL embeddings. |
-| AC-5-02 | ivfflat index created — EXPLAIN shows Index Scan | — | |
+| AC-5-02 | ivfflat index created — EXPLAIN shows Index Scan | PASS | Pure DB operation. `CREATE INDEX ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)` executed. EXPLAIN with `SET enable_seqscan = off` confirmed `Index Scan using "KnowledgeBaseChunk_embedding_idx"` with cosine `<=>` operator. No code files created. |
 | AC-5-03 | retrieveChunks() returns constrained_couple chunk (not solo_aewv) | — | |
 | AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | — | |
 | AC-5-05 | Production IRD question → grounded in T08 chunk, cites ird.govt.nz | — | |
@@ -141,7 +141,7 @@
 | AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | — | |
 | AC-5-13 | BigInt fix applied — pgvector query serialises without error | — | |
 
-**Phase 5 Gate:** BLOCKED — begins after Phase 4 gate PASS
+**Phase 5 Gate:** BLOCKED — begins after all ACs pass
 
 ---
 
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-5-02] ivfflat index created manually in PostgreSQL (not in any migration file — C05). Index name: KnowledgeBaseChunk_embedding_idx. EXPLAIN with `SET enable_seqscan = off` confirmed Index Scan (not Seq Scan) — required because 42 rows is too small for PostgreSQL planner to naturally prefer index. No code files created or modified.
 - [AC-5-01] OpenAI text-embedding-3-small integration complete. Spec inconsistency resolved: "Anthropic text-embedding-3-small" doesn't exist — OpenAI's text-embedding-3-small (1536 dims) used instead. Raw SQL migration for vector column avoids Prisma shadow DB issue. Script processes 42 chunks sequentially (rate limit friendly), respects C05 (no ivfflat in script). All embeddings generated successfully, 0 failures.
 - [Phase 4 Gate] routes.test.ts rewritten with real Supabase auth — onRoute mock auth pattern was always broken (hook fires during route registration, not after buildApp()). Also fixed: "no profile" test was logically wrong (no subscription → 403 before 404 profile check). All 168/168 tests pass after fix.
 - [AC-4-15] ChatMessage persistence verification AC. No implementation changes — persistence already correct in service.ts from AC-4-02. New test file service.persistence.test.ts seeds a TEST-P15 task+variant in beforeAll so kbChunks are non-empty (test DB has no seed data). 4/4 tests pass: USER+ASSISTANT records in DB, retrievedChunks contains taskId-personaKey keys, guardrailFlags=["CRISIS_SIGNAL"] when crisis trigger fires, guardrailFlags=[] for neutral messages. Code-reviewer PASS.
