@@ -20,4 +20,6 @@ export const config = {
   // Anthropic API — required for chat advisor (Job B)
   anthropicApiKey: requireEnv('ANTHROPIC_API_KEY'),
   anthropicModel: requireEnv('ANTHROPIC_MODEL'),
+  // OpenAI API — required for RAG embeddings (text-embedding-3-small, 1536 dims)
+  openaiApiKey: requireEnv('OPENAI_API_KEY'),
 }
