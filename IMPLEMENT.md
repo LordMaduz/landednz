@@ -14,7 +14,7 @@
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
 | 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
-| 5 — RAG + Launch (~60h) | IN PROGRESS | 2 / 13 | In progress |
+| 5 — RAG + Launch (~60h) | IN PROGRESS | 3 / 13 | In progress |
 
 ---
 
@@ -123,13 +123,13 @@
 
 ## Phase 5 — RAG + Launch
 
-**Status:** IN PROGRESS — 2 / 13 ACs complete
+**Status:** IN PROGRESS — 3 / 13 ACs complete
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-5-01 | generate-embeddings.ts — zero NULL embeddings after run | PASS | OpenAI text-embedding-3-small (1536 dims), 42/42 chunks processed successfully. Raw SQL migration + openai package isolated in embeddings.client.ts. Script respects C05 (no ivfflat). Verification: 0 NULL embeddings. |
 | AC-5-02 | ivfflat index created — EXPLAIN shows Index Scan | PASS | Pure DB operation. `CREATE INDEX ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)` executed. EXPLAIN with `SET enable_seqscan = off` confirmed `Index Scan using "KnowledgeBaseChunk_embedding_idx"` with cosine `<=>` operator. No code files created. |
-| AC-5-03 | retrieveChunks() returns constrained_couple chunk (not solo_aewv) | — | |
+| AC-5-03 | retrieveChunks() returns constrained_couple chunk (not solo_aewv) | PASS | 6-step RAG pipeline in features/chat/rag/retrieval.ts. SQL persona pre-filter (C07). GOLDEN 1: CHUNK_T08_constrained_couple in top 3 for IRD query, CHUNK_T08_solo_aewv excluded. All 4 golden examples pass 4/4. Code-reviewer PASS. |
 | AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | — | |
 | AC-5-05 | Production IRD question → grounded in T08 chunk, cites ird.govt.nz | — | |
 | AC-5-06 | ChatMessage.retrievedChunks has KnowledgeBaseChunk IDs (not task IDs) | — | |
@@ -153,10 +153,10 @@
 | Priority GOLDEN 2 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
 | Priority GOLDEN 3 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
 | Priority GOLDEN 4 | apps/api/src/core/priority/scoring.test.ts | 2026-03-14 | PASS |
-| RAG GOLDEN 1 | golden-examples/rag-retrieval.ts | — | — |
-| RAG GOLDEN 2 | golden-examples/rag-retrieval.ts | — | — |
-| RAG GOLDEN 3 | golden-examples/rag-retrieval.ts | — | — |
-| RAG GOLDEN 4 | golden-examples/rag-retrieval.ts | — | — |
+| RAG GOLDEN 1 | golden-examples/rag-retrieval.ts | 2026-03-22 | PASS |
+| RAG GOLDEN 2 | golden-examples/rag-retrieval.ts | 2026-03-22 | PASS |
+| RAG GOLDEN 3 | golden-examples/rag-retrieval.ts | 2026-03-22 | PASS |
+| RAG GOLDEN 4 | golden-examples/rag-retrieval.ts | 2026-03-22 | PASS |
 
 ---
 
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-5-03] CHUNK_CONTEXT_suburbs (personaKey=NULL, chunkType=SETTLEMENT_CONTEXT) inserted manually — spec described this chunk but it was never seeded (42 TaskContentVariant → 42 chunks, no null-personaKey chunks existed). Option A chosen to preserve C07 null-personaKey code path. generateEmbedding reused from embeddings.client.ts. vitest.config.ts updated to include golden-examples/**/*.ts. All 4 golden examples pass.
 - [AC-5-02] ivfflat index created manually in PostgreSQL (not in any migration file — C05). Index name: KnowledgeBaseChunk_embedding_idx. EXPLAIN with `SET enable_seqscan = off` confirmed Index Scan (not Seq Scan) — required because 42 rows is too small for PostgreSQL planner to naturally prefer index. No code files created or modified.
 - [AC-5-01] OpenAI text-embedding-3-small integration complete. Spec inconsistency resolved: "Anthropic text-embedding-3-small" doesn't exist — OpenAI's text-embedding-3-small (1536 dims) used instead. Raw SQL migration for vector column avoids Prisma shadow DB issue. Script processes 42 chunks sequentially (rate limit friendly), respects C05 (no ivfflat in script). All embeddings generated successfully, 0 failures.
 - [Phase 4 Gate] routes.test.ts rewritten with real Supabase auth — onRoute mock auth pattern was always broken (hook fires during route registration, not after buildApp()). Also fixed: "no profile" test was logically wrong (no subscription → 403 before 404 profile check). All 168/168 tests pass after fix.

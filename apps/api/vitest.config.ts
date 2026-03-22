@@ -11,5 +11,7 @@ export default defineConfig({
     // Integration tests share canonical task IDs in the DB — run files sequentially
     // to prevent concurrent CREATE conflicts between test files.
     fileParallelism: false,
+    // Include RAG golden examples (not named *.test.ts — named per spec convention)
+    include: ['**/*.{test,spec}.{ts,js}', 'golden-examples/**/*.ts'],
   },
 });
