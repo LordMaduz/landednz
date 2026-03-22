@@ -136,6 +136,21 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 
 ### Testing & Dependencies
 
+- **Test DB has no seed data — create test-specific TaskContentVariants in tests.**
+  Any test needing TaskContentVariants must create them in beforeAll using test-specific task IDs (e.g., TEST-P15).
+  Never assume seeded tasks like T08/T09 exist in test DB — they only exist after AC-2-15 seed in dev/prod.
+
+- **onRoute hooks added AFTER buildApp() never fire — routes already registered.**
+  Mock auth via onRoute hooks is impossible because routes register immediately when `buildApp()` returns.
+  Always use real Supabase auth: create user → get JWT → Authorization header. Broken pattern:
+  ```typescript
+  const app = buildApp(); app.addHook('onRoute', ...) // hook never fires
+  ```
+
+- **Error precedence in route guards: auth (401) → validation (400) → subscription (403) → business (404).**
+  When testing edge cases like "no subscription + no profile", subscription gate (403) fires before profile check (404).
+  Respect the middleware order when writing expected test outcomes.
+
 - **Integration test cleanup with canonical task IDs requires comprehensive deletion.**
   Delete ALL TaskDependency records referencing canonical IDs (T06/T07/T08 etc.) as both prerequisiteId and dependentId.
   AC-2-15 seed data introduces real dependencies for all 21 tasks — narrow cleanup queries miss these.

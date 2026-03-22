@@ -5,16 +5,16 @@
 
 ## Overall Progress
 
-**Active Phase:** Phase 2 — Roadmap Engine
-**Phases Complete:** 1 / 5
+**Active Phase:** Phase 5 — RAG + Launch
+**Phases Complete:** 3 / 5
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
 | 1 — Foundation (~60h) | COMPLETE | 15 / 15 | PASS |
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
-| 4 — AI Chat Basic (~40h) | IN PROGRESS | 9 / 15 | — |
-| 5 — RAG + Launch (~60h) | BLOCKED | 0 / 13 | Requires Phase 4 PASS |
+| 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
+| 5 — RAG + Launch (~60h) | IN PROGRESS | 0 / 13 | Requires Phase 4 PASS |
 
 ---
 
@@ -117,7 +117,7 @@
 | AC-4-14 | Conversation history included on subsequent turns | PASS | Verification AC. History mechanism already correct in service.ts (step 3 fetches all messages, step 6 passes to streamMessage). New test verifies full conversation history passed on turn 2. 2/2 tests pass. Code-reviewer PASS. |
 | AC-4-15 | ChatMessage persisted both roles — retrievedChunks + guardrailFlags populated | PASS | Verification AC. New test file service.persistence.test.ts: creates TEST-P15 task+variant in setup so kbChunks populate. 4/4 tests pass: both roles in DB, retrievedChunks non-empty with taskId-personaKey keys, guardrailFlags=["CRISIS_SIGNAL"] when Level 1 fires, guardrailFlags=[] when no flag triggers. Code-reviewer PASS. |
 
-**Phase 4 Gate:** BLOCKED
+**Phase 4 Gate:** PASS — 2026-03-22. 14 PASS + 1 DEFERRED (AC-4-12 UI). 168/168 tests pass. routes.test.ts rewritten with real Supabase auth (onRoute mock auth broken pattern fixed).
 
 ---
 
@@ -141,7 +141,7 @@
 | AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | — | |
 | AC-5-13 | BigInt fix applied — pgvector query serialises without error | — | |
 
-**Phase 5 Gate:** BLOCKED
+**Phase 5 Gate:** BLOCKED — begins after Phase 4 gate PASS
 
 ---
 
@@ -164,6 +164,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [Phase 4 Gate] routes.test.ts rewritten with real Supabase auth — onRoute mock auth pattern was always broken (hook fires during route registration, not after buildApp()). Also fixed: "no profile" test was logically wrong (no subscription → 403 before 404 profile check). All 168/168 tests pass after fix.
 - [AC-4-15] ChatMessage persistence verification AC. No implementation changes — persistence already correct in service.ts from AC-4-02. New test file service.persistence.test.ts seeds a TEST-P15 task+variant in beforeAll so kbChunks are non-empty (test DB has no seed data). 4/4 tests pass: USER+ASSISTANT records in DB, retrievedChunks contains taskId-personaKey keys, guardrailFlags=["CRISIS_SIGNAL"] when crisis trigger fires, guardrailFlags=[] for neutral messages. Code-reviewer PASS.
 - [AC-4-14] Conversation history verification AC. No implementation changes — history mechanism already correct in service.ts from AC-4-02. Step 3 fetches ALL session messages (including just-persisted current message), step 6 passes to streamMessage(). New test file service.history.test.ts pre-seeds prior USER+ASSISTANT exchange, sends turn 2, verifies streamMessage receives full conversation history in chronological order. 2/2 tests pass. Code-reviewer PASS.
 - [AC-4-11] AIFailureError verification AC. No implementation changes — error path already in service.ts from AC-4-02. New test file service.ai-failure.test.ts uses vi.mock() on claude.client to force AIFailureError deterministically. Real Supabase auth + real DB (auth never mocked). 2/2 tests pass. Code-reviewer PASS.
