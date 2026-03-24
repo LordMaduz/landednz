@@ -11,15 +11,15 @@
 
 | Screen | File | URL Route | Description |
 |--------|------|-----------|-------------|
-| 1. Landing Page | `mockup-screens/landednz-screen1-landing-page.jsx` | `/` | Marketing entry point. Hero + problem statement + how it works + social proof + pricing + CTA |
-| 2. Onboarding Flow | `mockup-screens/landednz-screen2-onboarding.jsx` | `/onboarding` | 5-question conversational flow + roadmap reveal transition (includes Screen 8) |
-| 3. Roadmap Dashboard | `mockup-screens/landednz-screen3-roadmap-dashboard.jsx` | `/roadmap` | Core app screen. Sidebar + hero card + priority tasks + filter tabs + phase sections + task detail replacement |
+| 1. Landing Page | `mockup-screens/landednz-screen-landing-page.jsx` | `/` | Marketing entry point. Hero + problem statement + how it works + social proof + pricing + CTA |
+| 2. Onboarding Flow | `mockup-screens/landednz-screen-onboarding.jsx` | `/onboarding` | 5-question conversational flow + roadmap reveal transition (includes Screen 8) |
+| 3. Roadmap Dashboard | `mockup-screens/landednz-screen-roadmap-dashboard.jsx` | `/roadmap` | Core app screen. Sidebar + hero card + priority tasks + filter tabs + phase sections + task detail replacement |
 | 4. Task Detail | (embedded in Screen 3) | `/roadmap` (replaces list) | Full task detail with consequence callout, steps, documents, source, tips, actions |
-| 5. Chat Interface | `mockup-screens/landednz-screen5-chat-interface.jsx` | Floating overlay | Intercom Fin pattern. Entry-point-aware, structured responses, inline citations, thinking state |
-| 6. Premium Gate | `mockup-screens/landednz-screen6-premium-gate.jsx` | `/roadmap` (inline) | Inline card between free and premium tasks. Three paths: upgrade, defer, decline |
-| 7. Settings | `mockup-screens/landednz-screen7-settings.jsx` | `/settings` | Profile, subscription, notifications, account. Single column centered |
+| 5. Chat Interface | `mockup-screens/landednz-screen-chat-interface.jsx` | Floating overlay | Intercom Fin pattern. Entry-point-aware, structured responses, inline citations, thinking state |
+| 6. Premium Gate | `mockup-screens/landednz-screen-premium-gate.jsx` | `/roadmap` (inline) | Inline card between free and premium tasks. Three paths: upgrade, defer, decline |
+| 7. Settings | `mockup-screens/landednz-screen-settings.jsx` | `/settings` | Profile, subscription, notifications, account. Single column centered |
 | 8. Roadmap Reveal | (embedded in Screen 2) | `/onboarding` → `/roadmap` | Transition animation with personalised messages. 1.5–2s psychological pause |
-| 9. Auth | `mockup-screens/landednz-screen9-auth.jsx` | `/auth/signin` | Google OAuth + magic link email. "Save your progress" framing |
+| 9. Auth | `mockup-screens/landednz-screen-auth.jsx` | `/auth/signin` | Google OAuth + magic link email. "Save your progress" framing |
 
 ---
 

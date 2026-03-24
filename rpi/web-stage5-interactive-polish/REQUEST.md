@@ -42,11 +42,11 @@ Exact animation specs are documented in `mockup-screens/MOCKUP-REFERENCE-INDEX.m
 under the ANIMATION SPECS section. All durations, easings, and keyframes are defined there.
 
 Key animations to verify against mockups:
-- Task row hover → `mockup-screens/landednz-screen3-roadmap-dashboard.jsx`
-- Chat thinking dots → `mockup-screens/landednz-screen5-chat-interface.jsx`
-- Onboarding transitions → `mockup-screens/landednz-screen2-onboarding.jsx`
-- Premium gate collapse → `mockup-screens/landednz-screen6-premium-gate.jsx`
-- Auth states → `mockup-screens/landednz-screen9-auth.jsx`
+- Task row hover → `mockup-screens/landednz-screen-roadmap-dashboard.jsx`
+- Chat thinking dots → `mockup-screens/landednz-screen-chat-interface.jsx`
+- Onboarding transitions → `mockup-screens/landednz-screen-onboarding.jsx`
+- Premium gate collapse → `mockup-screens/landednz-screen-premium-gate.jsx`
+- Auth states → `mockup-screens/landednz-screen-auth.jsx`
 
 ---
 

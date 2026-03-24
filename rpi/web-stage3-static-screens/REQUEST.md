@@ -18,13 +18,13 @@ Before implementing any screen, open and interact with the corresponding mockup:
 
 | Screen | Mockup file | Key visual elements |
 |--------|-------------|-------------------|
-| Landing page | `mockup-screens/landednz-screen1-landing-page.jsx` | Hero, problem cards, how it works, pricing |
-| Onboarding | `mockup-screens/landednz-screen2-onboarding.jsx` | 5 questions, progress bar, roadmap reveal |
-| Roadmap dashboard | `mockup-screens/landednz-screen3-roadmap-dashboard.jsx` | Hero card, priority tasks, filter tabs, phases, task detail REPLACEMENT |
-| Chat interface | `mockup-screens/landednz-screen5-chat-interface.jsx` | Floating overlay, thinking state, citations |
-| Premium gate | `mockup-screens/landednz-screen6-premium-gate.jsx` | Inline card, 3 paths, banner collapse |
-| Settings | `mockup-screens/landednz-screen7-settings.jsx` | Profile, subscription, notifications, delete modal |
-| Auth | `mockup-screens/landednz-screen9-auth.jsx` | Google OAuth, magic link, confirmation |
+| Landing page | `mockup-screens/landednz-screen-landing-page.jsx` | Hero, problem cards, how it works, pricing |
+| Onboarding | `mockup-screens/landednz-screen-onboarding.jsx` | 5 questions, progress bar, roadmap reveal |
+| Roadmap dashboard | `mockup-screens/landednz-screen-roadmap-dashboard.jsx` | Hero card, priority tasks, filter tabs, phases, task detail REPLACEMENT |
+| Chat interface | `mockup-screens/landednz-screen-chat-interface.jsx` | Floating overlay, thinking state, citations |
+| Premium gate | `mockup-screens/landednz-screen-premium-gate.jsx` | Inline card, 3 paths, banner collapse |
+| Settings | `mockup-screens/landednz-screen-settings.jsx` | Profile, subscription, notifications, delete modal |
+| Auth | `mockup-screens/landednz-screen-auth.jsx` | Google OAuth, magic link, confirmation |
 
 Also read `mockup-screens/MOCKUP-REFERENCE-INDEX.md` for design decisions, token
 values, and the component inventory.
@@ -72,7 +72,7 @@ TypeScript interfaces from `@landednz/types` and `src/types/web.ts`.
 
 | AC | Description | Verification |
 |----|-------------|-------------|
-| AC-W3-01 | Landing page: 6 sections, matches `mockup-screens/landednz-screen1-landing-page.jsx` | Side-by-side visual comparison |
+| AC-W3-01 | Landing page: 6 sections, matches `mockup-screens/landednz-screen-landing-page.jsx` | Side-by-side visual comparison |
 | AC-W3-02 | Onboarding: 5 questions, option cards highlight on select, progress bar fills | Click through flow |
 | AC-W3-03 | Roadmap reveal transition: personalised messages, reduced motion = instant | Visual + toggle |
 | AC-W3-04 | Roadmap dashboard: teal hero card with circular progress, "Do these first" 3 cards, filter tabs | Visual comparison with mockup |

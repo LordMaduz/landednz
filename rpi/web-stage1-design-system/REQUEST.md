@@ -61,7 +61,7 @@ documented states. Nothing more.**
 - **Font loading** — DM Sans is a variable font (single woff2 file); DM Serif Display is a static font (single weight 400). Both need separate @font-face declarations with `font-display: swap`.
 - **Font name confusion** — DM Sans, NOT Inter. The original spec said Inter but the mockup session changed it. If you see "Inter" anywhere in the codebase, it's wrong.
 - **Tailwind `extend` not merging** — test `bg-primary` class in a component, inspect computed style
-- **StatusIndicator icons wrong** — verify each against mockup `mockup-screens/landednz-screen3-roadmap-dashboard.jsx`
+- **StatusIndicator icons wrong** — verify each against mockup `mockup-screens/landednz-screen-roadmap-dashboard.jsx`
 - **Reduced motion not tested** — toggle via DevTools → Rendering → Emulate `prefers-reduced-motion`
 - **Contrast failure on warning-light** — text-primary (#1A1A2E) on warning-light (#FDF6E7) may be close to 4.5:1
 - **Storybook + Tailwind config** — Storybook needs `tailwind.config.ts` path in its config for styles to apply
