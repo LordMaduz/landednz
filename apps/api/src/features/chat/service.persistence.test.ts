@@ -182,7 +182,7 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
     expect(messages[1].role).toBe('ASSISTANT');
   }, 10000);
 
-  test('AC-4-15: retrievedChunks populated with T08 task variant chunk keys', async () => {
+  test('AC-4-15: retrievedChunks populated with real KnowledgeBaseChunk keys via RAG', async () => {
     // Query the assistant message from the previous test
     const assistantMessage = await db.chatMessage.findFirst({
       where: {
@@ -194,16 +194,22 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
     expect(assistantMessage).not.toBeNull();
     expect(assistantMessage!.retrievedChunks).not.toBeNull();
 
-    // Parse JSON — must be a non-empty array (T08 has variants in AC-2-15 seed)
+    // Parse JSON — must be a non-empty array of real KnowledgeBaseChunk chunkKeys from RAG
     const chunks = JSON.parse(assistantMessage!.retrievedChunks as string) as string[];
     expect(Array.isArray(chunks)).toBe(true);
-    expect(chunks.length).toBeGreaterThan(0);
+    expect(chunks.length).toBeGreaterThanOrEqual(3);
+    expect(chunks.length).toBeLessThanOrEqual(5);
 
-    // Each key is in chunkKey format: taskId-personaKey (e.g., "TEST-P15-constrained_couple")
+    // Phase 5: real CHUNK_<taskId>_<personaKey> format from semantic search (not test task)
     chunks.forEach(key => {
-      expect(key).toContain(TEST_TASK_ID);
+      expect(key).toMatch(/^CHUNK_T\d+_/);
+      expect(typeof key).toBe('string');
+      expect(key.length).toBeGreaterThan(10);
     });
-  }, 10000);
+
+    // Should contain real KB chunks for "bank account" query — likely T01 or T08
+    console.log('Retrieved chunks from RAG:', chunks);
+  }, 30000);
 
   test('AC-4-15: guardrailFlags populated with CRISIS_SIGNAL when triggered', async () => {
     // Create a fresh session for this test to isolate DB state

@@ -9,6 +9,7 @@ import { streamMessage, type ChatMessage } from '../../shared/ai/claude.client';
 import { runLevel1Guardrail } from './guardrails/level1';
 import { runLevel2Guardrail } from './guardrails/level2';
 import type { ChatEntryPoint } from '@landednz/types';
+import { retrieveChunks, type RetrievedChunk } from './rag/retrieval';
 import type { CreateSessionResponse, BuildSystemPromptParams, ChatKbChunk } from './chat.types';
 import type { FastifyReply } from 'fastify';
 
@@ -170,33 +171,51 @@ export async function sendMessage(
       content: msg.content,
     }));
 
-    // Step 4: Fetch task content from DB (Phase 4 placeholder for RAG)
-    let kbChunks: ChatKbChunk[] = [];
+    // Step 4: RAG retrieval — replaces Phase 4 DB placeholder (C07, C13)
+    // Runs for ALL messages regardless of entry point — query drives retrieval.
+    let retrievedChunksResult: RetrievedChunk[] = [];
+    try {
+      retrievedChunksResult = await retrieveChunks({
+        query: content,
+        personaKey: session.user.profile.personaKey,
+        visaType: session.user.profile.visaType,
+        city: session.user.profile.city,
+        taskContext: session.taskContext,
+      });
+    } catch (error) {
+      // C13: embeddings.client.ts does NOT wrap OpenAI errors as AIFailureError.
+      // SSE headers already sent — must convert here so outer catch emits SSE error event.
+      throw new AIFailureError(
+        `RAG retrieval failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+
+    const kbChunks: ChatKbChunk[] = retrievedChunksResult.map(chunk => ({
+      chunkKey: chunk.chunkKey,
+      personaKey: session.user.profile!.personaKey,
+      content: chunk.content,
+      sourceName: chunk.sourceName,
+      sourceUrl: chunk.sourceUrl,
+    }));
+
+    // Fetch taskName + consequenceLine separately — Component 2 task context, not Component 6 KB
     let taskName: string | null = null;
     let consequenceLine: string | null = null;
-
     if (session.taskContext) {
-      const taskVariants = await db.taskContentVariant.findMany({
-        where: { taskId: session.taskContext },
-        include: { task: true },
+      const task = await db.task.findUnique({
+        where: { id: session.taskContext },
+        select: { name: true },
       });
+      taskName = task?.name ?? null;
 
-      if (taskVariants.length > 0) {
-        taskName = taskVariants[0].task.name;
-
-        // Format as KB chunks (Phase 4 placeholder)
-        kbChunks = taskVariants.map(variant => ({
-          chunkKey: `${variant.taskId}-${variant.personaKey}`,
-          personaKey: variant.personaKey,
-          content: `${variant.steps}\n\nDocuments required: ${variant.documentsRequired}\n\nCommon mistakes: ${variant.commonMistakes}`,
-          sourceName: variant.task.name,
-          sourceUrl: variant.sourceUrl,
-        }));
-
-        // Get consequence line for user's persona
-        const userVariant = taskVariants.find(v => v.personaKey === session.user.profile!.personaKey);
-        consequenceLine = userVariant?.consequenceLine || taskVariants[0]?.consequenceLine || null;
-      }
+      const variant = await db.taskContentVariant.findFirst({
+        where: {
+          taskId: session.taskContext,
+          personaKey: session.user.profile.personaKey,
+        },
+        select: { consequenceLine: true },
+      });
+      consequenceLine = variant?.consequenceLine ?? null;
     }
 
     // Calculate arrival days ago
@@ -254,7 +273,7 @@ export async function sendMessage(
         role: 'ASSISTANT',
         content: fullResponse,
         guardrailFlags: JSON.stringify(level1Result.flags),
-        retrievedChunks: JSON.stringify(kbChunks.map(chunk => chunk.chunkKey)),
+        retrievedChunks: JSON.stringify(retrievedChunksResult.map(chunk => chunk.chunkKey)),
       },
     });
 

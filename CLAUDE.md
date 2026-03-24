@@ -195,6 +195,11 @@ Full conventions: `.claude/rules/git-workflow.md`
 - **app.inject() buffers entire SSE responses.**
   Cannot prove progressive delivery with Fastify's `inject()` method. Use standalone scripts with `fetch()` + `ReadableStream` against real servers to verify streaming. Test both success chunks and error events to prove non-buffering in both scenarios.
 
+### Implementation Verification
+
+- **Never mock away integration failures during critical AC implementation.**
+  When core features like RAG integration timeout or fail in tests, investigate the root cause first. Mocking `retrieveChunks()` to "fix" timeouts hides real integration issues and breaks verification integrity. Critical ACs require end-to-end verification with real API calls, real embeddings, and real chunk IDs in the database. Test shortcuts during core feature implementation are unacceptable. Learned during AC-5-06 RAG wiring.
+
 ### Web-Specific Gotchas
 
 - **Supabase SSR cookie configuration.**

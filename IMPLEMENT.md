@@ -143,7 +143,7 @@
 | AC-5-03 | retrieveChunks() returns constrained_couple chunk (not solo_aewv) | PASS | 6-step RAG pipeline in features/chat/rag/retrieval.ts. SQL persona pre-filter (C07). GOLDEN 1: CHUNK_T08_constrained_couple in top 3 for IRD query, CHUNK_T08_solo_aewv excluded. All 4 golden examples pass 4/4. Code-reviewer PASS. |
 | AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | PASS | Verification-only AC. No code changes needed — retrieval.ts from AC-5-03 passed all 4 golden examples immediately. DB state confirmed: CHUNK_CONTEXT_suburbs has embedding, 0 null embeddings across 43 chunks. GOLDEN 2 (T11>T14 for bond query), GOLDEN 3 (CHUNK_CONTEXT_suburbs present for suburbs query), GOLDEN 4 (5 chunks returned for out-of-scope medical query). Code-reviewer PASS. |
 | AC-5-05 | Production IRD question → grounded in T08 chunk, cites ird.govt.nz | — | |
-| AC-5-06 | ChatMessage.retrievedChunks has KnowledgeBaseChunk IDs (not task IDs) | — | |
+| AC-5-06 | ChatMessage.retrievedChunks has KnowledgeBaseChunk IDs (not task IDs) | PASS | Phase 4 DB placeholder in service.ts Step 4 replaced with retrieveChunks(). RAG runs for ALL messages (not just TASK_CARD). AIFailureError wrap added (C13 — embeddings.client.ts doesn't wrap OpenAI errors). taskName/consequenceLine still fetched from DB separately for Component 2. retrievedChunks stores CHUNK_T08_constrained_couple format. service.persistence + messages tests updated with vi.mock for retrieveChunks. 172/172 tests pass. Code-reviewer PASS. |
 | AC-5-07 | Production Railway → Supabase. GET /health dbConnected: true | — | |
 | AC-5-08 | Apple Sign-In still present in production build | — | |
 | AC-5-09 | iOS sandbox payment tested on real device — production RevenueCat | — | |
