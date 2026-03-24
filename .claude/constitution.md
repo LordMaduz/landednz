@@ -1,5 +1,5 @@
 # LandedNZ — Architectural Constitution
-*Source: 12-build-specification.md + 09-ai-design.md*
+*Source: 12-build-specification.md + 09-ai-design.md + 15-web-build-specification.md*
 *Non-negotiable. Any violation must be flagged and resolved before implementation proceeds.*
 *Run by: constitutional-validator agent via /rpi:plan*
 
@@ -81,3 +81,53 @@ db push skips migration history. Migration history required for production.
 **[C16] pgvector Column via Raw SQL Migration**
 `ALTER TABLE "KnowledgeBaseChunk" ADD COLUMN embedding vector(1536);`
 Cannot be expressed in Prisma schema syntax. Always raw SQL in migration file.
+
+---
+
+## WEB-SPECIFIC CONSTRAINTS
+
+**[CW01] Design Tokens via Tailwind Only**
+No raw hex values, px values, or arbitrary Tailwind classes in `apps/web/` component files.
+All colours, font sizes, spacing, and shadows MUST use Tailwind config token classes
+(e.g., `bg-primary`, `text-h2`, `shadow-card`, `rounded-card`).
+Exception: `tailwind.config.ts` itself defines the raw token values.
+VIOLATION: `className="bg-[#1B6B6D]"` or `style={{ color: '#1B6B6D' }}` anywhere in `apps/web/src/`.
+
+**[CW02] Storybook Story Required for Every UI Primitive**
+Every component in `apps/web/src/components/ui/` MUST have a corresponding `.stories.tsx`
+file in the same directory. The story MUST document all states defined in 14-ui-ux-design.md.
+VIOLATION: A UI primitive committed without its Storybook story.
+VIOLATION: A story that does not cover all documented states (e.g., StatusIndicator story
+missing one of the 7 TaskCardState values).
+
+**[CW03] Reduced Motion Respected**
+Every CSS transition and JS animation in `apps/web/` MUST check `prefers-reduced-motion`.
+When reduced motion is preferred: all animations are replaced with instant state changes.
+No fade-ins, no slide-ins, no pulsing, no progress bar transitions.
+VIOLATION: Any animation that plays when `prefers-reduced-motion: reduce` is active.
+Implementation: use `@media (prefers-reduced-motion: reduce)` in CSS or the
+`useReducedMotion()` hook in JS to conditionally disable.
+
+**[CW04] API Types from packages/types/ Only**
+`apps/web/` imports all API contract types (enums, request/response shapes) from
+`@landednz/types` — the same package used by `apps/api/` and `apps/mobile/`.
+Web-specific types (component props, UI state, TaskCardState) live in
+`apps/web/src/types/web.ts` and may import from `@landednz/types`.
+VIOLATION: Redefining `VisaType`, `TaskStatus`, `ChatEntryPoint`, or any shared enum
+inside `apps/web/src/`. These already exist in `packages/types/index.ts`.
+
+**[CW05] Mock Data Shape Matches API Response**
+All mock data used in Web Stage 3 (static screens) MUST conform to the exact TypeScript
+interfaces returned by the Fastify API endpoints. Mock data files in `apps/web/src/mocks/`
+MUST import and satisfy types from `@landednz/types` or `apps/web/src/types/web.ts`.
+VIOLATION: Mock data with fields, types, or shapes that differ from the real API response.
+Drift between mock and real = rework in Stage 4.
+
+**[CW06] No localStorage for Auth or App State**
+Auth session managed by Supabase SSR helpers (HTTP-only cookies, `@supabase/ssr`).
+Application state managed by Zustand (in-memory, resets on page unload).
+URL state managed by `nuqs` (shareable, bookmarkable).
+`localStorage` is permitted ONLY for non-critical UI preferences:
+first-use hint dismissal, sidebar collapse preference, theme preference.
+VIOLATION: Storing auth tokens, user profile, roadmap data, chat history, or
+subscription status in localStorage. These belong in server state or Zustand.

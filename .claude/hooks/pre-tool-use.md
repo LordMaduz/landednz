@@ -49,3 +49,59 @@ Before writing any import statement, check:
 
 If any boundary violation is detected: surface it immediately. Do not proceed.
 See `.claude/constitution.md` for the full list of architectural constraints.
+
+---
+
+## Storybook Story Guard (Web)
+
+Before creating or modifying any component in `apps/web/src/components/ui/`:
+
+- A corresponding `.stories.tsx` file MUST exist or be created in the same commit.
+- The story MUST cover all documented states from 14-ui-ux-design.md.
+- If modifying an existing component and adding a new state: the story MUST be updated
+  in the same commit to include the new state.
+
+If about to commit a UI primitive without its story: STOP. Write the story first.
+Constitutional constraint CW02.
+
+---
+
+## Design Token Guard (Web)
+
+Before using any colour, font-size, spacing, or shadow value in `apps/web/src/`:
+
+- MUST use Tailwind design token class (e.g., `bg-primary`, `text-h2`, `shadow-card`,
+  `rounded-card`, `p-6`, `gap-4`).
+- Raw hex values are NOT permitted: `bg-[#1B6B6D]` → violation.
+- Arbitrary Tailwind values are NOT permitted: `p-[23px]` → violation.
+- Inline styles with raw values are NOT permitted: `style={{ color: '#1B6B6D' }}` → violation.
+- Exception: `tailwind.config.ts` itself defines the raw token values.
+
+If a raw value is detected in any component file: STOP. Use the Tailwind token class instead.
+If the needed token doesn't exist in `tailwind.config.ts`: add it to the config first,
+then use the class.
+Constitutional constraint CW01.
+
+---
+
+## Accessibility Guard (Web)
+
+Before creating any interactive component in `apps/web/src/`:
+
+- **Keyboard interaction defined:** Every clickable element must respond to Enter/Space.
+  Every dismissible element (panel, modal, tooltip) must respond to Escape.
+  Tab order must follow visual order.
+
+- **ARIA attributes present:** Expandable sections need `aria-expanded`. Live regions
+  for chat need `aria-live`. Form inputs need `<label>` or `aria-label`. Decorative
+  icons need `aria-hidden="true"`. Meaningful icons need `aria-label`.
+
+- **Reduced motion handled:** Any CSS `transition`, `animation`, or Framer Motion
+  animation MUST have a `prefers-reduced-motion` check. When active: duration → 0.
+  Constitutional constraint CW03.
+
+- **Focus indicators visible:** Every interactive element must have a visible focus ring
+  (`focus:ring-2 focus:ring-border-focus focus:ring-offset-2`). Never remove outlines
+  without replacement.
+
+If any of the above are missing: STOP. Add them before proceeding.

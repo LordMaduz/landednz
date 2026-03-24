@@ -74,3 +74,49 @@ Action:
 
 Rationale: The 4 priority scoring golden examples are load-bearing.
 They encode the product thesis — wrong golden example output = wrong product.
+
+---
+
+## Visual Regression Reminder (Web)
+
+Trigger: Any file edit to `apps/web/src/components/` that has a corresponding
+Playwright visual snapshot in `apps/web/e2e/__screenshots__/`.
+
+Action:
+1. Remind: "This component has visual regression tests. If the visual change is
+   intentional, run `npx playwright test --update-snapshots` to update baselines."
+2. If unintentional: investigate what caused the visual change before committing.
+
+Rationale: Visual regression tests catch unintended UI changes. Updated baselines
+must be committed alongside the code change so CI passes.
+
+---
+
+## Bundle Size Reminder (Web)
+
+Trigger: After adding any new npm dependency to `apps/web/package.json`.
+
+Action:
+1. Remind: "New dependency added to apps/web. Verify it's tree-shakeable and
+   does not bloat the client bundle."
+2. Check: Run `npx next build` and inspect the output for the `/roadmap` route.
+   Target: < 200KB gzipped total JS for this route.
+3. If the dependency adds > 20KB gzipped: surface it and justify the addition.
+   Consider: can a lighter alternative achieve the same result?
+
+Rationale: Bundle size directly affects LCP (Largest Contentful Paint). Every
+dependency added to the client bundle has a performance cost. Framer Motion,
+Lucide React, and Zustand are pre-approved. Others need justification.
+
+---
+
+## Web Storybook Consistency Reminder
+
+Trigger: After editing any component in `apps/web/src/components/ui/`.
+
+Action:
+1. Check: does the corresponding `.stories.tsx` file cover the change?
+2. If a new state or variant was added: the story MUST be updated in the same commit.
+3. Run `npm run storybook` and verify the updated story renders without console errors.
+
+Constitutional constraint CW02: no UI primitive without its story.
