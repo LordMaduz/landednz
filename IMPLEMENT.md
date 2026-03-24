@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | NOT STARTED | 0 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 1 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -164,7 +164,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W1-01 | Next.js 14 project at apps/web/, TS strict, compiles clean | — | |
+| AC-W1-01 | Next.js 14 project at apps/web/, TS strict, compiles clean | PASS | Next.js 14 + React 18 + TypeScript scaffolding. Workspace added to root package.json. npx tsc --noEmit → 0 errors. apps/web/CLAUDE.md created. Code-reviewer PASS. |
 | AC-W1-02 | Tailwind config has ALL tokens from 14-ui-ux-design.md | — | |
 | AC-W1-03 | globals.css CSS custom properties + Inter self-hosted | — | |
 | AC-W1-04 | cn() utility with unit test | — | |
