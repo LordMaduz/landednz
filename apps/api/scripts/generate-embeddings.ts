@@ -19,12 +19,17 @@ async function main(): Promise<void> {
   logger.info('Starting embedding generation for KnowledgeBaseChunk records');
 
   // Fetch all chunks without embeddings via raw query (embedding column is not in Prisma schema)
-  const chunks = await db.$queryRaw<Array<{ id: string; chunkKey: string; content: string }>>`
+  const rawChunks = await db.$queryRaw<Array<{ id: string; chunkKey: string; content: string }>>`
     SELECT id, "chunkKey", content
     FROM "KnowledgeBaseChunk"
     WHERE embedding IS NULL
     ORDER BY "chunkKey"
   `;
+
+  // C10: BigInt replacer on every $queryRaw result — non-negotiable.
+  const chunks = JSON.parse(
+    JSON.stringify(rawChunks, (_, v) => (typeof v === 'bigint' ? Number(v) : v)),
+  ) as Array<{ id: string; chunkKey: string; content: string }>;
 
   const total = chunks.length;
   logger.info({ total }, 'Chunks requiring embeddings');

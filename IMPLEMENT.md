@@ -16,7 +16,7 @@
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
 | 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
-| 5 — RAG + Launch (~60h) | IN PROGRESS | 3 / 13 | In progress |
+| 5 — RAG + Launch (~60h) | IN PROGRESS | 7 / 13 | In progress |
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
@@ -150,7 +150,7 @@
 | AC-5-10 | App Store submission complete — app in TestFlight | — | |
 | AC-5-11 | Play Store submission complete — APK passes review | — | |
 | AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | — | |
-| AC-5-13 | BigInt fix applied — pgvector query serialises without error | — | |
+| AC-5-13 | BigInt fix applied — pgvector query serialises without error | PASS | Defensive BigInt replacer added to generate-embeddings.ts:22. All 4 $queryRaw call sites now C10-compliant. Code-reviewer PASS. |
 
 **Phase 5 Gate:** BLOCKED — begins after all ACs pass
 
