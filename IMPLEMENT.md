@@ -6,7 +6,9 @@
 ## Overall Progress
 
 **Active Phase:** Phase 5 — RAG + Launch
-**Phases Complete:** 3 / 5
+**Active Web Stage:** Web Stage 1 — Design System (NOT STARTED)
+**Backend Phases Complete:** 3 / 5
+**Web Stages Complete:** 0 / 6
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
@@ -15,6 +17,15 @@
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
 | 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
 | 5 — RAG + Launch (~60h) | IN PROGRESS | 3 / 13 | In progress |
+
+| Web Stage | Status | AC Passed | Gate |
+|-----------|--------|-----------|------|
+| W1 — Design System (~20h) | NOT STARTED | 0 / 16 | — |
+| W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
+| W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
+| W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
+| W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
+| W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
 
 ---
 
@@ -74,7 +85,7 @@
 
 ## Phase 3 — Monetisation
 
-**Status:** BLOCKED (Phase 2 not complete)
+**Status:** DEFERRED
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
@@ -91,13 +102,13 @@
 | AC-3-11 | Decline path — banner persists, roadmap navigable | — | |
 | AC-3-12 | Account creation gate structural — User record required | — | |
 
-**Phase 3 Gate:** BLOCKED
+**Phase 3 Gate:** DEFERRED
 
 ---
 
 ## Phase 4 — AI Chat Basic
 
-**Status:** BLOCKED (Phase 3 not complete)
+**Status:** COMPLETE — Gate passed 2026-03-22
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
@@ -130,7 +141,7 @@
 | AC-5-01 | generate-embeddings.ts — zero NULL embeddings after run | PASS | OpenAI text-embedding-3-small (1536 dims), 42/42 chunks processed successfully. Raw SQL migration + openai package isolated in embeddings.client.ts. Script respects C05 (no ivfflat). Verification: 0 NULL embeddings. |
 | AC-5-02 | ivfflat index created — EXPLAIN shows Index Scan | PASS | Pure DB operation. `CREATE INDEX ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)` executed. EXPLAIN with `SET enable_seqscan = off` confirmed `Index Scan using "KnowledgeBaseChunk_embedding_idx"` with cosine `<=>` operator. No code files created. |
 | AC-5-03 | retrieveChunks() returns constrained_couple chunk (not solo_aewv) | PASS | 6-step RAG pipeline in features/chat/rag/retrieval.ts. SQL persona pre-filter (C07). GOLDEN 1: CHUNK_T08_constrained_couple in top 3 for IRD query, CHUNK_T08_solo_aewv excluded. All 4 golden examples pass 4/4. Code-reviewer PASS. |
-| AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | — | |
+| AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | PASS | Verification-only AC. No code changes needed — retrieval.ts from AC-5-03 passed all 4 golden examples immediately. DB state confirmed: CHUNK_CONTEXT_suburbs has embedding, 0 null embeddings across 43 chunks. GOLDEN 2 (T11>T14 for bond query), GOLDEN 3 (CHUNK_CONTEXT_suburbs present for suburbs query), GOLDEN 4 (5 chunks returned for out-of-scope medical query). Code-reviewer PASS. |
 | AC-5-05 | Production IRD question → grounded in T08 chunk, cites ird.govt.nz | — | |
 | AC-5-06 | ChatMessage.retrievedChunks has KnowledgeBaseChunk IDs (not task IDs) | — | |
 | AC-5-07 | Production Railway → Supabase. GET /health dbConnected: true | — | |
@@ -142,6 +153,169 @@
 | AC-5-13 | BigInt fix applied — pgvector query serialises without error | — | |
 
 **Phase 5 Gate:** BLOCKED — begins after all ACs pass
+
+---
+
+## Web Stage 1 — Design System
+
+**Status:** NOT STARTED
+**Research dir:** `rpi/web-stage1-design-system/research/`
+**Plans dir:** `rpi/web-stage1-design-system/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W1-01 | Next.js 14 project at apps/web/, TS strict, compiles clean | — | |
+| AC-W1-02 | Tailwind config has ALL tokens from 14-ui-ux-design.md | — | |
+| AC-W1-03 | globals.css CSS custom properties + Inter self-hosted | — | |
+| AC-W1-04 | cn() utility with unit test | — | |
+| AC-W1-05 | Button: 5 variants × 3 sizes × 4 states in Storybook | — | |
+| AC-W1-06 | Card: 4 states + padding variants in Storybook | — | |
+| AC-W1-07 | Badge: 5 variants with correct colour mappings in Storybook | — | |
+| AC-W1-08 | ProgressBar: deterministic + indeterminate in Storybook | — | |
+| AC-W1-09 | Skeleton: 3 variants with pulse, reduced motion disabled | — | |
+| AC-W1-10 | StatusIndicator: all 7 states × 2 sizes in Storybook | — | |
+| AC-W1-11 | Input: text + textarea, all states in Storybook | — | |
+| AC-W1-12 | Tooltip: 4 positions, hover/focus trigger in Storybook | — | |
+| AC-W1-13 | Storybook 8 running, all primitives documented, zero errors | — | |
+| AC-W1-14 | Vitest configured, all primitives tested, all passing | — | |
+| AC-W1-15 | All components respect prefers-reduced-motion | — | |
+| AC-W1-16 | Colour contrast verified ≥ 4.5:1 for all text/bg combinations | — | |
+
+**Web Stage 1 Gate:** —
+
+---
+
+## Web Stage 2 — Layout Shell
+
+**Status:** BLOCKED (W1 not complete)
+**Research dir:** `rpi/web-stage2-layout-shell/research/`
+**Plans dir:** `rpi/web-stage2-layout-shell/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W2-01 | Root layout: Inter font, metadata, bg-bg background | — | |
+| AC-W2-02 | Marketing layout at /: full-width, no sidebar | — | |
+| AC-W2-03 | App layout at /roadmap: three-column at 1280px+ | — | |
+| AC-W2-04 | Sidebar: full nav structure, active states | — | |
+| AC-W2-05 | Sidebar collapses to 64px icon-only at 1024-1279px | — | |
+| AC-W2-06 | Below 768px: sidebar hidden, hamburger opens MobileNav | — | |
+| AC-W2-07 | DetailPanel slides in from right, empty state, close button | — | |
+| AC-W2-08 | 768-1023px: DetailPanel as overlay with backdrop | — | |
+| AC-W2-09 | All 6 routes exist with correct layouts | — | |
+| AC-W2-10 | Auth middleware redirects unauthenticated from protected routes | — | |
+| AC-W2-11 | Responsive verified at 1440/1280/1024/768/375px | — | |
+| AC-W2-12 | Phase sections expand/collapse with triangle rotation | — | |
+| AC-W2-13 | Playwright E2E: all routes, correct layout at 1280 + 768 | — | |
+
+**Web Stage 2 Gate:** —
+
+---
+
+## Web Stage 3 — Static Screens
+
+**Status:** BLOCKED (W2 not complete)
+**Research dir:** `rpi/web-stage3-static-screens/research/`
+**Plans dir:** `rpi/web-stage3-static-screens/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W3-01 | Landing page: all 6 sections, copy matches spec | — | |
+| AC-W3-02 | Onboarding: 5 questions, option cards, progress bar | — | |
+| AC-W3-03 | Roadmap reveal transition with reduced motion fallback | — | |
+| AC-W3-04 | Roadmap dashboard: hero card, "Do these first", filter tabs | — | |
+| AC-W3-05 | Task list cards: all 7 states with mock data | — | |
+| AC-W3-06 | Task detail: right panel, consequence callout, steps, source | — | |
+| AC-W3-07 | Chat: mock conversation, thinking indicator, citations | — | |
+| AC-W3-08 | Premium gate: inline, 3 paths, decline collapses to banner | — | |
+| AC-W3-09 | Settings: profile, subscription, notifications, account | — | |
+| AC-W3-10 | Auth: Google button, email input, terms | — | |
+| AC-W3-11 | Sidebar phases expand with status indicators + premium lock | — | |
+| AC-W3-12 | Responsive: all screens correct at 5 breakpoints | — | |
+| AC-W3-13 | Playwright visual regression baselines captured | — | |
+| AC-W3-14 | All feature components in Storybook, zero console errors | — | |
+| AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | — | |
+
+**Web Stage 3 Gate:** —
+
+---
+
+## Web Stage 4 — API Integration
+
+**Status:** BLOCKED (W3 not complete)
+**Research dir:** `rpi/web-stage4-api-integration/research/`
+**Plans dir:** `rpi/web-stage4-api-integration/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W4-01 | Google OAuth end-to-end on web, session persists | — | |
+| AC-W4-02 | Auth middleware redirects + returns to original path | — | |
+| AC-W4-03 | Sign out clears session, redirects to / | — | |
+| AC-W4-04 | Onboarding submits to API, profile persisted | — | |
+| AC-W4-05 | Roadmap fetches from API, hero card correct counts | — | |
+| AC-W4-06 | TaskCardState derived correctly, unit tests for all paths | — | |
+| AC-W4-07 | Task detail populated from API endpoint | — | |
+| AC-W4-08 | Mark as done: optimistic update + rollback on failure | — | |
+| AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | — | |
+| AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | — | |
+| AC-W4-11 | Premium gate upgrade → Stripe Checkout → return | — | |
+| AC-W4-12 | Premium gate defer + decline paths work | — | |
+| AC-W4-13 | All loading states use skeleton components | — | |
+| AC-W4-14 | Error handling: network, 401, 500, chat failure | — | |
+| AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | — | |
+| AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | — | |
+
+**Web Stage 4 Gate:** —
+
+---
+
+## Web Stage 5 — Interactive Polish
+
+**Status:** BLOCKED (W4 not complete)
+**Research dir:** `rpi/web-stage5-interactive-polish/research/`
+**Plans dir:** `rpi/web-stage5-interactive-polish/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W5-01 | Task completion animation + reduced motion fallback | — | |
+| AC-W5-02 | Onboarding transitions + reduced motion fallback | — | |
+| AC-W5-03 | Roadmap reveal full sequence + reduced motion | — | |
+| AC-W5-04 | Chat streaming: no jitter, auto-scroll, citations inline | — | |
+| AC-W5-05 | Premium gate decline animation + reduced motion | — | |
+| AC-W5-06 | Phase expand/collapse animation | — | |
+| AC-W5-07 | Keyboard nav: Tab order, Enter/Space, Escape | — | |
+| AC-W5-08 | Focus management: panel trap + return focus | — | |
+| AC-W5-09 | Screen reader: alt text, aria-labels, aria-live | — | |
+| AC-W5-10 | prefers-reduced-motion verified for ALL animations | — | |
+| AC-W5-11 | Lighthouse: Performance ≥90, Accessibility ≥95 | — | |
+| AC-W5-12 | Bundle: /roadmap < 200KB gzipped | — | |
+| AC-W5-13 | First-use hints persist in localStorage | — | |
+| AC-W5-14 | Playwright visual regression re-captured | — | |
+| AC-W5-15 | Cross-browser: Chrome, Firefox, Safari | — | |
+
+**Web Stage 5 Gate:** —
+
+---
+
+## Web Stage 6 — Deployment
+
+**Status:** BLOCKED (W5 not complete)
+**Research dir:** `rpi/web-stage6-deployment/research/`
+**Plans dir:** `rpi/web-stage6-deployment/plans/`
+
+| AC | Description | Status | Notes |
+|----|-------------|--------|-------|
+| AC-W6-01 | Vercel deployment succeeds, production URL accessible | — | |
+| AC-W6-02 | All env vars configured in Vercel | — | |
+| AC-W6-03 | Google OAuth works in production | — | |
+| AC-W6-04 | Full production smoke test passes | — | |
+| AC-W6-05 | Stripe Checkout works in production (test mode) | — | |
+| AC-W6-06 | Preview deployments work | — | |
+| AC-W6-07 | SEO: meta, OG image, robots.txt, sitemap | — | |
+| AC-W6-08 | Error monitoring configured | — | |
+| AC-W6-09 | IMPLEMENT.md + CLAUDE.md updated | — | |
+| AC-W6-10 | Lighthouse production: Performance ≥85, Accessibility ≥95 | — | |
+
+**Web Stage 6 Gate:** —
 
 ---
 
@@ -164,6 +338,8 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [Web Build Spec] 15-web-build-specification.md created. 6 stages, 85 ACs total. Layer-based: design system → layout → static screens → API integration → polish → deployment. Integrates with existing RPI pipeline — same commands, same agents, same constitution (CW01-CW06 appended). 4 new skills (web-design-system, web-component-patterns, web-responsive-layout, web-chat-streaming). Hooks updated with Storybook/token/a11y guards. AC naming: AC-W{stage}-{number} to avoid backend collision.
+- [UI/UX Design] 13-ui-ux-research.md and 14-ui-ux-design.md produced from analysis of 7 reference apps (Settly, Notion, Linear, Intercom Fin, Duolingo, Perplexity, Calm). Key patterns: priority-first dashboard, two-panel layout, conversational onboarding, consequence-first task cards, entry-point-aware chat, inline citations, inline premium gate. Design tokens: deep teal primary (#1B6B6D), warm amber secondary (#D4A843), warm off-white bg (#F8F6F3), Inter font, 8px spacing system.
 - [AC-5-03] CHUNK_CONTEXT_suburbs (personaKey=NULL, chunkType=SETTLEMENT_CONTEXT) inserted manually — spec described this chunk but it was never seeded (42 TaskContentVariant → 42 chunks, no null-personaKey chunks existed). Option A chosen to preserve C07 null-personaKey code path. generateEmbedding reused from embeddings.client.ts. vitest.config.ts updated to include golden-examples/**/*.ts. All 4 golden examples pass.
 - [AC-5-02] ivfflat index created manually in PostgreSQL (not in any migration file — C05). Index name: KnowledgeBaseChunk_embedding_idx. EXPLAIN with `SET enable_seqscan = off` confirmed Index Scan (not Seq Scan) — required because 42 rows is too small for PostgreSQL planner to naturally prefer index. No code files created or modified.
 - [AC-5-01] OpenAI text-embedding-3-small integration complete. Spec inconsistency resolved: "Anthropic text-embedding-3-small" doesn't exist — OpenAI's text-embedding-3-small (1536 dims) used instead. Raw SQL migration for vector column avoids Prisma shadow DB issue. Script processes 42 chunks sequentially (rate limit friendly), respects C05 (no ivfflat in script). All embeddings generated successfully, 0 failures.
@@ -177,7 +353,6 @@
 - [AC-4-05] PROMPT_INJECTION Level 1 guardrail implemented with TDD. 14 injection patterns with refined "act as a"/"act as an" to avoid false positives on legitimate settlement questions. User-friendly augmentation redirects to settlement help without confrontation. Code-reviewer PASS with zero violations. Constitutional constraint C04 clarified: augmentation strings in level1.ts are guardrail output data, not prompt definitions — moving to registry.ts would violate C02.
 - [AC-4-04] CRISIS_SIGNAL Level 1 guardrail implemented with TDD. 10 patterns detect crisis signals case-insensitively. Verbatim augmentation string includes "RESPOND WITH THIS FIRST" instruction to force Lifeline NZ (0800 543 354) before settlement info, ensuring C08 compliance. Production-ready implementation: 6/6 unit tests pass, zero TypeScript errors, follows all code quality rules.
 - [AC-4-03] End-to-end verification required for AC completion — assumptions not sufficient. Mock auth in routes.test.ts fails due to onRoute hook timing (preHandler already set). Real Supabase auth in messages.test.ts works correctly. SSE progressive delivery verified via scripts/test-sse-streaming.ts using fetch() + ReadableStream against real server. Even error events prove non-buffering if immediate vs delayed.
-
 - [AC-4-03] SSE non-buffering headers implemented: `Connection: keep-alive` + `X-Accel-Buffering: no` added to SSE response headers in chat service. Comprehensive verification script created at `scripts/test-sse-streaming.ts` that creates test user via Supabase Auth, starts Fastify server, creates chat session, sends message, and measures chunk arrival timing. Script verifies progressive streaming by reading SSE events via ReadableStream API and logging timestamps. Handles both success (chunk events) and error scenarios (still proves non-buffering). Includes full cleanup of test data.
 - [AC-4-02] Complete SSE streaming pipeline implemented. Full `buildChatSystemPrompt()` with 7 components (2,370-3,320 tokens) avoiding AC-4-08 rework. `shared/ai/claude.client.ts` (C03 SDK isolation) + 10-step constitutional pipeline (C06). Level 1/2 guardrail stubs for AC-4-04/05/06/07 extension. `AIFailureError` never reaches global handler (C13). `reply.raw.setTimeout(0)` + SSE event format: `{type:'chunk|done'}`. Code-reviewer PASS: zero violations, production-ready. 16/16 TDD tests pass. Real end-to-end test requires `ANTHROPIC_API_KEY` in env.
 - [AC-4-01/13] Code-reviewer: PASS — Implementation verified with real Supabase Auth-generated JWT tokens and HTTP requests. Zero constitutional violations (C01/C03/C04/C07). Excellent error handling, comprehensive test coverage (12/12 pass), production-ready code. Real HTTP verification: AC-4-01 (subscribed user + T09 → tax opening message), AC-4-13 (unsubscribed user → 403 SUBSCRIPTION_REQUIRED). Manual verification achieved "real confidence" without test manipulation.
