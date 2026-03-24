@@ -13,7 +13,7 @@ accessibility requirements, and font setup.
 
 **Source hierarchy (highest → lowest):**
 1. `mockup-screens/*.jsx` — interactive React mockups are the visual truth
-2. `mockup-screens/MOCKUP-REFERENCE-INDEX.md` — design decisions, tokens, component inventory
+2. `MOCKUP-REFERENCE-INDEX.md` — design decisions, tokens, component inventory
 3. `16-web-layout-analysis.md` — layout rules (sidebar + content, no three-column)
 4. `14-ui-ux-design.md` — original spec (overridden where conflicts documented)
 5. This skill file — implementation patterns and Tailwind mappings

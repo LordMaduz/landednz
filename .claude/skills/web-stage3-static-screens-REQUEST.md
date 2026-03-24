@@ -26,7 +26,7 @@ Before implementing any screen, open and interact with the corresponding mockup:
 | Settings | `mockup-screens/landednz-screen-settings.jsx` | Profile, subscription, notifications, delete modal |
 | Auth | `mockup-screens/landednz-screen-auth.jsx` | Google OAuth, magic link, confirmation |
 
-Also read `mockup-screens/MOCKUP-REFERENCE-INDEX.md` for design decisions, token
+Also read `MOCKUP-REFERENCE-INDEX.md` for design decisions, token
 values, and the component inventory.
 
 ---
