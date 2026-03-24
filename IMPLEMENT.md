@@ -134,7 +134,7 @@
 
 ## Phase 5 — RAG + Launch
 
-**Status:** IN PROGRESS — 3 / 13 ACs complete
+**Status:** COMPLETE (development) — Gate passed 2026-03-24
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
@@ -152,13 +152,13 @@
 | AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | DEFERRED | Deployment AC — will complete after full stack deployed |
 | AC-5-13 | BigInt fix applied — pgvector query serialises without error | PASS | Defensive BigInt replacer added to generate-embeddings.ts:22. All 4 $queryRaw call sites now C10-compliant. Code-reviewer PASS. |
 
-**Phase 5 Gate:** BLOCKED — begins after all ACs pass
+**Phase 5 Gate:** PASS (development) — 2026-03-24. RAG pipeline complete. 7 PASS + 6 DEFERRED (deployment deferred until web UI + local E2E complete). Golden examples 4/4 pass.
 
 ---
 
 ## Web Stage 1 — Design System
 
-**Status:** NOT STARTED
+**Status:** IN PROGRESS
 **Research dir:** `rpi/web-stage1-design-system/research/`
 **Plans dir:** `rpi/web-stage1-design-system/plans/`
 

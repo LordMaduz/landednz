@@ -79,6 +79,8 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 
 - **`$queryRaw` returns BigInt — always apply replacer.**
   `JSON.stringify(result, (_, v) => typeof v === 'bigint' ? Number(v) : v)`
+  ALL four $queryRaw call sites must include this replacer (health.ts, embeddings script,
+  retrieval.ts, recalculate script) for C10 constitutional compliance.
 
 - **Persona pre-filter runs as SQL WHERE clause — never post-search.**
   Wrong order = wrong-persona chunks in system prompt.
@@ -114,7 +116,7 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
   Catch unique constraint violation on email during user creation to determine if user is new.
 
 
-### Claude API
+### Claude API & RAG
 
 - **Model string via env var — never hardcode.**
 
@@ -124,6 +126,14 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 - **SDK throws on non-2xx — wrap in try/catch → convert to AIFailureError.**
 
 - **max_tokens: 1024 is intentional.** Do not increase.
+
+- **OpenAI client errors not auto-wrapped as AIFailureError — explicit wrapping required.**
+  `embeddings.client.ts` does NOT wrap OpenAI errors. Chat service must wrap `retrieveChunks()` calls
+  with explicit try/catch and convert to AIFailureError to maintain C13 compliance.
+
+- **OPENAI_API_KEY required in .env for integration tests with real RAG pipeline.**
+  Tests using `retrieveChunks()` make real OpenAI API calls. Without the key, tests timeout and fail.
+  Never mock critical RAG integration during AC verification.
 
 ### RevenueCat Webhook
 

@@ -23,7 +23,7 @@ See `.claude/constitution.md` for all non-negotiable architectural constraints.
 |---|---|---|
 | Mobile | React Native CLI (iOS + Android) | Paused — web first |
 | Web | Next.js 14 App Router | Active build — see apps/web/CLAUDE.md |
-| API | Node.js + Fastify | Complete through Phase 4 |
+| API | Node.js + Fastify | Complete through Phase 5 (development) |
 
 ## Monorepo Structure
 
@@ -109,7 +109,7 @@ Web stage sequence: W1 (Design System) → W2 (Layout Shell) → W3 (Static Scre
 | 2 | COMPLETE | Roadmap Engine — priority scoring, tasks | ~100h | 15 |
 | 3 | DEFERRED | Monetisation — RevenueCat, premium gate | ~55h | 12 |
 | 4 | COMPLETE | AI Chat Basic — SSE, system prompt, guardrails | ~40h | 14 PASS + 1 DEFERRED |
-| 5 | IN PROGRESS | RAG + Launch — embeddings, app store | ~60h | 13 |
+| 5 | COMPLETE (development) | RAG + Launch — embeddings, app store | ~60h | 7 PASS + 6 DEFERRED |
 
 ## Web Stage Reference
 
