@@ -7,7 +7,7 @@
 
 **Active Phase:** Phase 5 — RAG + Launch
 **Active Web Stage:** Web Stage 1 — Design System (NOT STARTED)
-**Backend Phases Complete:** 3 / 5
+**Backend Phases Complete:** 4 / 5 (Phase 5 development done, deployment deferred)
 **Web Stages Complete:** 0 / 6
 
 | Phase | Status | AC Passed | Gate |
@@ -16,7 +16,7 @@
 | 2 — Roadmap Engine (~100h) | COMPLETE | 12 PASS + 3 DEFERRED / 15 | PASS |
 | 3 — Monetisation (~55h) | DEFERRED | 0 / 12 | Intentionally deferred — UI ACs + Phase 3 completing after Phase 4 |
 | 4 — AI Chat Basic (~40h) | COMPLETE | 14 PASS + 1 DEFERRED / 15 | PASS |
-| 5 — RAG + Launch (~60h) | IN PROGRESS | 7 / 13 | In progress |
+| 5 — RAG + Launch (~60h) | COMPLETE (development) | 7 PASS + 6 DEFERRED / 13 | Development complete — deployment deferred until after web UI |
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
@@ -144,12 +144,12 @@
 | AC-5-04 | retrieveChunks() returns 3–5 chunks for all 4 RAG golden examples | PASS | Verification-only AC. No code changes needed — retrieval.ts from AC-5-03 passed all 4 golden examples immediately. DB state confirmed: CHUNK_CONTEXT_suburbs has embedding, 0 null embeddings across 43 chunks. GOLDEN 2 (T11>T14 for bond query), GOLDEN 3 (CHUNK_CONTEXT_suburbs present for suburbs query), GOLDEN 4 (5 chunks returned for out-of-scope medical query). Code-reviewer PASS. |
 | AC-5-05 | Production IRD question → grounded in T08 chunk, cites ird.govt.nz | PASS | Verification-only AC (no code). Manual chat test: query "What documents do I need for my IRD application?" → CHUNK_T08_constrained_couple top chunk → response grounded in IRD-specific content (passport, visa, NZ address, IR330 form, 45% tax consequence) → explicit citation "Source: IRD numbers for individuals — Inland Revenue — https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals". Both criteria confirmed from real session in DB. |
 | AC-5-06 | ChatMessage.retrievedChunks has KnowledgeBaseChunk IDs (not task IDs) | PASS | Phase 4 DB placeholder in service.ts Step 4 replaced with retrieveChunks(). RAG runs for ALL messages (not just TASK_CARD). AIFailureError wrap added (C13 — embeddings.client.ts doesn't wrap OpenAI errors). taskName/consequenceLine still fetched from DB separately for Component 2. retrievedChunks stores CHUNK_T08_constrained_couple format. 172 automated tests pass with REAL OpenAI API calls (OPENAI_API_KEY added to .env). Manual end-to-end verified: real embedding → real pgvector search → real Claude response (1,770 chars) → real chunk IDs in DB. Code-reviewer PASS. |
-| AC-5-07 | Production Railway → Supabase. GET /health dbConnected: true | — | |
-| AC-5-08 | Apple Sign-In still present in production build | — | |
-| AC-5-09 | iOS sandbox payment tested on real device — production RevenueCat | — | |
-| AC-5-10 | App Store submission complete — app in TestFlight | — | |
-| AC-5-11 | Play Store submission complete — APK passes review | — | |
-| AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | — | |
+| AC-5-07 | Production Railway → Supabase. GET /health dbConnected: true | DEFERRED | Deployment AC — will complete after web UI is built and local E2E verified |
+| AC-5-08 | Apple Sign-In still present in production build | DEFERRED | Deployment AC — will verify during App Store submission |
+| AC-5-09 | iOS sandbox payment tested on real device — production RevenueCat | DEFERRED | Deployment AC — will test during production deployment |
+| AC-5-10 | App Store submission complete — app in TestFlight | DEFERRED | Deployment AC — will complete after web app ready |
+| AC-5-11 | Play Store submission complete — APK passes review | DEFERRED | Deployment AC — will complete after web app ready |
+| AC-5-12 | Full smoke test production: onboarding → roadmap → task → gate → upgrade → chat | DEFERRED | Deployment AC — will complete after full stack deployed |
 | AC-5-13 | BigInt fix applied — pgvector query serialises without error | PASS | Defensive BigInt replacer added to generate-embeddings.ts:22. All 4 $queryRaw call sites now C10-compliant. Code-reviewer PASS. |
 
 **Phase 5 Gate:** BLOCKED — begins after all ACs pass
