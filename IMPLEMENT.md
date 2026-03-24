@@ -6,7 +6,7 @@
 ## Overall Progress
 
 **Active Phase:** Phase 5 — RAG + Launch
-**Active Web Stage:** Web Stage 1 — Design System (NOT STARTED)
+**Active Web Stage:** Web Stage 1 — Design System (IN PROGRESS)
 **Backend Phases Complete:** 4 / 5 (Phase 5 development done, deployment deferred)
 **Web Stages Complete:** 0 / 6
 
@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | IN PROGRESS | 2 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 3 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -166,7 +166,7 @@
 |----|-------------|--------|-------|
 | AC-W1-01 | Next.js 14 project at apps/web/, TS strict, compiles clean | PASS | Next.js 14 + React 18 + TypeScript scaffolding. Workspace added to root package.json. npx tsc --noEmit → 0 errors. apps/web/CLAUDE.md created. Code-reviewer PASS. |
 | AC-W1-02 | Tailwind config has ALL tokens from 14-ui-ux-design.md | PASS | Complete token set: 27 colors, 7 font sizes, 4 shadows, 4 radii, 5 layout widths. Raw hex values only in tailwind.config.ts (CW01). npx tsc + npm run build both pass. next.config.ts → .mjs (Next.js 14 requirement). |
-| AC-W1-03 | globals.css CSS custom properties + Inter self-hosted | — | |
+| AC-W1-03 | globals.css CSS custom properties + DM Sans & DM Serif Display self-hosted | PASS | @font-face + :root CSS vars + reduced-motion block. tailwind.config.ts: fixed Inter→DM Sans, fixed font sizes (body 15px, h1 24px), radii (button/input 10px), added chat-panel+modal shadows. npx tsc + npm run build pass. Code-reviewer PASS. |
 | AC-W1-04 | cn() utility with unit test | — | |
 | AC-W1-05 | Button: 5 variants × 3 sizes × 4 states in Storybook | — | |
 | AC-W1-06 | Card: 4 states + padding variants in Storybook | — | |
@@ -338,6 +338,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W1-03] DM Sans + DM Serif Display self-hosted. tailwind.config.ts had token discrepancies carried over from AC-W1-02: font was Inter (wrong — mockup changed to DM Sans), body 1rem (should be 0.9375rem/15px), h1 1.75rem (should be 1.5rem), button/input radii 8px (should be 10px), missing chat-panel+modal shadows. All fixed. Inter removed everywhere. IMPLEMENT.md AC-W1-03 description updated from "Inter" to "DM Sans & DM Serif Display".
 - [Web Build Spec] 15-web-build-specification.md created. 6 stages, 85 ACs total. Layer-based: design system → layout → static screens → API integration → polish → deployment. Integrates with existing RPI pipeline — same commands, same agents, same constitution (CW01-CW06 appended). 4 new skills (web-design-system, web-component-patterns, web-responsive-layout, web-chat-streaming). Hooks updated with Storybook/token/a11y guards. AC naming: AC-W{stage}-{number} to avoid backend collision.
 - [UI/UX Design] 13-ui-ux-research.md and 14-ui-ux-design.md produced from analysis of 7 reference apps (Settly, Notion, Linear, Intercom Fin, Duolingo, Perplexity, Calm). Key patterns: priority-first dashboard, two-panel layout, conversational onboarding, consequence-first task cards, entry-point-aware chat, inline citations, inline premium gate. Design tokens: deep teal primary (#1B6B6D), warm amber secondary (#D4A843), warm off-white bg (#F8F6F3), Inter font, 8px spacing system.
 - [AC-5-03] CHUNK_CONTEXT_suburbs (personaKey=NULL, chunkType=SETTLEMENT_CONTEXT) inserted manually — spec described this chunk but it was never seeded (42 TaskContentVariant → 42 chunks, no null-personaKey chunks existed). Option A chosen to preserve C07 null-personaKey code path. generateEmbedding reused from embeddings.client.ts. vitest.config.ts updated to include golden-examples/**/*.ts. All 4 golden examples pass.

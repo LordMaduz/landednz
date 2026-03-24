@@ -1,3 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─── Self-hosted fonts ─────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/DMSans-Variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/DMSerifDisplay-Regular.woff2') format('woff2');
+}
+
+/* ─── CSS custom properties (fallback / design token reference) ────────── */
+
+:root {
+  /* Font families */
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Typography scale */
+  --text-display: 2.25rem;   /* 36px — DM Serif Display */
+  --text-h1: 1.5rem;         /* 24px — DM Serif Display */
+  --text-h2: 1.375rem;       /* 22px — DM Serif Display */
+  --text-h3: 1.125rem;       /* 18px — DM Sans 600 */
+  --text-body: 0.9375rem;    /* 15px — DM Sans 400 */
+  --text-secondary: 0.8125rem; /* 13px — DM Sans 400 */
+  --text-caption: 0.6875rem;  /* 11px — DM Sans 500 */
+
+  /* Colours */
+  --color-primary: #1B6B6D;
+  --color-primary-hover: #15585A;
+  --color-primary-light: #E8F4F4;
+  --color-primary-subtle: #F0F8F8;
+  --color-secondary: #D4A843;
+  --color-secondary-light: #FDF6E7;
+  --color-secondary-hover: #C09338;
+  --color-bg: #F8F6F3;
+  --color-bg-card: #FFFFFF;
+  --color-bg-sidebar: #F2F0ED;
+  --color-text-primary: #1A1A2E;
+  --color-text-secondary: #5A5A6E;
+  --color-text-tertiary: #8E8E9A;
+  --color-border: #E5E3E0;
+  --color-border-focus: #1B6B6D;
+  --color-border-hover: #D0CEC8;
+}
+
+/* ─── Base styles ───────────────────────────────────────────────────────── */
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

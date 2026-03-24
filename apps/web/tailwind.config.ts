@@ -45,16 +45,21 @@ const config: Config = {
         'border-hover': '#D0CEC8',
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        // font-display → DM Serif Display (headings, hero, greeting, page titles)
+        display: ['DM Serif Display', 'serif'],
+        // font-body → DM Sans (body text, buttons, labels, navigation)
+        body: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        // font-sans → DM Sans (Tailwind default override)
+        sans: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       fontSize: {
-        display: ['2.25rem', { lineHeight: '1.4' }],
-        h1: ['1.75rem', { lineHeight: '1.4' }],
-        h2: ['1.375rem', { lineHeight: '1.4' }],
-        h3: ['1.125rem', { lineHeight: '1.4' }],
-        body: ['1rem', { lineHeight: '1.6' }],
-        secondary: ['0.875rem', { lineHeight: '1.6' }],
-        caption: ['0.75rem', { lineHeight: '1.3' }],
+        display: ['2.25rem', { lineHeight: '1.2', fontWeight: '400' }],
+        h1: ['1.5rem', { lineHeight: '1.35', fontWeight: '400' }],
+        h2: ['1.375rem', { lineHeight: '1.35', fontWeight: '400' }],
+        h3: ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }],
+        body: ['0.9375rem', { lineHeight: '1.6', fontWeight: '400' }],
+        secondary: ['0.8125rem', { lineHeight: '1.4', fontWeight: '400' }],
+        caption: ['0.6875rem', { lineHeight: '1.3', fontWeight: '500' }],
       },
       lineHeight: {
         tight: '1.3',
@@ -65,19 +70,26 @@ const config: Config = {
         card: '0 1px 3px rgba(26, 26, 46, 0.06), 0 1px 2px rgba(26, 26, 46, 0.04)',
         'card-hover': '0 4px 12px rgba(26, 26, 46, 0.08), 0 2px 4px rgba(26, 26, 46, 0.04)',
         panel: '-4px 0 24px rgba(26, 26, 46, 0.08)',
+        'chat-panel': '0 12px 48px rgba(26, 26, 46, 0.15), 0 4px 16px rgba(26, 26, 46, 0.08)',
+        modal: '0 16px 48px rgba(26, 26, 46, 0.15)',
         dropdown: '0 8px 24px rgba(26, 26, 46, 0.12)',
       },
       borderRadius: {
         card: '12px',
-        button: '8px',
-        input: '8px',
+        button: '10px',
+        input: '10px',
         badge: '100px',
+        'chat-panel': '16px',
       },
       width: {
         sidebar: '256px',
         'sidebar-collapsed': '64px',
         'detail-panel': '480px',
         'detail-panel-min': '400px',
+        'chat-panel': '420px',
+      },
+      height: {
+        'chat-panel': '600px',
       },
       maxWidth: {
         content: '960px',
