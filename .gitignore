@@ -13,6 +13,10 @@ build/
 dist/
 *.tsbuildinfo
 
+# Next.js build output
+.next/
+out/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

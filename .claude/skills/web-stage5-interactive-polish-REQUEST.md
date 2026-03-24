@@ -38,7 +38,7 @@ matching the interaction quality in `mockup-screens/*.jsx` files.**
 
 ## Animation reference
 
-Exact animation specs are documented in `MOCKUP-REFERENCE-INDEX.md`
+Exact animation specs are documented in `mockup-screens/MOCKUP-REFERENCE-INDEX.md`
 under the ANIMATION SPECS section. All durations, easings, and keyframes are defined there.
 
 Key animations to verify against mockups:

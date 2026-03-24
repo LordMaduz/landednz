@@ -31,6 +31,15 @@ See `.claude/constitution.md` for all non-negotiable architectural constraints.
     ├── CLAUDE.md                    ← this file (project-level memory)
     ├── IMPLEMENT.md                 ← execution state tracker (AC pass/fail per phase + web stage)
     ├── docs/                        ← external setup guides (Google OAuth, etc.)
+    ├── mockup-screens/              ← interactive React mockups — visual truth for web UI
+    │   ├── MOCKUP-REFERENCE-INDEX.md ← file map, design decisions, tokens, component inventory
+    │   ├── landednz-screen-landing-page.jsx
+    │   ├── landednz-screen-onboarding.jsx
+    │   ├── landednz-screen-roadmap-dashboard.jsx
+    │   ├── landednz-screen-chat-interface.jsx
+    │   ├── landednz-screen-premium-gate.jsx
+    │   ├── landednz-screen-settings.jsx
+    │   └── landednz-screen-auth.jsx
     ├── .claude/                     ← all Claude Code config
     │   ├── constitution.md          ← architectural non-negotiables (C01-C16 backend + CW01-CW06 web)
     │   ├── agents/                  ← specialised subagents
@@ -71,7 +80,9 @@ See `.claude/constitution.md` for all non-negotiable architectural constraints.
 - `12-build-specification.md` — Backend phase specs, AC, schema (source of truth — never modify)
 - `15-web-build-specification.md` — Web stage specs, AC, architecture (source of truth — never modify)
 - `13-ui-ux-research.md` — Reference app analysis, design patterns, visual direction
-- `14-ui-ux-design.md` — Screen-by-screen design spec, design tokens, component states
+- `14-ui-ux-design.md` — Screen-by-screen design spec, design tokens, component states (overridden by mockups on 6 decisions — see index)
+- `16-web-layout-analysis.md` — Layout rules from Linear/Notion/Intercom Fin analysis
+- `mockup-screens/MOCKUP-REFERENCE-INDEX.md` — Visual source of truth for web UI. Maps mockup files to screens, documents 6 design decisions that override doc 14, lists all design tokens, component inventory, and animation specs. **Read this before implementing any web UI.**
 - `apps/api/prisma/schema.prisma` — Single source of truth for all data types
 - `.claude/settings.json` — Claude Code permissions and model config
 
@@ -115,11 +126,11 @@ Web stage sequence: W1 (Design System) → W2 (Layout Shell) → W3 (Static Scre
 
 | Stage | Status | Focus | Hours | AC Count |
 |---|---|---|---|---|
-| W1 | NOT STARTED | Design System — Tailwind, UI primitives, Storybook | ~20h | 16 |
-| W2 | BLOCKED | Layout Shell — sidebar, panels, routes, responsive | ~15h | 13 |
+| W1 | NOT STARTED | Design System — Tailwind, UI primitives, Storybook | ~20h | 17 |
+| W2 | BLOCKED | Layout Shell — sidebar, routes, responsive | ~15h | 11 |
 | W3 | BLOCKED | Static Screens — all pages with mock data | ~35h | 15 |
 | W4 | BLOCKED | API Integration — real data, auth, streaming, Stripe | ~30h | 16 |
-| W5 | BLOCKED | Interactive Polish — animations, a11y, performance | ~20h | 15 |
+| W5 | BLOCKED | Interactive Polish — animations, a11y, performance | ~20h | 16 |
 | W6 | BLOCKED | Deployment — Vercel, production, monitoring | ~10h | 10 |
 
 ## Web Architecture
@@ -132,8 +143,17 @@ Web stage sequence: W1 (Design System) → W2 (Layout Shell) → W3 (Static Scre
 **Testing:** Storybook 8 + Playwright (visual regression + E2E) + Vitest (unit)
 **Deploy:** Vercel
 
-**Design spec:** 14-ui-ux-design.md is the single visual source of truth. All design tokens,
-component states, screen layouts, and responsive breakpoints are defined there.
+**Visual source of truth:** `mockup-screens/*.jsx` — interactive React mockups for all 9 web screens.
+`mockup-screens/MOCKUP-REFERENCE-INDEX.md` documents design decisions, resolved conflicts with doc 14,
+and the complete design token set. When any text spec (docs 13, 14, 16) conflicts with a mockup,
+the mockup wins.
+
+**Source hierarchy for web UI (highest → lowest):**
+1. `mockup-screens/MOCKUP-REFERENCE-INDEX.md` — design decisions and resolved conflicts
+2. `mockup-screens/*.jsx` — pixel-level visual reference
+3. `.claude/skills/web-*` — implementation patterns and code structure
+4. `14-ui-ux-design.md` — original spec (overridden on 6 decisions)
+5. `16-web-layout-analysis.md` — layout rules
 
 **Constitutional constraints:** CW01-CW06 in constitution.md cover web-specific rules
 (Tailwind tokens only, Storybook required, reduced motion, shared types, mock data shape, no localStorage for auth).
@@ -215,9 +235,11 @@ Full conventions: `.claude/rules/git-workflow.md`
   `bg-[#1B6B6D]` or `p-[23px]` are violations of CW01. If a token doesn't exist in
   `tailwind.config.ts`, add it there first, then use the class.
 
-- **Inter font must be self-hosted.**
-  Do not use `next/font` with Google Fonts CDN. Download Inter variable font woff2,
-  place in `public/fonts/`, and use `@font-face` in globals.css with `font-display: swap`.
+- **DM Sans + DM Serif Display fonts must be self-hosted.**
+  Do not use `next/font` with Google Fonts CDN. Download DM Sans (variable, woff2) and
+  DM Serif Display (400, woff2), place in `public/fonts/`, and use `@font-face` in globals.css
+  with `font-display: swap`. The original spec referenced Inter — that was changed during the
+  mockup session to DM Sans (body) + DM Serif Display (headings) for warmer tone.
 
 ## Compounding Engineering
 

@@ -1,7 +1,7 @@
 # Skill: Web Chat Streaming
 # Domain knowledge for consuming SSE streams, rendering tokens, and managing chat UI state.
 # Preloaded by: senior-software-engineer agent
-# Visual truth: mockup-screens/landednz-screen5-chat-interface.jsx
+# Visual truth: mockup-screens/landednz-screen-chat-interface.jsx
 
 ---
 
