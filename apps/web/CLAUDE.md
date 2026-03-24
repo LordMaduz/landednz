@@ -74,7 +74,10 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 
 ## Known Gotchas
 
-*None yet — will be populated during Stage 1-6 implementation.*
+### Next.js Configuration
+
+- **Next.js 14 does not support `next.config.ts` — requires `.js` or `.mjs`.**
+  TypeScript config file support was introduced in Next.js 15. Attempting to use `next.config.ts` in Next.js 14.2.x fails with "Configuring Next.js via 'next.config.ts' is not supported." Use `next.config.mjs` for ES modules or `next.config.js` for CommonJS.
 
 ---
 

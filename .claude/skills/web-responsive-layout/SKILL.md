@@ -1,15 +1,18 @@
 # Skill: Web Responsive Layout
-# Domain knowledge for implementing sidebar, panels, breakpoints, and responsive transitions.
+# Domain knowledge for implementing sidebar, responsive breakpoints, and layout transitions.
 # Preloaded by: senior-software-engineer agent
+# Visual truth: mockup-screens/*.jsx
 
 ---
 
 ## What this skill covers
 
-Breakpoint rules, sidebar collapse logic, detail panel transitions (right panel → overlay
-→ full page), two-panel vs single-panel layout switching, content max-width behaviour,
-and mobile navigation patterns. Reference document: 14-ui-ux-design.md (Navigation Pattern
-and Responsive Breakpoints sections).
+Breakpoint rules, sidebar collapse logic, content replacement for task detail (NOT side
+panel), floating chat overlay, content max-width behaviour, and mobile navigation patterns.
+
+**Core layout rule (from 16-web-layout-analysis.md):**
+Always two windows — sidebar | content. Nothing else. No three-column layout ever.
+Task detail replaces list content. Chat floats as an overlay. Settings is single column.
 
 ---
 
@@ -17,43 +20,57 @@ and Responsive Breakpoints sections).
 
 ```
 apps/web/src/
-├── app/(app)/layout.tsx            ← App layout: sidebar + content + detail panel
+├── app/(app)/layout.tsx            ← App layout: sidebar + content area (TWO columns only)
 ├── app/(marketing)/layout.tsx      ← Marketing layout: full-width, no sidebar
 ├── components/layout/
 │   ├── Sidebar.tsx                 ← Full nav, collapse/expand, responsive
-│   ├── DetailPanel.tsx             ← Slide-in right panel, overlay modes
 │   ├── MobileNav.tsx               ← Hamburger drawer for <768px
 │   └── ContentArea.tsx             ← Max-width container, scroll management
+├── components/chat/
+│   ├── ChatPanel.tsx               ← FLOATING OVERLAY (bottom-right), not a layout column
+│   └── ChatFAB.tsx                 ← Floating action button to open chat
 └── lib/hooks/
     └── useBreakpoint.ts            ← Current breakpoint detection hook
 ```
+
+**NOTE:** There is NO `DetailPanel.tsx` for task detail. Task detail renders within
+ContentArea as a content replacement. See `web-component-patterns` skill.
 
 ---
 
 ## Breakpoint definitions
 
-| Name | Range | Sidebar | Detail Panel | Chat |
+| Name | Range | Sidebar | Task detail | Chat |
 |------|-------|---------|-------------|------|
-| desktop-wide | ≥1280px | 256px expanded | 480px right panel | Side panel or full page |
-| desktop | 1024–1279px | 64px icon-only | 400px right panel | Side panel or full page |
-| tablet | 768–1023px | 64px overlay on demand | Slide-over overlay with backdrop | Full page only |
-| mobile | <768px | Hidden (hamburger menu) | Full page navigation | Full page only |
+| desktop-wide | ≥1280px | 256px expanded | Replaces list in content area | Floating overlay 420×600px |
+| desktop | 1024–1279px | 64px icon-only | Replaces list in content area | Floating overlay 420×600px |
+| tablet | 768–1023px | 64px overlay on demand | Full page navigation | Floating overlay (may reduce height) |
+| mobile | <768px | Hidden (hamburger menu) | Full page navigation (`/roadmap/task/[id]`) | Full page (`/chat`) |
 
-Tailwind breakpoint classes:
-- `lg:` → ≥1024px
-- `xl:` → ≥1280px
-- No `md:` — 768px uses custom breakpoint or `min-[768px]:`
+**Key difference from original spec:** There is no "right panel" column at any
+breakpoint. Task detail always replaces the list. Chat is always a floating overlay
+(except mobile where it's a full page).
 
 ---
 
 ## App layout structure
 
 ```
-┌──────────┬─────────────────────────────────┬────────────────────────┐
-│ Sidebar  │  ContentArea                    │  DetailPanel           │
-│ 256px    │  (scrollable, max-w-content)    │  480px (hidden default)│
-│ (or 64px)│                                 │                        │
-└──────────┴─────────────────────────────────┴────────────────────────┘
+┌──────────┬─────────────────────────────────────────┐
+│ Sidebar  │  ContentArea                            │
+│ 256px    │  (scrollable, max-w-content)            │
+│ (or 64px)│                                         │
+│          │  Shows EITHER:                          │
+│          │  • RoadmapList (default)                │
+│          │  • TaskDetail (when task selected)      │
+│          │  • SettingsPage                         │
+│          │  • ChatPage (mobile only)               │
+└──────────┴─────────────────────────────────────────┘
+                              ┌────────────────────┐
+                              │ ChatPanel (overlay) │
+                              │ 420×600px          │
+                              │ bottom-right fixed │
+                              └────────────────────┘
 ```
 
 Implementation:
@@ -65,11 +82,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-bg">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-content mx-auto px-6 py-12">
+        <div className="max-w-content mx-auto px-6 lg:px-10 py-7">
           {children}
         </div>
       </main>
-      <DetailPanel />
+      {/* Chat overlay rendered at app root — NOT inside content flow */}
+      <ChatOverlayPortal />
     </div>
   );
 }
@@ -88,23 +106,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 │  💬 Chat                    │
 │  ⚙ Settings                │
 │                             │
-│  ─── YOUR PLAN ───          │  Section divider (uppercase, caption size)
-│  ▸ Phase 1: Before arrival  │  Collapsible, shows "4/8 ✓"
+│  ─── YOUR PLAN ───          │  Section divider
+│  ▸ Phase 1: Before work     │  Collapsible, shows "4/8 ✓"
 │  ▸ Phase 2: First 2 weeks   │
-│  ▸ Phase 3: Weeks 3-8       │  Lock icon + "Premium" if locked
+│  ▸ Phase 3: Settling in     │  Lock icon + "Premium" if locked
 │                             │
 │  ─── HELP ───               │
 │  📖 Resources               │
 │  📧 Feedback                │
 │                             │
 │  ─────────────────          │
-│  Priya & Karthik            │  User name(s)
+│  Priya & Karthik            │  User name(s), avatar circle
 │  Partner of Student Visa    │  Visa badge
 │  Auckland                   │  City
 └─────────────────────────────┘
 ```
 
 Width: `w-sidebar` (256px). Background: `bg-bg-sidebar`.
+
+**Visual reference:** `mockup-screens/landednz-screen-roadmap-dashboard.jsx`
 
 ### Collapsed (1024–1279px)
 - Width: `w-sidebar-collapsed` (64px)
@@ -117,14 +137,14 @@ Width: `w-sidebar` (256px). Background: `bg-bg-sidebar`.
 - Default: collapsed (64px)
 - Hamburger icon click: sidebar expands to 256px as overlay
 - Semi-transparent backdrop behind expanded sidebar
-- Click backdrop or press Escape: sidebar collapses back
+- Click backdrop or Escape: sidebar collapses back
 
 ### Hidden (<768px)
-- Sidebar not rendered at all
+- Sidebar not rendered
 - Hamburger icon in top-left corner of ContentArea
-- Click: opens MobileNav (bottom sheet or slide-in drawer)
+- Click: opens MobileNav (slide-in drawer)
 - Full navigation options in MobileNav
-- Backdrop click or swipe down: closes
+- Backdrop click or swipe: closes
 
 ---
 
@@ -136,52 +156,75 @@ const isActive = pathname === item.href;
 <Link
   href={item.href}
   className={cn(
-    'flex items-center gap-3 px-4 py-2.5 rounded-button text-body transition-colors',
+    'flex items-center gap-2.5 px-3 py-2 rounded-button text-secondary transition-colors',
     isActive
       ? 'bg-primary-light text-primary border-l-[3px] border-primary font-semibold'
-      : 'text-text-secondary hover:bg-primary-subtle hover:text-text-primary'
+      : 'text-text-secondary hover:bg-primary-subtle border-l-[3px] border-transparent'
   )}
 >
 ```
 
 ---
 
-## Detail panel behaviour
+## Chat overlay (Intercom Fin pattern)
 
-### Right panel (≥1024px)
-- Width: `w-detail-panel` (480px) or `w-detail-panel-min` (400px) at 1024–1279px
-- Slides in from right: `transform translateX(100%) → translateX(0)`, 0.25s ease-out
-- Slides out on close: `translateX(0) → translateX(100%)`, 0.2s ease-in
-- Shadow: `shadow-panel` on left edge
-- Close button (X) in top-right corner
-- Content scrolls independently of main content area
+Chat is a FLOATING PANEL overlaid on the page — not embedded in the layout.
 
-### Overlay (768–1023px)
-- Same panel, but positioned over content area (not beside it)
-- Semi-transparent backdrop behind panel
-- Click backdrop: closes panel
-- z-index above content, below mobile nav
+```tsx
+// components/chat/ChatPanel.tsx — rendered via React Portal at app root
+function ChatPanel({ onClose }) {
+  return createPortal(
+    <div className="fixed bottom-6 right-6 w-chat-panel h-chat-panel
+                    bg-bg-card rounded-chat-panel border border-border
+                    shadow-chat-panel flex flex-col overflow-hidden z-50">
+      <ChatHeader onClose={onClose} />
+      <ChatMessages />
+      <ChatInput />
+    </div>,
+    document.body
+  );
+}
+```
 
-### Full page (<768px)
-- Panel not used at all
-- Clicking a task navigates to `/roadmap/task/[taskId]`
-- Back button ("← Back to roadmap") at top of full page detail view
-- Browser back also works
+Key rules:
+- Position: `fixed bottom-6 right-6` (24px from edges)
+- Size: 420×600px (`w-chat-panel h-chat-panel`)
+- z-index: above all content, above sidebar overlay
+- Background content: dims slightly when chat is open (optional, not blur)
+- Close button: top-right of panel header
+- When closed: ChatFAB button appears (56px circle, bottom-right)
+
+**Mobile (<768px):** Chat is a full page at `/chat`, not a floating panel.
+
+**Visual reference:** `mockup-screens/landednz-screen-chat-interface.jsx`
 
 ---
 
-## Focus management (constitutional constraint CW03 adjacent — accessibility)
+## Content replacement for task detail
 
-When DetailPanel opens:
-1. Focus moves to the panel close button
-2. Focus is trapped within the panel (Tab cycles through panel elements only)
-3. Elements behind the panel get `inert` attribute (prevents interaction)
+When a task is clicked on desktop/tablet:
 
-When DetailPanel closes:
-1. Focus returns to the element that triggered the panel open (the task card)
-2. `inert` removed from background elements
+```tsx
+// In the roadmap page component
+function RoadmapPage() {
+  const { selectedTask, selectTask, clearSelection } = useRoadmapStore();
 
-Implementation: use `focus-trap-react` library or manual `inert` attribute management.
+  return selectedTask ? (
+    <TaskDetail
+      task={selectedTask}
+      onBack={clearSelection}
+      className="animate-slide-in-right"
+    />
+  ) : (
+    <RoadmapList onTaskClick={selectTask} />
+  );
+}
+```
+
+On mobile (<768px): clicking a task navigates to `/roadmap/task/[taskId]` as a
+separate route. Back button and browser back both work.
+
+**There is no DetailPanel component.** The original spec's `DetailPanel.tsx` is removed.
 
 ---
 
@@ -190,34 +233,53 @@ Implementation: use `focus-trap-react` library or manual `inert` attribute manag
 ```tsx
 function PhaseSection({ phase, children }: PhaseSectionProps) {
   const [isExpanded, setExpanded] = useState(false);
-  
+
   return (
     <div>
       <button
         onClick={() => setExpanded(!isExpanded)}
-        className="flex items-center gap-2 w-full px-4 py-2 text-body text-text-secondary"
+        className="flex items-center gap-2 w-full px-2 py-2.5 text-secondary
+                   text-text-secondary hover:bg-black/[0.02] rounded-md"
         aria-expanded={isExpanded}
       >
         <ChevronRight className={cn(
-          'h-4 w-4 transition-transform duration-200',
+          'h-3 w-3 text-text-tertiary transition-transform duration-150',
           isExpanded && 'rotate-90'
         )} />
-        <span>{phase.name}</span>
+        <span className="font-semibold text-text-primary">Phase {phase.num}: {phase.name}</span>
+        <span className="text-caption text-text-tertiary ml-1">· {phase.timeline}</span>
+        {phase.premium && (
+          <Badge variant="premium" size="sm">Premium</Badge>
+        )}
         <span className="ml-auto text-caption text-text-tertiary">
-          {phase.completedCount}/{phase.totalCount} ✓
+          {phase.completedCount}/{phase.totalCount}
         </span>
       </button>
-      
-      {/* Height transition for expand/collapse */}
-      <div className={cn(
-        'overflow-hidden transition-[max-height] duration-200 ease-out',
-        isExpanded ? 'max-h-[2000px]' : 'max-h-0'
-      )}>
-        {children}
-      </div>
+
+      {isExpanded && (
+        <div className="pt-1">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
 ```
 
-Reduced motion: `transition-duration: 0s` when `prefers-reduced-motion: reduce`.
+Reduced motion: instant expand/collapse, no transition.
+
+---
+
+## Focus management
+
+When task detail is shown (content replacement):
+1. Focus moves to the "← Back to roadmap" button
+2. No focus trap needed (it's not a panel/overlay — it's just page content)
+
+When chat overlay opens:
+1. Focus moves to the chat close button
+2. Focus is trapped within the chat panel
+3. Escape key closes the chat panel
+4. Focus returns to the element that opened the chat
+
+Implementation: use `focus-trap-react` for chat overlay only.

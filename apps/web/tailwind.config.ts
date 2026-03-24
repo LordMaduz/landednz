@@ -8,7 +8,80 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // Design tokens will be added in AC-W1-02
+      colors: {
+        // Primary
+        primary: '#1B6B6D',
+        'primary-hover': '#15585A',
+        'primary-light': '#E8F4F4',
+        'primary-subtle': '#F0F8F8',
+        // Secondary
+        secondary: '#D4A843',
+        'secondary-light': '#FDF6E7',
+        'secondary-hover': '#C09338',
+        // Neutral backgrounds
+        bg: '#F8F6F3',
+        'bg-card': '#FFFFFF',
+        'bg-sidebar': '#F2F0ED',
+        'bg-panel': '#FFFFFF',
+        // Text
+        'text-primary': '#1A1A2E',
+        'text-secondary': '#5A5A6E',
+        'text-tertiary': '#8E8E9A',
+        'text-inverse': '#FFFFFF',
+        // Semantic
+        success: '#2D8A5E',
+        'success-light': '#E8F5EE',
+        warning: '#D4A843',
+        'warning-light': '#FDF6E7',
+        error: '#C75B4A',
+        'error-light': '#FDF0EE',
+        blocked: '#8E8E9A',
+        'blocked-light': '#F2F2F4',
+        premium: '#1B6B6D',
+        'premium-gold': '#D4A843',
+        // Borders
+        border: '#E5E3E0',
+        'border-focus': '#1B6B6D',
+        'border-hover': '#D0CEC8',
+      },
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
+      fontSize: {
+        display: ['2.25rem', { lineHeight: '1.4' }],
+        h1: ['1.75rem', { lineHeight: '1.4' }],
+        h2: ['1.375rem', { lineHeight: '1.4' }],
+        h3: ['1.125rem', { lineHeight: '1.4' }],
+        body: ['1rem', { lineHeight: '1.6' }],
+        secondary: ['0.875rem', { lineHeight: '1.6' }],
+        caption: ['0.75rem', { lineHeight: '1.3' }],
+      },
+      lineHeight: {
+        tight: '1.3',
+        heading: '1.4',
+        body: '1.6',
+      },
+      boxShadow: {
+        card: '0 1px 3px rgba(26, 26, 46, 0.06), 0 1px 2px rgba(26, 26, 46, 0.04)',
+        'card-hover': '0 4px 12px rgba(26, 26, 46, 0.08), 0 2px 4px rgba(26, 26, 46, 0.04)',
+        panel: '-4px 0 24px rgba(26, 26, 46, 0.08)',
+        dropdown: '0 8px 24px rgba(26, 26, 46, 0.12)',
+      },
+      borderRadius: {
+        card: '12px',
+        button: '8px',
+        input: '8px',
+        badge: '100px',
+      },
+      width: {
+        sidebar: '256px',
+        'sidebar-collapsed': '64px',
+        'detail-panel': '480px',
+        'detail-panel-min': '400px',
+      },
+      maxWidth: {
+        content: '960px',
+      },
     },
   },
   plugins: [],

@@ -1,6 +1,7 @@
 # Skill: Web Chat Streaming
 # Domain knowledge for consuming SSE streams, rendering tokens, and managing chat UI state.
 # Preloaded by: senior-software-engineer agent
+# Visual truth: mockup-screens/landednz-screen5-chat-interface.jsx
 
 ---
 
@@ -8,9 +9,8 @@
 
 SSE consumption via fetch + ReadableStream (not EventSource — we need auth headers),
 token-by-token rendering without layout jitter, citation badge extraction from stream
-markers, thinking state management, entry-point-aware opening messages, and chat panel
-layout patterns. Reference documents: 14-ui-ux-design.md (Chat Interface section),
-phase4-ai-chat-basic/REQUEST.md (SSE event format).
+markers, thinking state management, entry-point-aware opening messages, and the
+**floating chat overlay** pattern (Intercom Fin style, NOT a slide-in side panel).
 
 ---
 
@@ -19,21 +19,66 @@ phase4-ai-chat-basic/REQUEST.md (SSE event format).
 ```
 apps/web/src/
 ├── components/chat/
-│   ├── ChatPanel.tsx               ← Slide-in or full-page chat container
+│   ├── ChatPanel.tsx               ← FLOATING OVERLAY (420×600px, fixed bottom-right)
+│   ├── ChatFAB.tsx                 ← Floating action button (56px circle) when panel closed
+│   ├── ChatHeader.tsx              ← Logo avatar + "LandedNZ Advisor" + close button
 │   ├── ChatMessage.tsx             ← AI/user message bubble with citations
 │   ├── ChatInput.tsx               ← Multi-line input with send button
-│   ├── ThinkingIndicator.tsx       ← Pulsing dots + status text
-│   ├── CitationBadge.tsx           ← Inline source pill (e.g., "ird.govt.nz +2")
-│   └── SourceFooter.tsx            ← "Source: [Agency] — [URL]" at end of message
+│   ├── ThinkingIndicator.tsx       ← Pulsing dots + contextual status text
+│   ├── CitationBadge.tsx           ← Inline source pill (e.g., "ird.govt.nz")
+│   ├── SourceFooter.tsx            ← "Sources: [pill] [pill]" at bottom of AI message
+│   └── SuggestedQuestion.tsx       ← Tappable question chip below opening message
 ├── lib/hooks/useChat.ts            ← SSE consumption + state management
 └── lib/stores/chatStore.ts         ← Zustand: messages, streaming state, entry point
 ```
 
 ---
 
-## SSE event format (from backend — do not change)
+## Chat panel — floating overlay (NOT slide-in panel)
 
-The Fastify API sends these SSE events:
+**Critical design decision:** The chat panel is a floating overlay rendered via React
+Portal, positioned fixed at bottom-right. It is NOT part of the layout grid, NOT a
+sidebar panel, NOT a third column. It floats above the current content.
+
+```tsx
+// ChatPanel.tsx — rendered via Portal
+function ChatPanel({ onClose }) {
+  return createPortal(
+    <div className="fixed bottom-6 right-6 w-[420px] h-[600px] max-h-[calc(100vh-48px)]
+                    bg-bg-card rounded-2xl border border-border shadow-chat-panel
+                    flex flex-col overflow-hidden z-50
+                    animate-slide-up-panel">
+      <ChatHeader onClose={onClose} />
+      <ChatMessages />
+      <ChatInput />
+    </div>,
+    document.body
+  );
+}
+
+// ChatFAB.tsx — visible when panel is closed
+function ChatFAB({ onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="fixed bottom-6 right-6 w-14 h-14 rounded-full
+                 bg-primary shadow-chat-panel z-50
+                 flex items-center justify-center
+                 hover:scale-105 transition-transform"
+    >
+      <MessageCircle className="w-6 h-6 text-text-inverse" />
+    </button>
+  );
+}
+```
+
+Mobile (<768px): navigates to `/chat` full page instead of floating panel.
+
+**Visual reference:** `mockup-screens/landednz-screen-chat-interface.jsx`
+
+---
+
+## SSE event format (from backend — do not change)
 
 ```
 data: {"type":"chunk","text":"For your IRD "}
@@ -42,7 +87,7 @@ data: {"type":"chunk","text":"need these documents:"}
 data: {"type":"done"}
 ```
 
-Error case (after headers sent):
+Error case:
 ```
 data: {"type":"error","message":"AI service unavailable"}
 ```
@@ -52,7 +97,6 @@ data: {"type":"error","message":"AI service unavailable"}
 ## SSE consumption pattern (fetch + ReadableStream)
 
 Do NOT use `EventSource` — it does not support custom headers (Authorization).
-Use `fetch` with `ReadableStream`:
 
 ```typescript
 async function streamChat(
@@ -87,27 +131,16 @@ async function streamChat(
 
     buffer += decoder.decode(value, { stream: true });
     const lines = buffer.split('\n');
-    buffer = lines.pop() || '';  // Keep incomplete line in buffer
+    buffer = lines.pop() || '';
 
     for (const line of lines) {
       if (!line.startsWith('data: ')) continue;
-      const json = line.slice(6);  // Remove "data: " prefix
-      
       try {
-        const event = JSON.parse(json);
-        
-        if (event.type === 'chunk') {
-          onChunk(event.text);
-        } else if (event.type === 'done') {
-          onDone();
-          return;
-        } else if (event.type === 'error') {
-          onError(event.message);
-          return;
-        }
-      } catch {
-        // Malformed JSON — skip this line
-      }
+        const event = JSON.parse(line.slice(6));
+        if (event.type === 'chunk') onChunk(event.text);
+        else if (event.type === 'done') { onDone(); return; }
+        else if (event.type === 'error') { onError(event.message); return; }
+      } catch { /* skip malformed */ }
     }
   }
 }
@@ -118,34 +151,19 @@ async function streamChat(
 ## useChat hook pattern
 
 ```typescript
-// lib/hooks/useChat.ts
-import { useChatStore } from '../stores/chatStore';
-
 export function useChat() {
   const { messages, isStreaming, currentStreamText, addMessage,
     startStream, appendChunk, endStream, setError } = useChatStore();
 
   async function sendMessage(content: string) {
-    // 1. Add user message to state
     addMessage({ role: 'user', content });
-    
-    // 2. Start streaming state (shows ThinkingIndicator)
     startStream();
-    
-    // 3. Stream response
+
     await streamChat(
-      sessionId,
-      content,
-      token,
-      (text) => appendChunk(text),     // Each chunk appends to currentStreamText
-      () => {
-        // 4. On done: convert accumulated text to a complete AI message
-        endStream();
-      },
-      (errorMsg) => {
-        // 5. On error: show as system message in thread
-        setError(errorMsg);
-      },
+      sessionId, content, token,
+      (text) => appendChunk(text),
+      () => endStream(),
+      (errorMsg) => setError(errorMsg),
     );
   }
 
@@ -157,130 +175,84 @@ export function useChat() {
 
 ## Token rendering without layout jitter
 
-The critical UX requirement: as tokens arrive, the chat message container must NOT
-resize or jump. The user should see text appearing smoothly.
+Critical: the chat panel has FIXED dimensions (420×600px). Messages scroll within.
+The panel itself never resizes.
 
-**Key implementation rules:**
-
-1. The chat message container has a FIXED height (e.g., `calc(100vh - headerHeight - inputHeight)`)
-2. Messages scroll within this fixed container — the container itself never resizes
-3. Auto-scroll: `scrollToBottom()` called after each chunk append
-4. The streaming message starts as an empty bubble at the bottom, tokens fill it
-5. Container auto-scrolls to keep the streaming bubble visible
-
-```tsx
-function ChatMessageList({ messages, isStreaming, currentStreamText }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  
-  // Auto-scroll on new content
-  useEffect(() => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior: 'smooth',
-    });
-  }, [messages, currentStreamText]);
-  
-  return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-      {messages.map((msg, i) => (
-        <ChatMessage key={i} message={msg} />
-      ))}
-      
-      {isStreaming && (
-        <>
-          {currentStreamText ? (
-            <ChatMessage message={{ role: 'assistant', content: currentStreamText }} isStreaming />
-          ) : (
-            <ThinkingIndicator />
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-```
+1. Message container: `flex-1 overflow-y-auto` inside the fixed-size panel
+2. Auto-scroll: `scrollToBottom()` after each chunk
+3. Streaming message starts empty, tokens fill it in-place
+4. Container auto-scrolls to keep streaming bubble visible
 
 ---
 
 ## Thinking indicator
 
-Shows while waiting for the first token from the stream:
+Shows while waiting for the first token. Contextual status text that evolves:
 
 ```tsx
 function ThinkingIndicator() {
   const [statusText, setStatusText] = useState('Checking NZ settlement guidance...');
-  
-  // After 2s, update to more specific text
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setStatusText('Looking up information for your situation...');
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-  
+
   return (
-    <div className="flex items-start gap-3 max-w-[85%]">
-      <div className="bg-bg-card border border-border rounded-card p-4">
-        <div className="flex gap-1.5 mb-2">
-          <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-          <span className="w-2 h-2 bg-primary rounded-full animate-pulse delay-150" />
-          <span className="w-2 h-2 bg-primary rounded-full animate-pulse delay-300" />
+    <div className="flex items-start gap-2.5 px-1">
+      <ChatAvatar />
+      <div>
+        <div className="flex gap-1.5 mb-2 mt-1.5">
+          {[0, 1, 2].map(i => (
+            <span key={i}
+              className="w-[7px] h-[7px] rounded-full bg-primary"
+              style={{ animation: `typing 1s ease-in-out ${i * 0.15}s infinite` }}
+            />
+          ))}
         </div>
-        <p className="text-secondary text-text-tertiary">{statusText}</p>
+        <p className="text-caption text-text-tertiary">{statusText}</p>
       </div>
     </div>
   );
 }
 ```
 
-When `prefers-reduced-motion: reduce`: dots are static (no pulse), status text still shows.
+Reduced motion: dots static at 0.7 opacity, status text still shows.
 
 ---
 
-## Citation badge extraction
+## Citation badges (inline source pills)
 
-The AI response may contain citation markers in the text. The exact format depends on
-the AI system prompt output, but the pattern for web rendering is:
+From mockup: small rounded pills within AI response text showing source name.
 
 ```tsx
-function CitationBadge({ source, count }: { source: string; count?: number }) {
+function CitationBadge({ source }: { source: string }) {
   return (
-    <span className={cn(
-      'inline-flex items-center px-2 py-0.5 rounded-badge',
-      'bg-bg-sidebar text-caption text-text-secondary',
-      'cursor-pointer hover:bg-primary-subtle transition-colors'
-    )}>
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-badge
+                     bg-bg text-caption font-medium text-primary
+                     border border-border cursor-pointer
+                     hover:bg-primary-light hover:border-primary transition-colors">
+      <ExternalLink className="w-[9px] h-[9px]" />
       {source}
-      {count && count > 0 && <span className="ml-1 text-text-tertiary">+{count}</span>}
     </span>
   );
 }
 ```
 
-Citation badges appear inline within the AI response text. They are clickable —
-clicking expands to show the full source URL.
-
 ---
 
 ## Source footer
 
-Every AI response ends with a structured source section:
+Every AI message ends with a sources section:
 
 ```tsx
-function SourceFooter({ sourceName, sourceUrl }: { sourceName: string; sourceUrl: string }) {
+function SourceFooter({ sources }: { sources: string[] }) {
   return (
-    <div className="mt-3 pt-3 border-t border-border">
-      <p className="text-caption text-text-tertiary">
-        Source: {sourceName} —{' '}
-        <a
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline"
-        >
-          {sourceUrl}
-        </a>
-      </p>
+    <div className="mt-3 pt-2.5 border-t border-border flex items-center gap-1.5 flex-wrap">
+      <span className="text-caption text-text-tertiary font-medium">Sources:</span>
+      {sources.map((s, i) => <CitationBadge key={i} source={s} />)}
     </div>
   );
 }
@@ -290,72 +262,83 @@ function SourceFooter({ sourceName, sourceUrl }: { sourceName: string; sourceUrl
 
 ## Entry-point-aware opening messages
 
-When a chat session is created, the API returns an `openingMessage` based on entry point.
-The web app displays this as the first AI message in the thread.
-
-| Entry point | Opening message pattern |
-|-------------|------------------------|
+| Entry point | Opening message |
+|-------------|----------------|
 | TASK_CARD | "You're looking at the [task name] task. What would you like to know?" |
 | ROADMAP | "Hi [name] — you've completed [X] tasks so far. What's your next question?" |
 | NAVIGATION | "Hi [name] — ask me anything about settling in New Zealand." |
-| EMAIL_DEEPLINK | Same as TASK_CARD (links to specific task context) |
 
-The opening message is NOT an AI call — it's static text from `buildChatOpeningMessage()`
-on the backend. The web app just renders it as the first message in the thread.
+**Never show generic "Hi! How can I help?"** — explicit anti-pattern from research.
 
-**Never show a generic "Hi! How can I help?"** — this is an explicit anti-pattern
-from 13-ui-ux-research.md.
+---
+
+## AI message structure (from mockup)
+
+```tsx
+function AIMessage({ content, sources, timestamp }) {
+  return (
+    <div className="flex gap-2.5 mb-4 px-1">
+      <ChatAvatar />
+      <div className="flex-1 min-w-0 max-w-[88%]">
+        <div className="bg-bg-card border border-border rounded-[4px_12px_12px_12px] p-3.5">
+          {/* "Based on official NZ sources" header */}
+          <p className="text-caption text-text-tertiary font-medium mb-2">
+            Based on official NZ sources
+          </p>
+          {content}
+          {sources && <SourceFooter sources={sources} />}
+        </div>
+        <p className="text-caption text-text-tertiary mt-1.5">
+          LandedNZ · AI Advisor · {timestamp}
+        </p>
+      </div>
+    </div>
+  );
+}
+```
 
 ---
 
 ## Chat input
 
 ```tsx
-function ChatInput({ onSend, isStreaming, placeholder }: ChatInputProps) {
+function ChatInput({ onSend, isStreaming, placeholder }) {
   const [value, setValue] = useState('');
-  
+
   const handleSend = () => {
     if (!value.trim() || isStreaming) return;
     onSend(value.trim());
     setValue('');
   };
-  
+
   return (
-    <div className="border-t border-border p-4 bg-bg-card">
-      <div className="flex items-end gap-2">
+    <div className="border-t border-border p-3 flex-shrink-0">
+      <div className="flex items-end gap-2 bg-bg rounded-xl p-2.5 border border-border
+                      focus-within:border-primary transition-colors">
         <textarea
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-          placeholder={placeholder}
+          placeholder={placeholder || "Ask about your settlement..."}
           rows={1}
-          className={cn(
-            'flex-1 resize-none bg-bg-card border border-border rounded-input',
-            'px-4 py-3 text-body text-text-primary placeholder:text-text-tertiary',
-            'focus:outline-none focus:ring-2 focus:ring-border-focus',
-            'max-h-[120px] overflow-y-auto'
-          )}
+          className="flex-1 resize-none bg-transparent border-none outline-none
+                     text-body text-text-primary placeholder:text-text-tertiary
+                     max-h-[72px] overflow-y-auto"
         />
         <button
           onClick={handleSend}
           disabled={!value.trim() || isStreaming}
-          className={cn(
-            'w-10 h-10 rounded-full bg-primary text-text-inverse',
-            'flex items-center justify-center',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
-            'hover:bg-primary-hover transition-colors'
-          )}
+          className="w-[34px] h-[34px] rounded-full bg-primary flex items-center
+                     justify-center flex-shrink-0 disabled:opacity-40
+                     hover:bg-primary-hover transition-colors"
         >
-          <ArrowUp className="h-5 w-5" />
+          <Send className="w-4 h-4 text-text-inverse" />
         </button>
       </div>
-      <p className="text-caption text-text-tertiary mt-2">
+      <p className="text-caption text-text-tertiary text-center mt-2">
         Responses are AI-generated. Always verify with official sources.
       </p>
     </div>
   );
 }
 ```
-
-Enter sends message. Shift+Enter adds newline. Textarea auto-expands to 3 lines max.
-Send button disabled while streaming or input is empty.
