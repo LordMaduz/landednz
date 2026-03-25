@@ -423,7 +423,7 @@ documented states. Nothing more.**
 | AC-W1-01 | Next.js 14 project at `apps/web/`, App Router, TS strict mode | `npx tsc --noEmit` returns 0 |
 | AC-W1-02 | Tailwind config has ALL tokens from 14-ui-ux-design.md (colours, type, spacing, shadows, radii, widths) | Test component using `bg-primary text-h2 shadow-card` renders correctly |
 | AC-W1-03 | `globals.css` has CSS custom properties fallback. Inter self-hosted in `public/fonts/` | Font renders in browser, no Google Fonts network request |
-| AC-W1-04 | `cn()` utility at `src/lib/utils/cn.ts` | Unit test: `cn('px-4 py-2', 'px-8')` returns `'px-8 py-2'` |
+| AC-W1-04 | `cn()` utility at `src/lib/utils/cn.ts` | Unit test: `cn('px-4 py-2', 'px-8')` returns `'py-2 px-8'` |
 | AC-W1-05 | Button: 5 variants × 3 sizes × 4 states (default/hover/disabled/loading). Loading shows spinner + disables click. | Storybook story, all combos render |
 | AC-W1-06 | Card: default/hover/selected/error states. Padding variants (compact/default/spacious). Hover shadow transition 0.15s. | Storybook story, all states render |
 | AC-W1-07 | Badge: 5 variants (status/phase/premium/difficulty/source) with correct colour mappings. Premium shows lock icon. | Storybook story, all variants render |
