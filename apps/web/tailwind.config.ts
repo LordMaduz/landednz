@@ -35,6 +35,7 @@ const config: Config = {
         'warning-light': '#FDF6E7',
         error: '#C75B4A',
         'error-light': '#FDF0EE',
+        'error-hover': '#B54E3E',
         blocked: '#8E8E9A',
         'blocked-light': '#F2F2F4',
         premium: '#1B6B6D',
