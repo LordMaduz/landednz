@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | IN PROGRESS | 5 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 6 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -169,7 +169,7 @@
 | AC-W1-03 | globals.css CSS custom properties + DM Sans & DM Serif Display self-hosted | PASS | @font-face + :root CSS vars + reduced-motion block. tailwind.config.ts: fixed Inter→DM Sans, fixed font sizes (body 15px, h1 24px), radii (button/input 10px), added chat-panel+modal shadows. npx tsc + npm run build pass. Code-reviewer PASS. |
 | AC-W1-04 | cn() utility with unit test | PASS | clsx + tailwind-merge. cn('px-4 py-2', 'px-8') → 'py-2 px-8' (conflict resolution correct). 3/3 tests pass. npx tsc clean. Code-reviewer CONDITIONAL PASS (vitest.config.ts deferred to AC-W1-14 — tests run fine without it). |
 | AC-W1-05 | Button: 5 variants × 3 sizes × 4 states in Storybook | PASS | Storybook 8.6.18 + @storybook/react-vite framework. Button component: 5 variants (primary/secondary/outline/text/destructive), 3 sizes (sm/md/lg), 4 states (default/hover/disabled/loading). error-hover token added. All stories render localhost:6006. Code-reviewer PASS after Storybook 8 upgrade. |
-| AC-W1-06 | Card: 4 states + padding variants in Storybook | — | |
+| AC-W1-06 | Card: 4 states + padding variants in Storybook | PASS | 4 states (default/hover/selected/error), 3 padding variants (compact/default/spacious), 0.15s shadow transition. Barrel index.ts created. npx tsc clean. Code-reviewer PASS. |
 | AC-W1-07 | Badge: 5 variants with correct colour mappings in Storybook | — | |
 | AC-W1-08 | ProgressBar: deterministic + indeterminate in Storybook | — | |
 | AC-W1-09 | Skeleton: 3 variants with pulse, reduced motion disabled | — | |
@@ -338,6 +338,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W1-06] Card component. Explicit `state` prop (default/hover/selected/error) + `padding` prop (compact/default/spacious). const style maps → cn() composition, same pattern as Button. border-error/30 opacity modifier works as Tailwind supports it when color is configured. index.ts barrel created for ui/. Code-reviewer PASS.
 - [AC-W1-05] Storybook 8.6.18 + @storybook/react-vite framework resolves webpack compatibility issues. @storybook/nextjs caused "TypeError: Cannot read properties of undefined (reading 'tap')" in webpack compilation. react-vite framework avoids Next.js-specific webpack hooks. Added vite.config.ts for @/ path alias resolution. Button component complete: error-hover token, 5 variants × 3 sizes × 4 states, inline SVG spinner, comprehensive Storybook stories. Fixed "Can't find variable: React" by adding React import for type references.
 - [AC-W1-04] cn() utility. AC specification corrected: tailwind-merge returns 'py-2 px-8' not 'px-8 py-2' (both CSS-equivalent). Conflict resolution works correctly: px-4 removed, px-8 wins, py-2 preserved. Updated 15-web-build-specification.md line 426 to match library behavior. Trust the library.
 - [AC-W1-03] DM Sans + DM Serif Display self-hosted. tailwind.config.ts had token discrepancies carried over from AC-W1-02: font was Inter (wrong — mockup changed to DM Sans), body 1rem (should be 0.9375rem/15px), h1 1.75rem (should be 1.5rem), button/input radii 8px (should be 10px), missing chat-panel+modal shadows. All fixed. Inter removed everywhere. IMPLEMENT.md AC-W1-03 description updated from "Inter" to "DM Sans & DM Serif Display".
