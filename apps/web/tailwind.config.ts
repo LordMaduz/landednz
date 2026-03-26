@@ -44,6 +44,7 @@ const config: Config = {
         border: '#E5E3E0',
         'border-focus': '#1B6B6D',
         'border-hover': '#D0CEC8',
+        'border-error': '#C75B4A',
       },
       fontFamily: {
         // font-display → DM Serif Display (headings, hero, greeting, page titles)
