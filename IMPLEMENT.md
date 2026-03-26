@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | IN PROGRESS | 6 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 8 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -170,8 +170,8 @@
 | AC-W1-04 | cn() utility with unit test | PASS | clsx + tailwind-merge. cn('px-4 py-2', 'px-8') → 'py-2 px-8' (conflict resolution correct). 3/3 tests pass. npx tsc clean. Code-reviewer CONDITIONAL PASS (vitest.config.ts deferred to AC-W1-14 — tests run fine without it). |
 | AC-W1-05 | Button: 5 variants × 3 sizes × 4 states in Storybook | PASS | Storybook 8.6.18 + @storybook/react-vite framework. Button component: 5 variants (primary/secondary/outline/text/destructive), 3 sizes (sm/md/lg), 4 states (default/hover/disabled/loading). error-hover token added. All stories render localhost:6006. Code-reviewer PASS after Storybook 8 upgrade. |
 | AC-W1-06 | Card: 4 states + padding variants in Storybook | PASS | 4 states (default/hover/selected/error), 3 padding variants (compact/default/spacious), 0.15s shadow transition. Barrel index.ts created. npx tsc clean. Code-reviewer PASS. |
-| AC-W1-07 | Badge: 5 variants with correct colour mappings in Storybook | — | |
-| AC-W1-08 | ProgressBar: deterministic + indeterminate in Storybook | — | |
+| AC-W1-07 | Badge: 5 variants with correct colour mappings in Storybook | PASS | 5 variants (phase/difficulty-easy/medium/hard/premium), inline lock SVG for premium, rounded-badge token, AllVariants gallery. npx tsc clean. Code-reviewer PASS. |
+| AC-W1-08 | ProgressBar: deterministic + indeterminate in Storybook | PASS | Deterministic (0-100% with 0.4s transition) + indeterminate (pulse) modes. Custom duration-fill token (400ms) added to tailwind.config. Interactive Storybook control, reduced motion support, full a11y. Code-reviewer PASS. |
 | AC-W1-09 | Skeleton: 3 variants with pulse, reduced motion disabled | — | |
 | AC-W1-10 | StatusIndicator: all 7 states × 2 sizes in Storybook | — | |
 | AC-W1-11 | Input: text + textarea, all states in Storybook | — | |
@@ -338,6 +338,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W1-08] ProgressBar component with deterministic (0-100%) and indeterminate (pulse) modes. Custom `transitionDuration: { fill: '400ms' }` added to tailwind.config.ts since 400ms not in default Tailwind scale (CW01 compliance). Indeterminate uses 60% width with `progress-pulse` CSS animation (0.4→0.7→0.4 opacity, 1.5s). Full a11y: role="progressbar", conditional aria-valuenow, proper reduced motion support. Interactive Storybook control for % testing. Code-reviewer PASS.
 - [AC-W1-06] Card component. Root cause of __namedExportsOrder Storybook error: complex JSX in story args, NOT missing tokens. Solution: define content as const outside exports, use in args. React import required for gallery render functions. Card: 4 states × 3 padding variants with proper UI content showing typography and spacing. Barrel index.ts created. Code-reviewer PASS.
 - [AC-W1-05] Storybook 8.6.18 + @storybook/react-vite framework resolves webpack compatibility issues. @storybook/nextjs caused "TypeError: Cannot read properties of undefined (reading 'tap')" in webpack compilation. react-vite framework avoids Next.js-specific webpack hooks. Added vite.config.ts for @/ path alias resolution. Button component complete: error-hover token, 5 variants × 3 sizes × 4 states, inline SVG spinner, comprehensive Storybook stories. Fixed "Can't find variable: React" by adding React import for type references.
 - [AC-W1-04] cn() utility. AC specification corrected: tailwind-merge returns 'py-2 px-8' not 'px-8 py-2' (both CSS-equivalent). Conflict resolution works correctly: px-4 removed, px-8 wins, py-2 preserved. Updated 15-web-build-specification.md line 426 to match library behavior. Trust the library.

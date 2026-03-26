@@ -96,6 +96,9 @@ const config: Config = {
       maxWidth: {
         content: '960px',
       },
+      transitionDuration: {
+        fill: '400ms',
+      },
     },
   },
   plugins: [],

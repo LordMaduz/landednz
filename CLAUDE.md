@@ -108,6 +108,12 @@ Web stage sequence: W1 (Design System) → W2 (Layout Shell) → W3 (Static Scre
 /rpi:gate web-stage1
 ```
 
+### RPI Workflow Discipline
+
+- **Follow plan exactly — never improvise, never manipulate tests.** When implementing any AC, execute the plan and test strategy exactly as written. If errors occur: STOP → Plan mode → root cause analysis → proper fix. Never claim PASS without running actual verification steps. Never work around failures or take shortcuts. This discipline is non-negotiable across all ACs in all phases. Violation is not tolerable.
+
+- **Execute all verification steps before code review.** When approved plans specify verification steps (like "Run npm run storybook", "Run npx tsc --noEmit"), execute them exactly as written before proceeding to code reviewer. Never skip verification steps and jump directly to code review — the plan sequence is mandatory.
+
 ### RPI Workflow Optimizations
 
 - **AC-2-15 research automation** — `/rpi:research phase2 AC-2-15` auto-generates URL liveness checker and verification report template. Reduces manual URL checking time while preserving sequential task verification approach required for knowledge base content accuracy.
