@@ -91,4 +91,8 @@ body {
   .progress-pulse {
     animation: progress-pulse 1.5s ease-in-out infinite;
   }
+
+  .skeleton-pulse {
+    animation: progress-pulse 1.5s ease-in-out infinite;
+  }
 }
