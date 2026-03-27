@@ -12,3 +12,6 @@ export type { ProgressBarProps, ProgressBarSize } from './ProgressBar'
 
 export { Skeleton } from './Skeleton'
 export type { SkeletonProps, SkeletonVariant } from './Skeleton'
+
+export { StatusIndicator } from './StatusIndicator'
+export type { StatusIndicatorProps, StatusIndicatorSize } from './StatusIndicator'

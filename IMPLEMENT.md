@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | IN PROGRESS | 9 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 10 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -173,7 +173,7 @@
 | AC-W1-07 | Badge: 5 variants with correct colour mappings in Storybook | PASS | 5 variants (phase/difficulty-easy/medium/hard/premium), inline lock SVG for premium, rounded-badge token, AllVariants gallery. npx tsc clean. Code-reviewer PASS. |
 | AC-W1-08 | ProgressBar: deterministic + indeterminate in Storybook | PASS | Deterministic (0-100% with 0.4s transition) + indeterminate (pulse) modes. Custom duration-fill token (400ms) added to tailwind.config. Interactive Storybook control, reduced motion support, full a11y. Code-reviewer PASS. |
 | AC-W1-09 | Skeleton: 3 variants with pulse, reduced motion disabled | PASS | 3 variants (text-line/card/circle), pulse 0.4→0.7→0.4 over 1.5s, reduced motion support, 6 Storybook stories, bg-border for visibility | |
-| AC-W1-10 | StatusIndicator: all 7 states × 2 sizes in Storybook | — | |
+| AC-W1-10 | StatusIndicator: all 7 states × 2 sizes in Storybook | PASS | 7 TaskCardState values (not_started/in_progress/complete/blocked/premium_locked/loading/error) × 2 sizes (sm/md), inline SVGs, CSS half-filled circle, 10 Storybook stories | |
 | AC-W1-11 | Input: text + textarea, all states in Storybook | — | |
 | AC-W1-12 | Tooltip: 4 positions, hover/focus trigger in Storybook | — | |
 | AC-W1-13 | Storybook 8 running, all primitives documented, zero errors | — | |
