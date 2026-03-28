@@ -21,7 +21,7 @@
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
-| W2 — Layout Shell (~15h) | IN PROGRESS | 0 / 13 | — |
+| W2 — Layout Shell (~15h) | IN PROGRESS | 1 / 11 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
@@ -188,13 +188,13 @@
 
 ## Web Stage 2 — Layout Shell
 
-**Status:** BLOCKED (W1 not complete)
+**Status:** IN PROGRESS
 **Research dir:** `rpi/web-stage2-layout-shell/research/`
 **Plans dir:** `rpi/web-stage2-layout-shell/plans/`
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W2-01 | Root layout: Inter font, metadata, bg-bg background | — | |
+| AC-W2-01 | Root layout: DM Sans + DM Serif Display fonts, metadata, bg-bg background | PASS | Added className="bg-bg font-body antialiased" to <body>. Fonts self-hosted from Stage 1, Tailwind token classes applied correctly. npx tsc --noEmit → 0 errors, visual verification confirms cream background + DM Sans. Code-reviewer PASS. |
 | AC-W2-02 | Marketing layout at /: full-width, no sidebar | — | |
 | AC-W2-03 | App layout at /roadmap: three-column at 1280px+ | — | |
 | AC-W2-04 | Sidebar: full nav structure, active states | — | |
@@ -339,6 +339,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W2-01] Root layout complete. Fixed IMPLEMENT.md AC description: "Inter font" → "DM Sans + DM Serif Display fonts" (matches REQUEST.md). Added `className="bg-bg font-body antialiased"` to `<body>` element. Fonts already self-hosted from Stage 1, Tailwind config has font-body → DM Sans mapping. Simple 3-class addition to complete root layout foundation. Code-reviewer PASS.
 - [AC-W1-08] ProgressBar component with deterministic (0-100%) and indeterminate (pulse) modes. Custom `transitionDuration: { fill: '400ms' }` added to tailwind.config.ts since 400ms not in default Tailwind scale (CW01 compliance). Indeterminate uses 60% width with `progress-pulse` CSS animation (0.4→0.7→0.4 opacity, 1.5s). Full a11y: role="progressbar", conditional aria-valuenow, proper reduced motion support. Interactive Storybook control for % testing. Code-reviewer PASS.
 - [AC-W1-06] Card component. Root cause of __namedExportsOrder Storybook error: complex JSX in story args, NOT missing tokens. Solution: define content as const outside exports, use in args. React import required for gallery render functions. Card: 4 states × 3 padding variants with proper UI content showing typography and spacing. Barrel index.ts created. Code-reviewer PASS.
 - [AC-W1-05] Storybook 8.6.18 + @storybook/react-vite framework resolves webpack compatibility issues. @storybook/nextjs caused "TypeError: Cannot read properties of undefined (reading 'tap')" in webpack compilation. react-vite framework avoids Next.js-specific webpack hooks. Added vite.config.ts for @/ path alias resolution. Button component complete: error-hover token, 5 variants × 3 sizes × 4 states, inline SVG spinner, comprehensive Storybook stories. Fixed "Can't find variable: React" by adding React import for type references.
