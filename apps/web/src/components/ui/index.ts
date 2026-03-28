@@ -15,3 +15,6 @@ export type { SkeletonProps, SkeletonVariant } from './Skeleton'
 
 export { StatusIndicator } from './StatusIndicator'
 export type { StatusIndicatorProps, StatusIndicatorSize } from './StatusIndicator'
+
+export { Input } from './Input'
+export type { InputProps, InputVariant } from './Input'
