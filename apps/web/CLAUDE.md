@@ -79,6 +79,26 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - **Next.js 14 does not support `next.config.ts` — requires `.js` or `.mjs`.**
   TypeScript config file support was introduced in Next.js 15. Attempting to use `next.config.ts` in Next.js 14.2.x fails with "Configuring Next.js via 'next.config.ts' is not supported." Use `next.config.mjs` for ES modules or `next.config.js` for CommonJS.
 
+### Storybook Setup
+
+- **Storybook 8.6.18 + @storybook/react-vite framework resolves webpack compatibility.**
+  `@storybook/nextjs` causes "Cannot read properties of undefined (reading 'tap')" in webpack compilation. Use `@storybook/react-vite` framework and create separate `vite.config.ts` for path alias resolution to avoid Next.js-specific webpack hooks.
+
+### Vitest Configuration
+
+- **Vitest requires `globals: true` for @testing-library/jest-dom to work.**
+  The jest-dom v6+ package calls `expect.extend()` at module load time and needs `expect` to be global. Use `import '@testing-library/jest-dom'` in test-setup.ts (not manual extend) to get both runtime matchers AND TypeScript types.
+
+### Component Testing Patterns
+
+- **StatusIndicator uses `role="img"` on its container — use `getByRole('img')` in tests.**
+  Don't rely on `querySelector('svg')` as the SVG is an implementation detail. The semantic role is what matters for testing.
+
+### Tailwind Font Configuration
+
+- **font-display/font-body Tailwind classes implemented as `display` and `body` keys in tailwind.config.ts fontFamily section.**
+  This is the correct pattern for custom Tailwind font utility classes: `fontFamily: { display: ['DM Serif Display', 'serif'], body: ['DM Sans', 'sans-serif'] }` enables `font-display` and `font-body` classes.
+
 ---
 
 ## Constitutional Compliance

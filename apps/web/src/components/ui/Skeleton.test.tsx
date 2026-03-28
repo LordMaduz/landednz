@@ -5,7 +5,7 @@ import { Skeleton } from './Skeleton'
 
 describe('Skeleton', () => {
   it('renders without crash', () => {
-    render(<Skeleton />)
+    render(<Skeleton variant="card" />)
     expect(screen.getByRole('status')).toBeInTheDocument()
   })
 
