@@ -6,9 +6,9 @@
 ## Overall Progress
 
 **Active Phase:** Phase 5 — RAG + Launch
-**Active Web Stage:** Web Stage 2 — Layout Shell (IN PROGRESS)
+**Active Web Stage:** Web Stage 3 — Static Screens (IN PROGRESS)
 **Backend Phases Complete:** 4 / 5 (Phase 5 development done, deployment deferred)
-**Web Stages Complete:** 1 / 6
+**Web Stages Complete:** 2 / 6
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
@@ -21,8 +21,8 @@
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
-| W2 — Layout Shell (~15h) | IN PROGRESS | 11 / 11 | — |
-| W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
+| W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
+| W3 — Static Screens (~35h) | IN PROGRESS | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
@@ -206,13 +206,13 @@
 | AC-W2-10 | Responsive at 1440/1280/1024/768/375px | PASS | Visual verification at all 7 breakpoints confirmed correct sidebar responsive behavior |
 | AC-W2-11 | Playwright E2E: all routes, correct layout at 1280 + 768 | PASS | 35/35 tests across 5 viewport projects (1440/1280/1024/768/375px). Sidebar visible/hidden by viewport, marketing routes never attach aside, auth redirect verified. Code-reviewer PASS. |
 
-**Web Stage 2 Gate:** —
+**Web Stage 2 Gate:** PASS — 2026-03-28. 11/11 ACs. Playwright 35/35 tests across 5 viewports. No DetailPanel component. Layout always sidebar + content.
 
 ---
 
 ## Web Stage 3 — Static Screens
 
-**Status:** BLOCKED (W2 not complete)
+**Status:** IN PROGRESS — W2 gate passed 2026-03-28
 **Research dir:** `rpi/web-stage3-static-screens/research/`
 **Plans dir:** `rpi/web-stage3-static-screens/plans/`
 

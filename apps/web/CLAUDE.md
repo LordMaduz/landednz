@@ -99,6 +99,24 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - **font-display/font-body Tailwind classes implemented as `display` and `body` keys in tailwind.config.ts fontFamily section.**
   This is the correct pattern for custom Tailwind font utility classes: `fontFamily: { display: ['DM Serif Display', 'serif'], body: ['DM Sans', 'sans-serif'] }` enables `font-display` and `font-body` classes.
 
+### Layout Implementation
+
+- **Nav elements need `flex flex-col` for vertical stacking — without it items go horizontal.**
+  Navigation containers must use `flex flex-col` to stack nav items vertically. Flex alone defaults to row direction, causing horizontal layout instead of expected vertical sidebar navigation.
+
+- **Route deletion requires .next cache cleanup before TypeScript passes.**
+  After deleting route files, run `rm -rf .next` before TypeScript check. Stale .next cache references deleted files, causing tsc errors until cache is cleared.
+
+### Responsive Testing
+
+- **Playwright mobile tests: `aside` with `hidden md:flex` uses `not.toBeVisible()`, not `not.toBeAttached()`.**
+  Elements with `hidden md:flex` stay in DOM but are visually hidden at mobile. Use `not.toBeVisible()` in mobile tests. Marketing routes (never rendered) correctly use `not.toBeAttached()`.
+
+### Tailwind Custom Values
+
+- **Add custom borderWidth values to tailwind.config.ts to avoid arbitrary values.**
+  `borderWidth: { '3': '3px' }` enables `border-l-3` class instead of arbitrary `border-l-[3px]`, maintaining CW01 compliance.
+
 ---
 
 ## Constitutional Compliance
@@ -137,31 +155,4 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - React 18 (Server Components)
 - Tailwind CSS 3.4+ (design tokens)
 
-**Will be added by AC:**
-- clsx + tailwind-merge (AC-W1-04)
-- Storybook 8 (AC-W1-13)
-- Vitest + Testing Library (AC-W1-14)
-- Lucide React (icons — Stage 2)
-- Zustand (state — Stage 2)
-- nuqs (URL state — Stage 2)
-- Supabase SSR (auth — Stage 4)
-- Framer Motion (animations — Stage 5)
-
----
-
-## Development
-
-**Stage 1 complete when:**
-- All 16 UI primitives render in Storybook
-- npx tsc --noEmit → 0 errors
-- npm run test → all pass
-- All primitives respect prefers-reduced-motion
-
-**Verification commands:**
-```bash
-npm run dev          # Next.js dev server
-npm run build        # Production build
-npm run storybook    # Storybook (Stage 1+)
-npm run test         # Vitest (Stage 1+)
-npx tsc --noEmit    # TypeScript check
-```
+**Stage additions:** clsx + tailwind-merge (W1), Storybook 8 (W1), Vitest + Testing Library (W1), Lucide React (W2), Zustand (W2), nuqs (W2), Supabase SSR (W4), Framer Motion (W5)
