@@ -21,7 +21,7 @@
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
-| W2 — Layout Shell (~15h) | IN PROGRESS | 1 / 11 | — |
+| W2 — Layout Shell (~15h) | IN PROGRESS | 2 / 11 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
@@ -195,7 +195,7 @@
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-W2-01 | Root layout: DM Sans + DM Serif Display fonts, metadata, bg-bg background | PASS | Added className="bg-bg font-body antialiased" to <body>. Fonts self-hosted from Stage 1, Tailwind token classes applied correctly. npx tsc --noEmit → 0 errors, visual verification confirms cream background + DM Sans. Code-reviewer PASS. |
-| AC-W2-02 | Marketing layout at /: full-width, no sidebar | — | |
+| AC-W2-02 | Marketing layout at /: full-width, no sidebar | PASS | Created (marketing)/layout.tsx (min-h-screen wrapper) + (marketing)/page.tsx placeholder. Deleted root page.tsx (Stage 1 test, route conflict). npx tsc --noEmit → 0 errors. Code-reviewer PASS. |
 | AC-W2-03 | App layout at /roadmap: three-column at 1280px+ | — | |
 | AC-W2-04 | Sidebar: full nav structure, active states | — | |
 | AC-W2-05 | Sidebar collapses to 64px icon-only at 1024-1279px | — | |
@@ -339,6 +339,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W2-02] Marketing layout: stale .next cache references deleted page.tsx — must run `rm -rf .next` after deleting route files before TypeScript check passes. Route group `(marketing)` correctly isolates `/` from sidebar app layout.
 - [AC-W2-01] Root layout complete. Fixed IMPLEMENT.md AC description: "Inter font" → "DM Sans + DM Serif Display fonts" (matches REQUEST.md). Added `className="bg-bg font-body antialiased"` to `<body>` element. Fonts already self-hosted from Stage 1, Tailwind config has font-body → DM Sans mapping. Simple 3-class addition to complete root layout foundation. Code-reviewer PASS.
 - [AC-W1-08] ProgressBar component with deterministic (0-100%) and indeterminate (pulse) modes. Custom `transitionDuration: { fill: '400ms' }` added to tailwind.config.ts since 400ms not in default Tailwind scale (CW01 compliance). Indeterminate uses 60% width with `progress-pulse` CSS animation (0.4→0.7→0.4 opacity, 1.5s). Full a11y: role="progressbar", conditional aria-valuenow, proper reduced motion support. Interactive Storybook control for % testing. Code-reviewer PASS.
 - [AC-W1-06] Card component. Root cause of __namedExportsOrder Storybook error: complex JSX in story args, NOT missing tokens. Solution: define content as const outside exports, use in args. React import required for gallery render functions. Card: 4 states × 3 padding variants with proper UI content showing typography and spacing. Barrel index.ts created. Code-reviewer PASS.
