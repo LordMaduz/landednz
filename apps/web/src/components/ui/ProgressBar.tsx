@@ -42,7 +42,7 @@ export function ProgressBar({
       <div
         aria-hidden="true"
         className={cn(
-          'h-full bg-primary rounded-full transition-all duration-fill',
+          'h-full bg-primary rounded-full transition-all duration-fill motion-reduce:transition-none',
           indeterminate && 'progress-pulse',
         )}
         style={{

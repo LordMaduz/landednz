@@ -60,7 +60,7 @@ export function Button({
     <button
       className={cn(
         'inline-flex items-center justify-center font-medium rounded-button',
-        'transition-colors duration-150',
+        'transition-colors duration-150 motion-reduce:transition-none',
         'focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2',
         variantStyles[variant],
         sizeStyles[size],

@@ -30,7 +30,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-card border transition-all duration-150',
+        'rounded-card border transition-all duration-150 motion-reduce:transition-none',
         stateStyles[state],
         paddingStyles[padding],
         className,
