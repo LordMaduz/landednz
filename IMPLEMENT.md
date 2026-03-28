@@ -22,7 +22,7 @@
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
-| W3 — Static Screens (~35h) | IN PROGRESS | 0 / 15 | — |
+| W3 — Static Screens (~35h) | IN PROGRESS | 1 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
@@ -218,7 +218,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W3-01 | Landing page: all 6 sections, copy matches spec | — | |
+| AC-W3-01 | Landing page: all 6 sections, copy matches spec | PASS | 8 components (Nav/Hero/Problem/HowItWorks/SocialProof/Pricing/FinalCTA/Footer). Teal gradients, DM Serif headlines, fade animations, CW01/CW03 compliant. Code-reviewer PASS. |
 | AC-W3-02 | Onboarding: 5 questions, option cards, progress bar | — | |
 | AC-W3-03 | Roadmap reveal transition with reduced motion fallback | — | |
 | AC-W3-04 | Roadmap dashboard: hero card, "Do these first", filter tabs | — | |
@@ -336,6 +336,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W3-01] Landing page complete: 8 components matching mockup. Key tokens added: `primary-dark`/`primary-darker` (#145254/#0F3E40), `bg-hero-gradient`/`bg-cta-gradient`, `max-w-landing` (1120px), `text-hero-heading` (clamp). Animations under `@media (prefers-reduced-motion: no-preference)`. Client components only for scroll state (Nav) + hover (Pricing). TypeScript 0 errors. Code-reviewer PASS.
 
 - [AC-W2-11] Playwright E2E: 35 tests across 5 viewport projects. Key insight: `aside` uses `hidden md:flex` CSS so always in DOM — mobile tests use `not.toBeVisible()`, marketing routes use `not.toBeAttached()`. Cookie `sb-dev=1` satisfies `sb-*` prefix check in middleware. fullyParallel: true across 5 projects. Code-reviewer PASS.
 - [AC-W2-10] Responsive verification: Visual verification at 7 breakpoints (1440/1280/1100/1024/900/768/375px) using sb-dev=1 cookie bypass. All responsive behavior confirmed: sidebar 256px + labels at xl+, 64px icon-only at lg, hidden at mobile with hamburger drawer. Code-reviewer PASS.

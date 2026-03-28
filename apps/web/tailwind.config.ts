@@ -14,6 +14,8 @@ const config: Config = {
         'primary-hover': '#15585A',
         'primary-light': '#E8F4F4',
         'primary-subtle': '#F0F8F8',
+        'primary-dark': '#145254',
+        'primary-darker': '#0F3E40',
         // Secondary
         secondary: '#D4A843',
         'secondary-light': '#FDF6E7',
@@ -65,6 +67,7 @@ const config: Config = {
         body: ['0.9375rem', { lineHeight: '1.6', fontWeight: '400' }],
         secondary: ['0.8125rem', { lineHeight: '1.4', fontWeight: '400' }],
         caption: ['0.6875rem', { lineHeight: '1.3', fontWeight: '500' }],
+        'hero-heading': ['clamp(2rem, 5vw, 3.25rem)', { lineHeight: '1.2', fontWeight: '400' }],
       },
       lineHeight: {
         tight: '1.3',
@@ -98,9 +101,14 @@ const config: Config = {
       },
       maxWidth: {
         content: '960px',
+        landing: '1120px',
       },
       transitionDuration: {
         fill: '400ms',
+      },
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #145254 40%, #0F3E40 100%)',
+        'cta-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #0F3E40 100%)',
       },
     },
   },
