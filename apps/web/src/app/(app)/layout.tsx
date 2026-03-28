@@ -1,4 +1,5 @@
 import { Sidebar } from '@/components/layout/Sidebar'
+import { MobileNav } from '@/components/layout/MobileNav'
 
 export default function AppLayout({
   children,
@@ -7,6 +8,7 @@ export default function AppLayout({
 }) {
   return (
     <div className="flex h-screen bg-bg">
+      <MobileNav />
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-content mx-auto px-6 lg:px-10 py-7">

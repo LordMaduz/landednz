@@ -54,6 +54,9 @@ const config: Config = {
         // font-sans → DM Sans (Tailwind default override)
         sans: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
+      borderWidth: {
+        '3': '3px',
+      },
       fontSize: {
         display: ['2.25rem', { lineHeight: '1.2', fontWeight: '400' }],
         h1: ['1.5rem', { lineHeight: '1.35', fontWeight: '400' }],
