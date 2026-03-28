@@ -18,3 +18,6 @@ export type { StatusIndicatorProps, StatusIndicatorSize } from './StatusIndicato
 
 export { Input } from './Input'
 export type { InputProps, InputVariant } from './Input'
+
+export { Tooltip } from './Tooltip'
+export type { TooltipProps, TooltipPosition } from './Tooltip'

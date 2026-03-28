@@ -20,7 +20,7 @@
 
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
-| W1 — Design System (~20h) | IN PROGRESS | 11 / 16 | — |
+| W1 — Design System (~20h) | IN PROGRESS | 12 / 16 | — |
 | W2 — Layout Shell (~15h) | BLOCKED | 0 / 13 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
@@ -175,7 +175,7 @@
 | AC-W1-09 | Skeleton: 3 variants with pulse, reduced motion disabled | PASS | 3 variants (text-line/card/circle), pulse 0.4→0.7→0.4 over 1.5s, reduced motion support, 6 Storybook stories, bg-border for visibility | |
 | AC-W1-10 | StatusIndicator: all 7 states × 2 sizes in Storybook | PASS | 7 TaskCardState values (not_started/in_progress/complete/blocked/premium_locked/loading/error) × 2 sizes (sm/md), inline SVGs, CSS half-filled circle, 10 Storybook stories | |
 | AC-W1-11 | Input: text + textarea, all states in Storybook | PASS | Text/textarea variants, label/error/disabled states, auto-expand (24-72px), focus rings (primary/error), 8 Storybook stories, CW01-CW06 compliance |
-| AC-W1-12 | Tooltip: 4 positions, hover/focus trigger in Storybook | — | |
+| AC-W1-12 | Tooltip: 4 positions, hover/focus trigger in Storybook | PASS | 4 positions (top/bottom/left/right), hover/focus/click-outside/Escape triggers, directional arrow, 7 Storybook stories, ARIA support, dark tooltip with shadow-dropdown |
 | AC-W1-13 | Storybook 8 running, all primitives documented, zero errors | — | |
 | AC-W1-14 | Vitest configured, all primitives tested, all passing | — | |
 | AC-W1-15 | All components respect prefers-reduced-motion | — | |
