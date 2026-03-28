@@ -17,7 +17,7 @@ export function LandingHero() {
         {/* Eyebrow */}
         <div className="fade-in-up delay-1 mb-6">
           <span className="text-caption text-secondary bg-secondary/[0.12] px-4 py-1.5 rounded-full inline-block">
-            For skilled migrants arriving in New Zealand
+            FOR SKILLED MIGRANTS ARRIVING IN NEW ZEALAND
           </span>
         </div>
 
@@ -30,27 +30,27 @@ export function LandingHero() {
         </h1>
 
         {/* Sub */}
-        <p className="fade-in-up delay-3 text-body text-text-inverse/[0.78] max-w-[560px] mx-auto mb-10 text-[1.125rem]">
+        <p className="fade-in-up delay-3 text-body text-text-inverse/[0.78] max-w-[560px] mx-auto mb-10 text-lg">
           LandedNZ builds a personalised settlement plan based on your visa, your city, and your
           family. In 2 minutes.
         </p>
 
         {/* CTA */}
         <div className="fade-in-up delay-4 mb-5">
-          <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-[1.0625rem] font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
-            Build my plan — free
+          <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-lg font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
+            Build my plan for free
           </button>
         </div>
 
         {/* Secondary link */}
         <div className="fade-in-up delay-5 mb-12">
-          <button className="text-secondary text-text-inverse/[0.55] underline underline-offset-4 hover:text-text-inverse/75 transition-colors">
+          <button className="text-body text-secondary underline underline-offset-4 hover:text-text-inverse/75 transition-colors">
             See how it works ↓
           </button>
         </div>
 
         {/* Trust signal */}
-        <p className="fade-in delay-6 text-caption text-text-inverse/[0.4] tracking-wide">
+        <p className="fade-in delay-6 text-small text-text-inverse/[0.4] tracking-wide">
           No account needed · No payment required · Your plan in 2 minutes
         </p>
       </div>

@@ -21,18 +21,18 @@ export function LandingFooter() {
         </div>
 
         <div className="flex gap-6">
-          <button className="text-caption text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
             Privacy
           </button>
-          <button className="text-caption text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
             Terms
           </button>
-          <button className="text-caption text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
             Contact
           </button>
         </div>
 
-        <span className="text-caption text-text-inverse/25">
+        <span className="text-small text-text-inverse/25">
           © 2026 LandedNZ
         </span>
       </div>

@@ -41,13 +41,13 @@ export function LandingNav() {
       </div>
 
       <div className="flex items-center gap-8">
-        <button className="text-secondary text-text-inverse/75 hover:text-secondary transition-colors">
+        <button className="text-small text-text-inverse/75 hover:text-secondary transition-colors">
           How it works
         </button>
-        <button className="text-secondary text-text-inverse/75 hover:text-secondary transition-colors">
+        <button className="text-small text-text-inverse/75 hover:text-secondary transition-colors">
           Pricing
         </button>
-        <button className="bg-secondary text-text-primary px-6 py-2.5 rounded-lg font-semibold text-secondary hover:scale-105 active:scale-100 transition-transform">
+        <button className="bg-secondary text-text-primary px-6 py-2.5 rounded-lg font-semibold text-small hover:scale-105 active:scale-100 transition-transform">
           Build my plan
         </button>
       </div>

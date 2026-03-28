@@ -8,10 +8,10 @@ export function LandingFinalCTA() {
         <h2 className="font-display text-hero-heading text-text-inverse mb-3 leading-tight">
           Your settlement plan is 2 minutes away
         </h2>
-        <p className="text-body text-text-inverse/70 mb-8">
+        <p className="text-lg text-text-inverse/70 mb-8">
           5 questions. No account required.
         </p>
-        <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-[1.0625rem] font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
+        <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-lg font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
           Build my plan — free
         </button>
       </div>

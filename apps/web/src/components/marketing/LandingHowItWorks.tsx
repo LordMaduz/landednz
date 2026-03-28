@@ -44,9 +44,9 @@ export function LandingHowItWorks() {
     <section className="py-20 px-6 bg-bg-card">
       <div className="max-w-landing mx-auto">
         <p className="text-caption text-primary text-center mb-3">
-          How it works
+          HOW IT WORKS
         </p>
-        <h2 className="font-display text-[1.875rem] text-text-primary text-center mb-14">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-14">
           From questions to action in 2 minutes
         </h2>
 

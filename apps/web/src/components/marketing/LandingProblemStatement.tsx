@@ -48,9 +48,9 @@ export function LandingProblemStatement() {
     <section className="py-20 px-6 bg-bg">
       <div className="max-w-landing mx-auto">
         <p className="text-caption text-primary text-center mb-3">
-          The cost of not knowing
+          THE COST OF NOT KNOWING
         </p>
-        <h2 className="font-display text-[1.875rem] text-text-primary text-center mb-12">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-12">
           These mistakes happen every week
         </h2>
 
@@ -69,7 +69,7 @@ export function LandingProblemStatement() {
                 <span className="font-display text-[2rem] text-text-primary">
                   {problem.stat}
                 </span>
-                <span className="text-secondary text-text-secondary">{problem.label}</span>
+                <span className="text-small text-text-secondary">{problem.label}</span>
               </div>
 
               <p className="text-body text-text-secondary">
@@ -79,7 +79,7 @@ export function LandingProblemStatement() {
           ))}
         </div>
 
-        <p className="text-body text-text-primary text-center max-w-[600px] mx-auto text-[1.0625rem] font-medium">
+        <p className="text-lg text-text-primary text-center max-w-[600px] mx-auto font-medium">
           These mistakes happen because nobody tells you the order.{' '}
           <span className="text-primary font-semibold">LandedNZ tells you the order.</span>
         </p>

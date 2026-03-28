@@ -8,7 +8,7 @@ export function LandingSocialProof() {
             "
           </div>
 
-          <p className="text-body text-text-primary text-[1.0625rem] italic mb-5 leading-relaxed">
+          <p className="text-lg text-text-primary italic mb-5 leading-relaxed">
             Built by a migrant, for migrants. Every feature is built from lived experience — settling
             in Auckland in 2026, navigating the same bureaucracy, making the same mistakes so you
             don&apos;t have to.
@@ -19,7 +19,7 @@ export function LandingSocialProof() {
               R
             </div>
             <div className="text-left">
-              <div className="text-secondary text-text-primary font-semibold">
+              <div className="text-small text-text-primary font-semibold">
                 Ruchira
               </div>
               <div className="text-caption text-text-tertiary normal-case">

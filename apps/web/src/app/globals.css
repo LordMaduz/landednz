@@ -29,12 +29,12 @@
 
   /* Typography scale */
   --text-display: 2.25rem;   /* 36px — DM Serif Display */
-  --text-h1: 1.5rem;         /* 24px — DM Serif Display */
-  --text-h2: 1.375rem;       /* 22px — DM Serif Display */
+  --text-h1: 1.75rem;        /* 28px — DM Serif Display */
+  --text-h2: 1.5rem;         /* 24px — DM Serif Display */
   --text-h3: 1.125rem;       /* 18px — DM Sans 600 */
-  --text-body: 0.9375rem;    /* 15px — DM Sans 400 */
-  --text-secondary: 0.8125rem; /* 13px — DM Sans 400 */
-  --text-caption: 0.6875rem;  /* 11px — DM Sans 500 */
+  --text-body: 1rem;         /* 16px — DM Sans 400 */
+  --text-small: 0.875rem;    /* 14px — DM Sans 400 */
+  --text-caption: 0.8125rem; /* 13px — DM Sans 500 */
 
   /* Colours */
   --color-primary: #1B6B6D;

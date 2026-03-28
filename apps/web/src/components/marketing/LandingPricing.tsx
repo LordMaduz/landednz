@@ -9,9 +9,9 @@ export function LandingPricing() {
     <section className="py-20 px-6 bg-bg-card">
       <div className="max-w-[880px] mx-auto">
         <p className="text-caption text-primary text-center mb-3">
-          Simple pricing
+          SIMPLE PRICING
         </p>
-        <h2 className="font-display text-[1.875rem] text-text-primary text-center mb-12">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-12">
           Start free. Upgrade when you&apos;re ready.
         </h2>
 
@@ -30,7 +30,7 @@ export function LandingPricing() {
                 $0
               </span>
             </div>
-            <p className="text-secondary text-text-secondary mb-6">
+            <p className="text-small text-text-secondary mb-6">
               Your first 2 weeks covered
             </p>
             <div className="flex flex-col gap-3">
@@ -73,9 +73,9 @@ export function LandingPricing() {
               <span className="font-display text-[2.5rem] text-text-primary">
                 $49
               </span>
-              <span className="text-secondary text-text-tertiary">/6 months</span>
+              <span className="text-small text-text-tertiary">/6 months</span>
             </div>
-            <p className="text-secondary text-text-secondary mb-6">
+            <p className="text-small text-text-secondary mb-6">
               Full 8-week settlement roadmap
             </p>
             <div className="flex flex-col gap-3">
