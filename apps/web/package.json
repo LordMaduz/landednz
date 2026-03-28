@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "storybook": "npx storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@landednz/types": "*",
@@ -22,6 +23,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/nextjs": "^8.6.18",
     "@storybook/react": "^8.6.18",

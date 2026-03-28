@@ -21,7 +21,7 @@
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
-| W2 — Layout Shell (~15h) | IN PROGRESS | 10 / 11 | — |
+| W2 — Layout Shell (~15h) | IN PROGRESS | 11 / 11 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
@@ -204,7 +204,7 @@
 | AC-W2-08 | All 6 routes: `/`, `/onboarding`, `/auth/signin`, `/roadmap`, `/chat`, `/settings` | PASS | Created 4 missing route shells with correct layout group assignment (app vs marketing) |
 | AC-W2-09 | Auth middleware: unauthenticated → `/auth/signin?redirect={path}` | PASS | Stage 2 middleware stub using sb-* cookie check, prevents redirect loops, Stage 4 upgrade path documented |
 | AC-W2-10 | Responsive at 1440/1280/1024/768/375px | PASS | Visual verification at all 7 breakpoints confirmed correct sidebar responsive behavior |
-| AC-W2-11 | Playwright E2E: all routes, correct layout at 1280 + 768 | — | |
+| AC-W2-11 | Playwright E2E: all routes, correct layout at 1280 + 768 | PASS | 35/35 tests across 5 viewport projects (1440/1280/1024/768/375px). Sidebar visible/hidden by viewport, marketing routes never attach aside, auth redirect verified. Code-reviewer PASS. |
 
 **Web Stage 2 Gate:** —
 
@@ -337,6 +337,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W2-11] Playwright E2E: 35 tests across 5 viewport projects. Key insight: `aside` uses `hidden md:flex` CSS so always in DOM — mobile tests use `not.toBeVisible()`, marketing routes use `not.toBeAttached()`. Cookie `sb-dev=1` satisfies `sb-*` prefix check in middleware. fullyParallel: true across 5 projects. Code-reviewer PASS.
 - [AC-W2-10] Responsive verification: Visual verification at 7 breakpoints (1440/1280/1100/1024/900/768/375px) using sb-dev=1 cookie bypass. All responsive behavior confirmed: sidebar 256px + labels at xl+, 64px icon-only at lg, hidden at mobile with hamburger drawer. Code-reviewer PASS.
 - [AC-W2-09] Auth middleware: Created middleware.ts using Next.js Edge API with sb-* cookie prefix check. Protects /roadmap, /chat, /settings → redirects to /auth/signin?redirect={path}. No redirect loop (/auth/signin excluded). Stage 2 structural stub with Stage 4 upgrade path documented (@supabase/ssr). All verification tests pass. Code-reviewer PASS.
 - [AC-W2-08] Route shell creation: Created 4 missing route files to complete all 6 required routes. Proper layout group assignment: (app) for sidebar routes (chat, settings), (marketing) for non-sidebar routes (onboarding, auth/signin). All routes return HTTP 200, TypeScript 0 errors. Code-reviewer PASS.
