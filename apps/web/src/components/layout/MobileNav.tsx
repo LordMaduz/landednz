@@ -98,7 +98,7 @@ export function MobileNav() {
         </div>
 
         {/* Primary Nav */}
-        <nav className="px-3 mb-6 space-y-1">
+        <nav className="px-3 mb-6 flex flex-col space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
@@ -108,7 +108,7 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
+                  'w-full flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
                   'border-l-3',
                   isActive
                     ? 'bg-primary-light text-primary border-primary font-semibold'

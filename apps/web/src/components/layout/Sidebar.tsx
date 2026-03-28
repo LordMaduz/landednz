@@ -55,7 +55,7 @@ export function Sidebar() {
       <Link
         href={item.href}
         className={cn(
-          'flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
+          'w-full flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
           'border-l-3',
           isActive
             ? 'bg-primary-light text-primary border-primary font-semibold'
@@ -124,7 +124,7 @@ export function Sidebar() {
         </button>
 
         {/* Primary Nav */}
-        <nav className="px-3 mb-2 space-y-1">
+        <nav className="px-3 mb-2 flex flex-col space-y-1">
           {navItems.map((item) => (
             <NavItem
               key={item.href}
