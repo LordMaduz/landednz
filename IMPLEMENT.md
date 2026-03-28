@@ -21,7 +21,7 @@
 | Web Stage | Status | AC Passed | Gate |
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
-| W2 — Layout Shell (~15h) | IN PROGRESS | 8 / 11 | — |
+| W2 — Layout Shell (~15h) | IN PROGRESS | 9 / 11 | — |
 | W3 — Static Screens (~35h) | BLOCKED | 0 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
@@ -202,7 +202,7 @@
 | AC-W2-06 | Below 768px: sidebar hidden, hamburger opens MobileNav | PASS | Batched implementation — MobileNav component with drawer, backdrop, keyboard support |
 | AC-W2-07 | Content area: max-w-content (960px), centered, scrollable | PASS | Verification-only — existing (app)/layout.tsx implementation satisfies all requirements |
 | AC-W2-08 | All 6 routes: `/`, `/onboarding`, `/auth/signin`, `/roadmap`, `/chat`, `/settings` | PASS | Created 4 missing route shells with correct layout group assignment (app vs marketing) |
-| AC-W2-09 | Auth middleware: unauthenticated → `/auth/signin?redirect={path}` | — | |
+| AC-W2-09 | Auth middleware: unauthenticated → `/auth/signin?redirect={path}` | PASS | Stage 2 middleware stub using sb-* cookie check, prevents redirect loops, Stage 4 upgrade path documented |
 | AC-W2-10 | Responsive at 1440/1280/1024/768/375px | — | |
 | AC-W2-11 | Playwright E2E: all routes, correct layout at 1280 + 768 | — | |
 
@@ -337,6 +337,7 @@
 
 *Most recent first. Add via /learn or manually during session.*
 
+- [AC-W2-09] Auth middleware: Created middleware.ts using Next.js Edge API with sb-* cookie prefix check. Protects /roadmap, /chat, /settings → redirects to /auth/signin?redirect={path}. No redirect loop (/auth/signin excluded). Stage 2 structural stub with Stage 4 upgrade path documented (@supabase/ssr). All verification tests pass. Code-reviewer PASS.
 - [AC-W2-08] Route shell creation: Created 4 missing route files to complete all 6 required routes. Proper layout group assignment: (app) for sidebar routes (chat, settings), (marketing) for non-sidebar routes (onboarding, auth/signin). All routes return HTTP 200, TypeScript 0 errors. Code-reviewer PASS.
 - [AC-W2-07] Content area verification: AC-W2-07 was verification-only. Existing (app)/layout.tsx implementation already satisfied all requirements: max-w-content (960px) token, mx-auto centering, overflow-y-auto scrolling. TypeScript 0 errors, dev server running, /roadmap HTTP 200 OK. Code-reviewer PASS.
 - [AC-W2-04-05-06] Complete sidebar batch implementation: Full responsive sidebar with 'use client', usePathname() active states, expandable phases, tooltip support for collapsed mode, plus MobileNav with hamburger + slide-in drawer. CW01 fix: added `borderWidth: { '3': '3px' }` to tailwind.config.ts to replace arbitrary border-l-[3px] with semantic border-l-3. Efficient batching approach avoided code duplication across related responsive behaviors. Code-reviewer PASS.
