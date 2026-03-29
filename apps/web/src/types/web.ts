@@ -30,7 +30,18 @@ export interface TaskListItem {
   completedAt?: string;
   blockedBy?: { taskId: string; taskName: string };
   isPremium: boolean;
+  difficulty?: 'Easy' | 'Medium' | 'Hard';
 }
+
+export interface RoadmapPhase {
+  num: 1 | 2 | 3;
+  name: string;
+  timeline: string;
+  isPremium: boolean;
+  tasks: TaskListItem[];
+}
+
+export type FilterValue = 'all' | 'todo' | 'progress' | 'done';
 
 export interface OnboardingState {
   currentStep: 1 | 2 | 3 | 4 | 5;

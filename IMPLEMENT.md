@@ -22,7 +22,7 @@
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
-| W3 — Static Screens (~35h) | IN PROGRESS | 3 / 15 | — |
+| W3 — Static Screens (~35h) | IN PROGRESS | 4 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
@@ -221,7 +221,7 @@
 | AC-W3-01 | Landing page: all 6 sections, copy matches spec | PASS | 8 components (Nav/Hero/Problem/HowItWorks/SocialProof/Pricing/FinalCTA/Footer). Teal gradients, DM Serif headlines, fade animations, CW01/CW03 compliant. Code-reviewer PASS. |
 | AC-W3-02 | Onboarding: 5 questions, option cards, progress bar | PASS | 3-phase state machine (scope→questions→reveal), 5 components, auto-advance 400ms, animations CW03 compliant, types from @landednz/types, all CW01 violations fixed. |
 | AC-W3-03 | Roadmap reveal transition with reduced motion fallback | PASS | RoadmapReveal component: 4 personalised messages → success state. useReducedMotion() hook skips sequence instantly. Zustand revealComplete flag persists session. CW01/CW03/CW06 compliant. |
-| AC-W3-04 | Roadmap dashboard: hero card, "Do these first", filter tabs | — | |
+| AC-W3-04 | Roadmap dashboard: hero card, "Do these first", filter tabs | PASS | HeroCard (teal gradient + SVG ring), TaskRow with 5 states, FilterTabs, PhaseSection collapsible, RoadmapView assembles all. Mock data 11 tasks/3 phases. CW01/CW03/CW05 compliant. Code-reviewer PASS. |
 | AC-W3-05 | Task list cards: all 7 states with mock data | — | |
 | AC-W3-06 | Task detail: right panel, consequence callout, steps, source | — | |
 | AC-W3-07 | Chat: mock conversation, thinking indicator, citations | — | |

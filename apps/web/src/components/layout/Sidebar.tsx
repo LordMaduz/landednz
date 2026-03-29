@@ -63,7 +63,7 @@ export function Sidebar() {
         )}
       >
         <Icon className="h-4 w-4 shrink-0" />
-        <span className="hidden xl:block">{item.label}</span>
+        <span className="hidden xl:block text-small font-medium">{item.label}</span>
       </Link>
     )
 
@@ -158,7 +158,7 @@ export function Sidebar() {
                       isExpanded && 'rotate-90'
                     )}
                   />
-                  <span className="flex-1 text-left text-text-secondary font-medium text-secondary hidden xl:block">
+                  <span className="flex-1 text-left text-text-secondary font-medium text-small hidden xl:block">
                     Phase {phase.num}: {phase.name}
                   </span>
                   {phase.premium && (
@@ -177,14 +177,14 @@ export function Sidebar() {
           </span>
         </div>
 
-        <div className="px-3 pb-4 space-y-1">
+        <div className="px-3 pb-4 flex flex-col space-y-1">
           {helpItems.map((item) => {
             const Icon = item.icon
 
             const buttonContent = (
               <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none">
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="hidden xl:block">{item.label}</span>
+                <span className="hidden xl:block text-small">{item.label}</span>
               </button>
             )
 
@@ -207,7 +207,7 @@ export function Sidebar() {
               P
             </div>
             <div className="hidden xl:block">
-              <div className="text-secondary font-semibold text-text-primary">Priya & Karthik</div>
+              <div className="text-small font-semibold text-text-primary">Priya & Karthik</div>
               <div className="text-caption text-text-tertiary">Partner of Student Visa · Auckland</div>
             </div>
           </div>
