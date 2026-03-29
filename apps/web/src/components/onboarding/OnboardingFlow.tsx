@@ -11,6 +11,7 @@ import {
 import { ScopeScreen } from './ScopeScreen'
 import { OnboardingProgressBar } from './OnboardingProgressBar'
 import { QuestionView } from './QuestionView'
+import { RoadmapReveal } from './RoadmapReveal'
 
 type OnboardingPhase = 'scope' | 'questions' | 'reveal'
 type AnimationState = 'entering' | 'stable' | 'exiting'
@@ -289,13 +290,7 @@ export function OnboardingFlow() {
       )}
 
       {phase === 'reveal' && (
-        <div className="min-h-screen flex items-center justify-center px-6">
-          <div className="text-center max-w-onboarding-scope">
-            <div className="text-body text-text-secondary">
-              Building your plan...
-            </div>
-          </div>
-        </div>
+        <RoadmapReveal answers={answers} />
       )}
     </div>
   )
