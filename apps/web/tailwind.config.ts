@@ -57,6 +57,7 @@ const config: Config = {
         sans: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       borderWidth: {
+        '1.5': '1.5px',
         '3': '3px',
       },
       fontSize: {
@@ -102,6 +103,9 @@ const config: Config = {
       maxWidth: {
         content: '960px',
         landing: '1120px',
+        onboarding: '640px',
+        'onboarding-question': '560px',
+        'onboarding-scope': '480px',
       },
       transitionDuration: {
         fill: '400ms',
