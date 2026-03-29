@@ -5,7 +5,7 @@ interface QuestionOption {
   value: string
   label: string
   desc?: string
-  icon: string
+  icon: React.ComponentType<{ className?: string }>
 }
 
 interface QuestionViewProps {

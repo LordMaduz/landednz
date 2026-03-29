@@ -4,7 +4,7 @@ interface OptionCardProps {
   value: string
   label: string
   description?: string
-  icon: string
+  icon: React.ComponentType<{ className?: string }>
   isSelected: boolean
   isCompact?: boolean
   onClick: (value: string) => void
@@ -15,7 +15,7 @@ export function OptionCard({
   value,
   label,
   description,
-  icon,
+  icon: Icon,
   isSelected,
   isCompact = false,
   onClick,
@@ -45,15 +45,13 @@ export function OptionCard({
       }}
     >
       {/* Icon */}
-      <span
+      <Icon
         className={cn(
-          'flex items-center justify-center rounded-lg bg-bg flex-shrink-0 transition-colors duration-200',
-          isCompact ? 'w-8 h-8 text-xl' : 'w-10 h-10 text-h2',
-          isSelected && 'bg-primary/10'
+          'flex-shrink-0 transition-colors duration-200',
+          isCompact ? 'w-6 h-6' : 'w-7 h-7',
+          isSelected ? 'text-primary' : 'text-text-primary'
         )}
-      >
-        {icon}
-      </span>
+      />
 
       {/* Text */}
       <div className="flex-1 min-w-0">
