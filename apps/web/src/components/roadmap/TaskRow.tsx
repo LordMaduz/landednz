@@ -57,6 +57,28 @@ function StatusIcon({ state, size = 18 }: { state: TaskCardState; size?: number 
     )
   }
 
+  if (state === 'loading') {
+    return (
+      <div
+        className="rounded-full skeleton-pulse flex-shrink-0"
+        style={{ width: s, height: s }}
+      />
+    )
+  }
+
+  if (state === 'error') {
+    return (
+      <div
+        className="rounded-full bg-error-light border border-error flex items-center justify-center flex-shrink-0"
+        style={{ width: s, height: s }}
+      >
+        <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" className="text-error" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+    )
+  }
+
   // not_started (default)
   return (
     <div
@@ -93,13 +115,17 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
   const isComplete = task.cardState === 'complete'
   const isBlocked = task.cardState === 'blocked'
   const isPremium = task.cardState === 'premium_locked'
+  const isLoading = task.cardState === 'loading'
+  const isError = task.cardState === 'error'
   const isMuted = isComplete || isBlocked
 
   const subText = isComplete
     ? `Completed ${task.completedAt}`
     : isBlocked
       ? `Needs: ${task.blockedBy?.taskName}`
-      : task.consequenceLine
+      : isError
+        ? 'Something went wrong — tap to retry'
+        : task.consequenceLine
 
   return (
     <div
@@ -107,38 +133,50 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
       tabIndex={onClick ? 0 : undefined}
       onClick={onClick}
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
+      aria-busy={isLoading}
       className={cn(
-        'flex items-center gap-3 rounded-button border bg-bg-card mb-1.5',
+        'flex items-center gap-3 rounded-button border mb-1.5',
         'transition-shadow duration-150',
         priority ? 'px-4 py-3.5' : 'px-4 py-2.5',
+        // Background variants
+        isBlocked ? 'bg-blocked-light' : isError ? 'bg-error-light' : 'bg-bg-card',
         // Left accent border
         task.cardState === 'in_progress' && 'border-l-3 border-l-primary border-t-border border-r-border border-b-border',
         isPremium && 'border-l-3 border-l-premium-gold border-t-border border-r-border border-b-border',
         !['in_progress', 'premium_locked'].includes(task.cardState) && 'border-border',
         isComplete && 'opacity-70',
-        onClick && 'cursor-pointer hover:shadow-card-hover'
+        onClick && 'cursor-pointer hover:border-border-hover hover:bg-primary-subtle'
       )}
     >
       <StatusIcon state={task.cardState} size={18} />
 
       <div className="flex-1 min-w-0">
-        <p className={cn(
-          'text-xs leading-tight mb-0.5',
-          isMuted ? 'font-normal text-text-secondary' : 'font-semibold text-text-primary'
-        )}>
-          {task.taskName}
-        </p>
-        <p className={cn(
-          'text-xs text-text-tertiary',
-          priority ? 'whitespace-normal' : 'truncate'
-        )}>
-          {subText}
-        </p>
+        {isLoading ? (
+          <>
+            <div className="skeleton-pulse rounded w-3/5 h-3 mb-0.5" />
+            <div className="skeleton-pulse rounded w-4/5 h-2.5" />
+          </>
+        ) : (
+          <>
+            <p className={cn(
+              'text-xs leading-tight mb-0.5',
+              isMuted ? 'font-normal text-text-secondary' : 'font-semibold text-text-primary'
+            )}>
+              {task.taskName}
+            </p>
+            <p className={cn(
+              'text-xs text-text-tertiary',
+              priority ? 'whitespace-normal' : 'truncate'
+            )}>
+              {subText}
+            </p>
+          </>
+        )}
       </div>
 
       {/* Right metadata */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        {!isComplete && !isBlocked && !isPremium && task.estimatedDuration && (
+        {!isLoading && !isError && !isComplete && !isBlocked && !isPremium && task.estimatedDuration && (
           <span className="text-caption text-text-tertiary flex items-center gap-1">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
@@ -147,7 +185,7 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
             {task.estimatedDuration}
           </span>
         )}
-        {isPremium && (
+        {!isLoading && !isError && isPremium && (
           <span className="text-caption font-medium bg-secondary-light text-secondary-hover px-2.5 py-0.5 rounded-badge flex items-center gap-1">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
@@ -156,12 +194,14 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
             Premium
           </span>
         )}
-        {!isComplete && !isPremium && task.difficulty && (
+        {!isLoading && !isError && !isComplete && !isPremium && task.difficulty && (
           <DifficultyBadge difficulty={task.difficulty} />
         )}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="opacity-30" aria-hidden="true">
-          <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        {!isLoading && (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="opacity-30" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
       </div>
     </div>
   )
