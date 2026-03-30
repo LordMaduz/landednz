@@ -242,7 +242,7 @@ export function ChatPanel({ onClose, entryContext }: ChatPanelProps) {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-chat-panel h-chat-panel max-h-[calc(100vh-3rem)] bg-bg-card rounded-chat-panel border border-border shadow-chat-panel flex flex-col z-[1000] chat-panel-enter">
+    <div className="fixed bottom-0 right-0 w-full h-chat-panel-mobile md:bottom-6 md:right-6 md:w-chat-panel md:h-chat-panel bg-bg-card rounded-t-chat-panel md:rounded-chat-panel border border-border shadow-chat-panel flex flex-col z-[1000] chat-panel-enter">
       {/* Header */}
       <div className="px-4 py-4 border-b border-border flex items-center gap-2.5 flex-shrink-0">
         <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center">

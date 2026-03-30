@@ -111,6 +111,7 @@ const config: Config = {
       },
       height: {
         'chat-panel': '600px',
+        'chat-panel-mobile': '85vh',
       },
       maxWidth: {
         content: '960px',

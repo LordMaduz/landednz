@@ -40,7 +40,7 @@ export function LandingNav() {
         </span>
       </div>
 
-      <div className="flex items-center gap-8">
+      <div className="hidden md:flex items-center gap-8">
         <button className="text-small text-text-inverse/75 hover:text-secondary transition-colors">
           How it works
         </button>

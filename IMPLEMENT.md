@@ -229,7 +229,7 @@
 | AC-W3-09 | Settings: profile, subscription, notifications, account | PASS | SettingsView + 6 components (SectionCard, FieldRow, Toggle, RadioOption, DeleteModal). subscription-gradient + shadow-toggle tokens. .scale-in CSS class. 3 Storybook stories. |
 | AC-W3-10 | Auth: Google button, email input, terms | PASS | AuthCard 4-state machine (main/email/google_loading/magic_sent). Input UI primitive for email. 4 Storybook stories. text-h2-sm/text-legal/shadow-auth-card/max-w-auth-card tokens added. |
 | AC-W3-11 | Sidebar phases expand with status indicators + premium lock | PASS | SidebarTask interface, mock data (Phase 1: 2complete/1in_progress/1not_started, Phase 2: 3not_started/1blocked), StatusIndicator sm reused, Lock replaced with Premium badge, completed/total counts, overflow-y-auto on container. |
-| AC-W3-12 | Responsive: all screens correct at 5 breakpoints | — | |
+| AC-W3-12 | Responsive: all screens correct at 5 breakpoints | PASS | LandingNav: hidden md:flex on nav links (no mobile overflow). ChatPanel: bottom-0 right-0 w-full h-chat-panel-mobile at mobile → bottom-6 right-6 w-chat-panel h-chat-panel at md+. h-chat-panel-mobile token added (85vh). |
 | AC-W3-13 | Playwright visual regression baselines captured | — | |
 | AC-W3-14 | All feature components in Storybook, zero console errors | — | |
 | AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | — | |
@@ -336,6 +336,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W3-12] Responsive fixes: LandingNav `hidden md:flex` hides all nav links (including CTA) at mobile — hero CTA is the primary conversion path at mobile. ChatPanel uses `rounded-t-chat-panel md:rounded-chat-panel` pattern for bottom-sheet-to-floating-panel transition. `h-chat-panel-mobile: '85vh'` token added. Old `max-h-[calc(100vh-3rem)]` arbitrary value removed.
 
 - [AC-W3-11] Sidebar phase expand complete: StatusIndicator sm (16px) reused from Stage 1 for task status dots. Premium badge uses `text-legal bg-secondary-light text-secondary-hover rounded-badge` pattern. Phase 3 expanded shows nothing (correct — premium tasks not listed). Task list wrapped in `hidden xl:block` consistent with existing sidebar visibility pattern. `overflow-y-auto` added to phase container to handle expanded lists.
 
