@@ -125,7 +125,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
 
       {/* Task header */}
       <div className="mb-6">
-        <div className="flex items-start gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-3">
           <StatusIcon state={task.cardState} />
           <h2 className="font-display text-h1 text-text-primary leading-tight">
             {task.taskName}
