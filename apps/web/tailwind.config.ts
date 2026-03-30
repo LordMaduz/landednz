@@ -89,6 +89,7 @@ const config: Config = {
         dropdown: '0 8px 24px rgba(26, 26, 46, 0.12)',
         fab: '0 4px 16px rgba(27, 107, 109, 0.3)',
         'fab-hover': '0 8px 28px rgba(27, 107, 109, 0.35)',
+        toggle: '0 1px 3px rgba(0, 0, 0, 0.15)',
       },
       borderRadius: {
         card: '12px',
@@ -122,6 +123,7 @@ const config: Config = {
         'hero-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #145254 40%, #0F3E40 100%)',
         'cta-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #0F3E40 100%)',
         'premium-gradient': 'linear-gradient(180deg, rgba(212, 168, 67, 0.06) 0%, transparent 100%)',
+        'subscription-gradient': 'linear-gradient(135deg, #1B6B6D 0%, #145254 100%)',
       },
     },
   },

@@ -160,6 +160,11 @@ body {
     opacity: 0;
   }
 
+  .scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+    opacity: 0;
+  }
+
   .delay-1 { animation-delay: 0.1s; }
   .delay-2 { animation-delay: 0.2s; }
   .delay-3 { animation-delay: 0.3s; }

@@ -226,7 +226,7 @@
 | AC-W3-06 | Task detail: right panel, consequence callout, steps, source | PASS | TaskDetail.tsx content replacement pattern, 7 sections (back button, header, callout, whyNow, steps, documents, source, tips), RoadmapView selectedTask state, 2 Storybook stories |
 | AC-W3-07 | Chat: mock conversation, thinking indicator, citations | PASS | ChatPanel 420×600px overlay, 4 structured response types (steps/checklist/alert/plain), progressive disclosure, clickable sources, proper scrolling, discriminated union types |
 | AC-W3-08 | Premium gate: inline, 3 paths, decline collapses to banner | PASS | PremiumGateCard + PremiumBanner. topSlot/bottomSlot in PhaseSection. State machine full→banner→dismissed. bg-premium-gradient token. Storybook 4 stories. |
-| AC-W3-09 | Settings: profile, subscription, notifications, account | — | |
+| AC-W3-09 | Settings: profile, subscription, notifications, account | PASS | SettingsView + 6 components (SectionCard, FieldRow, Toggle, RadioOption, DeleteModal). subscription-gradient + shadow-toggle tokens. .scale-in CSS class. 3 Storybook stories. |
 | AC-W3-10 | Auth: Google button, email input, terms | — | |
 | AC-W3-11 | Sidebar phases expand with status indicators + premium lock | — | |
 | AC-W3-12 | Responsive: all screens correct at 5 breakpoints | — | |
