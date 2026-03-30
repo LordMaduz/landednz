@@ -230,7 +230,7 @@
 | AC-W3-10 | Auth: Google button, email input, terms | PASS | AuthCard 4-state machine (main/email/google_loading/magic_sent). Input UI primitive for email. 4 Storybook stories. text-h2-sm/text-legal/shadow-auth-card/max-w-auth-card tokens added. |
 | AC-W3-11 | Sidebar phases expand with status indicators + premium lock | PASS | SidebarTask interface, mock data (Phase 1: 2complete/1in_progress/1not_started, Phase 2: 3not_started/1blocked), StatusIndicator sm reused, Lock replaced with Premium badge, completed/total counts, overflow-y-auto on container. |
 | AC-W3-12 | Responsive: all screens correct at 5 breakpoints | PASS | LandingNav: hidden md:flex on nav links (no mobile overflow). ChatPanel: bottom-0 right-0 w-full h-chat-panel-mobile at mobile → bottom-6 right-6 w-chat-panel h-chat-panel at md+. h-chat-panel-mobile token added (85vh). |
-| AC-W3-13 | Playwright visual regression baselines captured | — | |
+| AC-W3-13 | Playwright visual regression baselines captured | PASS | e2e/visual.spec.ts: 6 routes × 2 viewports = 12 PNG baselines. 12/12 pass at desktop-1280 + tablet-768. |
 | AC-W3-14 | All feature components in Storybook, zero console errors | — | |
 | AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | — | |
 
