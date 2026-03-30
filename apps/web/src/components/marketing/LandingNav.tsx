@@ -35,7 +35,7 @@ export function LandingNav() {
             />
           </svg>
         </div>
-        <span className="font-display text-xl text-text-inverse">
+        <span className="font-display text-h3 text-text-inverse">
           LandedNZ
         </span>
       </div>

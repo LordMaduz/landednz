@@ -66,7 +66,7 @@ export function LandingProblemStatement() {
               <div className="text-error mb-4">{problem.icon}</div>
 
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="font-display text-[2rem] text-text-primary">
+                <span className="font-display text-h1 text-text-primary">
                   {problem.stat}
                 </span>
                 <span className="text-small text-text-secondary">{problem.label}</span>
@@ -79,7 +79,7 @@ export function LandingProblemStatement() {
           ))}
         </div>
 
-        <p className="text-lg text-text-primary text-center max-w-[600px] mx-auto font-medium">
+        <p className="text-body text-text-primary text-center max-w-[600px] mx-auto font-medium">
           These mistakes happen because nobody tells you the order.{' '}
           <span className="text-primary font-semibold">LandedNZ tells you the order.</span>
         </p>

@@ -127,7 +127,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-3">
           <StatusIcon state={task.cardState} />
-          <h2 className="font-display text-h1 text-text-primary leading-tight">
+          <h2 className="font-display text-h2 text-text-primary leading-tight">
             {task.taskName}
           </h2>
         </div>

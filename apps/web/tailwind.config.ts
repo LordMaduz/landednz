@@ -66,16 +66,12 @@ const config: Config = {
         '3': '3px',
       },
       fontSize: {
-        display: ['2.25rem', { lineHeight: '1.2', fontWeight: '400' }],
-        h1: ['1.75rem', { lineHeight: '1.3', fontWeight: '400' }], // 28px (up from 24px)
-        h2: ['1.5rem', { lineHeight: '1.35', fontWeight: '400' }], // 24px (up from 22px)
-        h3: ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }], // 18px (keep)
-        body: ['1rem', { lineHeight: '1.6', fontWeight: '400' }], // 16px (up from 15px)
-        small: ['0.875rem', { lineHeight: '1.4', fontWeight: '400' }], // 14px (up from 13px)
-        caption: ['0.8125rem', { lineHeight: '1.3', fontWeight: '500' }], // 13px (up from 11px)
-        'hero-heading': ['clamp(2rem, 5vw, 3.25rem)', { lineHeight: '1.2', fontWeight: '400' }],
-        'h2-sm': ['1.375rem', { lineHeight: '1.35', fontWeight: '400' }],  // 22px — auth "Check your email"
-        'legal': ['0.6875rem', { lineHeight: '1.5', fontWeight: '400' }],  // 11px — terms/legal text
+        h1: ['1.75rem', { lineHeight: '1.3', fontWeight: '400' }],       // 28px - Page titles, hero
+        h2: ['1.5rem', { lineHeight: '1.35', fontWeight: '400' }],       // 24px - Major sections
+        h3: ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }],      // 18px - Component titles
+        body: ['1rem', { lineHeight: '1.6', fontWeight: '400' }],        // 16px - Primary content
+        small: ['0.875rem', { lineHeight: '1.4', fontWeight: '400' }],   // 14px - Secondary content
+        caption: ['0.75rem', { lineHeight: '1.3', fontWeight: '400' }]   // 12px - Tasks, badges, fine print
       },
       lineHeight: {
         tight: '1.3',

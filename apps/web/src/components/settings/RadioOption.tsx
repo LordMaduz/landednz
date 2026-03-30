@@ -25,9 +25,9 @@ export function RadioOption({ value, label, description, checked, onChange }: Ra
         onChange={() => onChange(value)}
         className="sr-only"
       />
-      <div className="text-sm font-medium text-text-primary">{label}</div>
+      <div className="text-small font-medium text-text-primary">{label}</div>
       {description && (
-        <div className="text-xs text-text-tertiary mt-0.5">{description}</div>
+        <div className="text-caption text-text-tertiary mt-0.5">{description}</div>
       )}
     </label>
   )

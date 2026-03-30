@@ -15,6 +15,23 @@ const navItems = [
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
+// Smart abbreviation for phase names - Linear style
+function getPhaseDisplayText(name: string, level: 'minimal' | 'short' | 'medium' | 'full') {
+  const words = name.split(' ')
+
+  switch (level) {
+    case 'minimal':
+      return words[0] // "Before"
+    case 'short':
+      return words.slice(0, 2).join(' ') // "Before you"
+    case 'medium':
+      return words.slice(0, 3).join(' ') // "Before you start"
+    case 'full':
+    default:
+      return name // Full name
+  }
+}
+
 interface SidebarTask {
   id: string
   name: string
@@ -202,20 +219,43 @@ export function Sidebar() {
                       isExpanded && 'rotate-90'
                     )}
                   />
-                  <span className="flex-1 text-left text-text-secondary font-medium text-small hidden xl:block truncate">
-                    Phase {phase.num}: {phase.name}
-                  </span>
-                  {/* Non-premium: completed/total count */}
+                  {/* Progressive disclosure for phase names - no truncation */}
+                  <div className="flex-1 text-left text-text-secondary font-medium text-small">
+                    {/* Medium: Just number + first word */}
+                    <span className="hidden md:block lg:hidden">
+                      {phase.num}: {getPhaseDisplayText(phase.name, 'minimal')}
+                    </span>
+                    {/* Large: Number + 2 words */}
+                    <span className="hidden lg:block xl:hidden">
+                      {phase.num}: {getPhaseDisplayText(phase.name, 'short')}
+                    </span>
+                    {/* Extra large: Number + 3 words */}
+                    <span className="hidden xl:block 2xl:hidden">
+                      {phase.num}: {getPhaseDisplayText(phase.name, 'medium')}
+                    </span>
+                    {/* 2xl: Full name */}
+                    <span className="hidden 2xl:block">
+                      {phase.num}: {getPhaseDisplayText(phase.name, 'full')}
+                    </span>
+                  </div>
+                  {/* Non-premium: completed/total count - show earlier than xl */}
                   {!phase.premium && (
-                    <span className="text-caption text-text-tertiary hidden xl:block shrink-0">
+                    <span className="text-caption text-text-tertiary hidden lg:block shrink-0">
                       {completedCount}/{phase.tasks.length}
                     </span>
                   )}
-                  {/* Premium: gold badge */}
+                  {/* Premium: gold badge - progressive disclosure */}
                   {phase.premium && (
-                    <span className="text-legal bg-secondary-light text-secondary-hover px-2 py-0.5 rounded-badge font-medium hidden xl:block shrink-0">
-                      Premium
-                    </span>
+                    <>
+                      {/* Large: Compact badge */}
+                      <span className="text-caption bg-secondary-light text-secondary-hover px-1.5 py-0.5 rounded-badge font-medium hidden lg:block xl:hidden shrink-0">
+                        Pro
+                      </span>
+                      {/* Extra large+: Full badge */}
+                      <span className="text-caption bg-secondary-light text-secondary-hover px-2 py-0.5 rounded-badge font-medium hidden xl:block shrink-0">
+                        Premium
+                      </span>
+                    </>
                   )}
                 </button>
 
@@ -230,7 +270,7 @@ export function Sidebar() {
                         <StatusIndicator state={task.state} size="sm" />
                         <span
                           className={cn(
-                            'text-caption truncate',
+                            'text-small truncate',
                             task.state === 'complete' ? 'text-text-tertiary' : 'text-text-secondary'
                           )}
                         >

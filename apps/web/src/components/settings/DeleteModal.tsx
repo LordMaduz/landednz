@@ -16,10 +16,10 @@ export function DeleteModal({ open, onClose, onConfirm }: DeleteModalProps) {
         <div className="w-12 h-12 bg-error-light flex items-center justify-center rounded-full mx-auto mb-4">
           <AlertTriangle className="text-error w-6 h-6" />
         </div>
-        <h3 className="font-display text-lg text-text-primary text-center mb-2">
+        <h3 className="font-display text-h3 text-text-primary text-center mb-2">
           Delete your account?
         </h3>
-        <p className="text-sm text-text-secondary text-center mb-6">
+        <p className="text-small text-text-secondary text-center mb-6">
           This will permanently delete your account and roadmap. This action cannot be undone.
         </p>
         <div className="flex gap-3 flex-col sm:flex-row">

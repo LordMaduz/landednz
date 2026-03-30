@@ -12,9 +12,9 @@ export function Toggle({ checked, onChange, label, id, description }: ToggleProp
   return (
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <div className="text-sm font-medium text-text-primary">{label}</div>
+        <div className="text-small font-medium text-text-primary">{label}</div>
         {description && (
-          <div className="text-xs text-text-tertiary mt-0.5">{description}</div>
+          <div className="text-caption text-text-tertiary mt-0.5">{description}</div>
         )}
       </div>
       <label

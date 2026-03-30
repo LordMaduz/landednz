@@ -26,7 +26,7 @@ export function LandingPricing() {
               Free plan
             </span>
             <div className="flex items-baseline gap-1 mb-1">
-              <span className="font-display text-[2.5rem] text-text-primary">
+              <span className="font-display text-h1 text-text-primary">
                 $0
               </span>
             </div>
@@ -70,7 +70,7 @@ export function LandingPricing() {
               Premium
             </span>
             <div className="flex items-baseline gap-1 mb-1">
-              <span className="font-display text-[2.5rem] text-text-primary">
+              <span className="font-display text-h1 text-text-primary">
                 $49
               </span>
               <span className="text-small text-text-tertiary">/6 months</span>

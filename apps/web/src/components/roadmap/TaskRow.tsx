@@ -97,7 +97,7 @@ function DifficultyBadge({ difficulty }: { difficulty: 'Easy' | 'Medium' | 'Hard
     Hard: 'bg-error-light text-error',
   }
   return (
-    <span className={cn('text-xs font-medium px-2 py-0.5 rounded-badge', styles[difficulty])}>
+    <span className={cn('text-caption font-medium px-2 py-0.5 rounded-badge', styles[difficulty])}>
       {difficulty}
     </span>
   )
@@ -159,13 +159,13 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
         ) : (
           <>
             <p className={cn(
-              'text-xs leading-tight mb-0.5',
-              isMuted ? 'font-normal text-text-secondary' : 'font-semibold text-text-primary'
+              'text-caption leading-tight mb-0.5',
+              isMuted ? 'font-normal text-text-secondary' : 'font-medium text-text-primary'
             )}>
               {task.taskName}
             </p>
             <p className={cn(
-              'text-xs text-text-tertiary',
+              'text-caption text-text-tertiary font-normal',
               priority ? 'whitespace-normal' : 'truncate'
             )}>
               {subText}

@@ -86,7 +86,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
             <path d="M22 4l-10 8L2 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        <h2 className="font-display text-h2-sm text-text-primary mb-2">
+        <h2 className="font-display text-h2 text-text-primary mb-2">
           Check your email
         </h2>
         <p className="text-small text-text-secondary leading-body mb-2">
@@ -126,7 +126,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
               />
             </svg>
           </div>
-          <span className="font-display text-xl text-text-primary">LandedNZ</span>
+          <span className="font-display text-h3 text-text-primary">LandedNZ</span>
         </div>
       </div>
 
@@ -251,7 +251,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
       </p>
 
       {/* Terms */}
-      <p className="text-legal text-text-tertiary text-center mt-4 leading-body">
+      <p className="text-caption text-text-tertiary text-center mt-4 leading-body">
         By continuing, you agree to our{' '}
         <span className="text-primary cursor-pointer hover:underline">Terms of Service</span>
         {' '}and{' '}

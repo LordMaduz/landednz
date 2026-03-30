@@ -24,7 +24,7 @@ export function OnboardingProgressBar({ current, total }: OnboardingProgressBarP
                 />
               </svg>
             </div>
-            <span className="font-display text-lg text-text-primary">
+            <span className="font-display text-h3 text-text-primary">
               LandedNZ
             </span>
           </div>

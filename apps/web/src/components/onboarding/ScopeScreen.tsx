@@ -37,7 +37,7 @@ export function ScopeScreen({ onStart }: ScopeScreenProps) {
         </div>
 
         {/* Heading */}
-        <h1 className="font-display text-display text-text-primary mb-3">
+        <h1 className="font-display text-h1 text-text-primary mb-3">
           5 quick questions to build
           <br />
           your settlement plan

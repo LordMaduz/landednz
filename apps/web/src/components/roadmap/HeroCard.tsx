@@ -18,7 +18,7 @@ export function HeroCard({ tasks, userName = 'Priya' }: HeroCardProps) {
   return (
     <div className="bg-gradient-to-br from-primary to-primary-dark rounded-card p-6 flex items-center justify-between mb-6">
       <div>
-        <p className="font-display text-h3 text-text-inverse mb-1">
+        <p className="font-display text-h2 text-text-inverse mb-1">
           Hi {userName}
         </p>
         <p className="text-small text-text-inverse/75 mb-2">

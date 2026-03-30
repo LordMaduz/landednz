@@ -22,6 +22,23 @@ function filterTasks(tasks: TaskListItem[], filter: FilterValue): TaskListItem[]
   return tasks
 }
 
+// Smart abbreviation for phase names - Linear style
+function getPhaseDisplayText(name: string, level: 'minimal' | 'short' | 'medium' | 'full') {
+  const words = name.split(' ')
+
+  switch (level) {
+    case 'minimal':
+      return words[0] // "Arrival"
+    case 'short':
+      return words.slice(0, 2).join(' ') // "Arrival Planning"
+    case 'medium':
+      return words.slice(0, 3).join(' ') // "Arrival Planning & Setup"
+    case 'full':
+    default:
+      return name // Full name
+  }
+}
+
 export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = true, topSlot, bottomSlot }: PhaseSectionProps) {
   const [expanded, setExpanded] = useState(defaultExpanded)
 
@@ -47,18 +64,41 @@ export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = tru
           )}
           aria-hidden="true"
         />
-        <span className="text-small font-semibold text-text-primary flex-1 text-left">
-          Phase {phase.num}: {phase.name}
-        </span>
-        <span className="text-small text-text-tertiary">
+        <div className="text-small font-semibold text-text-primary flex-1 text-left">
+          {/* Mobile: Just number + first word */}
+          <span className="md:hidden">
+            Phase {phase.num}: {getPhaseDisplayText(phase.name, 'minimal')}
+          </span>
+          {/* Medium: Number + 2 words */}
+          <span className="hidden md:block lg:hidden">
+            Phase {phase.num}: {getPhaseDisplayText(phase.name, 'short')}
+          </span>
+          {/* Large: Number + 3 words */}
+          <span className="hidden lg:block xl:hidden">
+            Phase {phase.num}: {getPhaseDisplayText(phase.name, 'medium')}
+          </span>
+          {/* Extra large: Full name */}
+          <span className="hidden xl:block">
+            Phase {phase.num}: {getPhaseDisplayText(phase.name, 'full')}
+          </span>
+        </div>
+        {/* Timeline - hidden on mobile to save space */}
+        <span className="hidden md:block text-small text-text-tertiary">
           · {phase.timeline}
         </span>
+        {/* Premium badge - abbreviated on mobile */}
         {phase.isPremium && (
-          <span className="text-caption bg-secondary-light text-secondary-hover px-2 py-0.5 rounded-badge font-medium ml-1">
-            Premium
-          </span>
+          <>
+            <span className="md:hidden text-caption bg-secondary-light text-secondary-hover px-1.5 py-0.5 rounded-badge font-medium ml-1">
+              Pro
+            </span>
+            <span className="hidden md:block text-caption bg-secondary-light text-secondary-hover px-2 py-0.5 rounded-badge font-medium ml-1">
+              Premium
+            </span>
+          </>
         )}
-        <span className="text-small text-text-tertiary ml-1">
+        {/* Progress counter - always visible but compact */}
+        <span className="text-small text-text-tertiary ml-1 shrink-0">
           {completedCount}/{phase.tasks.length}
         </span>
       </button>

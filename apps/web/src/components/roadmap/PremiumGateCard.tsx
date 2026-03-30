@@ -37,14 +37,14 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
         </div>
 
         {/* Heading */}
-        <h2 className="font-display text-h2 text-text-primary mb-2 leading-tight">
+        <h2 className="font-display text-h3 text-text-primary mb-2 leading-tight">
           Your first two weeks are covered.
           <br />
           Ready to keep going?
         </h2>
 
         {/* Subtitle */}
-        <p className="text-body text-text-secondary mb-6">
+        <p className="text-small text-text-secondary mb-6">
           Your full 8-week settlement plan includes:
         </p>
 
@@ -64,14 +64,14 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
                   />
                 </svg>
               </div>
-              <p className="text-body text-text-primary leading-body">{benefit}</p>
+              <p className="text-small text-text-primary leading-body">{benefit}</p>
             </div>
           ))}
         </div>
 
         {/* Anchor pricing */}
         <div className="bg-secondary-light rounded-xl px-4.5 py-3.5 mb-7 border border-secondary/15">
-          <p className="text-body text-text-primary leading-body">
+          <p className="text-small text-text-primary leading-body">
             One week of IRD emergency tax costs ~<strong className="font-semibold">$240</strong>.{' '}
             <span className="text-primary font-semibold">Six months of LandedNZ costs $49.</span>
           </p>
@@ -82,7 +82,7 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
           {/* 1. Upgrade */}
           <button
             onClick={onUpgrade}
-            className="w-full py-3.75 px-6 rounded-xl bg-primary text-text-inverse text-body font-semibold flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors duration-200"
+            className="w-full py-3.75 px-6 rounded-xl bg-primary text-text-inverse text-small font-semibold flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors duration-200"
           >
             Continue with Premium — $49 for 6 months
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">

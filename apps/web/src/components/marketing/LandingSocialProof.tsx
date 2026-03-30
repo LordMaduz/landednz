@@ -4,11 +4,11 @@ export function LandingSocialProof() {
       <div className="max-w-[720px] mx-auto text-center">
         <div className="bg-bg-card rounded-card p-9 border border-border relative">
           {/* Quote mark */}
-          <div className="font-display text-[4rem] text-primary-light leading-none mb-[-16px] select-none">
+          <div className="font-display text-h1 text-primary-light leading-none mb-[-16px] select-none">
             "
           </div>
 
-          <p className="text-lg text-text-primary italic mb-5 leading-relaxed">
+          <p className="text-body text-text-primary italic mb-5 leading-relaxed">
             Built by a migrant, for migrants. Every feature is built from lived experience — settling
             in Auckland in 2026, navigating the same bureaucracy, making the same mistakes so you
             don&apos;t have to.
