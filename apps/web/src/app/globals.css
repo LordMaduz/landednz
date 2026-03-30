@@ -122,7 +122,16 @@ body {
   to { stroke-dashoffset: 0; }
 }
 
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+  }
+
   .progress-pulse {
     animation: progress-pulse 1.5s ease-in-out infinite;
   }

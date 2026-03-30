@@ -20,6 +20,29 @@ export type TaskCardState =
   | 'loading'
   | 'error';
 
+export interface TaskDetailStep {
+  text: string;
+}
+
+export interface TaskDetailDocument {
+  name: string;
+  required: boolean;
+}
+
+export interface TaskDetailSource {
+  agency: string;
+  page: string;
+  url: string;
+}
+
+export interface TaskDetailData {
+  whyNow: string;
+  steps?: TaskDetailStep[];
+  documents?: TaskDetailDocument[];
+  source?: TaskDetailSource;
+  tips?: string[];
+}
+
 export interface TaskListItem {
   taskId: string;
   taskName: string;
@@ -31,6 +54,7 @@ export interface TaskListItem {
   blockedBy?: { taskId: string; taskName: string };
   isPremium: boolean;
   difficulty?: 'Easy' | 'Medium' | 'Hard';
+  detail?: TaskDetailData;
 }
 
 export interface RoadmapPhase {

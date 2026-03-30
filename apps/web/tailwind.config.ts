@@ -89,6 +89,7 @@ const config: Config = {
         input: '10px',
         badge: '100px',
         'chat-panel': '16px',
+        'r-button': '10px',
       },
       width: {
         sidebar: '256px',

@@ -26,6 +26,34 @@ const MOCK_TASKS: TaskListItem[] = [
     completedAt: 'Mar 14',
     isPremium: false,
     difficulty: 'Easy',
+    detail: {
+      whyNow:
+        'Without an IRD number your employer must deduct tax at the highest rate — 45% instead of your actual rate (likely 17.5% or 30%). That\'s $300–400 lost per paycheck until it\'s sorted.',
+      steps: [
+        { text: 'Go to the IRD website and select \'Apply for an IRD number\'' },
+        { text: 'Choose \'Individual\' and confirm you have a valid NZ visa' },
+        { text: 'Enter your passport details and NZ address' },
+        { text: 'Provide your NZ bank account number' },
+        { text: 'Submit — your IRD number arrives by post in 8–10 working days' },
+      ],
+      documents: [
+        { name: 'Passport', required: true },
+        { name: 'NZ visa (e-visa or label)', required: true },
+        { name: 'NZ bank account number', required: true },
+        { name: 'NZ address (rental or temporary)', required: true },
+        { name: 'Overseas tax ID', required: false },
+      ],
+      source: {
+        agency: 'Inland Revenue (IRD)',
+        page: 'Apply for an IRD number',
+        url: 'ird.govt.nz',
+      },
+      tips: [
+        'Apply online — it\'s faster than the paper form.',
+        'You can start work before getting your IRD number, but tell your employer as soon as it arrives.',
+        'If you\'re on a Partner visa, you still need your own IRD number.',
+      ],
+    },
   },
   {
     taskId: 'T03',

@@ -5,11 +5,13 @@ import { HeroCard } from './HeroCard'
 import { FilterTabs } from './FilterTabs'
 import { PhaseSection } from './PhaseSection'
 import { TaskRow } from './TaskRow'
+import { TaskDetail } from './TaskDetail'
 import { MOCK_PHASES, MOCK_TASKS_FLAT } from '@/mocks/roadmap'
-import type { FilterValue } from '@/types/web'
+import type { FilterValue, TaskListItem } from '@/types/web'
 
 export function RoadmapView() {
   const [filter, setFilter] = useState<FilterValue>('all')
+  const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
 
   // Top 3 actionable tasks for "Do these first"
   const priorityTasks = MOCK_TASKS_FLAT.filter(
@@ -18,6 +20,10 @@ export function RoadmapView() {
       t.cardState !== 'blocked' &&
       t.cardState !== 'premium_locked'
   ).slice(0, 3)
+
+  if (selectedTask) {
+    return <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />
+  }
 
   return (
     <div>
@@ -34,9 +40,7 @@ export function RoadmapView() {
               key={task.taskId}
               task={task}
               priority
-              onClick={() => {
-                // Task detail wired in AC-W3-06
-              }}
+              onClick={() => setSelectedTask(task)}
             />
           ))}
         </div>
@@ -49,9 +53,7 @@ export function RoadmapView() {
           key={phase.num}
           phase={phase}
           filter={filter}
-          onTaskClick={() => {
-            // Task detail wired in AC-W3-06
-          }}
+          onTaskClick={(task) => setSelectedTask(task)}
           defaultExpanded={i < 2}
         />
       ))}
