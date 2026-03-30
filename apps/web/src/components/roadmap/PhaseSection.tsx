@@ -11,6 +11,8 @@ interface PhaseSectionProps {
   filter: FilterValue
   onTaskClick: (task: TaskListItem) => void
   defaultExpanded?: boolean
+  topSlot?: React.ReactNode
+  bottomSlot?: React.ReactNode
 }
 
 function filterTasks(tasks: TaskListItem[], filter: FilterValue): TaskListItem[] {
@@ -20,7 +22,7 @@ function filterTasks(tasks: TaskListItem[], filter: FilterValue): TaskListItem[]
   return tasks
 }
 
-export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = true }: PhaseSectionProps) {
+export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = true, topSlot, bottomSlot }: PhaseSectionProps) {
   const [expanded, setExpanded] = useState(defaultExpanded)
 
   const completedCount = phase.tasks.filter((t) => t.cardState === 'complete').length
@@ -63,6 +65,7 @@ export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = tru
 
       {expanded && (
         <div className="pt-1">
+          {topSlot}
           {displayedTasks.map((task) => (
             <TaskRow
               key={task.taskId}
@@ -70,6 +73,7 @@ export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = tru
               onClick={() => onTaskClick(task)}
             />
           ))}
+          {bottomSlot}
         </div>
       )}
     </div>

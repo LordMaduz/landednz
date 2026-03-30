@@ -22,7 +22,7 @@
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
-| W3 — Static Screens (~35h) | IN PROGRESS | 6 / 15 | — |
+| W3 — Static Screens (~35h) | IN PROGRESS | 8 / 15 | — |
 | W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
@@ -224,8 +224,8 @@
 | AC-W3-04 | Roadmap dashboard: hero card, "Do these first", filter tabs | PASS | HeroCard (teal gradient + SVG ring), TaskRow with 5 states, FilterTabs, PhaseSection collapsible, RoadmapView assembles all. Mock data 11 tasks/3 phases. CW01/CW03/CW05 compliant. Code-reviewer PASS. |
 | AC-W3-05 | Task rows: all 7 states per mockup — hybrid density, consequence visible, correct status icons | PASS | Extended TaskRow with loading/error states, fixed blocked bg + hover styles, created TaskRow.stories.tsx (all 7 states). Storybook running @ localhost:6006. Code-reviewer PASS. |
 | AC-W3-06 | Task detail: right panel, consequence callout, steps, source | PASS | TaskDetail.tsx content replacement pattern, 7 sections (back button, header, callout, whyNow, steps, documents, source, tips), RoadmapView selectedTask state, 2 Storybook stories |
-| AC-W3-07 | Chat: mock conversation, thinking indicator, citations | — | |
-| AC-W3-08 | Premium gate: inline, 3 paths, decline collapses to banner | — | |
+| AC-W3-07 | Chat: mock conversation, thinking indicator, citations | PASS | ChatPanel 420×600px overlay, 4 structured response types (steps/checklist/alert/plain), progressive disclosure, clickable sources, proper scrolling, discriminated union types |
+| AC-W3-08 | Premium gate: inline, 3 paths, decline collapses to banner | PASS | PremiumGateCard + PremiumBanner. topSlot/bottomSlot in PhaseSection. State machine full→banner→dismissed. bg-premium-gradient token. Storybook 4 stories. |
 | AC-W3-09 | Settings: profile, subscription, notifications, account | — | |
 | AC-W3-10 | Auth: Google button, email input, terms | — | |
 | AC-W3-11 | Sidebar phases expand with status indicators + premium lock | — | |
@@ -336,6 +336,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W3-08] Premium gate complete: `topSlot`/`bottomSlot` pattern in PhaseSection allows slot injection inside collapsible sections. Both Defer and Decline collapse to banner state. `bg-premium-gradient` token added for gold overlay — raw RGBA in SVG `fill` attributes is acceptable (not Tailwind classes). Custom spacing tokens `3.25`/`3.75`/`4.5` added for non-standard button padding values. `tracking-wider` used for premium badge label (0.05em vs mockup's 0.06em — close enough, uses existing token).
 
 - [AC-W3-03] RoadmapReveal complete: useReducedMotion() hook pattern established for all future animation-heavy components. CW06 clarified: Zustand is correct for session-scoped UI state (revealComplete); localStorage only for cross-session UI preferences. checkDraw animation requires stroke-dashoffset on the SVG path itself (not container) — set to 0 override when reducedMotion is true.
 

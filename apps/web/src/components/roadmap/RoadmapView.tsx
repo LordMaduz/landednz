@@ -7,11 +7,14 @@ import { PhaseSection } from './PhaseSection'
 import { TaskRow } from './TaskRow'
 import { TaskDetail } from './TaskDetail'
 import { MOCK_PHASES, MOCK_TASKS_FLAT } from '@/mocks/roadmap'
-import type { FilterValue, TaskListItem } from '@/types/web'
+import { PremiumGateCard } from './PremiumGateCard'
+import { PremiumBanner } from './PremiumBanner'
+import type { FilterValue, TaskListItem, PremiumGateState } from '@/types/web'
 
 export function RoadmapView() {
   const [filter, setFilter] = useState<FilterValue>('all')
   const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
+  const [gateState, setGateState] = useState<PremiumGateState>('full')
 
   // Top 3 actionable tasks for "Do these first"
   const priorityTasks = MOCK_TASKS_FLAT.filter(
@@ -55,6 +58,25 @@ export function RoadmapView() {
           filter={filter}
           onTaskClick={(task) => setSelectedTask(task)}
           defaultExpanded={i < 2}
+          topSlot={
+            phase.num === 3 && gateState === 'banner' && filter === 'all'
+              ? <PremiumBanner
+                  onUpgrade={() => {}}
+                  onDismiss={() => setGateState('dismissed')}
+                />
+              : undefined
+          }
+          bottomSlot={
+            phase.num === 3 && gateState === 'full' && filter === 'all'
+              ? <div className="mt-3">
+                  <PremiumGateCard
+                    onUpgrade={() => {}}
+                    onDefer={() => setGateState('banner')}
+                    onDecline={() => setGateState('banner')}
+                  />
+                </div>
+              : undefined
+          }
         />
       ))}
     </div>

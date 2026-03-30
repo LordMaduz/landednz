@@ -56,6 +56,11 @@ const config: Config = {
         // font-sans → DM Sans (Tailwind default override)
         sans: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
+      spacing: {
+        '3.25': '0.8125rem', // 13px — defer button vertical padding
+        '3.75': '0.9375rem', // 15px — upgrade button vertical padding
+        '4.5': '1.125rem',   // 18px — anchor box horizontal padding
+      },
       borderWidth: {
         '1.5': '1.5px',
         '3': '3px',
@@ -116,6 +121,7 @@ const config: Config = {
       backgroundImage: {
         'hero-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #145254 40%, #0F3E40 100%)',
         'cta-gradient': 'linear-gradient(160deg, #1B6B6D 0%, #0F3E40 100%)',
+        'premium-gradient': 'linear-gradient(180deg, rgba(212, 168, 67, 0.06) 0%, transparent 100%)',
       },
     },
   },

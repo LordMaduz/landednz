@@ -80,3 +80,5 @@ export interface OnboardingState {
 }
 
 export type DetailPanelMode = 'empty' | 'task' | 'chat';
+
+export type PremiumGateState = 'full' | 'banner' | 'dismissed';
