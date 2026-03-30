@@ -82,6 +82,8 @@ const config: Config = {
         'chat-panel': '0 12px 48px rgba(26, 26, 46, 0.15), 0 4px 16px rgba(26, 26, 46, 0.08)',
         modal: '0 16px 48px rgba(26, 26, 46, 0.15)',
         dropdown: '0 8px 24px rgba(26, 26, 46, 0.12)',
+        fab: '0 4px 16px rgba(27, 107, 109, 0.3)',
+        'fab-hover': '0 8px 28px rgba(27, 107, 109, 0.35)',
       },
       borderRadius: {
         card: '12px',

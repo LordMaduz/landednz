@@ -127,6 +127,16 @@ body {
   to { opacity: 1; transform: translateX(0); }
 }
 
+@keyframes slideUpPanel {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes typing {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .slide-in-right {
     animation: slideInRight 0.3s ease-out;
@@ -159,6 +169,14 @@ body {
 
   .progress-ring-circle {
     transition: stroke-dashoffset 0.6s ease-out;
+  }
+
+  .chat-panel-enter {
+    animation: slideUpPanel 0.3s ease-out;
+  }
+
+  .typing-dot {
+    animation: typing 1s ease-in-out infinite;
   }
 }
 
