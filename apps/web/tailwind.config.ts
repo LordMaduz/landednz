@@ -74,6 +74,8 @@ const config: Config = {
         small: ['0.875rem', { lineHeight: '1.4', fontWeight: '400' }], // 14px (up from 13px)
         caption: ['0.8125rem', { lineHeight: '1.3', fontWeight: '500' }], // 13px (up from 11px)
         'hero-heading': ['clamp(2rem, 5vw, 3.25rem)', { lineHeight: '1.2', fontWeight: '400' }],
+        'h2-sm': ['1.375rem', { lineHeight: '1.35', fontWeight: '400' }],  // 22px — auth "Check your email"
+        'legal': ['0.6875rem', { lineHeight: '1.5', fontWeight: '400' }],  // 11px — terms/legal text
       },
       lineHeight: {
         tight: '1.3',
@@ -90,6 +92,7 @@ const config: Config = {
         fab: '0 4px 16px rgba(27, 107, 109, 0.3)',
         'fab-hover': '0 8px 28px rgba(27, 107, 109, 0.35)',
         toggle: '0 1px 3px rgba(0, 0, 0, 0.15)',
+        'auth-card': '0 4px 24px rgba(26, 26, 46, 0.06)',
       },
       borderRadius: {
         card: '12px',
@@ -115,6 +118,7 @@ const config: Config = {
         onboarding: '640px',
         'onboarding-question': '560px',
         'onboarding-scope': '480px',
+        'auth-card': '420px',
       },
       transitionDuration: {
         fill: '400ms',
