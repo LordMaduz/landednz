@@ -2,10 +2,12 @@
 
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Map, MessageSquare, Settings, BookOpen, Mail, ChevronRight, Lock, Menu } from 'lucide-react'
+import { Map, MessageSquare, Settings, BookOpen, Mail, ChevronRight, Menu } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
 import { Tooltip } from '@/components/ui/Tooltip'
+import { StatusIndicator } from '@/components/ui/StatusIndicator'
+import type { TaskCardState } from '@/types/web'
 
 const navItems = [
   { href: '/roadmap', label: 'Roadmap', icon: Map },
@@ -13,10 +15,50 @@ const navItems = [
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
-const phases = [
-  { num: 1, name: 'Before you start working', timeline: 'Week 1' },
-  { num: 2, name: 'First 2 weeks', timeline: 'Weeks 1–2' },
-  { num: 3, name: 'Settling in', timeline: 'Weeks 3–8', premium: true },
+interface SidebarTask {
+  id: string
+  name: string
+  state: TaskCardState
+}
+
+interface Phase {
+  num: number
+  name: string
+  timeline: string
+  premium?: true
+  tasks: SidebarTask[]
+}
+
+const phases: Phase[] = [
+  {
+    num: 1,
+    name: 'Before you start working',
+    timeline: 'Week 1',
+    tasks: [
+      { id: 't1', name: 'Get a NZ SIM card', state: 'complete' },
+      { id: 't2', name: 'Open a bank account', state: 'complete' },
+      { id: 't3', name: 'Apply for your IRD number', state: 'in_progress' },
+      { id: 't4', name: 'Submit your tax code declaration', state: 'not_started' },
+    ],
+  },
+  {
+    num: 2,
+    name: 'First 2 weeks',
+    timeline: 'Weeks 1–2',
+    tasks: [
+      { id: 't5', name: 'Register with a GP (doctor)', state: 'not_started' },
+      { id: 't6', name: 'Get an AT HOP card', state: 'not_started' },
+      { id: 't7', name: 'Convert your driving licence', state: 'not_started' },
+      { id: 't8', name: 'Set up money transfers home', state: 'blocked' },
+    ],
+  },
+  {
+    num: 3,
+    name: 'Settling in',
+    timeline: 'Weeks 3–8',
+    premium: true,
+    tasks: [],
+  },
 ]
 
 const helpItems = [
@@ -100,7 +142,7 @@ export function Sidebar() {
         {/* Logo */}
         <div className="p-5 pb-4 flex items-center gap-2.5">
           <div className="w-7 h-7 bg-secondary rounded-lg flex items-center justify-center shrink-0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-text-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-text-primary" aria-hidden="true">
               <path
                 d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
                 stroke="currentColor"
@@ -142,15 +184,17 @@ export function Sidebar() {
         </div>
 
         {/* Phase sections */}
-        <div className="px-3 flex-1 space-y-1">
+        <div className="px-3 flex-1 space-y-1 overflow-y-auto">
           {phases.map((phase) => {
             const isExpanded = expandedPhases.includes(phase.num)
+            const completedCount = phase.tasks.filter(t => t.state === 'complete').length
 
             return (
               <div key={phase.num}>
+                {/* Phase header */}
                 <button
                   onClick={() => togglePhase(phase.num)}
-                  className="w-full flex items-center gap-1.5 px-3 py-2 rounded-md text-secondary hover:bg-black/5 transition-colors motion-reduce:transition-none"
+                  className="w-full flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-black/5 transition-colors motion-reduce:transition-none"
                 >
                   <ChevronRight
                     className={cn(
@@ -158,13 +202,44 @@ export function Sidebar() {
                       isExpanded && 'rotate-90'
                     )}
                   />
-                  <span className="flex-1 text-left text-text-secondary font-medium text-small hidden xl:block">
+                  <span className="flex-1 text-left text-text-secondary font-medium text-small hidden xl:block truncate">
                     Phase {phase.num}: {phase.name}
                   </span>
+                  {/* Non-premium: completed/total count */}
+                  {!phase.premium && (
+                    <span className="text-caption text-text-tertiary hidden xl:block shrink-0">
+                      {completedCount}/{phase.tasks.length}
+                    </span>
+                  )}
+                  {/* Premium: gold badge */}
                   {phase.premium && (
-                    <Lock className="h-3 w-3 text-secondary hidden xl:block" />
+                    <span className="text-legal bg-secondary-light text-secondary-hover px-2 py-0.5 rounded-badge font-medium hidden xl:block shrink-0">
+                      Premium
+                    </span>
                   )}
                 </button>
+
+                {/* Expanded task list — non-premium phases only */}
+                {isExpanded && !phase.premium && (
+                  <div className="pl-6 pb-1 hidden xl:block">
+                    {phase.tasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="flex items-center gap-2 py-1 px-2 rounded cursor-pointer hover:bg-black/5 transition-colors motion-reduce:transition-none"
+                      >
+                        <StatusIndicator state={task.state} size="sm" />
+                        <span
+                          className={cn(
+                            'text-caption truncate',
+                            task.state === 'complete' ? 'text-text-tertiary' : 'text-text-secondary'
+                          )}
+                        >
+                          {task.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -207,7 +282,7 @@ export function Sidebar() {
               P
             </div>
             <div className="hidden xl:block">
-              <div className="text-small font-semibold text-text-primary">Priya & Karthik</div>
+              <div className="text-small font-semibold text-text-primary">Priya &amp; Karthik</div>
               <div className="text-caption text-text-tertiary">Partner of Student Visa · Auckland</div>
             </div>
           </div>

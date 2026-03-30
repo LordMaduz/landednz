@@ -228,7 +228,7 @@
 | AC-W3-08 | Premium gate: inline, 3 paths, decline collapses to banner | PASS | PremiumGateCard + PremiumBanner. topSlot/bottomSlot in PhaseSection. State machine full→banner→dismissed. bg-premium-gradient token. Storybook 4 stories. |
 | AC-W3-09 | Settings: profile, subscription, notifications, account | PASS | SettingsView + 6 components (SectionCard, FieldRow, Toggle, RadioOption, DeleteModal). subscription-gradient + shadow-toggle tokens. .scale-in CSS class. 3 Storybook stories. |
 | AC-W3-10 | Auth: Google button, email input, terms | PASS | AuthCard 4-state machine (main/email/google_loading/magic_sent). Input UI primitive for email. 4 Storybook stories. text-h2-sm/text-legal/shadow-auth-card/max-w-auth-card tokens added. |
-| AC-W3-11 | Sidebar phases expand with status indicators + premium lock | — | |
+| AC-W3-11 | Sidebar phases expand with status indicators + premium lock | PASS | SidebarTask interface, mock data (Phase 1: 2complete/1in_progress/1not_started, Phase 2: 3not_started/1blocked), StatusIndicator sm reused, Lock replaced with Premium badge, completed/total counts, overflow-y-auto on container. |
 | AC-W3-12 | Responsive: all screens correct at 5 breakpoints | — | |
 | AC-W3-13 | Playwright visual regression baselines captured | — | |
 | AC-W3-14 | All feature components in Storybook, zero console errors | — | |
@@ -336,6 +336,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W3-11] Sidebar phase expand complete: StatusIndicator sm (16px) reused from Stage 1 for task status dots. Premium badge uses `text-legal bg-secondary-light text-secondary-hover rounded-badge` pattern. Phase 3 expanded shows nothing (correct — premium tasks not listed). Task list wrapped in `hidden xl:block` consistent with existing sidebar visibility pattern. `overflow-y-auto` added to phase container to handle expanded lists.
 
 - [AC-W3-10] Auth page complete: 4-state machine (main/email/google_loading/magic_sent). Google button uses native `<button>` with `border border-1.5 border-border` pattern (not Button primitive — custom grey outline style). Input UI primitive reused for email field. Page wraps AuthCard in centered card with two decorative circles (`opacity-30/20` via Tailwind). New tokens: text-h2-sm (22px), text-legal (11px), shadow-auth-card, max-w-auth-card.
 
