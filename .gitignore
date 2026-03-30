@@ -12,6 +12,7 @@ node_modules/
 build/
 dist/
 *.tsbuildinfo
+storybook-static/
 
 # Next.js build output
 .next/
