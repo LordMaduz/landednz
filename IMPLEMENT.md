@@ -232,7 +232,7 @@
 | AC-W3-12 | Responsive: all screens correct at 5 breakpoints | PASS | LandingNav: hidden md:flex on nav links (no mobile overflow). ChatPanel: bottom-0 right-0 w-full h-chat-panel-mobile at mobile → bottom-6 right-6 w-chat-panel h-chat-panel at md+. h-chat-panel-mobile token added (85vh). |
 | AC-W3-13 | Playwright visual regression baselines captured | PASS | e2e/visual.spec.ts: 6 routes × 2 viewports = 12 PNG baselines. 12/12 pass at desktop-1280 + tablet-768. |
 | AC-W3-14 | All feature components in Storybook, zero console errors | PASS | 23 new story files across marketing/onboarding/roadmap/layout/settings. next/navigation+next/link mocked in Storybook Vite config. Removed console.log from TaskRow.stories. build-storybook clean. |
-| AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | — | |
+| AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | PASS | FirstUseHint.tsx (persistent callout, arrow, Got it button, CW03). RoadmapView: activeHint 1→2→3→null. Hints 1+2 relative-positioned, Hint 3 fixed bottom-right. tsc clean. |
 
 **Web Stage 3 Gate:** —
 
