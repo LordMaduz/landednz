@@ -20,6 +20,8 @@ const config: StorybookConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': resolve(__dirname, '../src'),
+      'next/navigation': resolve(__dirname, '../src/__mocks__/next-navigation.ts'),
+      'next/link': resolve(__dirname, '../src/__mocks__/next-link.tsx'),
     };
 
     // JSX configuration for automatic React import

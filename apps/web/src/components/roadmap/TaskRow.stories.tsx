@@ -30,7 +30,7 @@ const baseTask: TaskListItem = {
 export const NotStarted: Story = {
   args: {
     task: baseTask,
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -40,7 +40,7 @@ export const InProgress: Story = {
       ...baseTask,
       cardState: 'in_progress',
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -51,7 +51,7 @@ export const Complete: Story = {
       cardState: 'complete',
       completedAt: 'Mar 15',
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -65,7 +65,7 @@ export const Blocked: Story = {
         taskName: 'Gather identity documents',
       },
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -80,7 +80,7 @@ export const PremiumLocked: Story = {
       isPremium: true,
       phase: 3,
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -90,7 +90,7 @@ export const Loading: Story = {
       ...baseTask,
       cardState: 'loading',
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -100,7 +100,7 @@ export const Error: Story = {
       ...baseTask,
       cardState: 'error',
     },
-    onClick: () => console.log('Task clicked'),
+    onClick: () => {},
   },
 }
 
@@ -108,6 +108,6 @@ export const PriorityCard: Story = {
   args: {
     task: baseTask,
     priority: true,
-    onClick: () => console.log('Priority task clicked'),
+    onClick: () => {},
   },
 }
