@@ -7,6 +7,7 @@ import { PhaseSection } from './PhaseSection'
 import { TaskRow } from './TaskRow'
 import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
+import { useOnboardingStore } from '@/lib/stores/onboardingStore'
 import { MOCK_PHASES, MOCK_TASKS_FLAT } from '@/mocks/roadmap'
 import { PremiumGateCard } from './PremiumGateCard'
 import { PremiumBanner } from './PremiumBanner'
@@ -16,9 +17,7 @@ export function RoadmapView() {
   const [filter, setFilter] = useState<FilterValue>('all')
   const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
   const [gateState, setGateState] = useState<PremiumGateState>('full')
-  const [activeHint, setActiveHint] = useState<1 | 2 | 3 | null>(1)
-
-  const dismissHint = () => setActiveHint(h => h === 1 ? 2 : h === 2 ? 3 : null)
+  const { activeHint, dismissHint } = useOnboardingStore()
 
   // Top 3 actionable tasks for "Do these first"
   const priorityTasks = MOCK_TASKS_FLAT.filter(
