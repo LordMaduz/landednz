@@ -33,8 +33,8 @@ const config: Config = {
         // Semantic
         success: '#2D8A5E',
         'success-light': '#E8F5EE',
-        warning: '#D4A843',
-        'warning-light': '#FDF6E7',
+        warning: '#14B8A6',
+        'warning-light': '#F0FAF9',
         error: '#C75B4A',
         'error-light': '#FDF0EE',
         'error-hover': '#B54E3E',

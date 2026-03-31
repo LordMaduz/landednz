@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { LogOut } from 'lucide-react'
+import { LogOut, User, Star,Bell, Shield } from 'lucide-react'
 import { SectionCard } from './SectionCard'
 import { FieldRow } from './FieldRow'
 import { Toggle } from './Toggle'
@@ -28,7 +28,7 @@ export function SettingsView({
       <h1 className="font-display text-h1 text-text-primary mb-8">Settings</h1>
 
       {/* Profile Section */}
-      <SectionCard icon="👤" title="Profile">
+      <SectionCard icon={User} title="Profile">
         <FieldRow
           label="Name"
           value={MOCK_PROFILE.name}
@@ -38,13 +38,9 @@ export function SettingsView({
         <FieldRow
           label="Email"
           value={MOCK_PROFILE.email}
-          badge={MOCK_PROFILE.authProvider === 'google' ? 'Managed by Google' : undefined}
         />
 
         <div className="mt-6">
-          <p className="text-small font-medium text-text-secondary uppercase tracking-wide mb-2">
-            Your onboarding answers
-          </p>
           <div className="grid grid-cols-2 gap-4">
             {MOCK_ONBOARDING_ANSWERS.map((answer, index) => (
               <FieldRow
@@ -63,7 +59,7 @@ export function SettingsView({
       </SectionCard>
 
       {/* Subscription Section */}
-      <SectionCard icon="⭐" title="Subscription">
+      <SectionCard icon={Star} title="Subscription">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-small text-text-primary">Free</span>
@@ -85,7 +81,7 @@ export function SettingsView({
       </SectionCard>
 
       {/* Notifications Section */}
-      <SectionCard icon="🔔" title="Notifications">
+      <SectionCard icon={Bell} title="Notifications">
         <Toggle
           checked={emailReminders}
           onChange={setEmailReminders}
@@ -119,7 +115,7 @@ export function SettingsView({
       </SectionCard>
 
       {/* Account Section */}
-      <SectionCard icon="🔐" title="Account">
+      <SectionCard icon={Shield} title="Account">
         <Button
           variant="outline"
           onClick={() => {}}

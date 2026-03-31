@@ -1,3 +1,5 @@
+'use client';
+
 export function LandingHero() {
   return (
     <section className="relative bg-hero-gradient min-h-screen flex items-center justify-center px-6 pt-20 pb-20 overflow-hidden">
@@ -16,23 +18,23 @@ export function LandingHero() {
       <div className="relative z-10 text-center max-w-[800px]">
         {/* Eyebrow */}
         <div className="fade-in-up delay-1 mb-6">
-          <span className="text-caption text-secondary bg-secondary/[0.12] px-4 py-1.5 rounded-full inline-block">
-            FOR SKILLED MIGRANTS ARRIVING IN NEW ZEALAND
+          <span className="text-small text-secondary font-medium px-4 py-1.5 rounded-full inline-block">
+            FOR SKILLED MIGRANTS TO NEW ZEALAND
           </span>
         </div>
 
         {/* Headline */}
         <h1 className="fade-in-up delay-2 font-display text-h1 text-text-inverse mb-4 leading-tight tracking-tight">
-          You&apos;ve just arrived in{' '}
-          <span className="text-secondary">New Zealand.</span>
+          The first month in{' '}
+          <span className="text-secondary">New Zealand</span>
           <br />
-          We&apos;ll tell you what to do first.
+          will make or break you.
         </h1>
 
         {/* Sub */}
         <p className="fade-in-up delay-3 text-body text-text-inverse/[0.78] max-w-[560px] mx-auto mb-8">
-          LandedNZ builds a personalised settlement plan based on your visa, your city, and your
-          family. In 2 minutes.
+          Get your personalized settlement roadmap based on your visa, city, and family situation.
+          Know exactly what to do before costly mistakes happen.
         </p>
 
         {/* CTA */}
@@ -44,14 +46,28 @@ export function LandingHero() {
 
         {/* Secondary link */}
         <div className="fade-in-up delay-5 mb-8">
-          <button className="text-body text-secondary underline underline-offset-4 hover:text-text-inverse/75 transition-colors">
-            See how it works ↓
+          <button
+            onClick={() => {
+              const nextSection = document.querySelector('section:nth-of-type(2)');
+              nextSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="group flex flex-col items-center gap-3 text-body text-secondary hover:text-text-inverse/75 transition-all duration-300 mx-auto"
+          >
+            <span className="underline underline-offset-4">See how it works</span>
+            <svg
+              className="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
           </button>
         </div>
 
         {/* Trust signal */}
         <p className="fade-in delay-6 text-small text-text-inverse/[0.4] tracking-wide">
-          No account needed · No payment required · Your plan in 2 minutes
+          No account needed · No payment required · 2-minute setup
         </p>
       </div>
     </section>

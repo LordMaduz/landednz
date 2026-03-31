@@ -80,7 +80,8 @@ export function LandingProblemStatement() {
         </div>
 
         <p className="text-body text-text-primary text-center max-w-[600px] mx-auto font-medium">
-          These mistakes happen because nobody tells you the order.{' '}
+          These mistakes happen because nobody tells you the order.
+          <br />
           <span className="text-primary font-semibold">LandedNZ tells you the order.</span>
         </p>
       </div>
