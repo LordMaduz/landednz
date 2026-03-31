@@ -212,7 +212,7 @@
 
 ## Web Stage 3 — Static Screens
 
-**Status:** IN PROGRESS — W2 gate passed 2026-03-28
+**Status:** COMPLETE — Gate passed 2026-04-01
 **Research dir:** `rpi/web-stage3-static-screens/research/`
 **Plans dir:** `rpi/web-stage3-static-screens/plans/`
 
@@ -234,13 +234,13 @@
 | AC-W3-14 | All feature components in Storybook, zero console errors | PASS | 23 new story files across marketing/onboarding/roadmap/layout/settings. next/navigation+next/link mocked in Storybook Vite config. Removed console.log from TaskRow.stories. build-storybook clean. |
 | AC-W3-15 | First-use hints: 3 tooltips, sequential dismiss | PASS | FirstUseHint.tsx (persistent callout, arrow, Got it button, CW03). RoadmapView: activeHint 1→2→3→null. Hints 1+2 relative-positioned, Hint 3 fixed bottom-right. tsc clean. |
 
-**Web Stage 3 Gate:** —
+**Web Stage 3 Gate:** PASS — 2026-04-01. All 15 ACs verified: Storybook build clean (38 stories, 0 errors), Playwright visual regression updated (30/30 pass). Next: Web Stage 4 API Integration.
 
 ---
 
 ## Web Stage 4 — API Integration
 
-**Status:** BLOCKED (W3 not complete)
+**Status:** IN PROGRESS — W3 gate passed 2026-04-01
 **Research dir:** `rpi/web-stage4-api-integration/research/`
 **Plans dir:** `rpi/web-stage4-api-integration/plans/`
 

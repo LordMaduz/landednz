@@ -117,6 +117,20 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - **Add custom borderWidth values to tailwind.config.ts to avoid arbitrary values.**
   `borderWidth: { '3': '3px' }` enables `border-l-3` class instead of arbitrary `border-l-[3px]`, maintaining CW01 compliance.
 
+### Stage 3 Static Screens Learnings
+
+- **Storybook next/navigation mocking requires Vite aliases for components using usePathname/useRouter.**
+  Add to `.storybook/main.ts` viteFinal config: `'next/navigation': resolve(__dirname, '../src/__mocks__/next-navigation.ts')` and similar for next/link. Create mock files that return noop functions to prevent Storybook runtime errors.
+
+- **First-use hints and route-persistent state must live in Zustand stores, not component useState.**
+  Component state resets on route navigation. Use stores like `useOnboardingStore` for UI state that should persist across route changes within a session. localStorage is only for cross-session persistence (Stage 5).
+
+- **useReducedMotion() hook pattern established for animation-heavy components.**
+  Import from `@/lib/hooks/useReducedMotion`, use as boolean flag to skip animation sequences. Apply `motion-reduce:animate-none` to CSS animations and set stroke-dashoffset to 0 for SVG animations when reduced motion is true.
+
+- **PhaseSection slot injection pattern: topSlot/bottomSlot props for premium gates.**
+  Allows content injection inside collapsible sections without breaking the fold/expand logic. Both slots render conditionally based on phase number, filter state, and premium gate state.
+
 ---
 
 ## Constitutional Compliance
