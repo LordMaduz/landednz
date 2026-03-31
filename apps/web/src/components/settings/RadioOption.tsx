@@ -12,7 +12,7 @@ export function RadioOption({ value, label, description, checked, onChange }: Ra
   return (
     <label
       className={cn(
-        'border-2 rounded-card p-3 cursor-pointer transition-colors block',
+        'border-2 rounded-card p-4 cursor-pointer transition-colors block',
         checked
           ? 'border-primary bg-primary/10'
           : 'border-border bg-bg-card hover:border-primary/40'

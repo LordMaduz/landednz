@@ -114,7 +114,7 @@ export function Sidebar() {
       <Link
         href={item.href}
         className={cn(
-          'w-full flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
+          'w-full flex items-center gap-2 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
           'border-l-3',
           isActive
             ? 'bg-primary-light text-primary border-primary font-semibold'
@@ -157,7 +157,7 @@ export function Sidebar() {
         )}
       >
         {/* Logo */}
-        <div className="p-5 pb-4 flex items-center gap-2.5">
+        <div className="p-5 pb-4 flex items-center gap-2">
           <div className="w-7 h-7 bg-secondary rounded-lg flex items-center justify-center shrink-0">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-text-primary" aria-hidden="true">
               <path
@@ -194,7 +194,7 @@ export function Sidebar() {
         </nav>
 
         {/* YOUR PLAN Section */}
-        <div className="px-5 pb-2 pt-3">
+        <div className="px-4 pb-2 pt-4">
           <span className="text-caption font-medium text-text-tertiary uppercase tracking-wider hidden xl:block">
             Your plan
           </span>
@@ -211,7 +211,7 @@ export function Sidebar() {
                 {/* Phase header */}
                 <button
                   onClick={() => togglePhase(phase.num)}
-                  className="w-full flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-black/5 transition-colors motion-reduce:transition-none"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-black/5 transition-colors motion-reduce:transition-none"
                 >
                   <ChevronRight
                     className={cn(
@@ -270,7 +270,7 @@ export function Sidebar() {
                         <StatusIndicator state={task.state} size="sm" />
                         <span
                           className={cn(
-                            'text-small truncate',
+                            'text-caption truncate',
                             task.state === 'complete' ? 'text-text-tertiary' : 'text-text-secondary'
                           )}
                         >
@@ -286,7 +286,7 @@ export function Sidebar() {
         </div>
 
         {/* HELP Section */}
-        <div className="px-5 pb-2 pt-4">
+        <div className="px-4 pb-2 pt-4">
           <span className="text-caption font-medium text-text-tertiary uppercase tracking-wider hidden xl:block">
             Help
           </span>
@@ -297,7 +297,7 @@ export function Sidebar() {
             const Icon = item.icon
 
             const buttonContent = (
-              <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none">
+              <button className="w-full flex items-center gap-2 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none">
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="hidden xl:block text-small">{item.label}</span>
               </button>
@@ -317,7 +317,7 @@ export function Sidebar() {
 
         {/* User Footer */}
         <div className="border-t border-border p-5 mt-auto">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center shrink-0 text-caption font-semibold text-primary">
               P
             </div>

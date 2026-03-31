@@ -29,7 +29,7 @@ export function PremiumBanner({ onUpgrade, onDismiss }: PremiumBannerProps) {
           Premium unlocks your full roadmap — $49 for 6 months
         </span>
       </div>
-      <div className="flex items-center gap-3 flex-shrink-0 ml-3">
+      <div className="flex items-center gap-4 flex-shrink-0 ml-4">
         <button
           onClick={onUpgrade}
           className="text-caption font-semibold text-primary hover:text-primary-hover transition-colors duration-150"

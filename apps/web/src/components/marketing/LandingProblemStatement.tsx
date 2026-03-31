@@ -50,15 +50,15 @@ export function LandingProblemStatement() {
         <p className="text-caption text-primary text-center mb-3">
           THE COST OF NOT KNOWING
         </p>
-        <h2 className="font-display text-h2 text-text-primary text-center mb-12">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-8">
           These mistakes happen every week
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {problems.map((problem, i) => (
             <div
               key={i}
-              className="bg-bg-card rounded-card p-7 border border-border relative overflow-hidden hover:-translate-y-1 transition-transform duration-300"
+              className="bg-bg-card rounded-card p-6 border border-border relative overflow-hidden hover:-translate-y-1 transition-transform duration-300"
             >
               {/* Top accent line */}
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-error to-warning opacity-70" />

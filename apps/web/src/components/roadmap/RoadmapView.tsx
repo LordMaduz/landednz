@@ -34,7 +34,7 @@ export function RoadmapView() {
 
       {/* Do these first — only shown in "all" filter */}
       {filter === 'all' && (
-        <div className="mb-7">
+        <div className="mb-8">
           <h2 className="text-body font-semibold text-text-primary mb-2.5">
             Do these first
           </h2>
@@ -68,7 +68,7 @@ export function RoadmapView() {
           }
           bottomSlot={
             phase.num === 3 && gateState === 'full' && filter === 'all'
-              ? <div className="mt-3">
+              ? <div className="mt-4">
                   <PremiumGateCard
                     onUpgrade={() => {}}
                     onDefer={() => setGateState('banner')}

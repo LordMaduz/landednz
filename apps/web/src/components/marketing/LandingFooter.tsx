@@ -2,7 +2,7 @@ export function LandingFooter() {
   return (
     <footer className="bg-primary-darker py-10 px-6 border-t border-text-inverse/[0.06]">
       <div className="max-w-landing mx-auto flex justify-between items-center flex-wrap gap-4">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path

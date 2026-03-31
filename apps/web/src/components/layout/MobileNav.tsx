@@ -73,7 +73,7 @@ export function MobileNav() {
       >
         {/* Header with close button */}
         <div className="p-5 pb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-secondary rounded-lg flex items-center justify-center shrink-0">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-text-primary">
                 <path
@@ -108,7 +108,7 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'w-full flex items-center gap-2.5 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
+                  'w-full flex items-center gap-2 px-3 py-2 rounded-button transition-colors motion-reduce:transition-none',
                   'border-l-3',
                   isActive
                     ? 'bg-primary-light text-primary border-primary font-semibold'
@@ -123,7 +123,7 @@ export function MobileNav() {
         </nav>
 
         {/* HELP Section */}
-        <div className="px-5 pb-2">
+        <div className="px-4 pb-2">
           <span className="text-caption font-medium text-text-tertiary uppercase tracking-wider">
             Help
           </span>
@@ -136,7 +136,7 @@ export function MobileNav() {
             return (
               <button
                 key={item.label}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none"
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none"
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span>{item.label}</span>
@@ -147,7 +147,7 @@ export function MobileNav() {
 
         {/* User Footer */}
         <div className="border-t border-border p-5 mt-auto">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center shrink-0 text-caption font-semibold text-primary">
               P
             </div>

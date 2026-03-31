@@ -24,8 +24,8 @@ export function SettingsView({
   const [showDeleteModal, setShowDeleteModal] = useState(initialDeleteModalOpen)
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-      <h1 className="font-display text-h1 text-text-primary mb-6">Settings</h1>
+    <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+      <h1 className="font-display text-h1 text-text-primary mb-8">Settings</h1>
 
       {/* Profile Section */}
       <SectionCard icon="👤" title="Profile">
@@ -41,11 +41,11 @@ export function SettingsView({
           badge={MOCK_PROFILE.authProvider === 'google' ? 'Managed by Google' : undefined}
         />
 
-        <div className="mt-4">
-          <p className="text-small font-medium text-text-secondary uppercase tracking-wide mt-4 mb-2">
+        <div className="mt-6">
+          <p className="text-small font-medium text-text-secondary uppercase tracking-wide mb-2">
             Your onboarding answers
           </p>
-          <div className="grid grid-cols-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-4">
             {MOCK_ONBOARDING_ANSWERS.map((answer, index) => (
               <FieldRow
                 key={index}
@@ -56,7 +56,7 @@ export function SettingsView({
               />
             ))}
           </div>
-          <p className="text-caption italic text-text-tertiary mt-3">
+          <p className="text-caption italic text-text-tertiary mt-4">
             Changing your answers will update your roadmap to match.
           </p>
         </div>

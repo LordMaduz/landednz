@@ -16,7 +16,7 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
       {/* Subtle gold gradient overlay */}
       <div className="absolute inset-x-0 top-0 h-20 bg-premium-gradient pointer-events-none" aria-hidden="true" />
 
-      <div className="px-7 py-8 relative">
+      <div className="px-6 py-8 relative">
         {/* Badge */}
         <div className="flex items-center gap-2 mb-4">
           <div className="w-9 h-9 rounded-button bg-secondary-light flex items-center justify-center flex-shrink-0">
@@ -49,9 +49,9 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
         </p>
 
         {/* Benefits */}
-        <div className="flex flex-col gap-3 mb-7">
+        <div className="flex flex-col gap-4 mb-8">
           {BENEFITS.map((benefit) => (
-            <div key={benefit} className="flex items-start gap-3">
+            <div key={benefit} className="flex items-start gap-4">
               <div className="w-6 h-6 rounded-full bg-success-light flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
@@ -70,7 +70,7 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
         </div>
 
         {/* Anchor pricing */}
-        <div className="bg-secondary-light rounded-xl px-4.5 py-3.5 mb-7 border border-secondary/15">
+        <div className="bg-secondary-light rounded-xl px-4.5 py-4 mb-8 border border-secondary/15">
           <p className="text-small text-text-primary leading-body">
             One week of IRD emergency tax costs ~<strong className="font-semibold">$240</strong>.{' '}
             <span className="text-primary font-semibold">Six months of LandedNZ costs $49.</span>
@@ -78,7 +78,7 @@ export function PremiumGateCard({ onUpgrade, onDefer, onDecline }: PremiumGateCa
         </div>
 
         {/* CTAs */}
-        <div className="flex flex-col gap-2.5 items-center">
+        <div className="flex flex-col gap-2 items-center">
           {/* 1. Upgrade */}
           <button
             onClick={onUpgrade}

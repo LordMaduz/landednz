@@ -135,9 +135,9 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
       aria-busy={isLoading}
       className={cn(
-        'flex items-center gap-3 rounded-button border mb-1.5',
+        'flex items-center gap-4 rounded-button border mb-1.5',
         'transition-shadow duration-150',
-        priority ? 'px-4 py-3.5' : 'px-4 py-2.5',
+        'px-4 py-2.5',
         // Background variants
         isBlocked ? 'bg-blocked-light' : isError ? 'bg-error-light' : 'bg-bg-card',
         // Left accent border

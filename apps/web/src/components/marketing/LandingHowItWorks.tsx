@@ -46,7 +46,7 @@ export function LandingHowItWorks() {
         <p className="text-caption text-primary text-center mb-3">
           HOW IT WORKS
         </p>
-        <h2 className="font-display text-h2 text-text-primary text-center mb-14">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-8">
           From questions to action in 2 minutes
         </h2>
 
@@ -54,7 +54,7 @@ export function LandingHowItWorks() {
           {steps.map((step, i) => (
             <div key={i} className="text-center px-2">
               {/* Icon circle */}
-              <div className="w-[72px] h-[72px] rounded-full bg-primary-subtle border border-primary-light flex items-center justify-center mx-auto mb-5">
+              <div className="w-[72px] h-[72px] rounded-full bg-primary-subtle border border-primary-light flex items-center justify-center mx-auto mb-4">
                 <div className="text-primary">{step.icon}</div>
               </div>
 

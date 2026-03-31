@@ -80,7 +80,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
   if (mode === 'magic_sent') {
     return (
       <div className="scale-in text-center">
-        <div className="w-16 h-16 rounded-full bg-success-light flex items-center justify-center mx-auto mb-5">
+        <div className="w-16 h-16 rounded-full bg-success-light flex items-center justify-center mx-auto mb-4">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-success" aria-hidden="true">
             <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
             <path d="M22 4l-10 8L2 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -95,7 +95,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
         <p className="text-small font-semibold text-text-primary mb-6">
           {email}
         </p>
-        <p className="text-caption text-text-tertiary leading-body mb-7">
+        <p className="text-caption text-text-tertiary leading-body mb-8">
           Click the link in the email to sign in. It expires in 10 minutes.
           <br />
           Check your spam folder if you don&apos;t see it.
@@ -113,8 +113,8 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
   return (
     <div className="fade-in-up">
       {/* Logo */}
-      <div className="flex justify-center mb-7">
-        <div className="flex items-center gap-2.5">
+      <div className="flex justify-center mb-8">
+        <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-button bg-secondary flex items-center justify-center">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-text-primary" aria-hidden="true">
               <path
@@ -143,8 +143,8 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
         onClick={handleGoogleClick}
         disabled={mode === 'google_loading'}
         className={cn(
-          'w-full flex items-center justify-center gap-2.5',
-          'py-3.5 px-5',
+          'w-full flex items-center justify-center gap-2',
+          'py-4 px-4',
           'rounded-button border border-1.5 border-border bg-bg-card',
           'text-small font-medium text-text-primary',
           'transition-all duration-150 motion-reduce:transition-none',
@@ -152,7 +152,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
           'active:translate-y-0',
           'disabled:opacity-60 disabled:cursor-default disabled:hover:translate-y-0 disabled:hover:bg-bg-card disabled:hover:border-border',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-          'mb-5',
+          'mb-4',
         )}
       >
         {mode === 'google_loading' ? (
@@ -169,7 +169,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
       </button>
 
       {/* Divider */}
-      <div className="flex items-center gap-4 mb-5">
+      <div className="flex items-center gap-4 mb-4">
         <div className="flex-1 h-px bg-border" />
         <span className="text-caption text-text-tertiary">or</span>
         <div className="flex-1 h-px bg-border" />
@@ -195,7 +195,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
             type="submit"
             className={cn(
               'w-full flex items-center justify-center',
-              'py-3.5 px-5',
+              'py-4 px-4',
               'rounded-button bg-primary',
               'text-small font-semibold text-text-inverse',
               'transition-all duration-150 motion-reduce:transition-none',
@@ -205,7 +205,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
           >
             Continue
           </button>
-          <div className="text-center mt-3">
+          <div className="text-center mt-4">
             <button
               type="button"
               onClick={() => {
@@ -223,7 +223,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
           onClick={() => setMode('email')}
           className={cn(
             'w-full flex items-center justify-center gap-2',
-            'py-3.5 px-5',
+            'py-4 px-4',
             'rounded-button border border-1.5 border-border bg-transparent',
             'text-small font-medium text-text-secondary',
             'transition-all duration-150 motion-reduce:transition-none',
@@ -246,7 +246,7 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
       )}
 
       {/* Trust signal */}
-      <p className="text-caption text-text-tertiary text-center mt-5 leading-body">
+      <p className="text-caption text-text-tertiary text-center mt-4 leading-body">
         We&apos;ll never share your email. No spam, ever.
       </p>
 

@@ -22,7 +22,7 @@ export function DeleteModal({ open, onClose, onConfirm }: DeleteModalProps) {
         <p className="text-small text-text-secondary text-center mb-6">
           This will permanently delete your account and roadmap. This action cannot be undone.
         </p>
-        <div className="flex gap-3 flex-col sm:flex-row">
+        <div className="flex gap-4 flex-col sm:flex-row">
           <Button
             variant="outline"
             onClick={onClose}

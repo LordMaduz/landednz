@@ -21,7 +21,7 @@ export function LandingNav() {
           : 'bg-transparent border-b border-transparent'
       )}
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2">
         {/* Logo mark */}
         <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

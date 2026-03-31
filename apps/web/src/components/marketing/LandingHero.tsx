@@ -22,7 +22,7 @@ export function LandingHero() {
         </div>
 
         {/* Headline */}
-        <h1 className="fade-in-up delay-2 font-display text-h1 text-text-inverse mb-5 leading-tight tracking-tight">
+        <h1 className="fade-in-up delay-2 font-display text-h1 text-text-inverse mb-4 leading-tight tracking-tight">
           You&apos;ve just arrived in{' '}
           <span className="text-secondary">New Zealand.</span>
           <br />
@@ -30,20 +30,20 @@ export function LandingHero() {
         </h1>
 
         {/* Sub */}
-        <p className="fade-in-up delay-3 text-body text-text-inverse/[0.78] max-w-[560px] mx-auto mb-10">
+        <p className="fade-in-up delay-3 text-body text-text-inverse/[0.78] max-w-[560px] mx-auto mb-8">
           LandedNZ builds a personalised settlement plan based on your visa, your city, and your
           family. In 2 minutes.
         </p>
 
         {/* CTA */}
-        <div className="fade-in-up delay-4 mb-5">
+        <div className="fade-in-up delay-4 mb-4">
           <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-body font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
             Build my plan for free
           </button>
         </div>
 
         {/* Secondary link */}
-        <div className="fade-in-up delay-5 mb-12">
+        <div className="fade-in-up delay-5 mb-8">
           <button className="text-body text-secondary underline underline-offset-4 hover:text-text-inverse/75 transition-colors">
             See how it works ↓
           </button>

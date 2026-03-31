@@ -115,7 +115,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
       {/* Back button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-1.5 text-small font-medium text-primary mb-6 hover:opacity-75 transition-opacity focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2 rounded"
+        className="flex items-center gap-2 text-small font-medium text-primary mb-6 hover:opacity-75 transition-opacity focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2 rounded"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -125,7 +125,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
 
       {/* Task header */}
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-2 mb-4">
           <StatusIcon state={task.cardState} />
           <h2 className="font-display text-h2 text-text-primary leading-tight">
             {task.taskName}
@@ -147,7 +147,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
       </div>
 
       {/* Consequence callout */}
-      <div className="bg-warning-light border-l-3 border-warning rounded-r-button px-5 py-4 mb-6">
+      <div className="bg-warning-light border-l-3 border-warning rounded-r-button px-4 py-4 mb-6">
         <p className="text-small font-semibold text-text-primary mb-0.5">Why this matters</p>
         <p className="text-small text-text-secondary">{task.consequenceLine}</p>
       </div>
@@ -166,7 +166,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
               <h3 className="text-h3 text-text-primary mb-3">How to do it</h3>
               <div className="space-y-0">
                 {detail.steps.map((step, i) => (
-                  <div key={i} className="flex gap-3 relative">
+                  <div key={i} className="flex gap-4 relative">
                     {/* Connector line between steps */}
                     {i < detail.steps!.length - 1 && (
                       <div className="absolute left-3.5 top-7 bottom-0 w-px bg-border" />
@@ -190,7 +190,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
                   <div
                     key={i}
                     className={cn(
-                      'flex items-center gap-3 px-4 py-3',
+                      'flex items-center gap-2 px-4 py-3',
                       i < detail.documents!.length - 1 && 'border-b border-border'
                     )}
                   >
@@ -214,7 +214,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
 
           {/* Source card */}
           {detail.source && (
-            <div className="border border-border rounded-button px-4 py-3.5 flex items-center justify-between mb-6">
+            <div className="border border-border rounded-button px-4 py-4 flex items-center justify-between mb-6">
               <div>
                 <p className="text-caption text-text-tertiary mb-0.5">Official source</p>
                 <p className="text-small font-medium text-text-primary">{detail.source.agency}</p>
@@ -270,7 +270,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
       )}
 
       {/* Action buttons */}
-      <div className="space-y-3 border-t border-border pt-6">
+      <div className="space-y-4 border-t border-border pt-6">
         {/* Ask a question — Chat wired in AC-W4-10 */}
         <button
           onClick={() => {/* Chat wired in AC-W4-10 */}}
@@ -282,7 +282,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
           Ask a question
         </button>
 
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           {/* Mark as done — Wired in AC-W4-08 */}
           <button
             onClick={() => {/* Wired in AC-W4-08 */}}

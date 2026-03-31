@@ -11,11 +11,11 @@ export function LandingPricing() {
         <p className="text-caption text-primary text-center mb-3">
           SIMPLE PRICING
         </p>
-        <h2 className="font-display text-h2 text-text-primary text-center mb-12">
+        <h2 className="font-display text-h2 text-text-primary text-center mb-8">
           Start free. Upgrade when you&apos;re ready.
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-9">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Free */}
           <div
             onMouseEnter={() => setHoveredCard('free')}
@@ -33,10 +33,10 @@ export function LandingPricing() {
             <p className="text-small text-text-secondary mb-6">
               Your first 2 weeks covered
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {['Personalised roadmap', 'Progress tracking', 'Government source links'].map(
                 (item, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
+                  <div key={i} className="flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path
                         d="M20 6L9 17l-5-5"
@@ -78,14 +78,14 @@ export function LandingPricing() {
             <p className="text-small text-text-secondary mb-6">
               Full 8-week settlement roadmap
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {[
                 'Everything in Free',
                 'Complete Phase 3 roadmap',
                 'AI settlement advisor',
                 'Smart deadline reminders',
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2.5">
+                <div key={i} className="flex items-center gap-2">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path
                       d="M20 6L9 17l-5-5"
