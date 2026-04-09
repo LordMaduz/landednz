@@ -1,3 +1,7 @@
+// Load environment variables from .env.local first
+import { config as loadDotenv } from 'dotenv'
+loadDotenv({ path: '.env.local' })
+
 import Fastify from 'fastify'
 import { config } from './shared/config'
 import { logger } from './shared/logger'
