@@ -5,11 +5,11 @@ export default function SignInPage() {
     <div className="min-h-screen bg-bg flex items-center justify-center p-6 relative">
       {/* Decorative circles */}
       <div
-        className="absolute top-[10%] right-[10%] w-[300px] h-[300px] rounded-full border border-border opacity-30 pointer-events-none"
+        className="absolute top-10p right-10p w-circle-lg h-circle-lg rounded-full border border-border opacity-30 pointer-events-none"
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-[15%] left-[8%] w-[200px] h-[200px] rounded-full border border-border opacity-20 pointer-events-none"
+        className="absolute bottom-15p left-8p w-circle-sm h-circle-sm rounded-full border border-border opacity-20 pointer-events-none"
         aria-hidden="true"
       />
 

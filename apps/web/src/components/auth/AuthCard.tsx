@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils/cn'
 import { Input } from '@/components/ui/Input'
+import { createClient } from '@/lib/supabase/client'
 
 type AuthMode = 'main' | 'email' | 'magic_sent' | 'google_loading'
 
@@ -57,9 +58,16 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
   const [email, setEmail] = useState(initialEmail)
   const [emailError, setEmailError] = useState('')
 
-  const handleGoogleClick = () => {
+  const handleGoogleClick = async () => {
     setMode('google_loading')
-    setTimeout(() => setMode('main'), 2500)
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    // Browser redirects away — loading state stays until navigation completes
   }
 
   const handleEmailSubmit = (e?: React.FormEvent) => {

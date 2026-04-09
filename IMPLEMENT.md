@@ -22,8 +22,8 @@
 |-----------|--------|-----------|------|
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
-| W3 — Static Screens (~35h) | IN PROGRESS | 8 / 15 | — |
-| W4 — API Integration (~30h) | BLOCKED | 0 / 16 | — |
+| W3 — Static Screens (~35h) | COMPLETE | 15 / 15 | PASS |
+| W4 — API Integration (~30h) | IN PROGRESS | 1 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
 
@@ -246,7 +246,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W4-01 | Google OAuth end-to-end on web, session persists | — | |
+| AC-W4-01 | Google OAuth end-to-end on web, session persists | PASS | @supabase/ssr installed. createBrowserClient (AuthCard) + createServerClient (callback route). /auth/callback exchanges code → calls POST /auth/verify → redirects /roadmap. signin/page.tsx CW01 fixes: inset/size tokens added. tsc clean. Code-reviewer PASS. |
 | AC-W4-02 | Auth middleware redirects + returns to original path | — | |
 | AC-W4-03 | Sign out clears session, redirects to / | — | |
 | AC-W4-04 | Onboarding submits to API, profile persisted | — | |
@@ -336,6 +336,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W4-01] Supabase SSR OAuth foundation: `@supabase/ssr` requires `getAll`/`setAll` cookie pattern in `createServerClient()` for Next.js App Router Route Handlers — NOT the older `get`/`set`/`remove` pattern. Browser client (`createBrowserClient`) in client components, server client in Route Handlers. `/auth/callback` Route Handler placed in `(marketing)` route group (no sidebar). Call `POST /auth/verify` in callback to guarantee user exists in Prisma DB before onboarding (not relying on middleware upsert). CW01: added `inset: { 10p/15p/8p }` + `width/height: { circle-lg/circle-sm }` tokens to fix pre-existing arbitrary values in signin/page.tsx.
 
 - [AC-W3-12] Responsive fixes: LandingNav `hidden md:flex` hides all nav links (including CTA) at mobile — hero CTA is the primary conversion path at mobile. ChatPanel uses `rounded-t-chat-panel md:rounded-chat-panel` pattern for bottom-sheet-to-floating-panel transition. `h-chat-panel-mobile: '85vh'` token added. Old `max-h-[calc(100vh-3rem)]` arbitrary value removed.
 

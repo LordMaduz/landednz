@@ -98,16 +98,25 @@ const config: Config = {
         'chat-panel': '16px',
         'r-button': '10px',
       },
+      inset: {
+        '10p': '10%',
+        '15p': '15%',
+        '8p': '8%',
+      },
       width: {
         sidebar: '256px',
         'sidebar-collapsed': '64px',
         'detail-panel': '480px',
         'detail-panel-min': '400px',
         'chat-panel': '420px',
+        'circle-lg': '300px',
+        'circle-sm': '200px',
       },
       height: {
         'chat-panel': '600px',
         'chat-panel-mobile': '85vh',
+        'circle-lg': '300px',
+        'circle-sm': '200px',
       },
       maxWidth: {
         content: '960px',
