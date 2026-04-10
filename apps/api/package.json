@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.79.0",
+    "@fastify/cors": "^11.2.0",
     "@landednz/types": "*",
     "@prisma/client": "^5.22.0",
     "dotenv": "^17.4.1",
