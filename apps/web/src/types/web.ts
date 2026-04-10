@@ -36,7 +36,7 @@ export interface TaskDetailSource {
 }
 
 export interface TaskDetailData {
-  whyNow: string;
+  whyNow?: string;  // optional — API doesn't provide this separately (consequenceLine is the "why now")
   steps?: TaskDetailStep[];
   documents?: TaskDetailDocument[];
   source?: TaskDetailSource;

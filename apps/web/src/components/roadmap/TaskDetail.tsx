@@ -154,11 +154,13 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
 
       {detail ? (
         <>
-          {/* Why now */}
-          <div className="mb-6">
-            <h3 className="text-h3 text-text-primary mb-2">Why now?</h3>
-            <p className="text-body text-text-secondary">{detail.whyNow}</p>
-          </div>
+          {/* Why now — only if provided */}
+          {detail.whyNow && (
+            <div className="mb-6">
+              <h3 className="text-h3 text-text-primary mb-2">Why now?</h3>
+              <p className="text-body text-text-secondary">{detail.whyNow}</p>
+            </div>
+          )}
 
           {/* Steps */}
           {detail.steps && detail.steps.length > 0 && (
@@ -221,7 +223,7 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
                 <p className="text-caption text-text-secondary">{detail.source.page}</p>
               </div>
               <a
-                href={`https://${detail.source.url}`}
+                href={detail.source.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-success-light text-success rounded-lg text-small font-semibold px-3 py-2 flex-shrink-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"

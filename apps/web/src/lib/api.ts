@@ -73,3 +73,41 @@ export async function getRoadmap(token: string): Promise<RoadmapApiResponse> {
 
   return res.json()
 }
+
+// ─── Task Detail ─────────────────────────────────────────────────────────────
+
+// Mirrors backend TaskDetailResponse from apps/api/src/features/roadmap/roadmap.types.ts
+export interface TaskDetailApiResponse {
+  taskId: string;
+  name: string;
+  status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETE';
+  isBlocked: boolean;
+  estimatedDuration: string;
+  processingTime: string | null;
+  governmentSourceUrl: string;
+  taskType: 'FREE' | 'PREMIUM';
+  consequenceLine: string;
+  steps: string[];
+  documentsRequired: string[];
+  commonMistakes: string[];
+  watchOuts: string[];
+  cost: string | null;
+  relatedTasks: { taskId: string; name: string; relationship: string }[];
+  professionalAdviceRequired: boolean;
+  professionalAdviceNote: string | null;
+}
+
+export async function getTaskDetail(taskId: string, token: string): Promise<TaskDetailApiResponse> {
+  const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw Object.assign(new Error('Task detail fetch failed'), { status: res.status })
+  }
+
+  return res.json()
+}

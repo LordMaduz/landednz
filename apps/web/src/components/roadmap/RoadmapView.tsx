@@ -8,7 +8,8 @@ import { TaskRow } from './TaskRow'
 import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
-import { mapApiPhasesToWeb, mapApiTaskToListItem } from '@/lib/roadmap-mapper'
+import { mapApiPhasesToWeb, mapApiTaskToListItem, mapApiTaskDetail } from '@/lib/roadmap-mapper'
+import { getTaskDetail } from '@/lib/api'
 import { PremiumGateCard } from './PremiumGateCard'
 import { PremiumBanner } from './PremiumBanner'
 import type { RoadmapApiResponse } from '@/lib/api'
@@ -16,9 +17,10 @@ import type { FilterValue, TaskListItem, PremiumGateState } from '@/types/web'
 
 interface RoadmapViewProps {
   initialData: RoadmapApiResponse | null
+  token: string
 }
 
-export function RoadmapView({ initialData }: RoadmapViewProps) {
+export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   const [filter, setFilter] = useState<FilterValue>('all')
   const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
   const [gateState, setGateState] = useState<PremiumGateState>('full')
@@ -28,6 +30,20 @@ export function RoadmapView({ initialData }: RoadmapViewProps) {
   const phases = initialData ? mapApiPhasesToWeb(initialData.phases) : []
   const allTasksFlat = phases.flatMap(phase => phase.tasks)
   const priorityTasks = initialData ? initialData.topThree.map(mapApiTaskToListItem) : []
+
+  // Handle task click: show detail immediately, then fetch real detail
+  const handleTaskClick = async (task: TaskListItem) => {
+    setSelectedTask(task)
+    try {
+      const response = await getTaskDetail(task.taskId, token)
+      const detail = mapApiTaskDetail(response)
+      setSelectedTask(prev => prev ? { ...prev, detail } : prev)
+    } catch (error) {
+      // AC-W4-14 adds proper error UI — for now, detail stays undefined (shows fallback text)
+      // Note: Using console.error temporarily until web structured logging is added
+      console.error('Failed to load task detail:', error)
+    }
+  }
 
   if (selectedTask) {
     return <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />
@@ -59,7 +75,7 @@ export function RoadmapView({ initialData }: RoadmapViewProps) {
               key={task.taskId}
               task={task}
               priority
-              onClick={() => setSelectedTask(task)}
+              onClick={() => handleTaskClick(task)}
             />
           ))}
         </div>
@@ -92,7 +108,7 @@ export function RoadmapView({ initialData }: RoadmapViewProps) {
           key={phase.num}
           phase={phase}
           filter={filter}
-          onTaskClick={(task) => setSelectedTask(task)}
+          onTaskClick={handleTaskClick}
           defaultExpanded={i < 2}
           topSlot={
             phase.num === 3 && gateState === 'banner' && filter === 'all'

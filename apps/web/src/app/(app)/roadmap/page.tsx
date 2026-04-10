@@ -13,13 +13,13 @@ export default async function RoadmapPage() {
 
   try {
     const data = await getRoadmap(session.access_token)
-    return <RoadmapView initialData={data} />
+    return <RoadmapView initialData={data} token={session.access_token} />
   } catch (err: unknown) {
     if ((err as { status?: number }).status === 404) {
       // No profile exists — redirect to onboarding (fixes first-time user flow)
       redirect('/onboarding')
     }
     // Other errors: pass null to show empty roadmap (AC-W4-14 handles error UI)
-    return <RoadmapView initialData={null} />
+    return <RoadmapView initialData={null} token={session.access_token} />
   }
 }

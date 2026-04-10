@@ -1,8 +1,8 @@
 // Pure mapping functions for API → web type conversion
 // Isolated module for AC-W4-06 unit testing
 
-import type { RoadmapApiTask, RoadmapApiResponse } from '@/lib/api'
-import type { TaskCardState, TaskListItem, RoadmapPhase } from '@/types/web'
+import type { RoadmapApiTask, RoadmapApiResponse, TaskDetailApiResponse } from '@/lib/api'
+import type { TaskCardState, TaskListItem, RoadmapPhase, TaskDetailData, TaskDetailSource } from '@/types/web'
 
 // Hardcoded phase metadata — not provided by API
 const PHASE_META = {
@@ -83,4 +83,42 @@ export function mapApiPhasesToWeb(
       tasks: apiPhase.tasks.map(mapApiTaskToListItem),
     }
   })
+}
+
+/**
+ * Maps API task detail to web TaskDetailData format.
+ * - steps: string[] → TaskDetailStep[]
+ * - documentsRequired: string[] → TaskDetailDocument[]
+ * - governmentSourceUrl → TaskDetailSource
+ * - watchOuts + commonMistakes → tips: string[]
+ */
+export function mapApiTaskDetail(response: TaskDetailApiResponse): TaskDetailData {
+  const tips = [...response.watchOuts, ...response.commonMistakes]
+  const source = parseSourceFromUrl(response.governmentSourceUrl)
+
+  return {
+    steps: response.steps.length > 0 ? response.steps.map(s => ({ text: s })) : undefined,
+    documents: response.documentsRequired.length > 0
+      ? response.documentsRequired.map(name => ({ name, required: true }))
+      : undefined,
+    source: source ?? undefined,
+    tips: tips.length > 0 ? tips : undefined,
+  }
+}
+
+/**
+ * Parses governmentSourceUrl to extract agency name from hostname.
+ * e.g. "https://www.ird.govt.nz/path" → { agency: "ird.govt.nz", page: "", url: "..." }
+ */
+function parseSourceFromUrl(url: string): TaskDetailSource | null {
+  try {
+    const { hostname } = new URL(url)
+    return {
+      agency: hostname.replace('www.', ''),
+      page: '',
+      url
+    }
+  } catch {
+    return null
+  }
 }
