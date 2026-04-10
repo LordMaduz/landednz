@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { LogOut, User, Star,Bell, Shield } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import { SectionCard } from './SectionCard'
 import { FieldRow } from './FieldRow'
 import { Toggle } from './Toggle'
@@ -19,9 +21,16 @@ export function SettingsView({
   initialEmailRemindersOn = true,
   initialDeleteModalOpen = false
 }: SettingsViewProps) {
+  const router = useRouter()
   const [emailReminders, setEmailReminders] = useState(initialEmailRemindersOn)
   const [reminderFreq, setReminderFreq] = useState<'deadlines' | 'weekly'>('deadlines')
   const [showDeleteModal, setShowDeleteModal] = useState(initialDeleteModalOpen)
+
+  const handleSignOut = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/')
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
@@ -118,7 +127,7 @@ export function SettingsView({
       <SectionCard icon={Shield} title="Account">
         <Button
           variant="outline"
-          onClick={() => {}}
+          onClick={handleSignOut}
           className="w-full flex items-center gap-2"
         >
           <LogOut size={16} />
