@@ -6,6 +6,19 @@ import type { VisaType, City, FamilySituation } from '@landednz/types'
 import type { OnboardingState } from '@/types/web'
 import { useReducedMotion } from '@/lib/hooks/useReducedMotion'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
+import { createClient } from '@/lib/supabase/client'
+import { submitOnboardingProfile } from '@/lib/api'
+
+// Maps human-readable arrival options to approximate ISO dates for the API
+function arrivalToISODate(arrival: string): string {
+  const today = new Date()
+  const d = (days: number) =>
+    new Date(today.getTime() + days * 86_400_000).toISOString().split('T')[0]
+  if (arrival === "I haven't arrived yet") return d(30)
+  if (arrival === 'I arrived in the last 2 weeks') return d(-7)
+  if (arrival === 'I arrived 2–8 weeks ago') return d(-35)
+  return d(-90) // "More than 2 months ago" + fallback
+}
 
 interface RoadmapRevealProps {
   answers: OnboardingState['answers']
@@ -58,6 +71,36 @@ export function RoadmapReveal({ answers }: RoadmapRevealProps) {
 
   const [messageIndex, setMessageIndex] = useState(0)
   const [showFinal, setShowFinal] = useState(revealComplete || reducedMotion)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+
+  const handleSeeRoadmap = async () => {
+    setSubmitting(true)
+    setSubmitError('')
+    try {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setSubmitting(false)
+        router.push('/auth/signin')
+        return
+      }
+      await submitOnboardingProfile(
+        {
+          visaType: answers.visaType!,
+          city: answers.city!,
+          familySituation: answers.familySituation!,
+          occupation: answers.occupation!,
+          arrivalDate: arrivalToISODate(answers.arrivalDate ?? ''),
+        },
+        session.access_token,
+      )
+      router.push('/roadmap')
+    } catch {
+      setSubmitting(false)
+      setSubmitError('Something went wrong. Please try again.')
+    }
+  }
 
   useEffect(() => {
     // Already complete or reduced motion — show success instantly
@@ -147,11 +190,25 @@ export function RoadmapReveal({ answers }: RoadmapRevealProps) {
 
             {/* CTA */}
             <button
-              onClick={() => router.push('/roadmap')}
-              className="bg-primary text-text-inverse px-12 py-4 rounded-button text-body font-semibold transition-all duration-200 hover:bg-primary-hover hover:-translate-y-px hover:shadow-lg hover:shadow-primary/25"
+              onClick={handleSeeRoadmap}
+              disabled={submitting}
+              className="bg-primary text-text-inverse px-12 py-4 rounded-button text-body font-semibold transition-all duration-200 hover:bg-primary-hover hover:-translate-y-px hover:shadow-lg hover:shadow-primary/25 disabled:opacity-60 disabled:cursor-default disabled:hover:translate-y-0 disabled:hover:shadow-none"
             >
-              See my roadmap →
+              {submitting ? (
+                <span className="flex items-center gap-2 justify-center">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-spin" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" opacity="0.25" />
+                    <path d="M12 2a10 10 0 019.95 9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  Building your roadmap...
+                </span>
+              ) : (
+                'See my roadmap →'
+              )}
             </button>
+            {submitError && (
+              <p className="text-caption text-error mt-3">{submitError}</p>
+            )}
           </div>
         )}
       </div>
