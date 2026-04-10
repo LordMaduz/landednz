@@ -61,10 +61,12 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
   const handleGoogleClick = async () => {
     setMode('google_loading')
     const supabase = createClient()
+    const params = new URLSearchParams(window.location.search)
+    const redirect = params.get('redirect') ?? '/roadmap'
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
       },
     })
     // Browser redirects away — loading state stays until navigation completes

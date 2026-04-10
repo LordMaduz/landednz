@@ -1,28 +1,50 @@
+import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
 const PROTECTED_PATHS = ['/roadmap', '/chat', '/settings']
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request })
 
-  const isProtected = PROTECTED_PATHS.some(path =>
-    pathname === path || pathname.startsWith(`${path}/`)
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          // RequestCookies.set() only accepts name + value (no options)
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
+          )
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options),
+          )
+        },
+      },
+    },
   )
 
-  if (!isProtected) return NextResponse.next()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  // Stage 2: check for Supabase session cookie by prefix
-  // Stage 4: replace with createServerClient().auth.getUser() from @supabase/ssr
-  const hasSession = request.cookies.getAll().some(c => c.name.startsWith('sb-'))
+  const { pathname } = request.nextUrl
+  const isProtected = PROTECTED_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  )
 
-  if (!hasSession) {
+  if (isProtected && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/signin'
     url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
   }
 
-  return NextResponse.next()
+  return supabaseResponse
 }
 
 export const config = {
