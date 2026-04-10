@@ -247,7 +247,7 @@
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
 | AC-W4-01 | Google OAuth end-to-end on web, session persists | PASS | @supabase/ssr installed. createBrowserClient (AuthCard) + createServerClient (callback route). /auth/callback exchanges code → calls POST /auth/verify → redirects /roadmap. signin/page.tsx CW01 fixes: inset/size tokens added. tsc clean. Code-reviewer PASS. |
-| AC-W4-02 | Auth middleware redirects + returns to original path | PASS | middleware.ts upgraded: createServerClient().auth.getUser() (Edge-safe cookie config), returns supabaseResponse for token refresh. AuthCard threads ?redirect= param through OAuth redirectTo. tsc clean. Code-reviewer PASS. |
+| AC-W4-02 | Auth middleware redirects + returns to original path | PASS | middleware.ts upgraded: createServerClient().auth.getUser() (Edge-safe cookie config), returns supabaseResponse for token refresh. AuthCard stores redirect in cookie (not query param to Supabase - requires exact URL match). Callback reads cookie + cleans up. tsc clean. |
 | AC-W4-03 | Sign out clears session, redirects to / | — | |
 | AC-W4-04 | Onboarding submits to API, profile persisted | — | |
 | AC-W4-05 | Roadmap fetches from API, hero card correct counts | — | |

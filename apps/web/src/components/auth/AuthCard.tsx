@@ -63,10 +63,12 @@ export function AuthCard({ initialMode = 'main', initialEmail = '' }: AuthCardPr
     const supabase = createClient()
     const params = new URLSearchParams(window.location.search)
     const redirect = params.get('redirect') ?? '/roadmap'
+    // Store redirect destination in cookie for server route to read
+    document.cookie = `auth_redirect=${encodeURIComponent(redirect)}; path=/; max-age=600` // 10 minutes
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
     // Browser redirects away — loading state stays until navigation completes
