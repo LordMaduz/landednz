@@ -13,20 +13,20 @@ const PHASE_META = {
 
 /**
  * Derives TaskCardState from API task data.
- * Priority order: COMPLETE → blocked → premium_locked → in_progress → not_started
+ * Priority order: COMPLETE → IN_PROGRESS → premium_locked → blocked → not_started
  */
 export function deriveCardState(task: RoadmapApiTask): TaskCardState {
   if (task.status === 'COMPLETE') {
     return 'complete'
   }
-  if (task.isBlocked) {
-    return 'blocked'
+  if (task.status === 'IN_PROGRESS') {
+    return 'in_progress'
   }
   if (task.taskType === 'PREMIUM') {
     return 'premium_locked'
   }
-  if (task.status === 'IN_PROGRESS') {
-    return 'in_progress'
+  if (task.isBlocked) {
+    return 'blocked'
   }
   return 'not_started'
 }

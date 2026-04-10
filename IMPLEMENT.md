@@ -23,7 +23,7 @@
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
 | W3 — Static Screens (~35h) | COMPLETE | 15 / 15 | PASS |
-| W4 — API Integration (~30h) | IN PROGRESS | 1 / 16 | — |
+| W4 — API Integration (~30h) | IN PROGRESS | 2 / 16 | — |
 | W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
 
@@ -251,7 +251,7 @@
 | AC-W4-03 | Sign out clears session, redirects to / | PASS | SettingsView: handleSignOut calls supabase.auth.signOut() + router.push('/'). Middleware handles subsequent /roadmap access. tsc clean. Code-reviewer PASS. |
 | AC-W4-04 | Onboarding submits to API, profile persisted | PASS | Created api.ts (typed API client). RoadmapReveal: arrivalToISODate() helper, handleSeeRoadmap calls POST /onboarding/profile with Bearer token, 409 treated as success, loading/error states. tsc clean. Code-reviewer CONDITIONAL PASS (type comment added). |
 | AC-W4-05 | Roadmap fetches from API, hero card correct counts | PASS | api.ts + roadmap-mapper.ts created. page.tsx → async server component: fetch GET /roadmap, 404→/onboarding redirect (first-time user flow). RoadmapView: initialData prop, mock imports removed, mapper functions used. HeroCard gets allTasksFlat. Code-reviewer PASS. |
-| AC-W4-06 | TaskCardState derived correctly, unit tests for all paths | — | |
+| AC-W4-06 | TaskCardState derived correctly, unit tests for all paths | PASS | Fixed deriveCardState priority order (IN_PROGRESS before premium_locked/blocked). 11 Vitest tests cover all derivation paths. Code-reviewer PASS. |
 | AC-W4-07 | Task detail populated from API endpoint | — | |
 | AC-W4-08 | Mark as done: optimistic update + rollback on failure | — | |
 | AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | — | |
