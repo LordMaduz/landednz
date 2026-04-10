@@ -17,6 +17,12 @@ import { registerAuthDecoration } from './shared/middleware/auth'
 export function buildApp() {
   const app = Fastify({ logger: false })
 
+  // Enable CORS for browser requests from web app
+  app.register(require('@fastify/cors'), {
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true,
+  })
+
   registerErrorHandler(app)
   registerAuthDecoration(app) // must register before any route that uses authenticateRequest
   registerHealthRoutes(app)
