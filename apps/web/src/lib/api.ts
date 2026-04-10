@@ -35,3 +35,41 @@ export async function submitOnboardingProfile(
     throw new Error(`Profile submission failed: ${res.status}`)
   }
 }
+
+// ─── Roadmap ──────────────────────────────────────────────────────────────────
+
+// Web-specific API response types — mirrors API's RoadmapResponse but cannot import
+// from apps/api directly. Primitive types come from @landednz/types (CW04 compliant).
+export interface RoadmapApiTask {
+  taskId: string
+  name: string
+  phase: number
+  status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETE'
+  isBlocked: boolean
+  blockingTaskNames: string[]
+  estimatedDuration: string
+  taskType: 'FREE' | 'PREMIUM'
+  consequenceLine: string
+  priorityScore: number
+}
+
+export interface RoadmapApiResponse {
+  topThree: RoadmapApiTask[]
+  phases: { phase: number; tasks: RoadmapApiTask[] }[]
+  lastComputedAt: string
+}
+
+export async function getRoadmap(token: string): Promise<RoadmapApiResponse> {
+  const res = await fetch(`${API_URL}/roadmap`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw Object.assign(new Error('Roadmap fetch failed'), { status: res.status })
+  }
+
+  return res.json()
+}

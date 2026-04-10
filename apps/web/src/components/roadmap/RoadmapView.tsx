@@ -8,24 +8,26 @@ import { TaskRow } from './TaskRow'
 import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
-import { MOCK_PHASES, MOCK_TASKS_FLAT } from '@/mocks/roadmap'
+import { mapApiPhasesToWeb, mapApiTaskToListItem } from '@/lib/roadmap-mapper'
 import { PremiumGateCard } from './PremiumGateCard'
 import { PremiumBanner } from './PremiumBanner'
+import type { RoadmapApiResponse } from '@/lib/api'
 import type { FilterValue, TaskListItem, PremiumGateState } from '@/types/web'
 
-export function RoadmapView() {
+interface RoadmapViewProps {
+  initialData: RoadmapApiResponse | null
+}
+
+export function RoadmapView({ initialData }: RoadmapViewProps) {
   const [filter, setFilter] = useState<FilterValue>('all')
   const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
   const [gateState, setGateState] = useState<PremiumGateState>('full')
   const { activeHint, dismissHint } = useOnboardingStore()
 
-  // Top 3 actionable tasks for "Do these first"
-  const priorityTasks = MOCK_TASKS_FLAT.filter(
-    (t) =>
-      t.cardState !== 'complete' &&
-      t.cardState !== 'blocked' &&
-      t.cardState !== 'premium_locked'
-  ).slice(0, 3)
+  // Derive data from API response
+  const phases = initialData ? mapApiPhasesToWeb(initialData.phases) : []
+  const allTasksFlat = phases.flatMap(phase => phase.tasks)
+  const priorityTasks = initialData ? initialData.topThree.map(mapApiTaskToListItem) : []
 
   if (selectedTask) {
     return <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />
@@ -33,7 +35,7 @@ export function RoadmapView() {
 
   return (
     <div>
-      <HeroCard tasks={MOCK_TASKS_FLAT} />
+      <HeroCard tasks={allTasksFlat} />
 
       {/* Do these first — only shown in "all" filter */}
       {filter === 'all' && (
@@ -85,7 +87,7 @@ export function RoadmapView() {
         />
       )}
 
-      {MOCK_PHASES.map((phase, i) => (
+      {phases.map((phase, i) => (
         <PhaseSection
           key={phase.num}
           phase={phase}

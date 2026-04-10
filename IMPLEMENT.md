@@ -250,7 +250,7 @@
 | AC-W4-02 | Auth middleware redirects + returns to original path | PASS | middleware.ts upgraded: createServerClient().auth.getUser() (Edge-safe cookie config), returns supabaseResponse for token refresh. AuthCard stores redirect in cookie (not query param to Supabase - requires exact URL match). Callback reads cookie + cleans up. tsc clean. |
 | AC-W4-03 | Sign out clears session, redirects to / | PASS | SettingsView: handleSignOut calls supabase.auth.signOut() + router.push('/'). Middleware handles subsequent /roadmap access. tsc clean. Code-reviewer PASS. |
 | AC-W4-04 | Onboarding submits to API, profile persisted | PASS | Created api.ts (typed API client). RoadmapReveal: arrivalToISODate() helper, handleSeeRoadmap calls POST /onboarding/profile with Bearer token, 409 treated as success, loading/error states. tsc clean. Code-reviewer CONDITIONAL PASS (type comment added). |
-| AC-W4-05 | Roadmap fetches from API, hero card correct counts | — | |
+| AC-W4-05 | Roadmap fetches from API, hero card correct counts | PASS | api.ts + roadmap-mapper.ts created. page.tsx → async server component: fetch GET /roadmap, 404→/onboarding redirect (first-time user flow). RoadmapView: initialData prop, mock imports removed, mapper functions used. HeroCard gets allTasksFlat. Code-reviewer PASS. |
 | AC-W4-06 | TaskCardState derived correctly, unit tests for all paths | — | |
 | AC-W4-07 | Task detail populated from API endpoint | — | |
 | AC-W4-08 | Mark as done: optimistic update + rollback on failure | — | |
