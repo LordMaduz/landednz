@@ -254,7 +254,8 @@
 | AC-W4-06 | TaskCardState derived correctly, unit tests for all paths | PASS | Fixed deriveCardState priority order (IN_PROGRESS before premium_locked/blocked). 11 Vitest tests cover all derivation paths. Code-reviewer PASS. |
 | AC-W4-07 | Task detail populated from API endpoint | PASS | Added getTaskDetail() API client + mapApiTaskDetail() mapper. Click task → GET /roadmap/tasks/:taskId → all Layer 2 sections populated. Fixed URL construction bug. Code-reviewer PASS. |
 | AC-W4-08 | Mark as done: optimistic update + rollback on failure | PASS | sonner installed. completeTask() in api.ts. RoadmapView: useState for roadmapData, handleComplete() optimistic→POST→re-fetch→setSelectedTask(null), rollback+toast on failure. TaskDetail: onComplete prop, isCompleting state, both buttons disabled+loading text. tsc clean. Code-reviewer CONDITIONAL PASS (pre-existing console.error from AC-W4-07, not blocked). |
-| AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | — | |
+| AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | PASS | createChatSession() + streamChat() in api.ts (fetch+ReadableStream). Layout async→token→ChatWidget→ChatPanel. Mock step-machine replaced: session init on mount, streamingTextRef for closure safety, thinking indicator→streaming bubble→finalised message. Source regex extracts NZ domains. 403→subscription error. tsc clean. Code-reviewer PASS. |
+| AC-W4-09b | Structured chat responses: detect patterns, render with existing components | — | Enhancement AC — research pre-filled at rpi/web-stage4-api-integration/research/AC-W4-09b.md |
 | AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | — | |
 | AC-W4-11 | Premium gate upgrade → Stripe Checkout → return | — | |
 | AC-W4-12 | Premium gate defer + decline paths work | — | |

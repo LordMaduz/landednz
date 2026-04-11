@@ -64,6 +64,7 @@ POST /chat/sessions/:sessionId/messages            ← send message (SSE streami
 | AC-W4-07 | Task detail from GET /roadmap/tasks/:taskId, all Layer 2 sections | Click task |
 | AC-W4-08 | Mark as done: optimistic → API → re-fetch. Rollback + toast on failure. | Mark task, kill API, retry |
 | AC-W4-09 | Chat SSE streaming: tokens progressive, citations render, source footer | Send message |
+| AC-W4-09b | Structured chat responses: detect patterns, render with existing components | Send varied questions |
 | AC-W4-10 | Chat entry-point: TASK_CARD sends taskId, ROADMAP sends context | Open from task vs roadmap |
 | AC-W4-11 | Upgrade → Stripe Checkout → return with ?upgrade=success → Phase 3 unlocked | Stripe test mode |
 | AC-W4-12 | Premium gate defer + decline paths functional | Click both |

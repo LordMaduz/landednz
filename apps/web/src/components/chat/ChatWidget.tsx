@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { ChatPanel } from './ChatPanel'
 
-export function ChatWidget() {
+interface ChatWidgetProps {
+  token: string | null
+}
+
+export function ChatWidget({ token }: ChatWidgetProps) {
   const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -17,7 +21,11 @@ export function ChatWidget() {
   return createPortal(
     <>
       {chatOpen ? (
-        <ChatPanel onClose={() => setChatOpen(false)} entryContext="ROADMAP" />
+        <ChatPanel
+          onClose={() => setChatOpen(false)}
+          entryContext="ROADMAP"
+          token={token}
+        />
       ) : (
         <button
           onClick={() => setChatOpen(true)}

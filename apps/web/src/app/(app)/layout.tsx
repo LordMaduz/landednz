@@ -2,12 +2,18 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { MobileNav } from '@/components/layout/MobileNav'
 import { ChatWidget } from '@/components/chat/ChatWidget'
 import { Toaster } from 'sonner'
+import { createClient } from '@/lib/supabase/server'
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Get session token for chat — chat API requires Bearer auth
+  const supabase = createClient()
+  const { data: { session } } = await supabase.auth.getSession()
+  const token = session?.access_token ?? null
+
   return (
     <div className="flex h-screen bg-bg">
       <MobileNav />
@@ -17,7 +23,7 @@ export default function AppLayout({
           {children}
         </div>
       </main>
-      <ChatWidget />
+      <ChatWidget token={token} />
       <Toaster position="bottom-center" />
     </div>
   )

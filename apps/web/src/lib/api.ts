@@ -1,7 +1,7 @@
 // Typed API client for the LandedNZ Fastify backend.
 // All fetch calls to NEXT_PUBLIC_API_URL live here — flat exported functions, no class.
 
-import type { VisaType, City, FamilySituation, Occupation } from '@landednz/types'
+import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint } from '@landednz/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -118,4 +118,81 @@ export async function completeTask(taskId: string, token: string): Promise<void>
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+
+// Mirrors backend CreateSessionResponse from apps/api/src/features/chat/chat.types.ts
+export interface CreateChatSessionResponse {
+  sessionId: string
+  openingMessage: string
+}
+
+export async function createChatSession(
+  entryPoint: ChatEntryPoint,
+  token: string,
+  taskContext?: string,
+): Promise<CreateChatSessionResponse> {
+  const res = await fetch(`${API_URL}/chat/sessions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ entryPoint, taskContext }),
+  })
+  if (!res.ok) throw Object.assign(new Error('Chat session creation failed'), { status: res.status })
+  return res.json()
+}
+
+// SSE streaming — must use fetch + ReadableStream, NOT EventSource (no auth header support).
+// Calls onChunk for each text token, onDone when stream ends, onError on failure.
+export async function streamChat(
+  sessionId: string,
+  content: string,
+  token: string,
+  onChunk: (text: string) => void,
+  onDone: () => void,
+  onError: (message: string) => void,
+): Promise<void> {
+  const res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content }),
+  })
+
+  if (!res.ok || !res.body) {
+    onError('Failed to connect to chat service')
+    return
+  }
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue
+        try {
+          const event = JSON.parse(line.slice(6))
+          if (event.type === 'chunk') onChunk(event.text)
+          else if (event.type === 'done') { onDone(); return }
+          else if (event.type === 'error') { onError(event.message); return }
+        } catch { /* skip malformed SSE lines */ }
+      }
+    }
+  } catch (error) {
+    onError(error instanceof Error ? error.message : 'Stream failed')
+  }
 }
