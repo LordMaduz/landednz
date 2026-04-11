@@ -104,11 +104,22 @@ function DifficultyBadge({ difficulty }: { difficulty: 'Easy' | 'Medium' | 'Hard
 interface TaskDetailProps {
   task: TaskListItem
   onBack: () => void
+  onComplete: () => Promise<void>
 }
 
-export function TaskDetail({ task, onBack }: TaskDetailProps) {
+export function TaskDetail({ task, onBack, onComplete }: TaskDetailProps) {
   const [tipsOpen, setTipsOpen] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false)
   const { detail } = task
+
+  const handleComplete = async () => {
+    setIsCompleting(true)
+    try {
+      await onComplete()
+    } finally {
+      setIsCompleting(false)
+    }
+  }
 
   return (
     <div className="slide-in-right max-w-3xl">
@@ -285,19 +296,19 @@ export function TaskDetail({ task, onBack }: TaskDetailProps) {
         </button>
 
         <div className="flex gap-4">
-          {/* Mark as done — Wired in AC-W4-08 */}
           <button
-            onClick={() => {/* Wired in AC-W4-08 */}}
-            className="flex-1 px-4 py-3 rounded-button bg-primary text-text-inverse text-small font-semibold hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
+            onClick={handleComplete}
+            disabled={isCompleting}
+            className="flex-1 px-4 py-3 rounded-button bg-primary text-text-inverse text-small font-semibold hover:bg-primary-hover transition-colors disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
           >
-            Mark as done
+            {isCompleting ? 'Saving…' : 'Mark as done'}
           </button>
-          {/* I've already done this — Wired in AC-W4-08 */}
           <button
-            onClick={() => {/* Wired in AC-W4-08 */}}
-            className="flex-1 px-4 py-3 rounded-button border border-border text-small font-medium text-text-primary hover:border-border-hover hover:bg-primary-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
+            onClick={handleComplete}
+            disabled={isCompleting}
+            className="flex-1 px-4 py-3 rounded-button border border-border text-small font-medium text-text-primary hover:border-border-hover hover:bg-primary-subtle transition-colors disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
           >
-            I&apos;ve already done this
+            {isCompleting ? 'Saving…' : "I've already done this"}
           </button>
         </div>
       </div>

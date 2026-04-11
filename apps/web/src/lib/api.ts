@@ -111,3 +111,11 @@ export async function getTaskDetail(taskId: string, token: string): Promise<Task
 
   return res.json()
 }
+
+export async function completeTask(taskId: string, token: string): Promise<void> {
+  const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}/complete`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
+}

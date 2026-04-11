@@ -9,7 +9,8 @@ import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
 import { mapApiPhasesToWeb, mapApiTaskToListItem, mapApiTaskDetail } from '@/lib/roadmap-mapper'
-import { getTaskDetail } from '@/lib/api'
+import { getTaskDetail, completeTask, getRoadmap } from '@/lib/api'
+import { toast } from 'sonner'
 import { PremiumGateCard } from './PremiumGateCard'
 import { PremiumBanner } from './PremiumBanner'
 import type { RoadmapApiResponse } from '@/lib/api'
@@ -24,12 +25,43 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   const [filter, setFilter] = useState<FilterValue>('all')
   const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
   const [gateState, setGateState] = useState<PremiumGateState>('full')
+  const [roadmapData, setRoadmapData] = useState<RoadmapApiResponse | null>(initialData)
   const { activeHint, dismissHint } = useOnboardingStore()
 
-  // Derive data from API response
-  const phases = initialData ? mapApiPhasesToWeb(initialData.phases) : []
+  // Derive data from local roadmap state
+  const phases = roadmapData ? mapApiPhasesToWeb(roadmapData.phases) : []
   const allTasksFlat = phases.flatMap(phase => phase.tasks)
-  const priorityTasks = initialData ? initialData.topThree.map(mapApiTaskToListItem) : []
+  const priorityTasks = roadmapData ? roadmapData.topThree.map(mapApiTaskToListItem) : []
+
+  // Optimistic complete: update local state, POST to API, re-fetch on success, rollback on failure
+  const handleComplete = async (taskId: string) => {
+    if (!roadmapData) return
+    const previousData = roadmapData
+
+    const optimisticData: RoadmapApiResponse = {
+      ...roadmapData,
+      phases: roadmapData.phases.map(phase => ({
+        ...phase,
+        tasks: phase.tasks.map(t =>
+          t.taskId === taskId ? { ...t, status: 'COMPLETE' as const } : t
+        ),
+      })),
+      topThree: roadmapData.topThree.map(t =>
+        t.taskId === taskId ? { ...t, status: 'COMPLETE' as const } : t
+      ),
+    }
+    setRoadmapData(optimisticData)
+
+    try {
+      await completeTask(taskId, token)
+      const freshData = await getRoadmap(token)
+      setRoadmapData(freshData)
+      setSelectedTask(null)
+    } catch {
+      setRoadmapData(previousData)
+      toast.error('Something went wrong. Your progress was not saved.')
+    }
+  }
 
   // Handle task click: show detail immediately, then fetch real detail
   const handleTaskClick = async (task: TaskListItem) => {
@@ -46,7 +78,13 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   }
 
   if (selectedTask) {
-    return <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />
+    return (
+      <TaskDetail
+        task={selectedTask}
+        onBack={() => setSelectedTask(null)}
+        onComplete={() => handleComplete(selectedTask.taskId)}
+      />
+    )
   }
 
   return (

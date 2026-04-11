@@ -1,6 +1,7 @@
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MobileNav } from '@/components/layout/MobileNav'
 import { ChatWidget } from '@/components/chat/ChatWidget'
+import { Toaster } from 'sonner'
 
 export default function AppLayout({
   children,
@@ -17,6 +18,7 @@ export default function AppLayout({
         </div>
       </main>
       <ChatWidget />
+      <Toaster position="bottom-center" />
     </div>
   )
 }
