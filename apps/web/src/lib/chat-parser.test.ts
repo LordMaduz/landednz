@@ -24,105 +24,97 @@ describe('stripMarkdown', () => {
   })
 })
 
-describe('parseResponse — steps detection', () => {
-  it('detects numbered list "1. item" → StepsResponse', () => {
-    const text = `To get an IRD number:\n\n1. Complete the IR742 form\n2. Submit to IRD\n3. Wait 8-10 days`
-    const result = parseResponse(text)
+describe('parseResponse — JSON parsing', () => {
+  it('parses valid JSON StepsResponse', () => {
+    const jsonText = JSON.stringify({
+      type: 'steps',
+      intro: 'To get an IRD number',
+      steps: [
+        { text: 'Complete the IR742 form' },
+        { text: 'Submit to IRD' },
+        { text: 'Wait 8-10 days' }
+      ],
+      sources: ['ird.govt.nz']
+    })
+    const result = parseResponse(jsonText)
     expect(result.content.type).toBe('steps')
     if (result.content.type === 'steps') {
       expect(result.content.steps).toHaveLength(3)
       expect(result.content.steps[0].text).toBe('Complete the IR742 form')
-      expect(result.content.intro).toBe('To get an IRD number:')
+      expect(result.content.intro).toBe('To get an IRD number')
     }
+    expect(result.sources).toEqual(['ird.govt.nz'])
   })
 
-  it('detects "1) item" format → StepsResponse', () => {
-    const text = '1) Apply online\n2) Provide ID\n3) Confirm'
-    const result = parseResponse(text)
-    expect(result.content.type).toBe('steps')
-  })
-
-  it('detects "Step 1: item" format → StepsResponse', () => {
-    const text = 'Step 1: Apply for IRD\nStep 2: Get bank account'
-    const result = parseResponse(text)
-    expect(result.content.type).toBe('steps')
-  })
-
-  it('strips markdown from step text', () => {
-    const text = '1. Complete the **IR742** form\n2. Visit *ird.govt.nz*'
-    const result = parseResponse(text)
-    if (result.content.type === 'steps') {
-      expect(result.content.steps[0].text).toBe('Complete the IR742 form')
-      expect(result.content.steps[1].text).toBe('Visit ird.govt.nz')
-    }
-  })
-
-  it('single list item does NOT trigger steps (needs 2+)', () => {
-    const text = '1. Just one step'
-    const result = parseResponse(text)
-    expect(result.content.type).toBe('plain')
-  })
-
-  it('detects multi-line numbered format → StepsResponse', () => {
-    const text = `Suggested order for your first week:\n\n1\n✅ Temporary accommodation sorted\n2\n→ Get NZ SIM cards\n3\n→ Open bank accounts`
-    const result = parseResponse(text)
-    expect(result.content.type).toBe('steps')
-    if (result.content.type === 'steps') {
-      expect(result.content.steps).toHaveLength(3)
-      expect(result.content.steps[0].text).toBe('✅ Temporary accommodation sorted')
-      expect(result.content.steps[1].text).toBe('→ Get NZ SIM cards')
-      expect(result.content.intro).toBe('Suggested order for your first week:')
-    }
-  })
-})
-
-describe('parseResponse — checklist detection', () => {
-  it('detects bullet list + document keywords → ChecklistResponse', () => {
-    const text = `You need the following documents:\n\n- Passport\n- NZ visa\n- Proof of address`
-    const result = parseResponse(text)
+  it('parses valid JSON ChecklistResponse', () => {
+    const jsonText = JSON.stringify({
+      type: 'checklist',
+      intro: 'Documents required',
+      items: [
+        { text: 'Passport', required: true },
+        { text: 'Reference letter', required: false }
+      ],
+      sources: ['immigration.govt.nz']
+    })
+    const result = parseResponse(jsonText)
     expect(result.content.type).toBe('checklist')
     if (result.content.type === 'checklist') {
-      expect(result.content.items).toHaveLength(3)
+      expect(result.content.items).toHaveLength(2)
       expect(result.content.items[0].text).toBe('Passport')
-    }
-  })
-
-  it('marks items as required by default', () => {
-    const text = '- Passport\n- Bank statement\nyou need these documents'
-    const result = parseResponse(text)
-    if (result.content.type === 'checklist') {
       expect(result.content.items[0].required).toBe(true)
+      expect(result.content.items[1].required).toBe(false)
     }
   })
 
-  it('marks items as optional when keywords present', () => {
-    const text = 'Documents required:\n- Passport\n- Reference letter (optional)\n- Bank statement'
-    const result = parseResponse(text)
-    if (result.content.type === 'checklist') {
-      const optional = result.content.items.find(i => i.text.includes('Reference letter'))
-      expect(optional?.required).toBe(false)
-    }
-  })
-
-  it('bullet list WITHOUT document keywords → StepsResponse', () => {
-    const text = 'Here is what to do:\n- Call IRD first\n- Then visit in person\n- Bring your ID'
-    const result = parseResponse(text)
-    expect(result.content.type).toBe('steps')
-  })
-})
-
-describe('parseResponse — alert detection', () => {
-  it('short urgency response → AlertResponse', () => {
-    const text = 'Your visa expires soon. You must apply for renewal immediately to avoid overstay penalties.'
-    const result = parseResponse(text)
+  it('parses valid JSON AlertResponse', () => {
+    const jsonText = JSON.stringify({
+      type: 'alert',
+      severity: 'warning',
+      title: 'Urgent',
+      message: 'Your visa expires soon',
+      sources: ['immigration.govt.nz']
+    })
+    const result = parseResponse(jsonText)
     expect(result.content.type).toBe('alert')
+    if (result.content.type === 'alert') {
+      expect(result.content.severity).toBe('warning')
+      expect(result.content.title).toBe('Urgent')
+      expect(result.content.message).toBe('Your visa expires soon')
+    }
   })
 
-  it('long response with urgency keywords → NOT alert (uses list/plain instead)', () => {
-    const text = `To renew your visa before it expires:\n\n1. Log into Immigration Online\n2. Select visa renewal\n3. Pay the fee\n4. Submit and wait\n\nApply immediately to avoid delays.`
-    const result = parseResponse(text)
-    // Should be steps, not alert — urgency is just context, not the primary content
-    expect(result.content.type).toBe('steps')
+  it('parses valid JSON PlainResponse', () => {
+    const jsonText = JSON.stringify({
+      type: 'plain',
+      text: 'ACC is the Accident Compensation Corporation',
+      sources: ['acc.co.nz']
+    })
+    const result = parseResponse(jsonText)
+    expect(result.content.type).toBe('plain')
+    if (result.content.type === 'plain') {
+      expect(result.content.text).toBe('ACC is the Accident Compensation Corporation')
+    }
+  })
+
+  it('adds default header when missing', () => {
+    const jsonText = JSON.stringify({
+      type: 'plain',
+      text: 'Some content'
+    })
+    const result = parseResponse(jsonText)
+    if (result.content.type === 'plain') {
+      expect(result.content.header).toBe('Based on official NZ sources')
+    }
+  })
+
+  it('falls back to plain text for invalid JSON', () => {
+    const invalidText = 'This is not JSON markdown text'
+    const result = parseResponse(invalidText)
+    expect(result.content.type).toBe('plain')
+    if (result.content.type === 'plain') {
+      expect(result.content.text).toBe('This is not JSON markdown text')
+      expect(result.content.header).toBe('Based on official NZ sources')
+    }
   })
 })
 
@@ -142,23 +134,24 @@ describe('parseResponse — plain text fallback', () => {
   })
 })
 
-describe('parseResponse — sources', () => {
-  it('extracts NZ domains from response text', () => {
+describe('parseResponse — fallback markdown parsing', () => {
+  it('extracts NZ domains from markdown fallback text', () => {
     const text = 'Apply at ird.govt.nz or visit immigration.govt.nz for details.'
     const result = parseResponse(text)
     expect(result.sources).toContain('ird.govt.nz')
     expect(result.sources).toContain('immigration.govt.nz')
   })
 
-  it('deduplicates sources', () => {
+  it('deduplicates sources in fallback mode', () => {
     const text = 'Visit ird.govt.nz to apply. More info at ird.govt.nz.'
     const result = parseResponse(text)
     expect(result.sources.filter(s => s === 'ird.govt.nz')).toHaveLength(1)
   })
 
-  it('returns empty sources when none found', () => {
+  it('handles empty sources in fallback', () => {
     const text = 'ACC covers all NZ residents.'
     const result = parseResponse(text)
+    expect(result.content.type).toBe('plain')
     expect(result.sources).toHaveLength(0)
   })
 })

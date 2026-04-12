@@ -52,11 +52,34 @@ export async function streamMessage(
   }
 }
 
-// Single-shot generation — for Job A AI personalisation (deferred to v2)
-// Stubbed in Phase 4, implemented in Phase 5 if AI personalisation is added
+// Single-shot generation — for response post-processing and Job A AI personalisation
 export async function generateText(
   systemPrompt: string,
   userPrompt: string,
 ): Promise<string> {
-  throw new Error('TODO: generateText() — deferred to Phase 5 AI personalisation');
+  const anthropic = new Anthropic({
+    apiKey: config.anthropicApiKey,
+  });
+
+  try {
+    const message = await anthropic.messages.create({
+      model: config.anthropicModel,
+      max_tokens: 1024,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }],
+    });
+
+    // Extract text content from the response
+    const content = message.content[0];
+    if (content.type === 'text') {
+      return content.text;
+    }
+
+    throw new AIFailureError('No text content in Claude response');
+  } catch (error) {
+    if (error instanceof AIFailureError) {
+      throw error;
+    }
+    throw new AIFailureError(`Claude API error: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }

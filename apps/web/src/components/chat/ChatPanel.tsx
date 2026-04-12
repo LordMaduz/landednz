@@ -100,6 +100,9 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
     setStreamingText('')
     streamingTextRef.current = ''
 
+    // Create message ID that we'll use for both initial and structured response
+    const aiMessageId = `ai-${Date.now()}`
+
     await streamChat(
       sessionId,
       userMessage.content,
@@ -109,9 +112,10 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
         setStreamingText(streamingTextRef.current)
       },
       () => {
+        // Initial response - use fallback parsing for immediate display
         const { content, sources } = parseResponse(streamingTextRef.current)
         setMessages(prev => [...prev, {
-          id: Date.now().toString(),
+          id: aiMessageId,
           variant: 'ai',
           content,
           sources: sources.length > 0 ? sources : undefined,
@@ -123,7 +127,7 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
       },
       (errorMessage: string) => {
         setMessages(prev => [...prev, {
-          id: Date.now().toString(),
+          id: aiMessageId,
           variant: 'ai',
           content: { type: 'plain', text: `Sorry, something went wrong: ${errorMessage}` },
           timestamp: 'Just now',
@@ -131,6 +135,24 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
         setIsStreaming(false)
         setStreamingText('')
         streamingTextRef.current = ''
+      },
+      (structuredJson: string) => {
+        // Structured response arrived - replace the message with clean structure
+        try {
+          const { content, sources } = parseResponse(structuredJson)
+          setMessages(prev => prev.map(msg =>
+            msg.id === aiMessageId
+              ? {
+                  ...msg,
+                  content,
+                  sources: sources.length > 0 ? sources : undefined,
+                }
+              : msg
+          ))
+        } catch (error) {
+          console.warn('Failed to parse structured response:', error)
+          // Keep the original fallback response
+        }
       },
     )
   }

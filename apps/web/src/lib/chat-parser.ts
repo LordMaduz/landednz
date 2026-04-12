@@ -79,111 +79,31 @@ export interface ParsedResponse {
 }
 
 export function parseResponse(rawText: string): ParsedResponse {
-  const sources = extractSources(rawText)
-  const allLines = rawText.split('\n')
-  const lines = allLines.filter(l => l.trim())
+  // Try to parse as JSON first
+  try {
+    const jsonResponse = JSON.parse(rawText.trim())
 
-  // 1. Detect ordered list (≥2 items) → StepsResponse
-  const orderedItems = lines.filter(l => ORDERED_ITEM_REGEX.test(l.trim()))
+    // Validate the JSON structure has required fields
+    if (jsonResponse && typeof jsonResponse === 'object' && jsonResponse.type) {
+      const sources = jsonResponse.sources || []
 
-  // Also check for multi-line numbered format: "1\n✅ content" or "2\n→ content"
-  const multiLineNumbered: string[] = []
-  for (let i = 0; i < lines.length - 1; i++) {
-    const currentLine = lines[i].trim()
-    const nextLine = lines[i + 1]?.trim()
-    if (/^\d+$/.test(currentLine) && nextLine && /^[✅→•-]/.test(nextLine)) {
-      multiLineNumbered.push(`${currentLine}. ${nextLine}`)
-    }
-  }
+      // Add default header if missing
+      if (!jsonResponse.header && jsonResponse.type !== 'alert') {
+        jsonResponse.header = 'Based on official NZ sources'
+      }
 
-  const allOrderedItems = [...orderedItems, ...multiLineNumbered]
-  if (allOrderedItems.length >= 2) {
-    // Find first ordered item (either inline or multi-line)
-    let firstIndex = lines.findIndex(l => ORDERED_ITEM_REGEX.test(l.trim()))
-    if (firstIndex === -1 && multiLineNumbered.length > 0) {
-      // Find first standalone number that starts multi-line pattern
-      firstIndex = lines.findIndex(l => /^\d+$/.test(l.trim()))
-    }
-
-    const intro = firstIndex >= 0 ? extractIntro(lines, firstIndex) : ''
-    const callout = extractCallout(lines)
-
-    return {
-      content: {
-        type: 'steps',
-        header: 'Based on official NZ sources',
-        intro: intro || '',
-        steps: allOrderedItems.map(item => {
-          // Handle both "1. content" format and reconstructed "1. ✅ content" format
-          const match = item.trim().match(ORDERED_ITEM_REGEX) || item.trim().match(/^(\d+)\.\s*(.+)/)
-          return { text: stripMarkdown((match?.[2] ?? match?.[3] ?? item).trim()) }
-        }),
-        ...(callout ? { callout: { type: callout.type, title: callout.title, text: callout.text } } : {}),
-        sources,
-      },
-      sources,
-    }
-  }
-
-  // 2. Detect unordered list (≥2 items)
-  const unorderedItems = lines.filter(l => UNORDERED_ITEM_REGEX.test(l.trim()))
-  if (unorderedItems.length >= 2) {
-    const firstIndex = lines.findIndex(l => UNORDERED_ITEM_REGEX.test(l.trim()))
-    const intro = extractIntro(lines, firstIndex)
-    const callout = extractCallout(lines)
-    const isDocumentList = DOCUMENT_KEYWORDS.test(rawText)
-
-    if (isDocumentList) {
-      // ChecklistResponse — required/optional per item
       return {
-        content: {
-          type: 'checklist',
-          header: 'Based on official NZ sources',
-          intro: intro || '',
-          items: unorderedItems.map(l => {
-            const match = l.trim().match(UNORDERED_ITEM_REGEX)
-            const text = stripMarkdown((match?.[1] ?? l).trim())
-            return { text, required: isRequired(text) }
-          }),
-          ...(callout ? { note: `${callout.title}: ${callout.text}` } : {}),
-          sources,
-        },
+        content: jsonResponse as ChatResponse,
         sources,
       }
     }
-
-    // Unordered list without document keywords → StepsResponse (bullets as steps)
-    return {
-      content: {
-        type: 'steps',
-        header: 'Based on official NZ sources',
-        intro: intro || '',
-        steps: unorderedItems.map(l => {
-          const match = l.trim().match(UNORDERED_ITEM_REGEX)
-          return { text: stripMarkdown((match?.[1] ?? l).trim()) }
-        }),
-        sources,
-      },
-      sources,
-    }
+  } catch (error) {
+    // If JSON parsing fails, fall back to markdown parsing
+    console.warn('Failed to parse JSON response, falling back to markdown parsing:', error)
   }
 
-  // 3. Short urgency response → AlertResponse
-  // Only triggers when the whole response IS the warning (short, no lists detected)
-  if (URGENCY_KEYWORDS.test(rawText) && lines.length <= 5) {
-    return {
-      content: {
-        type: 'alert',
-        severity: 'warning',
-        title: 'Important',
-        message: stripMarkdown(rawText),
-        sources,
-      },
-      sources,
-    }
-  }
-
-  // 4. Fallback → PlainTextResponse (markdown stripped)
+  // Fallback: treat as plain text with markdown cleanup (legacy behavior)
+  const sources = extractSources(rawText)
   return {
     content: {
       type: 'plain',

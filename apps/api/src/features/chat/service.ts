@@ -4,8 +4,8 @@
 import { db } from '../../shared/db';
 import { AppError, AIFailureError } from '../../shared/errors';
 import { logger } from '../../shared/logger';
-import { buildChatOpeningMessage, buildChatSystemPrompt } from '../../core/prompts/registry';
-import { streamMessage, type ChatMessage } from '../../shared/ai/claude.client';
+import { buildChatOpeningMessage, buildChatSystemPrompt, buildResponseStructuringPrompt } from '../../core/prompts/registry';
+import { streamMessage, generateText, type ChatMessage } from '../../shared/ai/claude.client';
 import { runLevel1Guardrail } from './guardrails/level1';
 import { runLevel2Guardrail } from './guardrails/level2';
 import type { ChatEntryPoint } from '@landednz/types';
@@ -142,6 +142,9 @@ export async function sendMessage(
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
     'X-Accel-Buffering': 'no',
+    // CORS headers (manually added because reply.raw bypasses @fastify/cors plugin)
+    'Access-Control-Allow-Origin': 'http://localhost:3000',
+    'Access-Control-Allow-Credentials': 'true',
   });
 
   try {
@@ -287,7 +290,25 @@ export async function sendMessage(
       });
     }
 
-    // Step 10: Close SSE stream
+    // Step 10: Post-process response for structured UI
+    try {
+      const structuringPrompt = buildResponseStructuringPrompt(fullResponse);
+      const structuredResponse = await generateText(structuringPrompt, '');
+
+      // Send structured response as separate SSE event
+      reply.raw.write(`data: ${JSON.stringify({
+        type: 'structured',
+        content: structuredResponse
+      })}\n\n`);
+    } catch (error) {
+      // If post-processing fails, log but don't break the stream
+      logger.warn(
+        { userId, sessionId, error: error instanceof Error ? error.message : String(error) },
+        'Response structuring failed, continuing with original response'
+      );
+    }
+
+    // Step 11: Close SSE stream
     reply.raw.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
     reply.raw.end();
 
