@@ -14,6 +14,14 @@ describe('stripMarkdown', () => {
   it('handles no markdown', () => {
     expect(stripMarkdown('plain text')).toBe('plain text')
   })
+
+  it('removes headers and horizontal rules', () => {
+    expect(stripMarkdown('# Main Title\n\n## Subtitle\n\n---\n\nContent here')).toBe('Main Title Subtitle Content here')
+  })
+
+  it('removes complex markdown formatting', () => {
+    expect(stripMarkdown('## What I can tell you\n\n---\n\n- Point **one**\n- Point *two*')).toBe('What I can tell you - Point one - Point two')
+  })
 })
 
 describe('parseResponse — steps detection', () => {
@@ -53,6 +61,18 @@ describe('parseResponse — steps detection', () => {
     const text = '1. Just one step'
     const result = parseResponse(text)
     expect(result.content.type).toBe('plain')
+  })
+
+  it('detects multi-line numbered format → StepsResponse', () => {
+    const text = `Suggested order for your first week:\n\n1\n✅ Temporary accommodation sorted\n2\n→ Get NZ SIM cards\n3\n→ Open bank accounts`
+    const result = parseResponse(text)
+    expect(result.content.type).toBe('steps')
+    if (result.content.type === 'steps') {
+      expect(result.content.steps).toHaveLength(3)
+      expect(result.content.steps[0].text).toBe('✅ Temporary accommodation sorted')
+      expect(result.content.steps[1].text).toBe('→ Get NZ SIM cards')
+      expect(result.content.intro).toBe('Suggested order for your first week:')
+    }
   })
 })
 

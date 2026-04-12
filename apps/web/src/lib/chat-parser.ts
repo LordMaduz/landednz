@@ -4,9 +4,13 @@ import type { ChatResponse } from '@/types/chat'
 
 export function stripMarkdown(text: string): string {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')  // **bold** → bold
-    .replace(/\*(.+?)\*/g, '$1')       // *italic* → italic
-    .replace(/`(.+?)`/g, '$1')         // `code` → code
+    .replace(/^#{1,6}\s+/gm, '')       // # ## ### headers → remove
+    .replace(/^---+$/gm, '')           // --- horizontal rules → remove
+    .replace(/\*\*(.+?)\*\*/g, '$1')   // **bold** → bold
+    .replace(/\*(.+?)\*/g, '$1')        // *italic* → italic
+    .replace(/`(.+?)`/g, '$1')          // `code` → code
+    .replace(/^\s*$/gm, '')            // empty lines → remove
+    .replace(/\n+/g, ' ')              // multiple newlines → single space
     .trim()
 }
 
@@ -81,9 +85,27 @@ export function parseResponse(rawText: string): ParsedResponse {
 
   // 1. Detect ordered list (≥2 items) → StepsResponse
   const orderedItems = lines.filter(l => ORDERED_ITEM_REGEX.test(l.trim()))
-  if (orderedItems.length >= 2) {
-    const firstIndex = lines.findIndex(l => ORDERED_ITEM_REGEX.test(l.trim()))
-    const intro = extractIntro(lines, firstIndex)
+
+  // Also check for multi-line numbered format: "1\n✅ content" or "2\n→ content"
+  const multiLineNumbered: string[] = []
+  for (let i = 0; i < lines.length - 1; i++) {
+    const currentLine = lines[i].trim()
+    const nextLine = lines[i + 1]?.trim()
+    if (/^\d+$/.test(currentLine) && nextLine && /^[✅→•-]/.test(nextLine)) {
+      multiLineNumbered.push(`${currentLine}. ${nextLine}`)
+    }
+  }
+
+  const allOrderedItems = [...orderedItems, ...multiLineNumbered]
+  if (allOrderedItems.length >= 2) {
+    // Find first ordered item (either inline or multi-line)
+    let firstIndex = lines.findIndex(l => ORDERED_ITEM_REGEX.test(l.trim()))
+    if (firstIndex === -1 && multiLineNumbered.length > 0) {
+      // Find first standalone number that starts multi-line pattern
+      firstIndex = lines.findIndex(l => /^\d+$/.test(l.trim()))
+    }
+
+    const intro = firstIndex >= 0 ? extractIntro(lines, firstIndex) : ''
     const callout = extractCallout(lines)
 
     return {
@@ -91,9 +113,10 @@ export function parseResponse(rawText: string): ParsedResponse {
         type: 'steps',
         header: 'Based on official NZ sources',
         intro: intro || '',
-        steps: orderedItems.map(l => {
-          const match = l.trim().match(ORDERED_ITEM_REGEX)
-          return { text: stripMarkdown((match?.[2] ?? match?.[3] ?? l).trim()) }
+        steps: allOrderedItems.map(item => {
+          // Handle both "1. content" format and reconstructed "1. ✅ content" format
+          const match = item.trim().match(ORDERED_ITEM_REGEX) || item.trim().match(/^(\d+)\.\s*(.+)/)
+          return { text: stripMarkdown((match?.[2] ?? match?.[3] ?? item).trim()) }
         }),
         ...(callout ? { callout: { type: callout.type, title: callout.title, text: callout.text } } : {}),
         sources,
