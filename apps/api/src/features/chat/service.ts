@@ -292,8 +292,12 @@ export async function sendMessage(
 
     // Step 10: Post-process response for structured UI
     try {
-      const structuringPrompt = buildResponseStructuringPrompt(fullResponse);
-      const structuredResponse = await generateText(structuringPrompt, '');
+      const systemPrompt = `You are a helpful assistant that converts conversational text to structured JSON.
+Convert the user's text to the most appropriate JSON format: steps, checklist, alert, or plain.
+Return ONLY valid JSON with no explanation.`
+
+      const userPrompt = buildResponseStructuringPrompt(fullResponse);
+      const structuredResponse = await generateText(systemPrompt, userPrompt);
 
       // Send structured response as separate SSE event
       reply.raw.write(`data: ${JSON.stringify({

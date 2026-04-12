@@ -227,20 +227,19 @@ and in ${userName}'s specific circumstances.`;
 
 // Post-processing prompt to convert conversational response to structured JSON
 export function buildResponseStructuringPrompt(conversationalResponse: string): string {
-  return `Convert this conversational chat response to clean structured JSON.
+  return `Please convert this conversational response to structured JSON format.
 
-CONVERSATIONAL RESPONSE:
+RESPONSE TO CONVERT:
 ${conversationalResponse}
 
-TASK:
-Analyze the response and convert it to the most appropriate JSON structure:
+Choose the most appropriate JSON structure:
 
 FOR STEP-BY-STEP PROCESSES (if response contains ordered instructions):
 {
   "type": "steps",
   "intro": "Brief context explaining the process",
   "steps": [
-    {"text": "Step description without markdown", "note": "Optional clarification"},
+    {"text": "Step description without markdown"},
     {"text": "Next step clean text"}
   ],
   "sources": ["domain1.govt.nz", "domain2.co.nz"]
@@ -274,9 +273,8 @@ FOR GENERAL Q&A (fallback for conversational responses):
 }
 
 RULES:
-- Extract NZ government domains (.govt.nz, .co.nz, .org.nz) from the response for sources array
-- Remove ALL markdown formatting (**, *, #, ---, etc.) from text fields
-- Convert tables to appropriate checklist or steps format
+- Extract NZ government domains (.govt.nz, .co.nz, .org.nz, .ac.nz) from the response for sources array
+- Remove ALL markdown formatting (**, *, #, ---, tables, etc.) from text fields
 - If response has numbered/ordered content → use "steps"
 - If response lists documents/requirements → use "checklist"
 - If response is primarily urgent warning → use "alert"
