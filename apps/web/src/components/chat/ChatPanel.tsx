@@ -2,19 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { ChatEntryPoint } from '@landednz/types'
+import type { ChatResponse } from '@/types/chat'
 import { ChatMessage } from './ChatMessage'
 import { ThinkingIndicator } from './ThinkingIndicator'
 import { createChatSession, streamChat } from '@/lib/api'
-
-// Extract NZ government/official domains from LLM response text.
-// Only domains actually mentioned in the response are shown as sources.
-// Returns empty array if none found — source footer is hidden in that case.
-// TODO AC-W4-09b: This will be enhanced when post-processing structures the full response.
-function extractSources(text: string): string[] {
-  const nzDomainRegex = /\b([a-zA-Z0-9-]+\.(?:govt\.nz|co\.nz|org\.nz|ac\.nz))\b/g
-  const matches: string[] = text.match(nzDomainRegex) ?? []
-  return matches.filter((domain, index) => matches.indexOf(domain) === index)
-}
+import { parseResponse, cleanStreamingText } from '@/lib/chat-parser'
 
 interface UserMessage {
   id: string
@@ -26,7 +18,8 @@ interface UserMessage {
 interface AIMessage {
   id: string
   variant: 'ai'
-  content: { type: 'plain'; text: string; sources?: string[] }
+  content: ChatResponse        // full union, not just plain
+  sources?: string[]           // top-level — ChatMessage reads this for source footer
   timestamp: string
 }
 
@@ -116,19 +109,12 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
         setStreamingText(streamingTextRef.current)
       },
       () => {
-        // TODO AC-W4-09b: Replace this plain text render with pattern detection.
-        // Detect numbered lists → StepsResponse, bullets → ChecklistResponse,
-        // warning keywords → AlertResponse, then re-render with ResponseRenderers.
-        const finalText = streamingTextRef.current
-        const sources = extractSources(finalText)
+        const { content, sources } = parseResponse(streamingTextRef.current)
         setMessages(prev => [...prev, {
           id: Date.now().toString(),
           variant: 'ai',
-          content: {
-            type: 'plain',
-            text: finalText,
-            sources: sources.length > 0 ? sources : undefined,
-          },
+          content,
+          sources: sources.length > 0 ? sources : undefined,
           timestamp: 'Just now',
         }])
         setIsStreaming(false)
@@ -211,7 +197,7 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
             {isStreaming && streamingText && (
               <ChatMessage
                 variant="ai"
-                content={{ type: 'plain', text: streamingText }}
+                content={{ type: 'plain', text: cleanStreamingText(streamingText) }}
                 timestamp="Just now"
               />
             )}

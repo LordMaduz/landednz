@@ -255,7 +255,7 @@
 | AC-W4-07 | Task detail populated from API endpoint | PASS | Added getTaskDetail() API client + mapApiTaskDetail() mapper. Click task → GET /roadmap/tasks/:taskId → all Layer 2 sections populated. Fixed URL construction bug. Code-reviewer PASS. |
 | AC-W4-08 | Mark as done: optimistic update + rollback on failure | PASS | sonner installed. completeTask() in api.ts. RoadmapView: useState for roadmapData, handleComplete() optimistic→POST→re-fetch→setSelectedTask(null), rollback+toast on failure. TaskDetail: onComplete prop, isCompleting state, both buttons disabled+loading text. tsc clean. Code-reviewer CONDITIONAL PASS (pre-existing console.error from AC-W4-07, not blocked). |
 | AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | PASS | createChatSession() + streamChat() in api.ts (fetch+ReadableStream). Layout async→token→ChatWidget→ChatPanel. Mock step-machine replaced: session init on mount, streamingTextRef for closure safety, thinking indicator→streaming bubble→finalised message. Source regex extracts NZ domains. 403→subscription error. tsc clean. Code-reviewer PASS. |
-| AC-W4-09b | Structured chat responses: detect patterns, render with existing components | — | Enhancement AC — research pre-filled at rpi/web-stage4-api-integration/research/AC-W4-09b.md |
+| AC-W4-09b | Structured chat responses: detect patterns, render with existing components | PASS | chat-parser.ts module: parseResponse() detects ordered/unordered lists→Steps/Checklist, urgency→Alert, fallback→Plain. stripMarkdown() removes **bold**/italic/code. Sources top-level in AIMessage. 20/20 Vitest tests pass. Code-reviewer PASS. |
 | AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | — | |
 | AC-W4-11 | Premium gate upgrade → Stripe Checkout → return | — | |
 | AC-W4-12 | Premium gate defer + decline paths work | — | |
@@ -337,6 +337,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W4-09b] Structured chat response parsing complete: chat-parser.ts pure module extracts pattern detection from ChatPanel. TDD approach: 20 tests written first (RED) → implementation (GREEN). Key patterns: ordered lists (≥2) → Steps, unordered + document keywords → Checklist, unordered only → Steps, short urgency (≤5 lines) → Alert, fallback → Plain. stripMarkdown() removes **bold**/*italic*/`code`. Sources promoted to top-level AIMessage.sources field (not content.sources) so ChatMessage renders source footer. Document keyword regex refined: avoid false positives on action verbs ("bring your ID" → Steps not Checklist). All 20/20 tests pass, Code-reviewer PASS.
 
 - [AC-W4-01] Supabase SSR OAuth foundation: `@supabase/ssr` requires `getAll`/`setAll` cookie pattern in `createServerClient()` for Next.js App Router Route Handlers — NOT the older `get`/`set`/`remove` pattern. Browser client (`createBrowserClient`) in client components, server client in Route Handlers. `/auth/callback` Route Handler placed in `(marketing)` route group (no sidebar). Call `POST /auth/verify` in callback to guarantee user exists in Prisma DB before onboarding (not relying on middleware upsert). CW01: added `inset: { 10p/15p/8p }` + `width/height: { circle-lg/circle-sm }` tokens to fix pre-existing arbitrary values in signin/page.tsx.
 
