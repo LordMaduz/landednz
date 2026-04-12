@@ -1,11 +1,129 @@
 import { SourcePill } from './SourcePill'
 import { StepsRenderer, ChecklistRenderer, AlertRenderer, PlainTextRenderer } from './ResponseRenderers'
+import ReactMarkdown from 'react-markdown'
 import type { ChatResponse } from '@/types/chat'
 
 
+// Markdown renderer with excellent typography for skimmability
+function MarkdownRenderer({ text }: { text: string }) {
+  return (
+    <div className="prose prose-slate max-w-none">
+      <ReactMarkdown
+        components={{
+          // Headers with proper hierarchy
+          h1: ({ children }) => (
+            <h1 className="text-lg font-bold mb-3 mt-0 text-slate-900 leading-tight">
+              {children}
+            </h1>
+          ),
+          h2: ({ children }) => (
+            <h2 className="text-base font-semibold mb-2 mt-4 text-slate-800 leading-tight">
+              {children}
+            </h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className="text-sm font-semibold mb-2 mt-3 text-slate-700 leading-tight">
+              {children}
+            </h3>
+          ),
+
+          // Paragraphs with optimal spacing for mobile reading
+          p: ({ children }) => (
+            <p className="mb-3 leading-relaxed text-slate-700 text-sm">
+              {children}
+            </p>
+          ),
+
+          // Lists with proper spacing and visual hierarchy
+          ul: ({ children }) => (
+            <ul className="mb-4 space-y-1.5 ml-4 list-disc marker:text-slate-400">
+              {children}
+            </ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="mb-4 space-y-1.5 ml-4 list-decimal marker:text-slate-500 marker:font-medium">
+              {children}
+            </ol>
+          ),
+          li: ({ children }) => (
+            <li className="text-sm leading-relaxed text-slate-700 pl-1">
+              {children}
+            </li>
+          ),
+
+          // Emphasis and strong text
+          strong: ({ children }) => (
+            <strong className="font-semibold text-slate-900">{children}</strong>
+          ),
+          em: ({ children }) => (
+            <em className="font-medium text-slate-800">{children}</em>
+          ),
+
+          // Tables with clean styling
+          table: ({ children }) => (
+            <div className="overflow-x-auto mb-4">
+              <table className="min-w-full border border-slate-200 rounded-md">
+                {children}
+              </table>
+            </div>
+          ),
+          thead: ({ children }) => (
+            <thead className="bg-slate-50">{children}</thead>
+          ),
+          th: ({ children }) => (
+            <th className="px-3 py-2 text-left text-xs font-semibold text-slate-600 border-b border-slate-200">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="px-3 py-2 text-sm text-slate-700 border-b border-slate-100">
+              {children}
+            </td>
+          ),
+
+          // Blockquotes for important information
+          blockquote: ({ children }) => (
+            <div className="border-l-3 border-amber-400 bg-amber-50 px-4 py-3 mb-4 rounded-r-md">
+              <div className="text-sm text-amber-800">{children}</div>
+            </div>
+          ),
+
+          // Code for technical terms
+          code: ({ children }) => (
+            <code className="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded text-xs font-mono">
+              {children}
+            </code>
+          ),
+
+          // Horizontal rules for section breaks
+          hr: () => (
+            <hr className="border-0 border-t border-slate-200 my-6" />
+          ),
+
+          // Links with clear styling
+          a: ({ children, href }) => (
+            <a
+              href={href}
+              className="text-primary hover:text-primary-hover underline underline-offset-2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {children}
+            </a>
+          ),
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    </div>
+  )
+}
+
 // Dynamic response renderer based on response type
-function ResponseRenderer({ data, fallbackSources }: { data: ChatResponse; fallbackSources?: string[] }) {
+function ResponseRenderer({ data, fallbackSources }: { data: ChatResponse | { type: 'markdown'; text: string }; fallbackSources?: string[] }) {
   switch (data.type) {
+    case 'markdown':
+      return <MarkdownRenderer text={data.text} />
     case 'steps':
       return <StepsRenderer data={data} />
     case 'checklist':
@@ -28,7 +146,7 @@ interface UserMessageProps {
 
 interface AIMessageProps {
   variant: 'ai'
-  content: ChatResponse
+  content: ChatResponse | { type: 'markdown'; text: string }
   sources?: string[]
   timestamp?: string
 }

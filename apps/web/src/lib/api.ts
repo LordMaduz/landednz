@@ -154,7 +154,6 @@ export async function streamChat(
   onChunk: (text: string) => void,
   onDone: () => void,
   onError: (message: string) => void,
-  onStructured?: (structuredJson: string) => void,
 ): Promise<void> {
   const res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
     method: 'POST',
@@ -188,9 +187,6 @@ export async function streamChat(
         try {
           const event = JSON.parse(line.slice(6))
           if (event.type === 'chunk') onChunk(event.text)
-          else if (event.type === 'structured') {
-            if (onStructured) onStructured(event.content)
-          }
           else if (event.type === 'done') { onDone(); return }
           else if (event.type === 'error') { onError(event.message); return }
         } catch { /* skip malformed SSE lines */ }
