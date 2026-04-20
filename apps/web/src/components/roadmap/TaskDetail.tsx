@@ -105,9 +105,10 @@ interface TaskDetailProps {
   task: TaskListItem
   onBack: () => void
   onComplete: () => Promise<void>
+  onOpenChat?: () => void
 }
 
-export function TaskDetail({ task, onBack, onComplete }: TaskDetailProps) {
+export function TaskDetail({ task, onBack, onComplete, onOpenChat }: TaskDetailProps) {
   const [tipsOpen, setTipsOpen] = useState(false)
   const [isCompleting, setIsCompleting] = useState(false)
   const { detail } = task
@@ -286,7 +287,7 @@ export function TaskDetail({ task, onBack, onComplete }: TaskDetailProps) {
       <div className="space-y-4 border-t border-border pt-6">
         {/* Ask a question — Chat wired in AC-W4-10 */}
         <button
-          onClick={() => {/* Chat wired in AC-W4-10 */}}
+          onClick={onOpenChat}
           className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-button border border-border text-small font-medium text-text-primary hover:border-border-hover hover:bg-primary-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">

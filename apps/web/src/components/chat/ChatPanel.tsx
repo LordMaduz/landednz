@@ -37,9 +37,10 @@ interface ChatPanelProps {
   onClose: () => void
   entryContext?: ChatEntryPoint
   token: string | null
+  taskId?: string
 }
 
-export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
+export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelProps) {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -58,7 +59,7 @@ export function ChatPanel({ onClose, entryContext, token }: ChatPanelProps) {
       }
 
       try {
-        const result = await createChatSession(entryContext ?? 'ROADMAP', token)
+        const result = await createChatSession(entryContext ?? 'ROADMAP', token, taskId)
         setSessionId(result.sessionId)
         setMessages([{
           id: '1',

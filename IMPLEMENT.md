@@ -256,7 +256,7 @@
 | AC-W4-08 | Mark as done: optimistic update + rollback on failure | PASS | sonner installed. completeTask() in api.ts. RoadmapView: useState for roadmapData, handleComplete() optimistic→POST→re-fetch→setSelectedTask(null), rollback+toast on failure. TaskDetail: onComplete prop, isCompleting state, both buttons disabled+loading text. tsc clean. Code-reviewer CONDITIONAL PASS (pre-existing console.error from AC-W4-07, not blocked). |
 | AC-W4-09 | Chat SSE streaming, tokens progressive, citations render | PASS | createChatSession() + streamChat() in api.ts (fetch+ReadableStream). Layout async→token→ChatWidget→ChatPanel. Mock step-machine replaced: session init on mount, streamingTextRef for closure safety, thinking indicator→streaming bubble→finalised message. Source regex extracts NZ domains. 403→subscription error. tsc clean. Code-reviewer PASS. |
 | AC-W4-09b | Structured chat responses: detect patterns, render with existing components | PASS | chat-parser.ts module: parseResponse() detects ordered/unordered lists→Steps/Checklist, urgency→Alert, fallback→Plain. stripMarkdown() removes **bold**/italic/code. Sources top-level in AIMessage. 20/20 Vitest tests pass. Code-reviewer PASS. |
-| AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | — | |
+| AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | PASS | Created chatStore.ts minimal Zustand store (isOpen, entryPoint, taskId). ChatWidget uses store instead of local useState. FAB→open('ROADMAP'), TaskDetail "Ask a question"→open('TASK_CARD', taskId). ChatPanel forwards taskId to createChatSession(). Code-reviewer PASS. |
 | AC-W4-11 | Premium gate upgrade → Stripe Checkout → return | — | |
 | AC-W4-12 | Premium gate defer + decline paths work | — | |
 | AC-W4-13 | All loading states use skeleton components | — | |
@@ -337,6 +337,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W4-10] Chat entry-point-aware implementation complete: Created minimal chatStore.ts (isOpen, entryPoint, taskId, open(), close()) as cross-component bridge between server layout and page components. ChatWidget migrated from local useState to store. FAB button → open('ROADMAP'), TaskDetail "Ask a question" → open('TASK_CARD', taskId). ChatPanel forwards taskId to createChatSession() — backend validates TASK_CARD requires taskContext. Store designed to be extended by AC-W4-15. TypeScript fix: taskId ?? undefined for prop compatibility (null vs undefined). Code-reviewer PASS.
 
 - [AC-W4-09b] Structured chat response parsing complete: chat-parser.ts pure module extracts pattern detection from ChatPanel. TDD approach: 20 tests written first (RED) → implementation (GREEN). Key patterns: ordered lists (≥2) → Steps, unordered + document keywords → Checklist, unordered only → Steps, short urgency (≤5 lines) → Alert, fallback → Plain. stripMarkdown() removes **bold**/*italic*/`code`. Sources promoted to top-level AIMessage.sources field (not content.sources) so ChatMessage renders source footer. Document keyword regex refined: avoid false positives on action verbs ("bring your ID" → Steps not Checklist). All 20/20 tests pass, Code-reviewer PASS.
 

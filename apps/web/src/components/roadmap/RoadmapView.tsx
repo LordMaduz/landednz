@@ -8,6 +8,7 @@ import { TaskRow } from './TaskRow'
 import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
+import { useChatStore } from '@/lib/stores/chatStore'
 import { mapApiPhasesToWeb, mapApiTaskToListItem, mapApiTaskDetail } from '@/lib/roadmap-mapper'
 import { getTaskDetail, completeTask, getRoadmap } from '@/lib/api'
 import { toast } from 'sonner'
@@ -83,6 +84,7 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
         task={selectedTask}
         onBack={() => setSelectedTask(null)}
         onComplete={() => handleComplete(selectedTask.taskId)}
+        onOpenChat={() => useChatStore.getState().open('TASK_CARD', selectedTask.taskId)}
       />
     )
   }
