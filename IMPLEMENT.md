@@ -258,8 +258,8 @@
 | AC-W4-09b | Structured chat responses: detect patterns, render with existing components | PASS | chat-parser.ts module: parseResponse() detects ordered/unordered lists→Steps/Checklist, urgency→Alert, fallback→Plain. stripMarkdown() removes **bold**/italic/code. Sources top-level in AIMessage. 20/20 Vitest tests pass. Code-reviewer PASS. |
 | AC-W4-10 | Chat entry-point-aware: TASK_CARD vs ROADMAP vs NAV | PASS | Created chatStore.ts minimal Zustand store (isOpen, entryPoint, taskId). ChatWidget uses store instead of local useState. FAB→open('ROADMAP'), TaskDetail "Ask a question"→open('TASK_CARD', taskId). ChatPanel forwards taskId to createChatSession(). Code-reviewer PASS. |
 | AC-W4-11 | Premium gate upgrade → Stripe Checkout → return | DEFERRED | Requires Stripe account setup + Phase 3 backend (subscription activation). Dependencies exceed Web Stage 4 scope. |
-| AC-W4-12 | Premium gate defer + decline paths work | — | |
-| AC-W4-13 | All loading states use skeleton components | — | |
+| AC-W4-12 | Premium gate defer + decline paths work | DEFERRED | "Remind me" defer path requires Phase 3 backend (email reminder — AC-3-10). Decline/banner visual-only already implemented in Stage 3. Full wiring deferred with Phase 3. |
+| AC-W4-13 | All loading states use skeleton components | PASS | loading.tsx (roadmap page skeleton via App Router convention), TaskDetail skeleton when detail===undefined, ChatPanel skeleton when sessionId===null. tsc clean. Code-reviewer PASS. |
 | AC-W4-14 | Error handling: network, 401, 500, chat failure | — | |
 | AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | — | |
 | AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | — | |
@@ -337,6 +337,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W4-13] Loading skeletons: 3 locations. (1) loading.tsx — Next.js App Router convention, auto-shows during RSC server fetch, no extra wiring needed. (2) TaskDetail — detail===undefined is the loading signal (optional field, undefined=not fetched, object=loaded). 3-way conditional: undefined→skeleton, object→content, falsy fallback→"coming soon". (3) ChatPanel — sessionId===null && !sessionError is the init window before createChatSession() resolves. Code-reviewer PASS.
 
 - [AC-W4-11] DEFERRED: Stripe Checkout integration. Blocking issues: (1) No Stripe account/keys configured, (2) Phase 3 backend deferred — no subscription webhook processing, (3) `stripe` npm package not installed. Would require Stripe test account setup + price configuration + subscription backend work that exceeds Web Stage 4 scope. Will revisit when Phase 3 monetisation is unblocked. PremiumGateCard onUpgrade remains placeholder callback.
 

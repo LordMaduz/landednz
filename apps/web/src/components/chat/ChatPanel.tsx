@@ -5,6 +5,7 @@ import type { ChatEntryPoint } from '@landednz/types'
 import type { ChatResponse } from '@/types/chat'
 import { ChatMessage } from './ChatMessage'
 import { ThinkingIndicator } from './ThinkingIndicator'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { createChatSession, streamChat } from '@/lib/api'
 
 // Extract NZ government/official domains from LLM response text.
@@ -192,7 +193,12 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-3 py-4 min-h-0" style={{ height: 0 }}>
-        {sessionError ? (
+        {sessionId === null && !sessionError ? (
+          <div className="p-4 space-y-3">
+            <Skeleton variant="text-line" width="w-3/4" className="h-12 rounded-xl" />
+            <Skeleton variant="text-line" width="w-1/2" className="h-8 rounded-xl ml-auto" />
+          </div>
+        ) : sessionError ? (
           <div className="p-4">
             <div className="bg-error-light border border-error rounded-button px-4 py-3">
               <p className="text-small text-text-primary">{sessionError}</p>

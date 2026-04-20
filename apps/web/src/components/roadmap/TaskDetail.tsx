@@ -2,7 +2,42 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils/cn'
+import { Skeleton } from '@/components/ui/Skeleton'
 import type { TaskListItem, TaskCardState } from '@/types/web'
+
+function TaskDetailLoadingSkeleton() {
+  return (
+    <div className="mb-8 space-y-6">
+      {/* Steps skeleton */}
+      <div>
+        <Skeleton variant="text-line" width="w-32" className="mb-4 h-5" />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-4">
+              <Skeleton variant="circle" className="w-7 h-7 flex-shrink-0" />
+              <Skeleton variant="text-line" className="flex-1 h-4 mt-1.5" />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Documents skeleton */}
+      <div>
+        <Skeleton variant="text-line" width="w-40" className="mb-3 h-5" />
+        <div className="bg-bg rounded-lg overflow-hidden">
+          {[1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-2 px-4 py-3 border-b border-border last:border-0">
+              <Skeleton variant="circle" className="w-2 h-2 flex-shrink-0" />
+              <Skeleton variant="text-line" className="flex-1 h-4" />
+              <Skeleton variant="text-line" width="w-16" className="h-4" />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Source card skeleton */}
+      <Skeleton variant="card" className="h-20" />
+    </div>
+  )
+}
 
 // ── Status icon (22px variant for detail header) ──────────────────────────────
 
@@ -164,7 +199,9 @@ export function TaskDetail({ task, onBack, onComplete, onOpenChat }: TaskDetailP
         <p className="text-small text-text-secondary">{task.consequenceLine}</p>
       </div>
 
-      {detail ? (
+      {detail === undefined ? (
+        <TaskDetailLoadingSkeleton />
+      ) : detail ? (
         <>
           {/* Why now — only if provided */}
           {detail.whyNow && (
