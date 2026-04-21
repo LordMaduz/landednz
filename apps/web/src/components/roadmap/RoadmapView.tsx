@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { HeroCard } from './HeroCard'
 import { FilterTabs } from './FilterTabs'
 import { PhaseSection } from './PhaseSection'
@@ -28,6 +29,7 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   const [gateState, setGateState] = useState<PremiumGateState>('full')
   const [roadmapData, setRoadmapData] = useState<RoadmapApiResponse | null>(initialData)
   const { activeHint, dismissHint } = useOnboardingStore()
+  const router = useRouter()
 
   // Derive data from local roadmap state
   const phases = roadmapData ? mapApiPhasesToWeb(roadmapData.phases) : []
@@ -74,8 +76,39 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
     } catch (error) {
       // AC-W4-14 adds proper error UI — for now, detail stays undefined (shows fallback text)
       // Note: Using console.error temporarily until web structured logging is added
+      // Handle 401 unauthorized error — redirect to sign in
+      if ((error as { status?: number }).status === 401) {
+        router.push('/auth/signin?redirect=/roadmap')
+        return
+      }
       console.error('Failed to load task detail:', error)
     }
+  }
+
+  // Show inline error when no roadmap data could be loaded
+  if (roadmapData === null && initialData === null) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="bg-error-light border border-error rounded-button px-6 py-8 max-w-md text-center">
+          <div className="w-12 h-12 rounded-full bg-error flex items-center justify-center mx-auto mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
+              <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+          <h2 className="text-small font-semibold text-text-primary mb-2">We couldn't load your roadmap</h2>
+          <p className="text-small text-text-secondary mb-6">
+            There was an error loading your settlement tasks. Please refresh the page to try again.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full px-4 py-3 rounded-button bg-primary text-text-inverse text-small font-semibold hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2"
+          >
+            Refresh page
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (selectedTask) {

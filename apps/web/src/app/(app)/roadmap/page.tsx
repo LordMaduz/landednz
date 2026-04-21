@@ -15,11 +15,24 @@ export default async function RoadmapPage() {
     const data = await getRoadmap(session.access_token)
     return <RoadmapView initialData={data} token={session.access_token} />
   } catch (err: unknown) {
-    if ((err as { status?: number }).status === 404) {
+    const status = (err as { status?: number }).status
+
+    if (status === 404) {
       // No profile exists — redirect to onboarding (fixes first-time user flow)
       redirect('/onboarding')
     }
-    // Other errors: pass null to show empty roadmap (AC-W4-14 handles error UI)
+
+    if (status === 401) {
+      // Unauthorized — redirect to sign in with return URL
+      redirect('/auth/signin?redirect=/roadmap')
+    }
+
+    // Network errors (no status) — re-throw to let error.tsx boundary handle
+    if (!status) {
+      throw err
+    }
+
+    // Server errors (5xx, other 4xx) — pass null to show inline error in RoadmapView
     return <RoadmapView initialData={null} token={session.access_token} />
   }
 }

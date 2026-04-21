@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ChatEntryPoint } from '@landednz/types'
 import type { ChatResponse } from '@/types/chat'
 import { ChatMessage } from './ChatMessage'
@@ -50,6 +51,7 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
   const [sessionError, setSessionError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const router = useRouter()
 
   // Initialise chat session on mount — get sessionId + personalised opening message from API
   useEffect(() => {
@@ -70,6 +72,12 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
         }])
       } catch (error: unknown) {
         const status = (error as { status?: number }).status
+
+        if (status === 401) {
+          router.push('/auth/signin?redirect=/roadmap')
+          return
+        }
+
         if (status === 403) {
           setSessionError('Chat requires a premium subscription. Upgrade to access the AI advisor.')
         } else {
@@ -134,6 +142,12 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
         streamingTextRef.current = ''
       },
       (errorMessage: string) => {
+        // Handle 401 unauthorized — redirect to sign in
+        if (errorMessage.includes('401') || errorMessage.toLowerCase().includes('unauthorized')) {
+          router.push('/auth/signin?redirect=/roadmap')
+          return
+        }
+
         setMessages(prev => [...prev, {
           id: Date.now().toString(),
           variant: 'ai',
