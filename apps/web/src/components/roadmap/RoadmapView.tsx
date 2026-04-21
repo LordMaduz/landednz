@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { HeroCard } from './HeroCard'
 import { FilterTabs } from './FilterTabs'
@@ -10,6 +10,7 @@ import { TaskDetail } from './TaskDetail'
 import { FirstUseHint } from './FirstUseHint'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
 import { useChatStore } from '@/lib/stores/chatStore'
+import { useRoadmapStore } from '@/lib/stores/roadmapStore'
 import { mapApiPhasesToWeb, mapApiTaskToListItem, mapApiTaskDetail } from '@/lib/roadmap-mapper'
 import { getTaskDetail, completeTask, getRoadmap } from '@/lib/api'
 import { toast } from 'sonner'
@@ -24,12 +25,26 @@ interface RoadmapViewProps {
 }
 
 export function RoadmapView({ initialData, token }: RoadmapViewProps) {
-  const [filter, setFilter] = useState<FilterValue>('all')
-  const [selectedTask, setSelectedTask] = useState<TaskListItem | null>(null)
-  const [gateState, setGateState] = useState<PremiumGateState>('full')
-  const [roadmapData, setRoadmapData] = useState<RoadmapApiResponse | null>(initialData)
+  const {
+    roadmapData,
+    filter,
+    selectedTask,
+    gateState,
+    setRoadmapData,
+    setFilter,
+    setSelectedTask,
+    updateSelectedTask,
+    setGateState,
+  } = useRoadmapStore()
   const { activeHint, dismissHint } = useOnboardingStore()
   const router = useRouter()
+
+  // Hydrate store from initialData on mount if store is empty
+  useEffect(() => {
+    if (roadmapData === null && initialData !== null) {
+      setRoadmapData(initialData)
+    }
+  }, [initialData, roadmapData, setRoadmapData])
 
   // Derive data from local roadmap state
   const phases = roadmapData ? mapApiPhasesToWeb(roadmapData.phases) : []
@@ -72,7 +87,7 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
     try {
       const response = await getTaskDetail(task.taskId, token)
       const detail = mapApiTaskDetail(response)
-      setSelectedTask(prev => prev ? { ...prev, detail } : prev)
+      updateSelectedTask(prev => ({ ...prev, detail }))
     } catch (error) {
       // AC-W4-14 adds proper error UI — for now, detail stays undefined (shows fallback text)
       // Note: Using console.error temporarily until web structured logging is added

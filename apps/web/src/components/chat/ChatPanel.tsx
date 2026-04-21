@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ChatEntryPoint } from '@landednz/types'
-import type { ChatResponse } from '@/types/chat'
+import type { ChatResponse, Message, UserMessage, AIMessage } from '@/types/chat'
 import { ChatMessage } from './ChatMessage'
 import { ThinkingIndicator } from './ThinkingIndicator'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { createChatSession, streamChat } from '@/lib/api'
+import { useChatStore } from '@/lib/stores/chatStore'
 
 // Extract NZ government/official domains from LLM response text.
 // Only domains actually mentioned in the response are shown as sources.
@@ -18,23 +19,6 @@ function extractSources(text: string): string[] {
   return matches.filter((domain, index) => matches.indexOf(domain) === index)
 }
 
-interface UserMessage {
-  id: string
-  variant: 'user'
-  content: string
-  timestamp: string
-}
-
-interface AIMessage {
-  id: string
-  variant: 'ai'
-  content: ChatResponse | { type: 'markdown'; text: string }  // Allow simple markdown type
-  sources?: string[]           // top-level — ChatMessage reads this for source footer
-  timestamp: string
-}
-
-type Message = UserMessage | AIMessage
-
 interface ChatPanelProps {
   onClose: () => void
   entryContext?: ChatEntryPoint
@@ -43,11 +27,18 @@ interface ChatPanelProps {
 }
 
 export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelProps) {
-  const [sessionId, setSessionId] = useState<string | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const {
+    messages,
+    isStreaming,
+    streamingText,
+    sessionId,
+    setMessages,
+    addMessage,
+    setStreaming,
+    setStreamingText,
+    setSessionId,
+  } = useChatStore()
   const [input, setInput] = useState('')
-  const [isStreaming, setIsStreaming] = useState(false)
-  const [streamingText, setStreamingText] = useState('')
   const [sessionError, setSessionError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -112,9 +103,9 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
       timestamp: 'Just now',
     }
 
-    setMessages(prev => [...prev, userMessage])
+    addMessage(userMessage)
     setInput('')
-    setIsStreaming(true)
+    setStreaming(true)
     setStreamingText('')
     streamingTextRef.current = ''
 
@@ -130,14 +121,14 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
         // Simple approach: just clean up the final response with good typography
         const finalText = streamingTextRef.current
         const sources = extractSources(finalText)
-        setMessages(prev => [...prev, {
+        addMessage({
           id: Date.now().toString(),
           variant: 'ai',
           content: { type: 'markdown', text: finalText },
           sources: sources.length > 0 ? sources : undefined,
           timestamp: 'Just now',
-        }])
-        setIsStreaming(false)
+        })
+        setStreaming(false)
         setStreamingText('')
         streamingTextRef.current = ''
       },
@@ -148,13 +139,13 @@ export function ChatPanel({ onClose, entryContext, token, taskId }: ChatPanelPro
           return
         }
 
-        setMessages(prev => [...prev, {
+        addMessage({
           id: Date.now().toString(),
           variant: 'ai',
           content: { type: 'plain', text: `Sorry, something went wrong: ${errorMessage}` },
           timestamp: 'Just now',
-        }])
-        setIsStreaming(false)
+        })
+        setStreaming(false)
         setStreamingText('')
         streamingTextRef.current = ''
       },

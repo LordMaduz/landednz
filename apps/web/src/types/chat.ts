@@ -63,3 +63,21 @@ export interface ChatMessage {
   content: string | ChatResponse
   timestamp: string
 }
+
+// Message types for ChatPanel component
+export interface UserMessage {
+  id: string
+  variant: 'user'
+  content: string
+  timestamp: string
+}
+
+export interface AIMessage {
+  id: string
+  variant: 'ai'
+  content: ChatResponse | { type: 'markdown'; text: string }
+  sources?: string[]
+  timestamp: string
+}
+
+export type Message = UserMessage | AIMessage

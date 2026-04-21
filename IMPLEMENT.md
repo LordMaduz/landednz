@@ -261,7 +261,7 @@
 | AC-W4-12 | Premium gate defer + decline paths work | DEFERRED | "Remind me" defer path requires Phase 3 backend (email reminder — AC-3-10). Decline/banner visual-only already implemented in Stage 3. Full wiring deferred with Phase 3. |
 | AC-W4-13 | All loading states use skeleton components | PASS | loading.tsx (roadmap page skeleton via App Router convention), TaskDetail skeleton when detail===undefined, ChatPanel skeleton when sessionId===null. tsc clean. Code-reviewer PASS. |
 | AC-W4-14 | Error handling: network, 401, 500, chat failure | PASS | Created error.tsx boundary with retry card. page.tsx: 401→redirect, network errors→re-throw. RoadmapView: null data→inline error, 401→redirect. ChatPanel: 401 session init→redirect. All design tokens (bg-error-light), no raw error strings. tsc clean. Code-reviewer PASS. |
-| AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | — | |
+| AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | PASS | Created roadmapStore.ts (roadmapData, filter, selectedTask, gateState). Extended chatStore.ts (messages, streaming state). Migrated RoadmapView + ChatPanel from useState to stores. RSC hydration pattern. Sign-out reset in SettingsView. Message types extracted to @/types/chat.ts. tsc clean. Code-reviewer PASS. |
 | AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | — | |
 
 **Web Stage 4 Gate:** —
@@ -337,6 +337,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W4-15] Zustand stores for cross-navigation persistence: (1) roadmapStore.ts — roadmapData, filter, selectedTask, gateState with RSC hydration from initialData (only if store.roadmapData === null). (2) chatStore.ts extended — messages, isStreaming, streamingText, sessionId. chatStore.close() calls reset() to clear messages (prevents stale context with new sessionId). (3) RoadmapView/ChatPanel migrated from useState to store hooks. (4) SettingsView.handleSignOut calls reset() on both stores (prevents data leaks between users). (5) Message types extracted to @/types/chat.ts (CW04 shared types). Store persistence = in-memory only across navigation, not localStorage (CW06). Code-reviewer PASS.
 
 - [AC-W4-14] Error handling complete: 4 error scenarios with proper UI treatment. (1) Network errors → error.tsx boundary with retry card (re-thrown from page.tsx). (2) 401 unauthorized → redirect to /auth/signin?redirect=/roadmap (page.tsx, RoadmapView task detail, ChatPanel session init + stream error). (3) 500 server errors → inline error card in RoadmapView when initialData===null. (4) Chat failures → 401 redirects to sign-in, others show system message. All error UI uses design tokens (bg-error-light, border-error, text-error). No raw error.message exposed to users. Code-reviewer PASS.
 

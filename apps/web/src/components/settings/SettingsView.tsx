@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LogOut, User, Star,Bell, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useRoadmapStore } from '@/lib/stores/roadmapStore'
+import { useChatStore } from '@/lib/stores/chatStore'
 import { SectionCard } from './SectionCard'
 import { FieldRow } from './FieldRow'
 import { Toggle } from './Toggle'
@@ -27,6 +29,10 @@ export function SettingsView({
   const [showDeleteModal, setShowDeleteModal] = useState(initialDeleteModalOpen)
 
   const handleSignOut = async () => {
+    // Reset stores before sign out to clear user data
+    useRoadmapStore.getState().reset()
+    useChatStore.getState().reset()
+
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/')
