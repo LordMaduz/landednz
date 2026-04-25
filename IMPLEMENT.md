@@ -262,7 +262,7 @@
 | AC-W4-13 | All loading states use skeleton components | PASS | loading.tsx (roadmap page skeleton via App Router convention), TaskDetail skeleton when detail===undefined, ChatPanel skeleton when sessionId===null. tsc clean. Code-reviewer PASS. |
 | AC-W4-14 | Error handling: network, 401, 500, chat failure | PASS | Created error.tsx boundary with retry card. page.tsx: 401→redirect, network errors→re-throw. RoadmapView: null data→inline error, 401→redirect. ChatPanel: 401 session init→redirect. All design tokens (bg-error-light), no raw error strings. tsc clean. Code-reviewer PASS. |
 | AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | PASS | Created roadmapStore.ts (roadmapData, filter, selectedTask, gateState). Extended chatStore.ts (messages, streaming state). Migrated RoadmapView + ChatPanel from useState to stores. RSC hydration pattern. Sign-out reset in SettingsView. Message types extracted to @/types/chat.ts. tsc clean. Code-reviewer PASS. |
-| AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | — | |
+| AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | PASS | Real Supabase auth flow implemented. Complete journey test: scope→questions→reveal→roadmap→task completion. Code-reviewer PASS. |
 
 **Web Stage 4 Gate:** —
 
