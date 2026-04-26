@@ -2,9 +2,9 @@ import { FastifyInstance } from 'fastify';
 import { logger } from '../../shared/logger';
 import { AppError } from '../../shared/errors';
 import { authenticateRequest } from '../../shared/middleware/auth';
-import { createProfile, updateProfileAndRegenerateRoadmap } from './onboarding.service';
+import { createProfile, updateProfileAndRegenerateRoadmap, getUserProfile } from './onboarding.service';
 import { db } from '../../shared/db';
-import type { CreateProfileRequest, CreateProfileResponse } from './onboarding.types';
+import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types';
 
 export function registerOnboardingRoutes(app: FastifyInstance): void {
   // POST /onboarding/profile
@@ -82,6 +82,22 @@ export function registerOnboardingRoutes(app: FastifyInstance): void {
         roadmapRegenerated: true,
         entriesCreated: result.entriesCreated
       };
+
+      reply.status(200).send(response);
+    },
+  );
+
+  // GET /onboarding/profile
+  // Retrieves the current user's profile data for settings display
+  app.get(
+    '/onboarding/profile',
+    { preHandler: authenticateRequest },
+    async (request, reply) => {
+      const result = await getUserProfile(request.userId);
+
+      logger.info({ userId: request.userId, profileId: result.profileId }, 'Profile retrieved');
+
+      const response: GetProfileResponse = result;
 
       reply.status(200).send(response);
     },

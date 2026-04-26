@@ -6,7 +6,7 @@ import { LogOut, User, Star, Bell, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRoadmapStore } from '@/lib/stores/roadmapStore'
 import { useChatStore } from '@/lib/stores/chatStore'
-import { updateOnboardingProfile, type UserProfile } from '@/lib/api'
+import { updateOnboardingProfile, getOnboardingProfile, type UserProfile, type GetProfileResponse } from '@/lib/api'
 import { toast } from 'sonner'
 import { SectionCard } from './SectionCard'
 import { FieldRow } from './FieldRow'
@@ -33,31 +33,47 @@ export function SettingsView({
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
+  const [settlementProfile, setSettlementProfile] = useState<GetProfileResponse | null>(null)
+  const [isLoadingSettlementProfile, setIsLoadingSettlementProfile] = useState(true)
 
-  // Fetch user profile from Supabase session
+  // Fetch user profile and settlement profile data
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchProfiles = async () => {
       try {
         const supabase = createClient()
         const { data: { session } } = await supabase.auth.getSession()
 
         if (session?.user) {
+          // Set basic user profile from Supabase
           setUserProfile({
             id: session.user.id,
             email: session.user.email || 'No email',
             name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
             provider: session.user.app_metadata?.provider || 'unknown'
           })
+
+          // Fetch settlement profile from API
+          try {
+            const settlementData = await getOnboardingProfile(session.access_token)
+            setSettlementProfile(settlementData)
+          } catch (error: any) {
+            if (error.status !== 404) {
+              console.error('Failed to fetch settlement profile:', error)
+              toast.error('Failed to load settlement profile data')
+            }
+            // 404 is ok - user hasn't completed onboarding yet
+          }
         }
       } catch (error) {
-        console.error('Failed to fetch user profile:', error)
+        console.error('Failed to fetch profiles:', error)
         toast.error('Failed to load profile data')
       } finally {
         setIsLoadingProfile(false)
+        setIsLoadingSettlementProfile(false)
       }
     }
 
-    fetchUserProfile()
+    fetchProfiles()
   }, [])
 
   const handleSignOut = async () => {
@@ -100,6 +116,14 @@ export function SettingsView({
         // Clear roadmap store to force refresh
         useRoadmapStore.getState().reset()
 
+        // Refresh settlement profile data
+        try {
+          const updatedProfile = await getOnboardingProfile(session.access_token)
+          setSettlementProfile(updatedProfile)
+        } catch (error) {
+          console.error('Failed to refresh settlement profile:', error)
+        }
+
         // Refresh the page to reload roadmap data
         router.refresh()
       } else {
@@ -120,7 +144,7 @@ export function SettingsView({
 
       {/* Profile Section */}
       <SectionCard icon={User} title="Profile">
-        {isLoadingProfile ? (
+        {isLoadingProfile || isLoadingSettlementProfile ? (
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
           </div>
@@ -272,8 +296,14 @@ export function SettingsView({
         open={showUpdateModal}
         onClose={() => setShowUpdateModal(false)}
         onConfirm={handleUpdateProfile}
-        currentProfile={{
-          visaType: 'AEWV', // Default selection - user will update with their actual info
+        currentProfile={settlementProfile ? {
+          visaType: settlementProfile.visaType,
+          city: settlementProfile.city,
+          familySituation: settlementProfile.familySituation,
+          occupation: settlementProfile.occupation
+        } : {
+          // Fallback defaults if settlement profile not loaded
+          visaType: 'AEWV',
           city: 'AUCKLAND',
           familySituation: 'SOLO',
           occupation: 'OTHER_PROFESSIONAL'

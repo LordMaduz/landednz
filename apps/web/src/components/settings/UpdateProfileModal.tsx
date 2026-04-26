@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AlertTriangle, X, Briefcase, Users, FileText, Home, Compass, Building, Building2, Mountain, MapPin, User, Heart, Monitor, Stethoscope, GraduationCap, Calculator, Wrench, Search } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import type { VisaType, City, FamilySituation, Occupation } from '@landednz/types'
@@ -61,6 +61,11 @@ const occupationOptions = [
 export function UpdateProfileModal({ open, onClose, onConfirm, currentProfile, isUpdating = false }: UpdateProfileModalProps) {
   const [selectedProfile, setSelectedProfile] = useState(currentProfile)
   const [confirmationText, setConfirmationText] = useState('')
+
+  // Update internal state when currentProfile prop changes (after API call completes)
+  useEffect(() => {
+    setSelectedProfile(currentProfile)
+  }, [currentProfile])
 
   const isValid = confirmationText === 'UPDATE MY PROFILE'
 

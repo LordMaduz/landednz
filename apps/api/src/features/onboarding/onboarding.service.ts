@@ -8,7 +8,7 @@ import { filterApplicableTasks } from '../../core/priority/filter';
 import { derivePersonaKey } from '../../core/priority/filter';
 import { resolveBlockedTasks } from '../../core/dependencies/resolver';
 import { scoreTask } from '../../core/priority/scoring';
-import type { CreateProfileRequest, CreateProfileResponse } from './onboarding.types';
+import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types';
 import type { PersonaKey } from '../../shared/types';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -258,4 +258,26 @@ export async function updateProfileAndRegenerateRoadmap(
       entriesCreated: roadmapEntries.length
     };
   });
+}
+
+// ─── getUserProfile() ────────────────────────────────────────────────────────
+
+export async function getUserProfile(userId: string): Promise<GetProfileResponse> {
+  const profile = await db.userProfile.findUnique({
+    where: { userId }
+  });
+
+  if (!profile) {
+    throw new AppError('PROFILE_NOT_FOUND', 'No profile found for this user', 404);
+  }
+
+  return {
+    profileId: profile.id,
+    visaType: profile.visaType,
+    city: profile.city,
+    familySituation: profile.familySituation,
+    occupation: profile.occupation,
+    arrivalDate: profile.arrivalDate.toISOString().split('T')[0], // Convert to ISO date string
+    personaKey: profile.personaKey as PersonaKey
+  };
 }

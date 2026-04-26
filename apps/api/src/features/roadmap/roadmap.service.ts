@@ -5,6 +5,7 @@
 import { db } from '../../shared/db';
 import { logger } from '../../shared/logger';
 import { AppError } from '../../shared/errors';
+import { config } from '../../shared/config';
 import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver';
 import { scoreTask } from '../../core/priority/scoring';
 import type { PersonaKey } from '../../shared/types';
@@ -355,7 +356,8 @@ export async function getTaskDetail(
   const { task } = entry;
 
   // 2. PREMIUM gate — check subscription before returning any detail
-  if (task.taskType === 'PREMIUM') {
+  // During beta, all users have premium access
+  if (task.taskType === 'PREMIUM' && !config.betaMode) {
     const sub = await db.subscription.findUnique({ where: { userId } });
     if (!sub || !sub.isActive) {
       throw new AppError('PREMIUM_REQUIRED', 'An active subscription is required to view this task', 403);

@@ -4,6 +4,7 @@ import { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db';
 import { logger } from '../../shared/logger';
 import { AppError } from '../../shared/errors';
+import { config } from '../../shared/config';
 import { authenticateRequest } from '../../shared/middleware/auth';
 import { createChatSession, sendMessage } from './service';
 import type { CreateSessionRequest, CreateSessionResponse, SendMessageRequest } from './chat.types';
@@ -30,13 +31,16 @@ export function registerChatRoutes(app: FastifyInstance): void {
 
       // Subscription gate — AC-4-13
       // Chat is a premium feature — check if user has active subscription
-      const subscription = await db.subscription.findUnique({
-        where: { userId: request.userId },
-        select: { isActive: true },
-      });
+      // During beta, all users have premium access
+      if (!config.betaMode) {
+        const subscription = await db.subscription.findUnique({
+          where: { userId: request.userId },
+          select: { isActive: true },
+        });
 
-      if (!subscription?.isActive) {
-        throw new AppError('SUBSCRIPTION_REQUIRED', 'Active subscription required for chat', 403);
+        if (!subscription?.isActive) {
+          throw new AppError('SUBSCRIPTION_REQUIRED', 'Active subscription required for chat', 403);
+        }
       }
 
       // Create session via service

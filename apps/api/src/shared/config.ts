@@ -22,4 +22,6 @@ export const config = {
   anthropicModel: requireEnv('ANTHROPIC_MODEL'),
   // OpenAI API — required for RAG embeddings (text-embedding-3-small, 1536 dims)
   openaiApiKey: requireEnv('OPENAI_API_KEY'),
+  // Beta mode — if true, bypasses all subscription checks (all users get premium access)
+  betaMode: process.env['BETA_MODE'] === 'true',
 }

@@ -23,6 +23,16 @@ export interface SubmitProfileResult {
   isExisting?: boolean
 }
 
+export interface GetProfileResponse {
+  profileId: string
+  visaType: VisaType
+  city: City
+  familySituation: FamilySituation
+  occupation: Occupation
+  arrivalDate: string // ISO date
+  personaKey: string
+}
+
 export async function submitOnboardingProfile(
   payload: SubmitProfilePayload,
   token: string,
@@ -85,6 +95,21 @@ export async function updateOnboardingProfile(
   }
 
   throw new Error(`Profile update failed: ${res.status}`)
+}
+
+export async function getOnboardingProfile(token: string): Promise<GetProfileResponse> {
+  const res = await fetch(`${API_URL}/onboarding/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw Object.assign(new Error('Profile fetch failed'), { status: res.status })
+  }
+
+  return res.json()
 }
 
 // ─── Roadmap ──────────────────────────────────────────────────────────────────

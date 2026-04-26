@@ -13,3 +13,13 @@ export interface CreateProfileResponse {
   personaKey: PersonaKey;
   roadmapGenerated: boolean; // always true
 }
+
+export interface GetProfileResponse {
+  profileId: string;
+  visaType: VisaType;
+  city: City;
+  familySituation: FamilySituation;
+  occupation: Occupation;
+  arrivalDate: string; // ISO date
+  personaKey: PersonaKey;
+}
