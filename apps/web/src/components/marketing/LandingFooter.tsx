@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export function LandingFooter() {
   return (
     <footer className="bg-primary-darker py-10 px-6 border-t border-text-inverse/[0.06]">
@@ -21,15 +23,24 @@ export function LandingFooter() {
         </div>
 
         <div className="flex gap-6">
-          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          <Link
+            href="/privacy"
+            className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors"
+          >
             Privacy
-          </button>
-          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          </Link>
+          <Link
+            href="/terms"
+            className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors"
+          >
             Terms
-          </button>
-          <button className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors">
+          </Link>
+          <Link
+            href="/contact"
+            className="text-small text-text-inverse/35 hover:text-text-inverse/50 transition-colors"
+          >
             Contact
-          </button>
+          </Link>
         </div>
 
         <span className="text-small text-text-inverse/25">

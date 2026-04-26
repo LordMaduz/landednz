@@ -8,6 +8,7 @@ import { useReducedMotion } from '@/lib/hooks/useReducedMotion'
 import { useOnboardingStore } from '@/lib/stores/onboardingStore'
 import { createClient } from '@/lib/supabase/client'
 import { submitOnboardingProfile } from '@/lib/api'
+import { toast } from 'sonner'
 
 // Maps human-readable arrival options to approximate ISO dates for the API
 function arrivalToISODate(arrival: string): string {
@@ -85,7 +86,8 @@ export function RoadmapReveal({ answers }: RoadmapRevealProps) {
         router.push('/auth/signin')
         return
       }
-      await submitOnboardingProfile(
+
+      const result = await submitOnboardingProfile(
         {
           visaType: answers.visaType!,
           city: answers.city!,
@@ -95,7 +97,18 @@ export function RoadmapReveal({ answers }: RoadmapRevealProps) {
         },
         session.access_token,
       )
-      router.push('/roadmap')
+
+      if (result.success) {
+        router.push('/roadmap')
+      } else if (result.isExisting) {
+        // Show message for existing profile
+        setSubmitError(result.message || 'Profile already exists')
+        toast.warning('You already have a settlement plan. Redirecting to your roadmap...', {
+          duration: 3000
+        })
+        // Still redirect after delay
+        setTimeout(() => router.push('/roadmap'), 3000)
+      }
     } catch {
       setSubmitting(false)
       setSubmitError('Something went wrong. Please try again.')

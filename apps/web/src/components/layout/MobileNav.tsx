@@ -2,13 +2,13 @@
 
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Map, MessageSquare, Settings, BookOpen, Mail, Menu, X } from 'lucide-react'
+import { Map, Settings, BookOpen, Mail, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
+import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
   { href: '/roadmap', label: 'Roadmap', icon: Map },
-  { href: '/chat', label: 'Chat', icon: MessageSquare },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -20,6 +20,28 @@ const helpItems = [
 export function MobileNav() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const [userName, setUserName] = useState<string>('User')
+  const [userInitial, setUserInitial] = useState<string>('U')
+
+  // Fetch user data from Supabase session
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (session?.user) {
+          const name = session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User'
+          setUserName(name)
+          setUserInitial(name.charAt(0).toUpperCase())
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   // Close on escape
   useEffect(() => {
@@ -149,11 +171,11 @@ export function MobileNav() {
         <div className="border-t border-border p-5 mt-auto">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center shrink-0 text-caption font-semibold text-primary">
-              P
+              {userInitial}
             </div>
             <div>
-              <div className="text-secondary font-semibold text-text-primary">Priya & Karthik</div>
-              <div className="text-caption text-text-tertiary">Partner of Student Visa · Auckland</div>
+              <div className="text-secondary font-semibold text-text-primary">{userName}</div>
+              <div className="text-caption text-text-tertiary">Settlement Profile</div>
             </div>
           </div>
         </div>

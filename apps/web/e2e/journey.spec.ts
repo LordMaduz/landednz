@@ -4,10 +4,6 @@ test.describe('Full user journey', () => {
   test('sign in → onboard → roadmap → open task → mark complete → verify', async ({ page }) => {
     // Auth state already loaded from storageState (playwright-auth.json set by global-setup)
 
-    // Emulate reduced motion so RoadmapReveal skips its 2.8s animation sequence.
-    // RoadmapReveal.tsx: useState(revealComplete || reducedMotion) → showFinal=true immediately.
-    await page.emulateMedia({ reducedMotion: 'reduce' })
-
     // ── 1. Navigate to /roadmap — no profile yet → should redirect to /onboarding ──
     await page.goto('/roadmap')
     await expect(page).toHaveURL(/\/onboarding/, { timeout: 10000 })

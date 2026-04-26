@@ -17,10 +17,16 @@ export interface SubmitProfilePayload {
   arrivalDate: string // ISO date, e.g. "2024-06-15"
 }
 
+export interface SubmitProfileResult {
+  success: boolean
+  message?: string
+  isExisting?: boolean
+}
+
 export async function submitOnboardingProfile(
   payload: SubmitProfilePayload,
   token: string,
-): Promise<void> {
+): Promise<SubmitProfileResult> {
   const res = await fetch(`${API_URL}/onboarding/profile`, {
     method: 'POST',
     headers: {
@@ -30,10 +36,55 @@ export async function submitOnboardingProfile(
     body: JSON.stringify(payload),
   })
 
-  // 409 = profile already exists — treat as success so refreshes don't block the user
-  if (!res.ok && res.status !== 409) {
-    throw new Error(`Profile submission failed: ${res.status}`)
+  if (res.ok) {
+    return { success: true }
   }
+
+  if (res.status === 409) {
+    // Profile exists - return specific info
+    return {
+      success: false,
+      isExisting: true,
+      message: 'You already have a settlement plan. Redirecting to your existing roadmap...'
+    }
+  }
+
+  throw new Error(`Profile submission failed: ${res.status}`)
+}
+
+export async function updateOnboardingProfile(
+  payload: SubmitProfilePayload,
+  token: string,
+): Promise<SubmitProfileResult> {
+  const res = await fetch(`${API_URL}/onboarding/profile`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      'X-Request-Source': 'settings-page', // Simple restriction check
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (res.ok) {
+    return { success: true }
+  }
+
+  if (res.status === 404) {
+    return {
+      success: false,
+      message: 'No profile found. Please complete onboarding first.'
+    }
+  }
+
+  if (res.status === 403) {
+    return {
+      success: false,
+      message: 'Profile updates are only allowed from the settings page.'
+    }
+  }
+
+  throw new Error(`Profile update failed: ${res.status}`)
 }
 
 // ─── Roadmap ──────────────────────────────────────────────────────────────────
@@ -118,6 +169,17 @@ export async function completeTask(taskId: string, token: string): Promise<void>
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
+}
+
+// ─── User Profile ────────────────────────────────────────────────────────────
+
+// Since there's no GET profile endpoint, we get basic user data from Supabase session
+// For onboarding answers, we'll need to either add a backend GET endpoint or handle differently
+export interface UserProfile {
+  id: string
+  email: string
+  name?: string
+  provider: string
 }
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────

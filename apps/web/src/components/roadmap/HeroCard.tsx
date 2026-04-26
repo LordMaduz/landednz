@@ -1,3 +1,7 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import type { TaskListItem } from '@/types/web'
 
 interface HeroCardProps {
@@ -5,7 +9,35 @@ interface HeroCardProps {
   userName?: string
 }
 
-export function HeroCard({ tasks, userName = 'Priya' }: HeroCardProps) {
+export function HeroCard({ tasks, userName }: HeroCardProps) {
+  const [displayName, setDisplayName] = useState<string>('User')
+
+  // Fetch real user name if not provided
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (userName) {
+        setDisplayName(userName)
+        return
+      }
+
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (session?.user) {
+          const name = session.user.user_metadata?.name ||
+                      session.user.email?.split('@')[0] ||
+                      'User'
+          setDisplayName(name)
+        }
+      } catch (error) {
+        console.error('Failed to fetch user name:', error)
+        setDisplayName('User')
+      }
+    }
+
+    fetchUserName()
+  }, [userName])
   const completed = tasks.filter((t) => t.cardState === 'complete').length
   const inProgress = tasks.filter((t) => t.cardState === 'in_progress').length
   const remaining = tasks.length - completed - inProgress
@@ -19,7 +51,7 @@ export function HeroCard({ tasks, userName = 'Priya' }: HeroCardProps) {
     <div className="bg-gradient-to-br from-primary to-primary-dark rounded-card p-6 flex items-center justify-between mb-6">
       <div>
         <p className="font-display text-h2 text-text-inverse mb-1">
-          Hi {userName}
+          Hi {displayName}
         </p>
         <p className="text-small text-text-inverse/75 mb-2">
           Your First 90 Days in New Zealand

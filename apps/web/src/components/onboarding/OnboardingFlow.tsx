@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 import type { VisaType, City, FamilySituation, Occupation } from '@landednz/types'
 import type { OnboardingState } from '@/types/web'
 import {
@@ -199,11 +202,47 @@ const questions = [
 ]
 
 export function OnboardingFlow() {
+  const router = useRouter()
   const [phase, setPhase] = useState<OnboardingPhase>('scope')
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState<OnboardingState['answers']>({})
   const [animState, setAnimState] = useState<AnimationState>('entering')
+  const [checkingProfile, setCheckingProfile] = useState(true)
   const transitionTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  // Check if user already has a profile on mount
+  useEffect(() => {
+    const checkExistingProfile = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+          setCheckingProfile(false)
+          return
+        }
+
+        // Try to get roadmap - if it exists, user has completed onboarding
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roadmap`, {
+          headers: { Authorization: `Bearer ${session.access_token}` }
+        })
+
+        if (response.ok) {
+          // Profile exists - redirect with message
+          toast.info('You already have a settlement plan. Redirecting to your roadmap...', {
+            duration: 3000
+          })
+          setTimeout(() => router.push('/roadmap'), 2000)
+          return
+        }
+      } catch {
+        // No profile or error - continue with onboarding
+      }
+
+      setCheckingProfile(false)
+    }
+
+    checkExistingProfile()
+  }, [router])
 
   const handleStart = () => {
     setPhase('questions')
@@ -268,6 +307,18 @@ export function OnboardingFlow() {
     if (question.id === 'occupation') return answers.occupation
     if (question.id === 'arrival') return answers.arrivalDate
     return undefined
+  }
+
+  // Show loading while checking for existing profile
+  if (checkingProfile) {
+    return (
+      <div className="bg-bg min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-body text-text-secondary">Checking your profile...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

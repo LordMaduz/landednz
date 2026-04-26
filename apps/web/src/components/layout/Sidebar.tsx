@@ -1,17 +1,18 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Map, MessageSquare, Settings, BookOpen, Mail, ChevronRight, Menu } from 'lucide-react'
+import { Map, Settings, BookOpen, Mail, ChevronRight, Menu } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
+import { useRoadmapStore } from '@/lib/stores/roadmapStore'
+import { createClient } from '@/lib/supabase/client'
 import type { TaskCardState } from '@/types/web'
 
 const navItems = [
   { href: '/roadmap', label: 'Roadmap', icon: Map },
-  { href: '/chat', label: 'Chat', icon: MessageSquare },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -79,14 +80,38 @@ const phases: Phase[] = [
 ]
 
 const helpItems = [
-  { label: 'Resources', icon: BookOpen },
-  { label: 'Feedback', icon: Mail },
+  { label: 'Resources', icon: BookOpen, href: '/resources' },
+  { label: 'Feedback', icon: Mail, href: '/contact' },
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { setSelectedTask } = useRoadmapStore()
   const [expandedPhases, setExpandedPhases] = useState<number[]>([1])
   const [isTabletExpanded, setIsTabletExpanded] = useState(false)
+  const [userName, setUserName] = useState<string>('User')
+  const [userInitial, setUserInitial] = useState<string>('U')
+
+  // Fetch user data from Supabase session
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (session?.user) {
+          const name = session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User'
+          setUserName(name)
+          setUserInitial(name.charAt(0).toUpperCase())
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   // Close tablet overlay on escape
   useEffect(() => {
@@ -104,6 +129,25 @@ export function Sidebar() {
     setExpandedPhases(prev =>
       prev.includes(num) ? prev.filter(n => n !== num) : [...prev, num]
     )
+  }
+
+  const handleTaskClick = (taskId: string, taskName: string) => {
+    // Navigate to roadmap if not already there
+    if (pathname !== '/roadmap') {
+      router.push('/roadmap')
+    }
+
+    // Set the selected task in the store (will open task detail)
+    setSelectedTask({
+      taskId,
+      taskName: taskName,
+      consequenceLine: '',
+      estimatedDuration: '',
+      phase: 1,
+      cardState: 'not_started',
+      isPremium: false,
+      detail: undefined // Will be fetched when detail view opens
+    })
   }
 
   const NavItem = ({ item, isCollapsed }: { item: typeof navItems[0], isCollapsed: boolean }) => {
@@ -263,9 +307,10 @@ export function Sidebar() {
                 {isExpanded && !phase.premium && (
                   <div className="pl-6 pb-1 hidden xl:block">
                     {phase.tasks.map((task) => (
-                      <div
+                      <button
                         key={task.id}
-                        className="flex items-center gap-2 py-1 px-2 rounded cursor-pointer hover:bg-black/5 transition-colors motion-reduce:transition-none"
+                        onClick={() => handleTaskClick(task.id, task.name)}
+                        className="w-full flex items-center gap-2 py-1 px-2 rounded cursor-pointer hover:bg-black/5 transition-colors motion-reduce:transition-none text-left"
                       >
                         <StatusIndicator state={task.state} size="sm" />
                         <span
@@ -276,7 +321,7 @@ export function Sidebar() {
                         >
                           {task.name}
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -296,22 +341,25 @@ export function Sidebar() {
           {helpItems.map((item) => {
             const Icon = item.icon
 
-            const buttonContent = (
-              <button className="w-full flex items-center gap-2 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none">
+            const linkContent = (
+              <Link
+                href={item.href}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-button text-text-secondary hover:bg-primary-subtle transition-colors motion-reduce:transition-none"
+              >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="hidden xl:block text-small">{item.label}</span>
-              </button>
+              </Link>
             )
 
             if (!isTabletExpanded) {
               return (
                 <Tooltip key={item.label} content={item.label} position="right">
-                  {buttonContent}
+                  {linkContent}
                 </Tooltip>
               )
             }
 
-            return <div key={item.label}>{buttonContent}</div>
+            return <div key={item.label}>{linkContent}</div>
           })}
         </div>
 
@@ -319,11 +367,11 @@ export function Sidebar() {
         <div className="border-t border-border p-5 mt-auto">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center shrink-0 text-caption font-semibold text-primary">
-              P
+              {userInitial}
             </div>
             <div className="hidden xl:block">
-              <div className="text-small font-semibold text-text-primary">Priya &amp; Karthik</div>
-              <div className="text-caption text-text-tertiary">Partner of Student Visa · Auckland</div>
+              <div className="text-small font-semibold text-text-primary">{userName}</div>
+              <div className="text-caption text-text-tertiary">Settlement Profile</div>
             </div>
           </div>
         </div>
