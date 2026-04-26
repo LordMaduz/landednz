@@ -14,7 +14,7 @@ import { useRoadmapStore } from '@/lib/stores/roadmapStore'
 import { mapApiPhasesToWeb, mapApiTaskToListItem, mapApiTaskDetail } from '@/lib/roadmap-mapper'
 import { getTaskDetail, completeTask, getRoadmap } from '@/lib/api'
 import { toast } from 'sonner'
-import { PremiumGateCard } from './PremiumGateCard'
+import { BetaAccessCard } from './BetaAccessCard'
 import { PremiumBanner } from './PremiumBanner'
 import type { RoadmapApiResponse } from '@/lib/api'
 import type { FilterValue, TaskListItem, PremiumGateState } from '@/types/web'
@@ -209,10 +209,8 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
           bottomSlot={
             phase.num === 3 && gateState === 'full' && filter === 'all'
               ? <div className="mt-4">
-                  <PremiumGateCard
-                    onUpgrade={() => {}}
-                    onDefer={() => setGateState('banner')}
-                    onDecline={() => setGateState('banner')}
+                  <BetaAccessCard
+                    onDismiss={() => setGateState('dismissed')}
                   />
                 </div>
               : undefined

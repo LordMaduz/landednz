@@ -9,10 +9,10 @@ export function LandingPricing() {
     <section className="py-20 px-6 bg-bg-card">
       <div className="max-w-[880px] mx-auto">
         <p className="text-caption text-primary text-center mb-3">
-          SIMPLE PRICING
+          BETA ACCESS
         </p>
         <h2 className="font-display text-h2 text-text-primary text-center mb-8">
-          Start free. Upgrade when you&apos;re ready.
+          All premium features are free during beta.
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -56,24 +56,24 @@ export function LandingPricing() {
             </div>
           </div>
 
-          {/* Premium */}
+          {/* Beta Access */}
           <div
             onMouseEnter={() => setHoveredCard('premium')}
             onMouseLeave={() => setHoveredCard(null)}
-            className="bg-bg-card rounded-card p-8 border-2 border-primary relative overflow-hidden hover:-translate-y-1 transition-transform duration-300 cursor-default"
+            className="bg-bg-card rounded-card p-8 border-2 border-secondary relative overflow-hidden hover:-translate-y-1 transition-transform duration-300 cursor-default"
           >
-            {/* Recommended badge */}
-            <div className="absolute top-4 right-4 bg-primary text-text-inverse text-caption px-3 py-1 rounded-full">
-              Recommended
+            {/* Beta badge */}
+            <div className="absolute top-4 right-4 bg-secondary text-text-primary text-caption px-3 py-1 rounded-full font-medium">
+              Beta Access
             </div>
-            <span className="text-caption text-primary block mb-2">
-              Premium
+            <span className="text-caption text-secondary block mb-2">
+              All Features
             </span>
             <div className="flex items-baseline gap-1 mb-1">
               <span className="font-display text-h1 text-text-primary">
-                $49
+                Free
               </span>
-              <span className="text-small text-text-tertiary">/6 months</span>
+              <span className="text-small text-text-tertiary">during beta</span>
             </div>
             <p className="text-small text-text-secondary mb-6">
               Full 8-week settlement roadmap
@@ -105,13 +105,11 @@ export function LandingPricing() {
           </div>
         </div>
 
-        {/* Anchor copy */}
-        <div className="bg-warning-light border border-secondary/20 rounded-button p-4 px-6 text-center">
+        {/* Beta notice */}
+        <div className="bg-secondary-light border border-secondary/20 rounded-button p-4 px-6 text-center">
           <p className="text-body text-text-primary font-medium">
-            One week of emergency tax costs ~$240.{' '}
-            <span className="text-primary font-semibold">
-              Six months of LandedNZ costs $49.
-            </span>
+            <span className="text-secondary font-semibold">You're getting beta access!</span>{' '}
+            All premium features are free while we perfect the platform. When we launch billing, beta users get 50% off for life.
           </p>
         </div>
       </div>

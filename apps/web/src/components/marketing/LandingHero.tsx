@@ -1,6 +1,81 @@
 'use client';
 
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+
 export function LandingHero() {
+  const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [hasProfile, setHasProfile] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+
+  // Check authentication status and profile
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (session?.user) {
+          setIsAuthenticated(true)
+
+          // Check if user has completed profile by trying to fetch roadmap
+          try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roadmap`, {
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`
+              }
+            })
+            setHasProfile(response.ok)
+          } catch (error) {
+            // If roadmap fetch fails, assume no profile
+            setHasProfile(false)
+          }
+        } else {
+          setIsAuthenticated(false)
+          setHasProfile(false)
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        setIsAuthenticated(false)
+        setHasProfile(false)
+      } finally {
+        setIsCheckingAuth(false)
+      }
+    }
+
+    checkAuthStatus()
+  }, [])
+
+  // Smart button logic based on auth state
+  const getButtonState = () => {
+    if (!isAuthenticated) {
+      return {
+        text: "Build my plan",
+        action: () => router.push('/auth/signin?redirect=/onboarding')
+      }
+    }
+
+    if (!hasProfile) {
+      return {
+        text: "Build my plan",
+        action: () => router.push('/onboarding')
+      }
+    }
+
+    return {
+      text: "View my roadmap",
+      action: () => router.push('/roadmap')
+    }
+  }
+
+  const buttonState = getButtonState()
+
+  const handleButtonClick = () => {
+    buttonState.action()
+  }
+
   return (
     <section className="relative bg-hero-gradient min-h-screen flex items-center justify-center px-6 pt-20 pb-20 overflow-hidden">
       {/* Decorative circles */}
@@ -16,6 +91,14 @@ export function LandingHero() {
       />
 
       <div className="relative z-10 text-center max-w-[800px]">
+        {/* Beta Badge */}
+        <div className="fade-in-up delay-1 mb-4">
+          <div className="inline-flex items-center px-3 py-1.5 rounded-full border border-secondary/20 bg-secondary/10 text-secondary text-small font-medium">
+            <span className="w-2 h-2 bg-secondary rounded-full mr-2"></span>
+            Free Beta — All Premium Features Included
+          </div>
+        </div>
+
         {/* Eyebrow */}
         <div className="fade-in-up delay-1 mb-6">
           <span className="text-small text-secondary font-medium px-4 py-1.5 rounded-full inline-block">
@@ -39,8 +122,12 @@ export function LandingHero() {
 
         {/* CTA */}
         <div className="fade-in-up delay-4 mb-4">
-          <button className="bg-secondary text-text-primary px-12 py-4 rounded-button text-body font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform">
-            Build my plan for free
+          <button
+            onClick={handleButtonClick}
+            disabled={isCheckingAuth}
+            className="bg-secondary text-text-primary px-12 py-4 rounded-button text-body font-semibold tracking-wide hover:scale-105 active:scale-100 transition-transform disabled:opacity-50 disabled:hover:scale-100"
+          >
+            {isCheckingAuth ? "Loading..." : buttonState.text}
           </button>
         </div>
 
@@ -67,7 +154,7 @@ export function LandingHero() {
 
         {/* Trust signal */}
         <p className="fade-in delay-6 text-small text-text-inverse/[0.4] tracking-wide">
-          No account needed · No payment required · 2-minute setup
+          Beta access · No payment required · All features unlocked
         </p>
       </div>
     </section>
