@@ -299,13 +299,13 @@
 
 ## Web Stage 6 — Deployment
 
-**Status:** BLOCKED (W5 not complete)
+**Status:** IN PROGRESS
 **Research dir:** `rpi/web-stage6-deployment/research/`
 **Plans dir:** `rpi/web-stage6-deployment/plans/`
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W6-01 | Vercel deployment succeeds, production URL accessible | — | |
+| AC-W6-01 | Vercel deployment succeeds, production URL accessible | PASS | Landing page renders at production URL. vercel.json + .vercelignore for monorepo config. |
 | AC-W6-02 | All env vars configured in Vercel | — | |
 | AC-W6-03 | Google OAuth works in production | — | |
 | AC-W6-04 | Full production smoke test passes | — | |
@@ -338,6 +338,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W6-01] Vercel deployment complete: Created vercel.json with npm workspace build command (`npm run build --workspace=@landednz/web`) + .vercelignore excluding backend/mobile. Root Directory = `/` (repo root) required for `@landednz/types` workspace dependency resolution. Framework detection: `"framework": "nextjs"` + exclusions prevent Fastify backend conflict. Landing page accessible at production URL. Initial deploy used old commit without vercel.json — required manual redeploy from dashboard to use latest configuration. Code-reviewer PASS.
 
 - [AC-W5-01] Task completion animation complete: Three CSS-only animations triggered by `justCompleted` and `isNextHighlighted` props. (1) Checkmark draws in via SVG `stroke-dasharray="24"` + `.check-draw-path` animation (0.3s). (2) Card mutes via `transition-all duration-200` + existing `opacity-70` class (0.2s). (3) Next task pulse via `@keyframes taskHighlightPulse` background color animation (0.3s). Animation state managed in RoadmapView with `setTimeout(600)` cleanup. Global reduced-motion rule (`animation-duration: 0.01ms !important`) handles fallback automatically. Code-reviewer CONDITIONAL PASS: implementation meets requirements, minor timing optimization possible (cleanup at 300ms vs 600ms).
 
