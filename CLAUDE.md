@@ -134,8 +134,8 @@ Web stage sequence: W1 (Design System) → W2 (Layout Shell) → W3 (Static Scre
 |---|---|---|---|---|
 | W1 | COMPLETE | Design System — Tailwind, UI primitives, Storybook | ~20h | 17 |
 | W2 | COMPLETE | Layout Shell — sidebar, routes, responsive | ~15h | 11 |
-| W3 | BLOCKED | Static Screens — all pages with mock data | ~35h | 15 |
-| W4 | BLOCKED | API Integration — real data, auth, streaming, Stripe | ~30h | 16 |
+| W3 | COMPLETE | Static Screens — all pages with mock data | ~35h | 15 |
+| W4 | COMPLETE | API Integration — real data, auth, streaming, Stripe | ~30h | 14 PASS + 2 DEFERRED |
 | W5 | BLOCKED | Interactive Polish — animations, a11y, performance | ~20h | 16 |
 | W6 | BLOCKED | Deployment — Vercel, production, monitoring | ~10h | 10 |
 

@@ -66,9 +66,35 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 
 **State management:**
 - Server: React Server Components + API fetch
-- URL: `nuqs` for shareable state
-- Client: Zustand stores for complex interactions
+- URL: `nuqs` for shareable state  
+- Client: Zustand stores for complex interactions (roadmapStore, chatStore)
 - Auth: Supabase SSR helpers (never localStorage)
+
+**Zustand store pattern:**
+```typescript
+interface Store {
+  // State
+  data: T | null;
+  isLoading: boolean;
+  
+  // Actions
+  setData: (data: T) => void;
+  reset: () => void;
+}
+
+// RSC hydration pattern
+if (store.data === null && initialData) {
+  store.setData(initialData);
+}
+```
+
+**Chat response parsing:**
+```typescript
+// Structured responses: ordered/unordered lists → Steps/Checklist
+// Short urgency text → Alert, fallback → Plain
+const response = parseResponse(content);
+// Sources promoted to top-level for citation rendering
+```
 
 ---
 
@@ -131,6 +157,26 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - **PhaseSection slot injection pattern: topSlot/bottomSlot props for premium gates.**
   Allows content injection inside collapsible sections without breaking the fold/expand logic. Both slots render conditionally based on phase number, filter state, and premium gate state.
 
+### Stage 4 API Integration Learnings
+
+- **Supabase SSR cookie configuration for Next.js App Router.**
+  `@supabase/ssr` requires `getAll`/`setAll` cookie pattern in `createServerClient()` for Route Handlers — NOT the older `get`/`set`/`remove` pattern. Browser client (`createBrowserClient`) for client components, server client for Route Handlers. Call `POST /auth/verify` in callback to guarantee user exists in Prisma DB before onboarding.
+
+- **Playwright E2E with real Supabase auth.**
+  Never mock authentication in E2E tests. Use real auth flow: create test users via Supabase, retrieve actual JWT tokens, use in Authorization headers. Real auth gives "real confidence" without test manipulation. Mock auth patterns fail due to onRoute hook timing issues.
+
+- **Zustand store patterns for cross-navigation persistence.**
+  Store persistence = in-memory only across navigation, not localStorage (CW06). Use RSC hydration pattern: store.roadmapData === null checks if store needs initial data from server components. Call store.reset() in sign-out handlers to prevent data leaks between users.
+
+- **Error handling with 401 redirects.**
+  Handle 401s consistently across app: page.tsx, RoadmapView task detail, and ChatPanel session init all redirect to `/auth/signin?redirect=/roadmap`. Use design tokens (bg-error-light, border-error, text-error) for error UI, never expose raw error.message to users.
+
+- **Chat SSE streaming implementation.**
+  Use `fetch()` + `ReadableStream` + `TextDecoder` for SSE consumption (EventSource doesn't support Authorization headers). Chat entry-point awareness via minimal Zustand store (isOpen, entryPoint, taskId) as bridge between server layout and client components.
+
+- **API client pattern with typed responses.**
+  Create api.ts with typed functions, use mapper functions (roadmap-mapper.ts) to transform API responses to component-friendly shapes. Handle 409 responses as success (user already exists), never expose network errors directly to users.
+
 ---
 
 ## Constitutional Compliance
@@ -169,4 +215,4 @@ export function Component({ variant, size, className, ...props }: ComponentProps
 - React 18 (Server Components)
 - Tailwind CSS 3.4+ (design tokens)
 
-**Stage additions:** clsx + tailwind-merge (W1), Storybook 8 (W1), Vitest + Testing Library (W1), Lucide React (W2), Zustand (W2), nuqs (W2), Supabase SSR (W4), Framer Motion (W5)
+**Stage additions:** clsx + tailwind-merge (W1), Storybook 8 (W1), Vitest + Testing Library (W1), Lucide React (W2), Zustand (W2), nuqs (W2), Supabase SSR (W4), sonner (W4), Framer Motion (W5)
