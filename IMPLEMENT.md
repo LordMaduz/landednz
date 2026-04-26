@@ -6,9 +6,9 @@
 ## Overall Progress
 
 **Active Phase:** Phase 5 — RAG + Launch
-**Active Web Stage:** Web Stage 3 — Static Screens (IN PROGRESS)
+**Active Web Stage:** Web Stage 5 — Interactive Polish (IN PROGRESS)
 **Backend Phases Complete:** 4 / 5 (Phase 5 development done, deployment deferred)
-**Web Stages Complete:** 2 / 6
+**Web Stages Complete:** 4 / 6
 
 | Phase | Status | AC Passed | Gate |
 |-------|--------|-----------|------|
@@ -23,8 +23,8 @@
 | W1 — Design System (~20h) | COMPLETE | 17 / 17 | PASS |
 | W2 — Layout Shell (~15h) | COMPLETE | 11 / 11 | PASS |
 | W3 — Static Screens (~35h) | COMPLETE | 15 / 15 | PASS |
-| W4 — API Integration (~30h) | IN PROGRESS | 3 / 16 | — |
-| W5 — Interactive Polish (~20h) | BLOCKED | 0 / 15 | — |
+| W4 — API Integration (~30h) | COMPLETE | 14 PASS + 2 DEFERRED / 16 | PASS |
+| W5 — Interactive Polish (~20h) | IN PROGRESS | 0 / 16 | — |
 | W6 — Deployment (~10h) | BLOCKED | 0 / 10 | — |
 
 ---
@@ -264,13 +264,13 @@
 | AC-W4-15 | Zustand stores: roadmap + chat, persist across nav, reset on signout | PASS | Created roadmapStore.ts (roadmapData, filter, selectedTask, gateState). Extended chatStore.ts (messages, streaming state). Migrated RoadmapView + ChatPanel from useState to stores. RSC hydration pattern. Sign-out reset in SettingsView. Message types extracted to @/types/chat.ts. tsc clean. Code-reviewer PASS. |
 | AC-W4-16 | Playwright E2E: full journey sign in → onboard → complete task | PASS | Real Supabase auth flow implemented. Complete journey test: scope→questions→reveal→roadmap→task completion. Code-reviewer PASS. |
 
-**Web Stage 4 Gate:** —
+**Web Stage 4 Gate:** PASS — 2026-04-25. 14/16 AC pass. AC-W4-11/12 (Stripe integration) deferred with Phase 3. All core API integration complete: auth, onboarding, roadmap, chat SSE, error handling, stores.
 
 ---
 
 ## Web Stage 5 — Interactive Polish
 
-**Status:** BLOCKED (W4 not complete)
+**Status:** IN PROGRESS
 **Research dir:** `rpi/web-stage5-interactive-polish/research/`
 **Plans dir:** `rpi/web-stage5-interactive-polish/plans/`
 
@@ -291,6 +291,7 @@
 | AC-W5-13 | First-use hints persist in localStorage | — | |
 | AC-W5-14 | Playwright visual regression re-captured | — | |
 | AC-W5-15 | Cross-browser: Chrome, Firefox, Safari | — | |
+| AC-W5-16 | Reduced motion: ALL animations verified | — | |
 
 **Web Stage 5 Gate:** —
 
