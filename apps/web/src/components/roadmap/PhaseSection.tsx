@@ -13,6 +13,8 @@ interface PhaseSectionProps {
   defaultExpanded?: boolean
   topSlot?: React.ReactNode
   bottomSlot?: React.ReactNode
+  justCompletedId?: string | null
+  nextHighlightId?: string | null
 }
 
 function filterTasks(tasks: TaskListItem[], filter: FilterValue): TaskListItem[] {
@@ -39,7 +41,7 @@ function getPhaseDisplayText(name: string, level: 'minimal' | 'short' | 'medium'
   }
 }
 
-export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = true, topSlot, bottomSlot }: PhaseSectionProps) {
+export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = true, topSlot, bottomSlot, justCompletedId, nextHighlightId }: PhaseSectionProps) {
   const [expanded, setExpanded] = useState(defaultExpanded)
 
   const completedCount = phase.tasks.filter((t) => t.cardState === 'complete').length
@@ -111,6 +113,8 @@ export function PhaseSection({ phase, filter, onTaskClick, defaultExpanded = tru
               key={task.taskId}
               task={task}
               onClick={() => onTaskClick(task)}
+              justCompleted={justCompletedId === task.taskId}
+              isNextHighlighted={nextHighlightId === task.taskId}
             />
           ))}
           {bottomSlot}

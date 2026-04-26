@@ -276,7 +276,7 @@
 
 | AC | Description | Status | Notes |
 |----|-------------|--------|-------|
-| AC-W5-01 | Task completion animation + reduced motion fallback | — | |
+| AC-W5-01 | Task completion animation + reduced motion fallback | PASS | Three CSS-only animations: checkmark draws (0.3s), card mutes (0.2s), next task pulse (0.3s). Global reduced-motion rule handles fallback. |
 | AC-W5-02 | Onboarding transitions + reduced motion fallback | — | |
 | AC-W5-03 | Roadmap reveal full sequence + reduced motion | — | |
 | AC-W5-04 | Chat streaming: no jitter, auto-scroll, citations inline | — | |
@@ -338,6 +338,8 @@
 ## Session Notes
 
 *Most recent first. Add via /learn or manually during session.*
+
+- [AC-W5-01] Task completion animation complete: Three CSS-only animations triggered by `justCompleted` and `isNextHighlighted` props. (1) Checkmark draws in via SVG `stroke-dasharray="24"` + `.check-draw-path` animation (0.3s). (2) Card mutes via `transition-all duration-200` + existing `opacity-70` class (0.2s). (3) Next task pulse via `@keyframes taskHighlightPulse` background color animation (0.3s). Animation state managed in RoadmapView with `setTimeout(600)` cleanup. Global reduced-motion rule (`animation-duration: 0.01ms !important`) handles fallback automatically. Code-reviewer CONDITIONAL PASS: implementation meets requirements, minor timing optimization possible (cleanup at 300ms vs 600ms).
 
 - [AC-W4-15] Zustand stores for cross-navigation persistence: (1) roadmapStore.ts — roadmapData, filter, selectedTask, gateState with RSC hydration from initialData (only if store.roadmapData === null). (2) chatStore.ts extended — messages, isStreaming, streamingText, sessionId. chatStore.close() calls reset() to clear messages (prevents stale context with new sessionId). (3) RoadmapView/ChatPanel migrated from useState to store hooks. (4) SettingsView.handleSignOut calls reset() on both stores (prevents data leaks between users). (5) Message types extracted to @/types/chat.ts (CW04 shared types). Store persistence = in-memory only across navigation, not localStorage (CW06). Code-reviewer PASS.
 

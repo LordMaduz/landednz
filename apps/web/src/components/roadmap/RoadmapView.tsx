@@ -39,6 +39,10 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   const { activeHint, dismissHint } = useOnboardingStore()
   const router = useRouter()
 
+  // Animation state for task completion
+  const [justCompletedId, setJustCompletedId] = useState<string | null>(null)
+  const [nextHighlightId, setNextHighlightId] = useState<string | null>(null)
+
   // Hydrate store from initialData on mount if store is empty
   useEffect(() => {
     if (roadmapData === null && initialData !== null) {
@@ -55,6 +59,15 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
   const handleComplete = async (taskId: string) => {
     if (!roadmapData) return
     const previousData = roadmapData
+
+    // Set animation state for task completion
+    const nextTask = priorityTasks.find(t => t.taskId !== taskId)
+    setJustCompletedId(taskId)
+    setNextHighlightId(nextTask?.taskId ?? null)
+    setTimeout(() => {
+      setJustCompletedId(null)
+      setNextHighlightId(null)
+    }, 600)
 
     const optimisticData: RoadmapApiResponse = {
       ...roadmapData,
@@ -164,6 +177,8 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
               task={task}
               priority
               onClick={() => handleTaskClick(task)}
+              justCompleted={justCompletedId === task.taskId}
+              isNextHighlighted={nextHighlightId === task.taskId}
             />
           ))}
         </div>
@@ -215,6 +230,8 @@ export function RoadmapView({ initialData, token }: RoadmapViewProps) {
                 </div>
               : undefined
           }
+          justCompletedId={justCompletedId}
+          nextHighlightId={nextHighlightId}
         />
       ))}
     </div>

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils/cn'
 
 // ── Status icon ─────────────────────────────────────────────────────────────
 
-function StatusIcon({ state, size = 18 }: { state: TaskCardState; size?: number }) {
+function StatusIcon({ state, size = 18, justCompleted }: { state: TaskCardState; size?: number; justCompleted?: boolean }) {
   const s = size
   const iconSize = Math.round(s * 0.55)
 
@@ -14,7 +14,17 @@ function StatusIcon({ state, size = 18 }: { state: TaskCardState; size?: number 
         style={{ width: s, height: s }}
       >
         <svg width={Math.round(s * 0.6)} height={Math.round(s * 0.6)} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M20 6L9 17l-5-5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          {justCompleted ? (
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+              strokeDasharray="24"
+              strokeDashoffset="24"
+              className="check-draw-path"
+            />
+          ) : (
+            <path d="M20 6L9 17l-5-5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          )}
         </svg>
       </div>
     )
@@ -109,9 +119,11 @@ interface TaskRowProps {
   task: TaskListItem
   priority?: boolean
   onClick?: () => void
+  justCompleted?: boolean      // triggers checkmark draw animation
+  isNextHighlighted?: boolean  // triggers next-task pulse
 }
 
-export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
+export function TaskRow({ task, priority = false, onClick, justCompleted, isNextHighlighted }: TaskRowProps) {
   const isComplete = task.cardState === 'complete'
   const isBlocked = task.cardState === 'blocked'
   const isPremium = task.cardState === 'premium_locked'
@@ -136,7 +148,7 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
       aria-busy={isLoading}
       className={cn(
         'flex items-center gap-4 rounded-button border mb-1.5',
-        'transition-shadow duration-150',
+        'transition-all duration-200',
         'px-4 py-2.5',
         // Background variants
         isBlocked ? 'bg-blocked-light' : isError ? 'bg-error-light' : 'bg-bg-card',
@@ -145,10 +157,11 @@ export function TaskRow({ task, priority = false, onClick }: TaskRowProps) {
         isPremium && 'border-l-3 border-l-premium-gold border-t-border border-r-border border-b-border',
         !['in_progress', 'premium_locked'].includes(task.cardState) && 'border-border',
         isComplete && 'opacity-70',
-        onClick && 'cursor-pointer hover:border-border-hover hover:bg-primary-subtle'
+        onClick && 'cursor-pointer hover:border-border-hover hover:bg-primary-subtle',
+        isNextHighlighted && 'task-next-pulse'
       )}
     >
-      <StatusIcon state={task.cardState} size={18} />
+      <StatusIcon state={task.cardState} size={18} justCompleted={justCompleted} />
 
       <div className="flex-1 min-w-0">
         {isLoading ? (

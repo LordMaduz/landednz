@@ -137,6 +137,12 @@ body {
   50% { opacity: 1; transform: translateY(-3px); }
 }
 
+@keyframes taskHighlightPulse {
+  0%   { background-color: var(--color-bg-card); }
+  40%  { background-color: var(--color-primary-subtle); }
+  100% { background-color: var(--color-bg-card); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .slide-in-right {
     animation: slideInRight 0.3s ease-out;
@@ -182,6 +188,14 @@ body {
 
   .typing-dot {
     animation: typing 1s ease-in-out infinite;
+  }
+
+  .check-draw-path {
+    animation: checkDraw 0.3s ease-out forwards;
+  }
+
+  .task-next-pulse {
+    animation: taskHighlightPulse 0.3s ease-out;
   }
 }
 

@@ -111,3 +111,23 @@ export const PriorityCard: Story = {
     onClick: () => {},
   },
 }
+
+export const JustCompleted: Story = {
+  args: {
+    task: {
+      ...baseTask,
+      cardState: 'complete',
+      completedAt: 'Mar 15',
+    },
+    justCompleted: true,
+    onClick: () => {},
+  },
+}
+
+export const IsNextHighlighted: Story = {
+  args: {
+    task: baseTask,
+    isNextHighlighted: true,
+    onClick: () => {},
+  },
+}
