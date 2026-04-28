@@ -1,9 +1,16 @@
 [build]
-buildCommand = "npm install && npm run build --workspace=@landednz/api"
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run prisma:generate --workspace=@landednz/api && npm run build --workspace=@landednz/api"
 
 [deploy]
-startCommand = "npm run start --workspace=@landednz/api"
+startCommand = "npm start --workspace=@landednz/api"
 healthcheckPath = "/health"
-healthcheckTimeout = 30
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[[services]]
+name = "landednz-api"
+
+[variables]
+NODE_ENV = "production"
