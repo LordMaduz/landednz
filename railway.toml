@@ -1,0 +1,9 @@
+[build]
+buildCommand = "npm install && npm run build --workspace=@landednz/api"
+
+[deploy]
+startCommand = "npm run start --workspace=@landednz/api"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

@@ -19,7 +19,7 @@ export function buildApp() {
 
   // Enable CORS for browser requests from web app
   app.register(require('@fastify/cors'), {
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: config.corsOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
