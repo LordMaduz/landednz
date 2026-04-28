@@ -1,9 +1,9 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm install && cd apps/api && echo '=== Checking TypeScript ===' && npx tsc --version && echo '=== Running Prisma Generate ===' && npm run prisma:generate && echo '=== Running TypeScript Build Directly ===' && npx tsc --verbose && echo '=== Build Finished ===' && echo '=== Checking Directory Structure ===' && pwd && ls -la && echo '=== Checking Dist Directory ===' && ls -la dist/ && echo '=== Checking Dist/Src Directory ===' && ls -la dist/src/ && echo '=== Build Complete ==='"
+buildCommand = "npm install && echo '=== Running Prisma Generate ===' && npm run prisma:generate --workspace=@landednz/api && echo '=== Running TypeScript Build ===' && npx tsc && echo '=== Verifying Build Output ===' && ls -la dist/apps/api/src/ && echo '=== Build Complete ==='"
 
 [deploy]
-startCommand = "cd apps/api && npm start"
+startCommand = "cd apps/api && node dist/apps/api/src/server.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
