@@ -1,9 +1,9 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm install && npm run prisma:generate --workspace=@landednz/api && npx tsc"
+buildCommand = "npm ci --only=production"
 
 [deploy]
-startCommand = "node dist/apps/api/src/server.js"
+startCommand = "node apps/api/dist/apps/api/src/server.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
