@@ -199,7 +199,7 @@ describe('derivePersonaKey()', () => {
     ['COUPLE_CONSTRAINED', 'constrained_couple'],
     ['FAMILY_WITH_CHILDREN', 'family_with_children'],
     ['SOLO', 'solo_aewv'],
-    ['COUPLE_DUAL_WORK', 'solo_aewv'],
+    ['COUPLE_DUAL_WORK', 'dual_work_couple'],
   ];
 
   cases.forEach(([situation, expectedKey]) => {

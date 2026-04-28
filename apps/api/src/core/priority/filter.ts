@@ -62,5 +62,6 @@ export function filterApplicableTasks(input: TaskFilterInput): FilterableTask[] 
 export function derivePersonaKey(familySituation: FamilySituation): PersonaKey {
   if (familySituation === 'COUPLE_CONSTRAINED') return 'constrained_couple';
   if (familySituation === 'FAMILY_WITH_CHILDREN') return 'family_with_children';
-  return 'solo_aewv'; // SOLO, COUPLE_DUAL_WORK, and any future values
+  if (familySituation === 'COUPLE_DUAL_WORK') return 'dual_work_couple';
+  return 'solo_aewv'; // SOLO and any future values
 }

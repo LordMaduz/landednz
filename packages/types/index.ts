@@ -28,7 +28,7 @@ export type Occupation =
 
 export type TaskStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETE" | "SKIPPED";
 export type DependencyType = "HARD" | "SOFT";
-export type PersonaKey = "constrained_couple" | "solo_aewv" | "family_with_children";
+export type PersonaKey = "constrained_couple" | "solo_aewv" | "family_with_children" | "dual_work_couple";
 export type ChatEntryPoint = "TASK_CARD" | "ROADMAP" | "EMAIL_DEEPLINK" | "NAVIGATION";
 
 // AppError shape — returned by all API error responses

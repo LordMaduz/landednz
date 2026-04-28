@@ -37,6 +37,9 @@ const PERSONA_WEIGHTS = {
   solo_aewv: {
     T08: 10, T09: 10, T10: 5, T11: 5, T12: 5, T16: 5, T01: 0,
   },
+  dual_work_couple: {
+    T08: 18, T09: 18, T10: 12, T11: 8, T12: 8, T16: 10, T01: 5,
+  },
 } as const;
 
 const URGENCY_BONUSES = {
