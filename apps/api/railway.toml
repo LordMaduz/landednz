@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm run prisma:generate --workspace=@landednz/api && npm run build --workspace=@landednz/api"
+buildCommand = "npm install && npm run prisma:generate --workspace=@landednz/api && npm run build --workspace=@landednz/api"
 
 [deploy]
 startCommand = "npm start --workspace=@landednz/api"
