@@ -183,6 +183,14 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
   Protect admin routes with optional ADMIN_API_KEY check via X-Admin-Key header.
   If env var not set, check is skipped (dev convenience). If set, header must match.
 
+- **Test failures often reveal real implementation gaps, not test issues.**
+  When tests fail after code changes, investigate the root cause before assuming test problems.
+  Example: filter test expecting old fallback behavior revealed missing persona mapping implementation.
+
+- **Production database operations require clean single-operation approach.**
+  Clear incomplete data and insert fresh complete data in one operation, with full validation afterward.
+  Never do partial updates or debug operations on production — highest data accuracy standards apply.
+
 ### Business Logic Patterns
 
 - **Targeted recomputation pattern: completeTask() rescores only direct dependents.**
@@ -195,6 +203,24 @@ Service → core/prompts/registry.ts → shared/ai/claude.client.ts → catch AI
 
 - **arrivalDate always required — no ArrivalTiming enum.**
   Phase 2 removed the ArrivalTiming approach. scoringArrivalDate field handles future arrivals (null = urgency 0).
+
+- **Complete CRUD operations required for user-editable data.**
+  Settings pages and admin interfaces must have GET endpoints to retrieve current state, not just POST/PATCH for modifications. Missing GET endpoints force frontend to use hardcoded defaults, creating UI inconsistency where users see wrong values. Always implement full CRUD when users can modify data.
+
+- **Complete persona support requires proper content generation, not fallback mappings.**
+  All 4 family situations must have persona-specific content with appropriate consequence lines, steps, and watch-outs.
+  Fallback mappings (e.g., dual_work_couple → solo_aewv content) are unacceptable for production.
+  Generate 84 TaskContentVariant records (21 tasks × 4 personas) with distinct, appropriate content.
+
+### Deployment & Environment
+
+- **Production deployment requires explicit environment clarification.**
+  Always confirm which environment (local/staging/production) before any database operations.
+  User confusion about local vs production can lead to working on wrong database entirely.
+
+- **.env file precedence: .env overrides .env.local.**
+  When DATABASE_URL seems wrong, check both .env and .env.local files.
+  .env takes precedence and can override production credentials set in .env.local.
 
 ### General TypeScript
 

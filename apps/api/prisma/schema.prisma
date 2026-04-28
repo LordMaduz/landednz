@@ -7,45 +7,159 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── AUTH ────────────────────────────────────────────────────────────────────
-// Supabase Auth manages the auth.users table. We mirror the user ID here
-// to link application data to auth identity. Do NOT store passwords here.
-
 model User {
-  id                String          @id @default(uuid()) // matches Supabase auth.users.id
-  email             String          @unique
-  name              String?
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  profile           UserProfile?
-  roadmapEntries    UserRoadmapEntry[]
-  chatSessions      ChatSession[]
-  subscription      Subscription?
+  id             String             @id @default(uuid())
+  email          String             @unique
+  name           String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  chatSessions   ChatSession[]
+  subscription   Subscription?
+  profile        UserProfile?
+  roadmapEntries UserRoadmapEntry[]
 }
 
-// ─── ONBOARDING ──────────────────────────────────────────────────────────────
-
 model UserProfile {
-  id                String          @id @default(uuid())
-  userId            String          @unique
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String          @id @default(uuid())
+  userId          String          @unique
+  visaType        VisaType
+  city            City
+  familySituation FamilySituation
+  occupation      Occupation
+  arrivalDate     DateTime
+  personaKey      String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  // Four onboarding answers — stored as enum strings
-  visaType          VisaType
-  city              City
-  familySituation   FamilySituation
-  occupation        Occupation
+model Task {
+  id                         String               @id
+  name                       String
+  phase                      Int
+  basePriority               Int
+  estimatedDuration          String
+  processingTime             String?
+  governmentSourceUrl        String
+  taskType                   TaskType             @default(FREE)
+  contentVersion             Int                  @default(1)
+  applicableVisaTypes        String
+  applicableFamilySituations String
+  applicableOccupations      String
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  contentVariants            TaskContentVariant[]
+  dependencies               TaskDependency[]     @relation("DependentTask")
+  dependents                 TaskDependency[]     @relation("PrerequisiteTask")
+  roadmapEntries             UserRoadmapEntry[]
+}
 
-  // User-provided exact arrival date — always required
-  arrivalDate       DateTime
+model TaskDependency {
+  id             String         @id @default(uuid())
+  prerequisiteId String
+  dependentId    String
+  dependencyType DependencyType
+  dependent      Task           @relation("DependentTask", fields: [dependentId], references: [id])
+  prerequisite   Task           @relation("PrerequisiteTask", fields: [prerequisiteId], references: [id])
 
-  // Persona key derived from visaType + familySituation — used for KB pre-filtering
-  // Values: constrained_couple | solo_aewv | family_with_children
-  personaKey        String
+  @@unique([prerequisiteId, dependentId])
+}
 
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+model TaskContentVariant {
+  id                         String   @id @default(uuid())
+  taskId                     String
+  personaKey                 String
+  consequenceLine            String
+  steps                      String
+  documentsRequired          String
+  commonMistakes             String
+  watchOuts                  String   @default("[]")
+  cost                       String?
+  professionalAdviceRequired Boolean  @default(false)
+  professionalAdviceNote     String?
+  sourceUrl                  String
+  contentVersion             Int      @default(1)
+  aiPersonalisationPrompt    String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  task                       Task     @relation(fields: [taskId], references: [id])
+
+  @@unique([taskId, personaKey])
+}
+
+model UserRoadmapEntry {
+  id               String            @id @default(uuid())
+  userId           String
+  taskId           String
+  status           TaskStatus        @default(NOT_STARTED)
+  priorityScore    Int
+  isBlocked        Boolean           @default(false)
+  completedAt      DateTime?
+  completionMethod CompletionMethod?
+  lastSyncVersion  Int               @default(1)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  task             Task              @relation(fields: [taskId], references: [id])
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, taskId])
+}
+
+model KnowledgeBaseChunk {
+  id             String    @id @default(uuid())
+  chunkKey       String    @unique
+  taskId         String?
+  personaKey     String?
+  chunkType      ChunkType
+  content        String
+  sourceUrl      String
+  sourceName     String
+  contentVersion Int       @default(1)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model KnowledgeBaseVersion {
+  id             Int      @id @default(1)
+  currentVersion Int      @default(1)
+  lastUpdated    DateTime @default(now())
+  updatedBy      String?
+}
+
+model ChatSession {
+  id          String         @id @default(uuid())
+  userId      String
+  entryPoint  ChatEntryPoint
+  taskContext String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  messages    ChatMessage[]
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id              String      @id @default(uuid())
+  sessionId       String
+  role            MessageRole
+  content         String
+  retrievedChunks String?
+  guardrailFlags  String?
+  level2Flags     String?
+  createdAt       DateTime    @default(now())
+  session         ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id               String            @id @default(uuid())
+  userId           String            @unique
+  isActive         Boolean           @default(false)
+  plan             SubscriptionPlan?
+  revenueCatUserId String?           @unique
+  expiresAt        DateTime?
+  cancelledAt      DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum VisaType {
@@ -66,7 +180,7 @@ enum City {
 enum FamilySituation {
   SOLO
   COUPLE_DUAL_WORK
-  COUPLE_CONSTRAINED   // one on student/partner visa
+  COUPLE_CONSTRAINED
   FAMILY_WITH_CHILDREN
 }
 
@@ -80,104 +194,14 @@ enum Occupation {
   SEEKING_WORK
 }
 
-
-// ─── TASK GRAPH ──────────────────────────────────────────────────────────────
-
-model Task {
-  id                String          @id // e.g. "T08" — matches canonical KB task IDs
-  name              String          // "Apply for your IRD number"
-  phase             Int             // 1 | 2 | 3
-  basePriority      Int             // 0–100
-  estimatedDuration String          // "15 minutes"
-  processingTime    String?         // "8–15 working days" — null if no processing delay
-  governmentSourceUrl String
-  taskType          TaskType        @default(FREE)
-  contentVersion    Int             @default(1)
-
-  // Applicability filters — JSON arrays of enum values
-  // e.g. applicableVisaTypes: ["AEWV", "PARTNER_OF_STUDENT"]
-  // "ALL" sentinel value means no restriction
-  applicableVisaTypes      String   // JSON array
-  applicableFamilySituations String // JSON array
-  applicableOccupations    String   // JSON array — "ALL" or specific values
-
-  contentVariants   TaskContentVariant[]
-  dependencies      TaskDependency[]    @relation("DependentTask")
-  dependents        TaskDependency[]    @relation("PrerequisiteTask")
-  roadmapEntries    UserRoadmapEntry[]
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-}
-
 enum TaskType {
   FREE
   PREMIUM
 }
 
-model TaskDependency {
-  id                String          @id @default(uuid())
-  prerequisiteId    String
-  dependentId       String
-  dependencyType    DependencyType
-
-  prerequisite      Task            @relation("PrerequisiteTask", fields: [prerequisiteId], references: [id])
-  dependent         Task            @relation("DependentTask", fields: [dependentId], references: [id])
-
-  @@unique([prerequisiteId, dependentId])
-}
-
 enum DependencyType {
-  HARD  // blocking — dependent cannot start until prerequisite is complete
-  SOFT  // recommended — dependent can start but recommended after prerequisite
-}
-
-model TaskContentVariant {
-  id                String          @id @default(uuid())
-  taskId            String
-  task              Task            @relation(fields: [taskId], references: [id])
-
-  personaKey        String          // constrained_couple | solo_aewv | family_with_children
-  consequenceLine   String          // "Without this, first paycheck taxed at 45%..."
-  steps             String          // JSON array of ordered step strings
-  documentsRequired String          // JSON array of document strings
-  commonMistakes    String          // JSON array of mistake strings
-  watchOuts         String          @default("[]") // JSON array of watch-out strings
-  cost              String?         // "Free" | "NZD $XX" | null
-  professionalAdviceRequired Boolean @default(false)
-  professionalAdviceNote     String?
-  sourceUrl         String          // Required — save blocked if empty
-  contentVersion    Int             @default(1)
-
-  // For AI personalisation layer (Phase 2 — deferred to v2 per MVP scope)
-  aiPersonalisationPrompt String?
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  @@unique([taskId, personaKey])
-}
-
-// ─── ROADMAP STATE ───────────────────────────────────────────────────────────
-
-model UserRoadmapEntry {
-  id                String          @id @default(uuid())
-  userId            String
-  taskId            String
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  task              Task            @relation(fields: [taskId], references: [id])
-
-  status            TaskStatus      @default(NOT_STARTED)
-  priorityScore     Int             // Computed: base + persona + time urgency - dependency penalty
-  isBlocked         Boolean         @default(false)
-  completedAt       DateTime?
-  completionMethod  CompletionMethod?
-  lastSyncVersion   Int             @default(1)
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  @@unique([userId, taskId])
+  HARD
+  SOFT
 }
 
 enum TaskStatus {
@@ -192,76 +216,17 @@ enum CompletionMethod {
   BULK_OVERRIDE
 }
 
-// ─── KNOWLEDGE BASE ───────────────────────────────────────────────────────────
-
-model KnowledgeBaseChunk {
-  id                String          @id @default(uuid())
-  chunkKey          String          @unique  // e.g. "CHUNK_T08_constrained_couple"
-  taskId            String?         // null for non-task chunks (context, policy)
-  personaKey        String?         // null for general chunks
-  chunkType         ChunkType
-
-  content           String          // Full text content of the chunk
-  sourceUrl         String          // Required
-  sourceName        String          // "Inland Revenue Department"
-  contentVersion    Int             @default(1)
-
-  // embedding column added via raw SQL migration — not Prisma syntax:
-  // ALTER TABLE "KnowledgeBaseChunk" ADD COLUMN embedding vector(1536);
-  // ivfflat index created AFTER all embeddings are loaded — not before.
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-}
-
 enum ChunkType {
-  TASK_CONTENT        // Per-task, per-persona settlement guidance
-  SETTLEMENT_CONTEXT  // Background knowledge (suburbs, banking, cost of living)
-  POLICY_REFERENCE    // Legislation and regulatory text
-}
-
-model KnowledgeBaseVersion {
-  id                Int             @id @default(1) // singleton record
-  currentVersion    Int             @default(1)
-  lastUpdated       DateTime        @default(now())
-  updatedBy         String?         // admin reference
-}
-
-// ─── CHAT ────────────────────────────────────────────────────────────────────
-
-model ChatSession {
-  id                String          @id @default(uuid())
-  userId            String
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  entryPoint        ChatEntryPoint
-  taskContext       String?         // task ID if entry from task card
-
-  messages          ChatMessage[]
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  TASK_CONTENT
+  SETTLEMENT_CONTEXT
+  POLICY_REFERENCE
 }
 
 enum ChatEntryPoint {
-  TASK_CARD       // Entry Point 1 — from task card "Ask a question"
-  ROADMAP         // Entry Point 2 — from roadmap screen general
-  EMAIL_DEEPLINK  // Entry Point 3 — from reminder email CTA
-  NAVIGATION      // Entry Point 4 — from bottom nav tab
-}
-
-model ChatMessage {
-  id                String          @id @default(uuid())
-  sessionId         String
-  session           ChatSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  role              MessageRole
-  content           String
-  retrievedChunks   String?         // JSON array of chunk IDs used for this response
-  guardrailFlags    String?         // JSON — which Level 1 flags triggered, if any
-  level2Flags       String?         // JSON — which Level 2 checks flagged this response
-
-  createdAt         DateTime        @default(now())
+  TASK_CARD
+  ROADMAP
+  EMAIL_DEEPLINK
+  NAVIGATION
 }
 
 enum MessageRole {
@@ -269,24 +234,7 @@ enum MessageRole {
   ASSISTANT
 }
 
-// ─── MONETISATION ────────────────────────────────────────────────────────────
-
-model Subscription {
-  id                String          @id @default(uuid())
-  userId            String          @unique
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  isActive          Boolean         @default(false)
-  plan              SubscriptionPlan?
-  revenueCatUserId  String?         @unique
-  expiresAt         DateTime?
-  cancelledAt       DateTime?
-
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-}
-
 enum SubscriptionPlan {
-  MONTHLY           // NZD $9.99/month
-  SIX_MONTH         // NZD $49 / 6 months
+  MONTHLY
+  SIX_MONTH
 }
