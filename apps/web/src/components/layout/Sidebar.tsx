@@ -9,7 +9,8 @@ import { Tooltip } from '@/components/ui/Tooltip'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
 import { useRoadmapStore } from '@/lib/stores/roadmapStore'
 import { createClient } from '@/lib/supabase/client'
-import type { TaskCardState } from '@/types/web'
+import { mapApiPhasesToWeb } from '@/lib/roadmap-mapper'
+import type { RoadmapPhase } from '@/types/web'
 
 const navItems = [
   { href: '/roadmap', label: 'Roadmap', icon: Map },
@@ -33,52 +34,6 @@ function getPhaseDisplayText(name: string, level: 'minimal' | 'short' | 'medium'
   }
 }
 
-interface SidebarTask {
-  id: string
-  name: string
-  state: TaskCardState
-}
-
-interface Phase {
-  num: number
-  name: string
-  timeline: string
-  premium?: true
-  tasks: SidebarTask[]
-}
-
-const phases: Phase[] = [
-  {
-    num: 1,
-    name: 'Before you start working',
-    timeline: 'Week 1',
-    tasks: [
-      { id: 't1', name: 'Get a NZ SIM card', state: 'complete' },
-      { id: 't2', name: 'Open a bank account', state: 'complete' },
-      { id: 't3', name: 'Apply for your IRD number', state: 'in_progress' },
-      { id: 't4', name: 'Submit your tax code declaration', state: 'not_started' },
-    ],
-  },
-  {
-    num: 2,
-    name: 'First 2 weeks',
-    timeline: 'Weeks 1–2',
-    tasks: [
-      { id: 't5', name: 'Register with a GP (doctor)', state: 'not_started' },
-      { id: 't6', name: 'Get an AT HOP card', state: 'not_started' },
-      { id: 't7', name: 'Convert your driving licence', state: 'not_started' },
-      { id: 't8', name: 'Set up money transfers home', state: 'blocked' },
-    ],
-  },
-  {
-    num: 3,
-    name: 'Settling in',
-    timeline: 'Weeks 3–8',
-    premium: true,
-    tasks: [],
-  },
-]
-
 const helpItems = [
   { label: 'Resources', icon: BookOpen, href: '/resources' },
   { label: 'Feedback', icon: Mail, href: '/contact' },
@@ -87,11 +42,16 @@ const helpItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { setSelectedTask } = useRoadmapStore()
+  const { roadmapData, setSelectedTask } = useRoadmapStore()
   const [expandedPhases, setExpandedPhases] = useState<number[]>([1])
   const [isTabletExpanded, setIsTabletExpanded] = useState(false)
   const [userName, setUserName] = useState<string>('User')
   const [userInitial, setUserInitial] = useState<string>('U')
+
+  // Transform API data to sidebar format
+  const phases: RoadmapPhase[] = roadmapData
+    ? mapApiPhasesToWeb(roadmapData.phases)
+    : []
 
   // Fetch user data from Supabase session
   useEffect(() => {
@@ -137,17 +97,15 @@ export function Sidebar() {
       router.push('/roadmap')
     }
 
-    // Set the selected task in the store (will open task detail)
-    setSelectedTask({
-      taskId,
-      taskName: taskName,
-      consequenceLine: '',
-      estimatedDuration: '',
-      phase: 1,
-      cardState: 'not_started',
-      isPremium: false,
-      detail: undefined // Will be fetched when detail view opens
-    })
+    // Find the task in the current roadmap data to get complete info
+    const task = phases
+      .flatMap(p => p.tasks)
+      .find(t => t.taskId === taskId)
+
+    if (task) {
+      // Set the selected task in the store (will open task detail)
+      setSelectedTask(task)
+    }
   }
 
   const NavItem = ({ item, isCollapsed }: { item: typeof navItems[0], isCollapsed: boolean }) => {
@@ -248,7 +206,7 @@ export function Sidebar() {
         <div className="px-3 flex-1 space-y-1 overflow-y-auto">
           {phases.map((phase) => {
             const isExpanded = expandedPhases.includes(phase.num)
-            const completedCount = phase.tasks.filter(t => t.state === 'complete').length
+            const completedCount = phase.tasks.filter(t => t.cardState === 'complete').length
 
             return (
               <div key={phase.num}>
@@ -283,13 +241,13 @@ export function Sidebar() {
                     </span>
                   </div>
                   {/* Non-premium: completed/total count - show earlier than xl */}
-                  {!phase.premium && (
+                  {!phase.isPremium && (
                     <span className="text-caption text-text-tertiary hidden lg:block shrink-0">
                       {completedCount}/{phase.tasks.length}
                     </span>
                   )}
                   {/* Premium: gold badge - progressive disclosure */}
-                  {phase.premium && (
+                  {phase.isPremium && (
                     <>
                       {/* Large: Compact badge */}
                       <span className="text-caption bg-secondary-light text-secondary-hover px-1.5 py-0.5 rounded-badge font-medium hidden lg:block xl:hidden shrink-0">
@@ -304,22 +262,22 @@ export function Sidebar() {
                 </button>
 
                 {/* Expanded task list — non-premium phases only */}
-                {isExpanded && !phase.premium && (
+                {isExpanded && !phase.isPremium && (
                   <div className="pl-6 pb-1 hidden xl:block">
                     {phase.tasks.map((task) => (
                       <button
-                        key={task.id}
-                        onClick={() => handleTaskClick(task.id, task.name)}
+                        key={task.taskId}
+                        onClick={() => handleTaskClick(task.taskId, task.taskName)}
                         className="w-full flex items-center gap-2 py-1 px-2 rounded cursor-pointer hover:bg-black/5 transition-colors motion-reduce:transition-none text-left"
                       >
-                        <StatusIndicator state={task.state} size="sm" />
+                        <StatusIndicator state={task.cardState} size="sm" />
                         <span
                           className={cn(
                             'text-caption truncate',
-                            task.state === 'complete' ? 'text-text-tertiary' : 'text-text-secondary'
+                            task.cardState === 'complete' ? 'text-text-tertiary' : 'text-text-secondary'
                           )}
                         >
-                          {task.name}
+                          {task.taskName}
                         </span>
                       </button>
                     ))}
