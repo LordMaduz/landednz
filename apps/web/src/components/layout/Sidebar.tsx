@@ -9,7 +9,8 @@ import { Tooltip } from '@/components/ui/Tooltip'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
 import { useRoadmapStore } from '@/lib/stores/roadmapStore'
 import { createClient } from '@/lib/supabase/client'
-import { mapApiPhasesToWeb } from '@/lib/roadmap-mapper'
+import { mapApiPhasesToWeb, mapApiTaskDetail } from '@/lib/roadmap-mapper'
+import { getTaskDetail } from '@/lib/api'
 import type { RoadmapPhase } from '@/types/web'
 
 const navItems = [
@@ -42,7 +43,7 @@ const helpItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { roadmapData, setSelectedTask } = useRoadmapStore()
+  const { roadmapData, setSelectedTask, updateSelectedTask } = useRoadmapStore()
   const [expandedPhases, setExpandedPhases] = useState<number[]>([1])
   const [isTabletExpanded, setIsTabletExpanded] = useState(false)
   const [userName, setUserName] = useState<string>('User')
@@ -91,7 +92,7 @@ export function Sidebar() {
     )
   }
 
-  const handleTaskClick = (taskId: string, taskName: string) => {
+  const handleTaskClick = async (taskId: string, taskName: string) => {
     // Navigate to roadmap if not already there
     if (pathname !== '/roadmap') {
       router.push('/roadmap')
@@ -102,9 +103,35 @@ export function Sidebar() {
       .flatMap(p => p.tasks)
       .find(t => t.taskId === taskId)
 
-    if (task) {
-      // Set the selected task in the store (will open task detail)
-      setSelectedTask(task)
+    if (!task) return
+
+    // Set the selected task immediately (shows panel with loading state)
+    setSelectedTask(task)
+
+    try {
+      // Get auth token from Supabase session
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) {
+        router.push('/auth/signin?redirect=/roadmap')
+        return
+      }
+
+      // Fetch task detail from API (same pattern as RoadmapView)
+      const response = await getTaskDetail(task.taskId, session.access_token)
+      const detail = mapApiTaskDetail(response)
+
+      // Update the selected task with the fetched details
+      updateSelectedTask(prev => ({ ...prev, detail }))
+    } catch (error) {
+      // Handle 401 unauthorized error
+      if ((error as { status?: number }).status === 401) {
+        router.push('/auth/signin?redirect=/roadmap')
+        return
+      }
+      console.error('Failed to load task detail from sidebar:', error)
+      // Detail stays undefined, TaskDetail shows "Coming soon" fallback
     }
   }
 
