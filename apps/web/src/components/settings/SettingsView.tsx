@@ -57,11 +57,14 @@ export function SettingsView({
             const settlementData = await getOnboardingProfile(session.access_token)
             setSettlementProfile(settlementData)
           } catch (error: any) {
-            if (error.status !== 404) {
+            if (error.status === 404) {
+              // 404 means user hasn't completed onboarding yet - this is expected
+              console.log('No settlement profile found - user may need to complete onboarding first')
+            } else {
+              // Any other error is unexpected and should be shown to user
               console.error('Failed to fetch settlement profile:', error)
-              toast.error('Failed to load settlement profile data')
+              toast.error(`Failed to load your settlement profile. Please try refreshing the page.`)
             }
-            // 404 is ok - user hasn't completed onboarding yet
           }
         }
       } catch (error) {
@@ -169,14 +172,30 @@ export function SettingsView({
                   This information is used to personalize your roadmap.
                 </p>
 
-                <Button
-                  variant="outline"
-                  onClick={() => setShowUpdateModal(true)}
-                  className="w-full"
-                  disabled={isUpdatingProfile}
-                >
-                  {isUpdatingProfile ? 'Updating...' : 'View & Update Settlement Profile'}
-                </Button>
+                {settlementProfile ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowUpdateModal(true)}
+                    className="w-full"
+                    disabled={isUpdatingProfile}
+                  >
+                    {isUpdatingProfile ? 'Updating...' : 'View & Update Settlement Profile'}
+                  </Button>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-error text-small mb-2">Unable to load your settlement profile</p>
+                    <p className="text-text-secondary text-caption mb-4">
+                      Please try refreshing the page or contact support if the issue persists.
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() => window.location.reload()}
+                      className="w-full"
+                    >
+                      Refresh Page
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </>
@@ -292,24 +311,20 @@ export function SettingsView({
         onConfirm={() => setShowDeleteModal(false)}
       />
 
-      <UpdateProfileModal
-        open={showUpdateModal}
-        onClose={() => setShowUpdateModal(false)}
-        onConfirm={handleUpdateProfile}
-        currentProfile={settlementProfile ? {
-          visaType: settlementProfile.visaType,
-          city: settlementProfile.city,
-          familySituation: settlementProfile.familySituation,
-          occupation: settlementProfile.occupation
-        } : {
-          // Fallback defaults if settlement profile not loaded
-          visaType: 'AEWV',
-          city: 'AUCKLAND',
-          familySituation: 'SOLO',
-          occupation: 'OTHER_PROFESSIONAL'
-        }}
-        isUpdating={isUpdatingProfile}
-      />
+      {settlementProfile && (
+        <UpdateProfileModal
+          open={showUpdateModal}
+          onClose={() => setShowUpdateModal(false)}
+          onConfirm={handleUpdateProfile}
+          currentProfile={{
+            visaType: settlementProfile.visaType,
+            city: settlementProfile.city,
+            familySituation: settlementProfile.familySituation,
+            occupation: settlementProfile.occupation
+          }}
+          isUpdating={isUpdatingProfile}
+        />
+      )}
     </div>
   )
 }
