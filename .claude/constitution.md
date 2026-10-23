@@ -11,6 +11,7 @@
 features/roadmap/ and features/chat/ NEVER import from each other.
 Shared types go in packages/types/ only.
 The AI never touches task sequencing, dependency resolution, or priority scoring.
+*Holds for R0; to be rewritten in R2.*
 
 **[C02] core/ Contains Only Pure Functions**
 Zero Fastify, zero Prisma, zero Anthropic SDK in core/.
@@ -47,16 +48,9 @@ before any settlement information. No exceptions.
 
 ## DATA CONSTRAINTS
 
-**[C09] HMAC Verification Before DB Touch**
-POST /subscription/webhook MUST verify X-RevenueCat-Signature BEFORE any DB operation.
-
 **[C10] BigInt Serialisation on All $queryRaw**
 `JSON.stringify(result, (_, v) => typeof v === 'bigint' ? Number(v) : v)`
 Required on every $queryRaw result. No exceptions.
-
-**[C11] EXPIRATION vs CANCELLATION Events**
-EXPIRATION webhook → isActive: false.
-CANCELLATION webhook → no access change (user retains until expiration).
 
 **[C12] Cosine Distance Operator**
 Always <=> (cosine). Never <-> (L2/Euclidean) for semantic similarity.
@@ -93,12 +87,10 @@ All colours, font sizes, spacing, and shadows MUST use Tailwind config token cla
 Exception: `tailwind.config.ts` itself defines the raw token values.
 VIOLATION: `className="bg-[#1B6B6D]"` or `style={{ color: '#1B6B6D' }}` anywhere in `apps/web/src/`.
 
-**[CW02] Storybook Story Required for Every UI Primitive**
-Every component in `apps/web/src/components/ui/` MUST have a corresponding `.stories.tsx`
-file in the same directory. The story MUST document all states defined in 14-ui-ux-design.md.
-VIOLATION: A UI primitive committed without its Storybook story.
-VIOLATION: A story that does not cover all documented states (e.g., StatusIndicator story
-missing one of the 7 TaskCardState values).
+**[CW02′] UI Matches Its Approved Artifact**
+Every UI change matches its approved design artifact (spec §7.4) and passes the
+minimalism validator.
+VIOLATION: A page or component built before its board is approved, or differing from it.
 
 **[CW03] Reduced Motion Respected**
 Every CSS transition and JS animation in `apps/web/` MUST check `prefers-reduced-motion`.
@@ -131,3 +123,9 @@ URL state managed by `nuqs` (shareable, bookmarkable).
 first-use hint dismissal, sidebar collapse preference, theme preference.
 VIOLATION: Storing auth tokens, user profile, roadmap data, chat history, or
 subscription status in localStorage. These belong in server state or Zustand.
+
+**[CW07] Minimalism**
+Every UI change passes the minimalism-validator skill.
+
+**[CW08] Light Theme Only**
+Light theme only; no dark mode or theme switching.

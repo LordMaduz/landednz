@@ -1,6 +1,0 @@
-{
-  "buildCommand": "npm run build --workspace=@landednz/web",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install",
-  "framework": "nextjs"
-}
