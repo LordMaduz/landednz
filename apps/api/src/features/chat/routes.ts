@@ -1,13 +1,13 @@
 // Chat routes — session creation and message streaming
 
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { logger } from '../../shared/logger';
-import { AppError } from '../../shared/errors';
-import { config } from '../../shared/config';
-import { authenticateRequest } from '../../shared/middleware/auth';
-import { createChatSession, sendMessage } from './service';
-import type { CreateSessionRequest, CreateSessionResponse, SendMessageRequest } from './chat.types';
+import { db } from '../../shared/db.js';
+import { logger } from '../../shared/logger.js';
+import { AppError } from '../../shared/errors.js';
+import { config } from '../../shared/config.js';
+import { authenticateRequest } from '../../shared/middleware/auth.js';
+import { createChatSession, sendMessage } from './service.js';
+import type { CreateSessionRequest, CreateSessionResponse, SendMessageRequest } from './chat.types.js';
 
 export function registerChatRoutes(app: FastifyInstance): void {
   // POST /chat/sessions

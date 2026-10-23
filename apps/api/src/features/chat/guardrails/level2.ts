@@ -3,7 +3,7 @@
 // LOGGING ONLY — never blocks or modifies the response.
 // Constitutional constraint C06: must remain at step 9 of the SSE pipeline.
 
-import type { Level2Result } from '../chat.types';
+import type { Level2Result } from '../chat.types.js';
 
 export function runLevel2Guardrail(response: string): Level2Result {
   const flags: string[] = [];

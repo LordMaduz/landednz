@@ -3,9 +3,9 @@
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
-import { db } from '../../shared/db';
-import { createProfile } from './onboarding.service';
-import { AppError } from '../../shared/errors';
+import { db } from '../../shared/db.js';
+import { createProfile } from './onboarding.service.js';
+import { AppError } from '../../shared/errors.js';
 
 // ─── Test fixtures ───────────────────────────────────────────────────────────
 

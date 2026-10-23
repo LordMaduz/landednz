@@ -11,9 +11,9 @@
 //
 // DO NOT add the CREATE INDEX command here — C05 violation.
 
-import { db } from '../src/shared/db';
-import { logger } from '../src/shared/logger';
-import { generateEmbedding } from '../src/shared/ai/embeddings.client';
+import { db } from '../src/shared/db.js';
+import { logger } from '../src/shared/logger.js';
+import { generateEmbedding } from '../src/shared/ai/embeddings.client.js';
 
 async function main(): Promise<void> {
   logger.info('Starting embedding generation for KnowledgeBaseChunk records');

@@ -2,8 +2,8 @@
 // Two exported functions only. All Anthropic SDK imports live here.
 
 import Anthropic from '@anthropic-ai/sdk';
-import { config } from '../config';
-import { AIFailureError } from '../errors';
+import { config } from '../config.js';
+import { AIFailureError } from '../errors.js';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';

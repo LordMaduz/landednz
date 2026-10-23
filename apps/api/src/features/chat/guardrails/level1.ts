@@ -2,7 +2,7 @@
 // Runs on EVERY user message BEFORE RAG retrieval and prompt construction.
 // Constitutional constraint C07: must remain at step 2 of the SSE pipeline.
 
-import type { GuardrailResult } from '../chat.types';
+import type { GuardrailResult } from '../chat.types.js';
 
 // CRISIS_SIGNAL patterns — case-insensitive substring match
 const CRISIS_SIGNAL_PATTERNS: string[] = [

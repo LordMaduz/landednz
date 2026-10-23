@@ -1,5 +1,5 @@
 import pino from 'pino'
-import { config } from './config'
+import { config } from './config.js'
 
 // Single logger instance used across the entire API.
 // Use logger.info/warn/error with structured context — never console.log.

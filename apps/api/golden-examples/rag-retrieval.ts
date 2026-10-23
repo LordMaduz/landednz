@@ -12,7 +12,7 @@
 // GOLDEN 4 — AC-5-04: out-of-scope query returns low-relevance chunks
 
 import { describe, it, expect } from 'vitest';
-import { retrieveChunks } from '../src/features/chat/rag/retrieval';
+import { retrieveChunks } from '../src/features/chat/rag/retrieval.js';
 
 describe('RAG Retrieval Golden Examples', () => {
   it('GOLDEN 1: constrained_couple IRD query returns CHUNK_T08_constrained_couple in top 3', async () => {

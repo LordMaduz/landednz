@@ -2,7 +2,7 @@
 // All tests will fail initially — implementation comes after
 
 import { describe, expect, test } from 'vitest';
-import { filterApplicableTasks, derivePersonaKey } from './filter';
+import { filterApplicableTasks, derivePersonaKey } from './filter.js';
 import { FamilySituation, PersonaKey } from '@landednz/types';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

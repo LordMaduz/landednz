@@ -4,8 +4,8 @@
 
 import { describe, expect, test, beforeAll, afterAll } from 'vitest';
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
+import { db } from '../../shared/db.js';
+import { buildApp } from '../../server.js';
 
 const TS = Date.now();
 const SUB_EMAIL = `test-chat-sub-${TS}@example.com`;
@@ -29,7 +29,7 @@ async function createSupabaseUser(email: string): Promise<{ userId: string; toke
     body: JSON.stringify({ email, password: TEST_PASSWORD }),
   });
   if (!res.ok) throw new Error(`Supabase signup failed for ${email}: ${res.status}`);
-  const data = await res.json();
+  const data = await res.json() as { user: { id: string }; access_token: string };
   return { userId: data.user.id, token: data.access_token };
 }
 

@@ -1,10 +1,10 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose'
 import { Prisma } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
-import { config } from '../../shared/config'
-import { db } from '../../shared/db'
-import { logger } from '../../shared/logger'
-import { AppError } from '../../shared/errors'
+import { config } from '../../shared/config.js'
+import { db } from '../../shared/db.js'
+import { logger } from '../../shared/logger.js'
+import { AppError } from '../../shared/errors.js'
 
 interface AuthVerifyResult {
   userId: string

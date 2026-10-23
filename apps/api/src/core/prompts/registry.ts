@@ -52,7 +52,7 @@ export function buildChatOpeningMessage(
 
 // Phase 4 — Chat advisor system prompt
 // Full 7-component implementation per chat-system-prompt skill
-import type { BuildSystemPromptParams } from '../../features/chat/chat.types';
+import type { BuildSystemPromptParams } from '../../features/chat/chat.types.js';
 
 export function buildChatSystemPrompt(params: BuildSystemPromptParams): string {
   const { user, entryPoint, taskName, consequenceLine, kbChunks, guardrailAugmentations } = params;

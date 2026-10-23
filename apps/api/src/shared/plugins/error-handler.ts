@@ -1,6 +1,6 @@
 import { FastifyError, FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../errors'
-import { logger } from '../logger'
+import { AppError } from '../errors.js'
+import { logger } from '../logger.js'
 
 // Global error handler for Fastify.
 // Handles AppError (business logic) → maps to typed HTTP response.

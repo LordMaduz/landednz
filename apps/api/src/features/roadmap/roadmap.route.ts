@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
-import { authenticateRequest } from '../../shared/middleware/auth';
-import { getRoadmap, completeTask, bulkOverride, getTaskDetail } from './roadmap.service';
-import { recalculateAllRoadmaps } from './roadmap.recalculate';
-import { config } from '../../shared/config';
-import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse, RecalculateResponse } from './roadmap.types';
+import { authenticateRequest } from '../../shared/middleware/auth.js';
+import { getRoadmap, completeTask, bulkOverride, getTaskDetail } from './roadmap.service.js';
+import { recalculateAllRoadmaps } from './roadmap.recalculate.js';
+import { config } from '../../shared/config.js';
+import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse, RecalculateResponse } from './roadmap.types.js';
 
 export function registerRoadmapRoutes(app: FastifyInstance): void {
   // GET /roadmap

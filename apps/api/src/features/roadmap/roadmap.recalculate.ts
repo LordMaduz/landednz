@@ -6,12 +6,12 @@
 // Triggered manually via POST /admin/recalculate (MVP).
 // No cron scheduler — Railway cron or manual trigger at this phase.
 
-import { db } from '../../shared/db';
-import { logger } from '../../shared/logger';
-import { resolveBlockedTasks } from '../../core/dependencies/resolver';
-import { scoreTask } from '../../core/priority/scoring';
-import type { PersonaKey } from '../../shared/types';
-import type { RecalculateResponse } from './roadmap.types';
+import { db } from '../../shared/db.js';
+import { logger } from '../../shared/logger.js';
+import { resolveBlockedTasks } from '../../core/dependencies/resolver.js';
+import { scoreTask } from '../../core/priority/scoring.js';
+import type { PersonaKey } from '../../shared/types.js';
+import type { RecalculateResponse } from './roadmap.types.js';
 
 export async function recalculateAllRoadmaps(
   currentDate: Date = new Date(),

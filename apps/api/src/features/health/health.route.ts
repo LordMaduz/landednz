@@ -1,11 +1,13 @@
 import { FastifyInstance } from 'fastify'
-import { db } from '../../shared/db'
-import { logger } from '../../shared/logger'
+import { db } from '../../shared/db.js'
+import { logger } from '../../shared/logger.js'
+import { config } from '../../shared/config.js'
 
 interface HealthResponse {
   status: 'ok'
   timestamp: string
   dbConnected: boolean
+  betaMode: boolean
 }
 
 interface HealthErrorResponse {
@@ -14,6 +16,11 @@ interface HealthErrorResponse {
 }
 
 export function registerHealthRoutes(app: FastifyInstance): void {
+  // GET /config — public endpoint for frontend feature flags
+  app.get('/config', async (_request, reply) => {
+    reply.status(200).send({ betaMode: config.betaMode })
+  })
+
   app.get('/health', async (_request, reply) => {
     try {
       // C10: $queryRaw can return BigInt — always apply replacer even when result is not returned
@@ -24,6 +31,7 @@ export function registerHealthRoutes(app: FastifyInstance): void {
         status: 'ok',
         timestamp: new Date().toISOString(),
         dbConnected: true,
+        betaMode: config.betaMode,
       }
       reply.status(200).send(response)
     } catch (err) {

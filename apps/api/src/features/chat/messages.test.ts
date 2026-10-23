@@ -3,8 +3,8 @@
 
 import { describe, expect, test, beforeAll, afterAll } from 'vitest';
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
+import { db } from '../../shared/db.js';
+import { buildApp } from '../../server.js';
 
 const TS = Date.now();
 const TEST_EMAIL = `test-messages-${TS}@example.com`;
@@ -32,7 +32,7 @@ async function createSupabaseTestUser() {
     throw new Error(`Failed to create test user: ${signUpResponse.status}`);
   }
 
-  const signUpData = await signUpResponse.json();
+  const signUpData = await signUpResponse.json() as { user: { id: string }; access_token: string };
   TEST_USER_ID = signUpData.user.id;
   TEST_JWT_TOKEN = signUpData.access_token;
 
@@ -218,7 +218,7 @@ describe('POST /chat/sessions/:sessionId/messages - Real SSE Integration', () =>
       }),
     });
 
-    const otherUserData = await otherUserResponse.json();
+    const otherUserData = await otherUserResponse.json() as { user: { id: string }; access_token: string };
     const otherUserId = otherUserData.user.id;
     const otherUserToken = otherUserData.access_token;
 

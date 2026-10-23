@@ -3,7 +3,7 @@
 // Model: text-embedding-3-small — 1536 dimensions (exact spec match)
 
 import OpenAI from 'openai';
-import { config } from '../config';
+import { config } from '../config.js';
 
 const client = new OpenAI({ apiKey: config.openaiApiKey });
 

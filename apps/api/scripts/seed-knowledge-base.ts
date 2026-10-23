@@ -9,7 +9,7 @@
  * - Run from apps/api/ directory: npx ts-node scripts/seed-knowledge-base.ts
  */
 
-import { db } from '../src/shared/db'
+import { db } from '../src/shared/db.js'
 // NOTE: Using console instead of logger to avoid DATABASE_URL import dependency
 import type { VisaType, FamilySituation, Occupation, PersonaKey } from '@landednz/types'
 
@@ -260,7 +260,7 @@ interface ValidationError {
 }
 
 function parseKnowledgeBase(): { tasks: TaskSeedEntry[], knowledgeBaseChunks: Array<any>, errors: ValidationError[] } {
-  const kbPath = path.join(__dirname, '../../../landednz_kb_master_COMPLETE_v1.md')
+  const kbPath = path.join(import.meta.dirname, '../content/kb-master.md')
 
   if (!fs.existsSync(kbPath)) {
     throw new Error(`Knowledge base file not found: ${kbPath}`)

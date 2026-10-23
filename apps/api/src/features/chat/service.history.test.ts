@@ -9,9 +9,9 @@ vi.mock('../../shared/ai/claude.client', () => ({
 }));
 
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
-import { streamMessage } from '../../shared/ai/claude.client';
+import { db } from '../../shared/db.js';
+import { buildApp } from '../../server.js';
+import { streamMessage } from '../../shared/ai/claude.client.js';
 
 // Get reference to the mocked function
 const mockStreamMessage = vi.mocked(streamMessage);
@@ -41,7 +41,7 @@ async function createSupabaseTestUser() {
     throw new Error(`Failed to create test user: ${signUpResponse.status}`);
   }
 
-  const signUpData = await signUpResponse.json();
+  const signUpData = await signUpResponse.json() as { user: { id: string }; access_token: string };
   TEST_USER_ID = signUpData.user.id;
   TEST_JWT_TOKEN = signUpData.access_token;
 }

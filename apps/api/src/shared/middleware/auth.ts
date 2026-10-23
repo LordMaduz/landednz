@@ -4,9 +4,9 @@
 
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { config } from '../config';
-import { logger } from '../logger';
-import { AppError } from '../errors';
+import { config } from '../config.js';
+import { logger } from '../logger.js';
+import { AppError } from '../errors.js';
 
 // Module augmentation — adds userId to FastifyRequest for all authenticated routes
 declare module 'fastify' {

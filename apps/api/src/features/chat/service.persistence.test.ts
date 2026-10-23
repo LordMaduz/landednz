@@ -10,8 +10,8 @@ vi.mock('../../shared/ai/claude.client', () => ({
 }));
 
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
+import { db } from '../../shared/db.js';
+import { buildApp } from '../../server.js';
 
 const TS = Date.now();
 const TEST_EMAIL = `test-persistence-${TS}@example.com`;
@@ -39,7 +39,7 @@ async function createSupabaseTestUser() {
     throw new Error(`Failed to create test user: ${signUpResponse.status}`);
   }
 
-  const signUpData = await signUpResponse.json();
+  const signUpData = await signUpResponse.json() as { user: { id: string }; access_token: string };
   TEST_USER_ID = signUpData.user.id;
   TEST_JWT_TOKEN = signUpData.access_token;
 }
