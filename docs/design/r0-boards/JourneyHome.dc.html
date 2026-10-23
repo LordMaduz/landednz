@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roadmap</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+.ui h1,.ui h2,.ui h3,.ui p{margin:0}
+.ui h1,.ui h2{text-wrap:balance}
+.t-hero{font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.03em}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.t-strong{font-weight:500}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+.ui a.btn{text-decoration:none}
+.btn-lg{min-height:48px;padding:0 24px}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.btn:disabled{background:#F6F8F8;color:#4B6170;border-color:#F6F8F8;cursor:default}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.hairline{border:1px solid #E3E8EA;border-radius:10px}
+.row-link{display:flex;align-items:center;gap:16px;padding:16px 24px}.ui a.row-link{color:#0F2A3A;text-decoration:none}.row-link:hover{background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;box-sizing:border-box;padding-left:24px;padding-right:24px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.streaming{background-size:200% 100%;animation:aurora 3s linear infinite}
+@keyframes aurora{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media (prefers-reduced-motion: reduce){.streaming{animation:none}}
+@container (max-width: 760px){.hide-sm{display:none !important}.t-hero{font-size:32px;line-height:1.15}.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}}
+.legs,.tasks{margin:0;padding:0;list-style:none}
+.legs > li{padding-bottom:24px;background:linear-gradient(var(--line),var(--line)) 7px 0/2px 100% no-repeat}
+.legs > li:last-child.collapsed{background-size:2px 22px}
+.legs > li:last-child{padding-bottom:0}
+.leg-head,.task{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:16px}
+.leg{--line:#E3E8EA}.leg.done{--line:#0E7C7B}
+.leg-head > div{display:flex;flex-wrap:wrap;align-items:center;column-gap:16px;min-height:44px}
+.rail{height:44px;display:flex;align-items:center;justify-content:center}
+.row{font:inherit;box-sizing:border-box;width:100%;min-height:44px;text-align:left;padding:8px;border:0;border-radius:6px;background:transparent;color:#0F2A3A;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:16px;cursor:pointer}
+.row:hover,.row[aria-current="true"]{background:#F6F8F8}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:48px;align-items:start}
+.route-col{width:100%;min-width:0;display:flex;flex-direction:column;gap:32px}
+.bar{height:6px;border-radius:3px;background:#E3E8EA;overflow:hidden}
+.sheet{display:flex;flex-direction:column;gap:24px;padding:24px;background:#FFFFFF}
+.sheet-top{display:flex;margin:-8px -8px -8px -16px}
+.ask-q{align-self:flex-end;max-width:85%;padding:8px 16px;border-radius:10px;background:#F6F8F8}
+.stamp{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #0E7C7B;box-sizing:border-box;transform:rotate(-10deg);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0A6463;font-size:13px;font-weight:600;line-height:1.1;animation:stampIn 200ms ease-out}
+@keyframes stampIn{from{transform:scale(1.2) rotate(0deg);opacity:0}to{transform:scale(1) rotate(-10deg);opacity:1}}
+@media (prefers-reduced-motion: reduce){.stamp{animation:none}}
+@container (min-width: 1100px){.layout.has-sheet{grid-template-columns:minmax(0,1fr) 480px}.sheet{position:sticky;top:24px;border:1px solid #E3E8EA;border-radius:10px;max-height:calc(100vh - 48px);overflow:auto}}
+@container (max-width: 1099px){.layout.has-sheet .route-col{display:none}.layout.has-sheet{margin:-48px -24px 0}.sheet-wrap{background:#F6F8F8;padding-top:48px}.sheet{border-radius:10px 10px 0 0;border-top:1px solid #E3E8EA}}
+@container (max-width: 560px){.hero .btn{width:100%}}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; min-height: 900px">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container hdr" style="height: 64px; display: flex; align-items: center; gap: 32px">
+      <a href="/app" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <nav class="nav" aria-label="Main" style="display: flex; gap: 4px">
+        <a href="/app">Home</a>
+        <a href="/app/roadmap" aria-current="page">Roadmap</a>
+      </nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px">
+        <button class="btn btn-quiet" aria-keyshortcuts="/" onClick="{{askCurrent}}" disabled="{{offline}}">Ask<span class="kbd hide-sm" aria-hidden="true">/</span></button>
+        <button aria-haspopup="menu" aria-label="Account, Priya Sharma" style="font: inherit; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 50%; background: #E8F2F1; color: #0A6463; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center">PS</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="container" style="padding-top: 48px; padding-bottom: 96px">
+    <div class="layout {{layoutCls}}">
+      <div class="route-col">
+
+        <sc-if value="{{offline}}" hint-placeholder-val="{{false}}">
+          <div role="alert" style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid #0F2A3A; border-radius: 10px">
+            <h1 class="t-section">Can't reach LandedNZ</h1>
+            <p class="muted">Your progress is saved. Check your connection, then try again.</p>
+            <button onClick="{{retry}}" class="btn btn-primary">Try again</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{online}}" hint-placeholder-val="{{true}}">
+          <section aria-labelledby="rm-title" style="display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
+              <h1 id="rm-title" class="t-title">Your roadmap</h1>
+              <span class="t-small muted">{{doneCount}} of {{total}} tasks done</span>
+            </div>
+            <div class="bar" role="progressbar" aria-label="Tasks done" aria-valuemin="0" aria-valuemax="{{total}}" aria-valuenow="{{doneCount}}"><div style="height: 6px; background: #0E7C7B; width: {{donePct}}"></div></div>
+            <sc-if value="{{firstUse}}" hint-placeholder-val="{{false}}"><p class="muted">Done some already? Open a task and mark it done.</p></sc-if>
+          </section>
+
+          <ol class="legs" aria-label="Your route">
+            <sc-for list="{{legs}}" as="L" hint-placeholder-count="5">
+              <li class="leg {{L.cls}}">
+                <div class="leg-head">
+                  <span class="rail" aria-hidden="true"><span style="{{L.dot}}"></span></span>
+                  <div>
+                    <h2 style="font-size: 15px; font-weight: 600">{{L.name}}</h2>
+                    <span class="t-small muted" style="flex: 1">{{L.meta}}</span>
+                    <sc-if value="{{L.collapsible}}" hint-placeholder-val="{{false}}">
+                      <button onClick="{{L.toggle}}" aria-expanded="{{L.expanded}}" class="btn btn-ghost t-small">{{L.toggleLabel}}<span class="sr"> {{L.name}} tasks</span></button>
+                    </sc-if>
+                  </div>
+                </div>
+                <sc-if value="{{L.showTasks}}" hint-placeholder-val="{{true}}">
+                  <ol class="tasks">
+                    <sc-for list="{{L.tasks}}" as="t" hint-placeholder-count="3">
+                      <li class="task">
+                        <span class="rail" aria-hidden="true" style="height: {{t.railH}}"><span style="{{t.dot}}"><sc-if value="{{t.blocked}}" hint-placeholder-val="{{false}}"><span style="width: 6px; height: 1.5px; background: #4B6170"></span></sc-if></span></span>
+                        <sc-if value="{{t.isHero}}" hint-placeholder-val="{{false}}">
+                          <article class="hairline hero" style="padding: 24px; margin: 8px 0 16px; display: flex; flex-direction: column; gap: 16px">
+                            <div style="display: flex; flex-direction: column; gap: 8px">
+                              <h3 class="t-section">{{t.name}}</h3>
+                              <p class="muted">{{t.why}}</p>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+                              <button onClick="{{t.open}}" class="btn btn-primary">Start<span class="sr">: {{t.name}}</span></button>
+                              <span class="t-small muted">{{t.time}}</span>
+                            </div>
+                          </article>
+                        </sc-if>
+                        <sc-if value="{{t.isRow}}" hint-placeholder-val="{{true}}">
+                          <div style="padding: 0 0 4px">
+                            <button onClick="{{t.open}}" aria-current="{{t.ariaCurrent}}" class="row"><span class="t-strong" style="flex: 1 1 240px; color: {{t.ink}}">{{t.name}}</span><span class="t-small muted">{{t.meta}}</span></button>
+                          </div>
+                        </sc-if>
+                      </li>
+                    </sc-for>
+                  </ol>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ol>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{sheetOpen}}" hint-placeholder-val="{{false}}">
+        <div class="sheet-wrap">
+          <aside class="sheet" aria-labelledby="sheet-title">
+            <sc-if value="{{hasBack}}" hint-placeholder-val="{{false}}"><div class="sheet-top"><button onClick="{{back}}" class="btn btn-ghost"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex: none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{backLabel}}</span></button></div></sc-if>
+            <div style="display: flex; align-items: flex-start; gap: 16px">
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+                <span class="t-small muted">{{open.sub}}</span>
+                <h2 id="sheet-title" class="t-section">{{open.name}}</h2>
+              </div>
+              <sc-if value="{{open.isDone}}" hint-placeholder-val="{{false}}">
+                <div class="stamp" role="img" aria-label="Done {{open.doneOn}}"><span>Done</span><span style="font-weight: 500">{{open.doneOn}}</span></div>
+              </sc-if>
+              <button onClick="{{close}}" class="btn btn-ghost" aria-label="Close task" style="margin: -8px -8px 0 0; padding: 0 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            </div>
+
+            <p>{{open.why}}</p>
+            <sc-if value="{{open.hasSteps}}" hint-placeholder-val="{{false}}">
+              <ol style="margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px">
+                <sc-for list="{{open.steps}}" as="s" hint-placeholder-count="4"><li>{{s}}</li></sc-for>
+              </ol>
+            </sc-if>
+            <sc-if value="{{open.hasAction}}" hint-placeholder-val="{{false}}">
+              <a href="{{open.actionHref}}" target="_blank" rel="noopener" class="t-strong" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px">{{open.actionLabel}}<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex: none"><path d="M6 3H3v10h10v-3M9 3h4v4M13 3 7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sr"> (opens in a new tab)</span></a>
+            </sc-if>
+            <p class="t-small muted">Source: <a href="{{open.sourceHref}}" target="_blank" rel="noopener">{{open.sourceLabel}}</a>, checked {{open.checked}}</p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-if value="{{open.canMark}}" hint-placeholder-val="{{true}}"><button onClick="{{open.mark}}" class="btn btn-primary">Mark as done</button></sc-if>
+              <sc-if value="{{open.canUndo}}" hint-placeholder-val="{{false}}"><button onClick="{{open.undo}}" class="btn btn-quiet">Mark as not done</button></sc-if>
+            </div>
+
+            <section aria-labelledby="ask-title" style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #E3E8EA">
+              <h3 id="ask-title" style="font-size: 15px; font-weight: 600">Ask about {{open.topic}}</h3>
+              <sc-for list="{{open.thread}}" as="m" hint-placeholder-count="0">
+                <p class="ask-q">{{m.q}}</p>
+                <div class="ai {{m.cls}}"><div aria-live="polite"><span class="t-small muted">{{m.traceText}}</span><p>{{m.text}}</p></div></div>
+              </sc-for>
+              <sc-if value="{{open.hasSuggestions}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                  <sc-for list="{{open.suggestions}}" as="g" hint-placeholder-count="2"><button onClick="{{g.ask}}" class="btn btn-quiet" style="font-weight: 400">{{g.q}}</button></sc-for>
+                </div>
+              </sc-if>
+              <div style="display: flex; gap: 8px">
+                <label for="sheet-ask" class="sr">Ask about {{open.topic}}</label>
+                <input id="sheet-ask" class="field" placeholder="Ask a question" autocomplete="off" value="{{draft}}" onInput="{{setDraft}}" onKeyDown="{{askKey}}" disabled="{{open.streaming}}" style="flex: 1; min-width: 0; background: {{open.inputBg}}">
+                <sc-if value="{{open.streaming}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{open.stop}}" class="btn btn-quiet">Stop</button></sc-if>
+                <sc-if value="{{open.idle}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{askFree}}" class="btn btn-quiet">Ask</button></sc-if>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </sc-if>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scenario":{"editor":"enum","options":["default","open","streaming","first","error"],"default":"default"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const sc = props.scenario || 'default';
+    const streamingMsg = { q: 'How long until I get my number?', a: 'Most people get it within 1–2 business days of applying, and IRD emails you when it is ready.', trace: 'Checked ird.govt.nz', shown: 6, streaming: true, frozen: true };
+    this.state = { draft: '', done: [], openId: sc === 'open' || sc === 'streaming' ? 't08' : null, expanded: {}, history: [],
+      threads: sc === 'streaming' ? { t08: [streamingMsg] } : {}, offline: sc === 'error', firstUse: sc === 'first' };
+  }
+  componentDidMount() { this.timer = setInterval(() => this.tick(), 90); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  // reveals one more word of each streaming answer; frozen ones (the streaming state board) hold still
+  tick() {
+    const threads = this.state.threads;
+    let changed = false;
+    const next = {};
+    Object.keys(threads).forEach((id) => {
+      next[id] = threads[id].map((m) => {
+        if (!m.streaming || m.frozen) return m;
+        changed = true;
+        const shown = m.shown + 1;
+        return { ...m, shown, streaming: shown < m.a.split(' ').length };
+      });
+    });
+    if (changed) this.setState({ threads: next });
+  }
+  tasks() {
+    // names, legs, times, dependencies and summaries from apps/api/content/kb-master.md (T01–T21, checked 3 Mar 2026)
+    const kb = 'LandedNZ knowledge base';
+    return [
+      { id: 't01', leg: 0, name: 'Research Auckland suburbs', topic: 'suburbs', time: '2–3 hours', why: 'Auckland is spread out: the southern suburbs to the North Shore can be a 60–90 minute commute each way at peak.', doneOn: '28 Sep' },
+      { id: 't02', leg: 0, name: 'Book temporary accommodation', topic: 'temporary accommodation', time: '1–2 hours', why: 'The rental market moves fast and you should view in person, so most people book short-term first.', doneOn: '30 Sep' },
+      { id: 't03', leg: 0, name: 'Prepare your overseas bank account', topic: 'your overseas account', time: '1–2 hours', why: 'Keep your home accounts reachable and ready to receive transfers from New Zealand.', doneOn: '3 Oct' },
+      { id: 't04', leg: 0, name: 'Insure your move', topic: 'moving insurance', time: '30–60 minutes', why: 'Cover your belongings in transit and in your first rental, before NZ contents insurance starts.', doneOn: '6 Oct' },
+      { id: 't05', leg: 0, name: 'Sort your home-country tax', topic: 'home-country tax', time: '1–2 hours', why: 'The year you leave needs a final resident return and the right documents for your new tax status.', doneOn: '12 Oct' },
+      { id: 't06', leg: 1, name: 'Get an NZ SIM card', topic: 'SIM cards', time: '15–30 minutes', why: 'Your bank, your employer and government sites need an NZ number. Get one before you leave the airport.', doneOn: '21 Oct' },
+      { id: 't07', leg: 1, name: 'Open a bank account', topic: 'bank accounts', time: 'In a branch, 45–90 minutes', why: 'Your employer pays into an NZ account, and your IRD application needs its number.', doneOn: '22 Oct' },
+      { id: 't08', leg: 2, name: 'Apply for your IRD number', topic: 'your IRD number', time: '20–30 minutes online',
+        why: 'Your employer needs it before your first payday. Without it they must deduct tax at 45%.',
+        steps: ['Have your passport, visa details and NZ bank account number ready.', 'Apply online at ird.govt.nz.', 'Wait 1–2 business days for your number.', 'Give it to your employer with your IR330.'],
+        action: ['Open the IRD application', 'https://www.ird.govt.nz'], source: ['ird.govt.nz', 'https://www.ird.govt.nz'],
+        asks: [
+          { q: 'What documents do I need?', a: 'Your passport, your visa details and your NZ bank account number. Yours is open, so you have everything.', trace: 'Read your roadmap, checked ird.govt.nz' },
+          { q: 'How long until I get my number?', a: 'Most people get it within 1–2 business days of applying.', trace: 'Checked ird.govt.nz' }
+        ] },
+      { id: 't09', leg: 2, needs: 't08', name: 'Give your employer a tax code (IR330)', topic: 'your tax code', time: '15–20 minutes', blockedMeta: 'Needs your IRD number first',
+        why: 'The IR330 tells your employer which tax rate to deduct. Most skilled migrants on one NZ income use code M.',
+        action: ['Open the IR330 form', 'https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration'], source: ['ird.govt.nz', 'https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration'] },
+      { id: 't10', leg: 2, name: 'Choose your KiwiSaver fund', topic: 'KiwiSaver', time: '30–45 minutes', meta: 'Best done with your IR330',
+        why: 'Your employer enrols you automatically. Choosing first lets you pick your provider and rate.', source: ['ird.govt.nz/kiwisaver', 'https://www.ird.govt.nz/kiwisaver'] },
+      { id: 't11', leg: 3, name: 'Sign a rental and lodge the bond', topic: 'renting', time: '2–4 hours',
+        why: 'Bond is capped at 4 weeks of rent and must be lodged with Tenancy Services, not kept by the landlord.', source: ['tenancy.govt.nz', 'https://www.tenancy.govt.nz/bonds/check-bond-status'] },
+      { id: 't12', leg: 3, name: 'Register with a GP', topic: 'GPs', time: '30–60 minutes',
+        why: 'Enrolled patients pay subsidised fees. Register before you need a doctor.', action: ['Find a GP near you', 'https://www.healthpoint.co.nz/general-practice'], source: ['healthpoint.co.nz', 'https://www.healthpoint.co.nz/general-practice'] },
+      { id: 't13', leg: 3, name: 'Learn how ACC covers injuries', topic: 'ACC', time: '20 minutes of reading',
+        why: 'ACC pays for treatment after an accident, for everyone in New Zealand, migrants and visitors included.', source: ['acc.co.nz', 'https://www.acc.co.nz/'] },
+      { id: 't14', leg: 3, name: 'Know your rights as a tenant', topic: 'tenant rights', time: '30 minutes of reading',
+        why: 'Landlords must give notice before entering and can raise rent only once every 12 months.', source: ['tenancy.govt.nz', 'https://www.tenancy.govt.nz/tenants-rights-and-responsibilities'] },
+      { id: 't15', leg: 4, name: 'Set up money transfers home', topic: 'sending money home', time: '1–2 hours', why: 'Bank wires are slow and expensive. Specialist services cost less for regular transfers.' },
+      { id: 't16', leg: 4, name: 'Convert your driving licence', topic: 'driving licences', time: '1–2 hours', why: 'An overseas licence lets you drive for 12 months from the day you arrive.' },
+      { id: 't17', leg: 4, name: 'Get your qualifications recognised', topic: 'NZQA', time: '2–4 hours, then about 10 weeks', why: 'NZQA assesses overseas qualifications against the New Zealand framework.' },
+      { id: 't18', leg: 4, name: 'Build an NZ credit history', topic: 'credit history', time: 'Ongoing', why: 'Overseas credit records do not transfer, so you start from nothing.' },
+      { id: 't19', leg: 4, name: 'Update your CV and LinkedIn for NZ', topic: 'CVs', time: '3–6 hours', why: 'NZ CV conventions differ from Indian, Sri Lankan and Singapore formats.' },
+      { id: 't20', leg: 4, needs: 't10', name: 'Review your KiwiSaver fund', topic: 'KiwiSaver reviews', time: '1–2 hours', blockedMeta: 'Three months after you choose a fund', why: 'Three months in, review your provider, fund type and contribution rate.' },
+      { id: 't21', leg: 4, couplesOnly: true, name: 'Open a joint bank account', topic: 'joint accounts', time: '45–60 minutes in a branch', why: 'Useful if you share rent, bills and savings with a partner.' }
+    // Priya moves on her own, so couple-only tasks (T21) are filtered out: 20 tasks
+    ].filter((t) => !t.couplesOnly).map((t) => ({ source: [kb, '#'], ...t }));
+  }
+  renderVals() {
+    const { done, openId, expanded, threads, history, offline, firstUse, draft } = this.state;
+    const all = this.tasks();
+    // before arrival and arrival day are done for Priya (day 3); first use starts empty
+    const preDone = firstUse ? [] : ['t01', 't02', 't03', 't04', 't05', 't06', 't07'];
+    const isDone = (t) => preDone.includes(t.id) || done.includes(t.id);
+    const isBlocked = (t) => !!t.needs && !isDone(all.find((x) => x.id === t.needs));
+    const current = firstUse ? all.find((t) => t.id === 't06') : all.find((t) => !isDone(t) && !isBlocked(t));
+    const sheetOpen = !!openId;
+    const open = (id) => () => this.setState((st) => ({ openId: id, history: st.openId && st.openId !== id ? st.history.concat([st.openId]) : st.history }));
+
+    const ring = 'width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; ';
+    const dots = {
+      done: ring + 'background: #0E7C7B',
+      current: ring + 'width: 16px; height: 16px; background: #FFFFFF; border: 2px solid #0F2A3A',
+      available: ring + 'background: #FFFFFF; border: 1.5px solid #7A8F99',
+      blocked: ring + 'background: #FFFFFF; border: 1.5px solid #7A8F99',
+      locked: ring + 'background: #FFFFFF; border: 1.5px dashed #7A8F99',
+      legNow: ring + 'background: #FFFFFF; border: 2px solid #0F2A3A'
+    };
+    const legDefs = [['Before you flew', 'before 21 Oct'], ['Arrival', '21 to 22 Oct'], ['Week 1', 'to 28 Oct'], ['Month 1', 'to 20 Nov'], ['Later', 'from month 2']];
+    const currentLeg = current ? current.leg : -1;
+    const legs = legDefs.map(([name, when], i) => {
+      const ts = all.filter((t) => t.leg === i);
+      const n = ts.filter(isDone).length;
+      const allDone = n === ts.length;
+      const locked = i > currentLeg + 1;
+      const isOpen = expanded[i] !== undefined ? expanded[i] : !allDone && !locked;
+      const tasks = ts.map((t) => {
+        const st = isDone(t) ? 'done' : t === current ? 'current' : locked ? 'locked' : isBlocked(t) ? 'blocked' : 'available';
+        const hero = st === 'current' && !sheetOpen;
+        return {
+          name: t.name, why: t.why, time: t.time, open: open(t.id),
+          isHero: hero, isRow: !hero, blocked: st === 'blocked',
+          dot: dots[st], railH: hero ? '72px' : '44px',
+          meta: st === 'done' ? 'Done ' + t.doneOn : st === 'current' ? 'Next' : st === 'blocked' ? t.blockedMeta : t.meta || t.time,
+          ariaCurrent: t.id === openId ? 'true' : 'false', ink: st === 'done' ? '#4B6170' : '#0F2A3A'
+        };
+      });
+      return {
+        name, cls: (allDone ? 'done ' : '') + (isOpen ? '' : 'collapsed'),
+        meta: n + ' of ' + ts.length + ' done, ' + when,
+        dot: allDone ? dots.done : i === currentLeg ? dots.legNow : locked ? dots.locked : dots.available,
+        collapsible: allDone || locked, showTasks: isOpen, expanded: isOpen ? 'true' : 'false',
+        toggleLabel: isOpen ? 'Hide' : 'Show', tasks,
+        toggle: () => this.setState({ expanded: { ...expanded, [i]: !isOpen } })
+      };
+    });
+
+    const doneCount = all.filter(isDone).length;
+    let openVals = { thread: [], suggestions: [], steps: [] };
+    const ot = all.find((t) => t.id === openId);
+    const askFree = () => {
+      const q = draft.trim();
+      if (!q || !ot) return;
+      const asked = threads[ot.id] || [];
+      this.setState({ draft: '', threads: { ...threads, [ot.id]: asked.concat([{ q, a: 'This prototype only answers the suggested questions. The real assistant answers anything about this task.', trace: 'Prototype', shown: 0, streaming: true }]) } });
+    };
+    if (ot) {
+      const asked = threads[ot.id] || [];
+      const tDone = isDone(ot);
+      const streaming = asked.some((m) => m.streaming);
+      openVals = {
+        name: ot.name, why: ot.why, topic: ot.topic,
+        sub: legDefs[ot.leg][0] + ', ' + ot.time,
+        isDone: tDone, doneOn: ot.doneOn || 'today', canMark: !tDone && !isBlocked(ot), canUndo: tDone,
+        hasSteps: !!ot.steps, steps: ot.steps || [],
+        hasAction: !!ot.action && !tDone, actionLabel: ot.action ? ot.action[0] : '', actionHref: ot.action ? ot.action[1] : '#',
+        sourceLabel: ot.source[0], sourceHref: ot.source[1], checked: '3 March 2026',
+        thread: asked.map((m) => {
+          const words = m.a.split(' ');
+          const shown = m.shown === undefined ? words.length : m.shown;
+          return { q: m.q, text: words.slice(0, shown).join(' ') + (m.streaming ? ' …' : ''), traceText: m.streaming ? 'Checking sources' : m.trace, cls: m.streaming ? 'streaming' : '' };
+        }),
+        streaming, idle: !streaming, inputBg: streaming ? '#F6F8F8' : '#FFFFFF',
+        stop: () => this.setState({ threads: { ...threads, [ot.id]: asked.map((m) => m.streaming ? { ...m, a: m.a.split(' ').slice(0, m.shown).join(' '), streaming: false, trace: m.trace + ', stopped' } : m) } }),
+        suggestions: (ot.asks || []).filter((s) => !asked.some((m) => m.q === s.q)).map((s) => ({ q: s.q, ask: () => this.setState({ threads: { ...threads, [ot.id]: asked.concat([{ ...s, shown: 0, streaming: true }]) } }) })),
+        mark: () => this.setState({ done: done.concat([ot.id]) }),
+        undo: () => this.setState({ done: done.filter((d) => d !== ot.id) })
+      };
+      openVals.hasSuggestions = openVals.suggestions.length > 0;
+    }
+
+    return {
+      offline, online: !offline, firstUse, total: all.length,
+      retry: () => this.setState({ offline: false }),
+      doneCount, donePct: Math.round((doneCount / all.length) * 100) + '%',
+      legs, sheetOpen, layoutCls: sheetOpen ? 'has-sheet' : '', open: openVals,
+      close: () => this.setState({ openId: null, history: [] }),
+      hasBack: sheetOpen && history.length > 0,
+      backLabel: history.length ? all.find((t) => t.id === history[history.length - 1]).name : '',
+      back: () => this.setState({ openId: history[history.length - 1], history: history.slice(0, -1) }),
+      askCurrent: () => current && !offline && this.setState({ openId: current.id }),
+      draft, setDraft: (e) => this.setState({ draft: e.target.value }),
+      askFree, askKey: (e) => { if (e.key === 'Enter') askFree(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

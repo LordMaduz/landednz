@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+.ui h1,.ui h2,.ui h3,.ui p{margin:0}
+.ui h1,.ui h2{text-wrap:balance}
+.t-hero{font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.03em}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.t-strong{font-weight:500}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+.ui a.btn{text-decoration:none}
+.btn-lg{min-height:48px;padding:0 24px}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.btn:disabled{background:#F6F8F8;color:#4B6170;border-color:#F6F8F8;cursor:default}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.hairline{border:1px solid #E3E8EA;border-radius:10px}
+.row-link{display:flex;align-items:center;gap:16px;padding:16px 24px}.ui a.row-link{color:#0F2A3A;text-decoration:none}.row-link:hover{background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;box-sizing:border-box;padding-left:24px;padding-right:24px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.streaming{background-size:200% 100%;animation:aurora 3s linear infinite}
+@keyframes aurora{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media (prefers-reduced-motion: reduce){.streaming{animation:none}}
+@container (max-width: 760px){.hide-sm{display:none !important}.t-hero{font-size:32px;line-height:1.15}.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}}
+.set{display:grid;grid-template-columns:minmax(0,280px) minmax(0,560px);gap:48px;padding-top:32px;padding-bottom:32px;border-top:1px solid #E3E8EA}
+.set > div:first-child{display:flex;flex-direction:column;gap:8px}
+.fields{display:flex;flex-direction:column;gap:24px}
+.f{display:flex;flex-direction:column;gap:8px}
+.f select,.f input{width:100%}
+.kv{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+@container (max-width: 860px){.set{grid-template-columns:minmax(0,1fr);gap:24px}}
+.sel{position:relative}.sel select{appearance:none;-webkit-appearance:none;padding-right:48px}.sel svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; min-height: 900px">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container hdr" style="height: 64px; display: flex; align-items: center; gap: 32px">
+      <a href="/app" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <nav class="nav" aria-label="Main" style="display: flex; gap: 4px">
+        <a href="/app">Home</a>
+        <a href="/app/roadmap">Roadmap</a>
+      </nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px">
+        <button class="btn btn-quiet" aria-keyshortcuts="/">Ask<span class="kbd hide-sm" aria-hidden="true">/</span></button>
+        <button aria-haspopup="menu" aria-label="Account, Priya Sharma" style="font: inherit; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 50%; background: #E8F2F1; color: #0A6463; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center">PS</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="container" style="padding-top: 48px; padding-bottom: 96px; display: flex; flex-direction: column; gap: 32px">
+    <h1 class="t-title">Settings</h1>
+    <div>
+      <section class="set" aria-labelledby="s-plan">
+        <div>
+          <h2 id="s-plan" class="t-section">Your plan</h2>
+          <p class="muted">Your roadmap is built from these answers. Change one and it's rebuilt; tasks you've done stay done.</p>
+        </div>
+        <div class="fields">
+          <div class="f"><label for="visa" class="t-strong">Visa</label><div class="sel"><select id="visa" class="field"><option selected>Accredited Employer Work Visa (AEWV)</option><option>Green List, work to residence</option><option>Green List, straight to residence</option><option>Partner of a student</option><option>Something else</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="#4B6170" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+          <div class="f"><label for="city" class="t-strong">City</label><div class="sel"><select id="city" class="field"><option selected>Auckland</option><option>Wellington</option><option>Christchurch</option><option>Somewhere else</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="#4B6170" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+          <div class="f"><label for="family" class="t-strong">Who's moving with you</label><div class="sel"><select id="family" class="field"><option selected>Just me</option><option>My partner, and we both work</option><option>My partner, who can't work yet</option><option>My partner and our children</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="#4B6170" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+          <div class="f"><label for="work" class="t-strong">Work</label><div class="sel"><select id="work" class="field"><option selected>Technology</option><option>Healthcare</option><option>Education</option><option>Finance</option><option>Trades</option><option>Another profession</option><option>I'm still looking for work</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m4 6 4 4 4-4" stroke="#4B6170" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+          <div class="f"><label for="arrival" class="t-strong">Arrival date</label><input id="arrival" type="date" class="field" value="2026-10-21" style="max-width: 280px"></div>
+          <button class="btn btn-primary" style="align-self: flex-start">Save changes</button>
+        </div>
+      </section>
+
+      <section class="set" aria-labelledby="s-account">
+        <div>
+          <h2 id="s-account" class="t-section">Account</h2>
+          <p class="muted">You sign in with Google.</p>
+        </div>
+        <div class="fields">
+          <div class="kv">
+            <div style="display: flex; flex-direction: column"><span class="t-strong">Priya Sharma</span><span class="muted">priya.sharma@gmail.com</span></div>
+            <button class="btn btn-quiet">Sign out</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="set" aria-labelledby="s-delete">
+        <div>
+          <h2 id="s-delete" class="t-section">Delete your account</h2>
+          <p class="muted">Removes your answers, your roadmap and your questions to the assistant. This can't be undone.</p>
+        </div>
+        <div class="fields">
+          <button class="btn btn-quiet" style="align-self: flex-start">Delete my account</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
