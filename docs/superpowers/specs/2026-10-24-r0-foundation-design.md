@@ -113,6 +113,8 @@ API routes and payloads, SSE event format, RAG pipeline order (C07), guardrails,
 **Amendment (2026-10-24, approved page boards):** additive, backward-compatible changes only — no existing route, field or event changes meaning:
 
 - `completedAt: string | null` (ISO) on every roadmap task in `GET /roadmap` (Home "Recently done", done dates, the stamp).
+- `blockingTaskIds: string[]` beside `blockingTaskNames` on roadmap tasks (blocked copy names the blocker in plain words).
+- `lastVerified: string | null` (ISO date, from the KB's `LAST_VERIFIED`) on `GET /roadmap/tasks/:taskId` (source line "checked 3 March 2026"); stored in a new nullable `Task.lastVerifiedAt` column (expand-only migration).
 - `POST /roadmap/tasks/:taskId/reopen` — marks a done task not done ("Mark as not done", toast Undo); blocked flags recompute.
 - `POST /onboarding/preview` — public, rate-limited; takes the five answers and returns the filtered, ordered task list, so the preview before sign-up is the real roadmap.
 - `DELETE /account` — deletes the user's rows (cascade) and their Supabase auth user.
