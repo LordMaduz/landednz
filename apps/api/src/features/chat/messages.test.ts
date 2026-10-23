@@ -4,54 +4,25 @@
 import { describe, expect, test, beforeAll, afterAll } from 'vitest';
 import { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
+import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
 
 const TS = Date.now();
-const TEST_EMAIL = `test-messages-${TS}@example.com`;
-const TEST_PASSWORD = 'TestPassword123!';
+let TEST_EMAIL: string;
 let TEST_USER_ID: string;
 let TEST_JWT_TOKEN: string;
 let TEST_SESSION_ID: string;
 let app: FastifyInstance;
 
 async function createSupabaseTestUser() {
-  // Create user via Supabase Auth API
-  const signUpResponse = await fetch('http://127.0.0.1:54321/auth/v1/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH', // From supabase start output
-    },
-    body: JSON.stringify({
-      email: TEST_EMAIL,
-      password: TEST_PASSWORD,
-    }),
-  });
-
-  if (!signUpResponse.ok) {
-    throw new Error(`Failed to create test user: ${signUpResponse.status}`);
-  }
-
-  const signUpData = await signUpResponse.json() as { user: { id: string }; access_token: string };
-  TEST_USER_ID = signUpData.user.id;
-  TEST_JWT_TOKEN = signUpData.access_token;
-
-  return { userId: TEST_USER_ID, token: TEST_JWT_TOKEN };
+  const user = await createTestUser('test-messages');
+  TEST_USER_ID = user.userId;
+  TEST_JWT_TOKEN = user.jwt;
+  TEST_EMAIL = user.email;
 }
 
 async function deleteSupabaseTestUser() {
-  // Delete user from Supabase
-  try {
-    await fetch(`http://127.0.0.1:54321/auth/v1/admin/users/${TEST_USER_ID}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${TEST_JWT_TOKEN}`,
-        'apikey': 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz', // Service role key from supabase start
-      },
-    });
-  } catch (error) {
-    console.warn('Failed to delete Supabase test user:', error);
-  }
+  await deleteTestUser(TEST_USER_ID);
 }
 
 beforeAll(async () => {
@@ -206,21 +177,7 @@ describe('POST /chat/sessions/:sessionId/messages - Real SSE Integration', () =>
 
   test('Session belonging to different user → 403', async () => {
     // Create another user and session for this test
-    const otherUserResponse = await fetch('http://127.0.0.1:54321/auth/v1/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
-      },
-      body: JSON.stringify({
-        email: `other-${TS}@example.com`,
-        password: TEST_PASSWORD,
-      }),
-    });
-
-    const otherUserData = await otherUserResponse.json() as { user: { id: string }; access_token: string };
-    const otherUserId = otherUserData.user.id;
-    const otherUserToken = otherUserData.access_token;
+    const { userId: otherUserId, jwt: otherUserToken } = await createTestUser('other');
 
     try {
       // Try to access our test session with the other user's token
@@ -238,13 +195,7 @@ describe('POST /chat/sessions/:sessionId/messages - Real SSE Integration', () =>
       expect(response.statusCode).toBe(403);
     } finally {
       // Clean up other user
-      await fetch(`http://127.0.0.1:54321/auth/v1/admin/users/${otherUserId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${otherUserToken}`,
-          'apikey': 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
-        },
-      });
+      await deleteTestUser(otherUserId);
     }
   }, 15000);
 

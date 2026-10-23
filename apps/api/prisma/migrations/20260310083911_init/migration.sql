@@ -1,3 +1,6 @@
+-- pgvector: required by the embedding column (20260322000000_add_embedding_column)
+CREATE EXTENSION IF NOT EXISTS vector;
+
 -- CreateEnum
 CREATE TYPE "VisaType" AS ENUM ('AEWV', 'PARTNER_OF_STUDENT', 'GREEN_LIST_WORK', 'GREEN_LIST_RESIDENCE', 'OTHER');
 
