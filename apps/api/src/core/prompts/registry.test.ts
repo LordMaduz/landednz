@@ -3,9 +3,9 @@
 // TDD for buildChatSystemPrompt() — all 7 components + token count
 
 import { describe, expect, test } from 'vitest';
-import { buildChatOpeningMessage, buildChatSystemPrompt } from './registry';
+import { buildChatOpeningMessage, buildChatSystemPrompt } from './registry.js';
 import type { ChatEntryPoint } from '@landednz/types';
-import type { BuildSystemPromptParams, ChatKbChunk } from '../../features/chat/chat.types';
+import type { BuildSystemPromptParams, ChatKbChunk } from '../../features/chat/chat.types.js';
 
 // Mock user data for tests
 const mockUser = {

@@ -1,10 +1,10 @@
 import { FastifyInstance } from 'fastify';
-import { logger } from '../../shared/logger';
-import { AppError } from '../../shared/errors';
-import { authenticateRequest } from '../../shared/middleware/auth';
-import { createProfile, updateProfileAndRegenerateRoadmap, getUserProfile } from './onboarding.service';
-import { db } from '../../shared/db';
-import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types';
+import { logger } from '../../shared/logger.js';
+import { AppError } from '../../shared/errors.js';
+import { authenticateRequest } from '../../shared/middleware/auth.js';
+import { createProfile, updateProfileAndRegenerateRoadmap, getUserProfile } from './onboarding.service.js';
+import { db } from '../../shared/db.js';
+import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
 
 export function registerOnboardingRoutes(app: FastifyInstance): void {
   // POST /onboarding/profile

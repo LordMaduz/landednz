@@ -3,9 +3,9 @@
 // Pipeline order is a constitutional constraint (C07, C12).
 // Zero imports from features/roadmap/ (C01). Prisma use allowed in features/ (C02).
 
-import { db } from '../../../shared/db';
-import { generateEmbedding } from '../../../shared/ai/embeddings.client';
-import { logger } from '../../../shared/logger';
+import { db } from '../../../shared/db.js';
+import { generateEmbedding } from '../../../shared/ai/embeddings.client.js';
+import { logger } from '../../../shared/logger.js';
 
 export interface RetrievalInput {
   query: string;

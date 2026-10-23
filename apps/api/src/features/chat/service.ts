@@ -1,16 +1,17 @@
 // Chat service — session creation and management
 // Zero imports from features/roadmap/ per constitutional constraint C01
 
-import { db } from '../../shared/db';
-import { AppError, AIFailureError } from '../../shared/errors';
-import { logger } from '../../shared/logger';
-import { buildChatOpeningMessage, buildChatSystemPrompt, buildResponseStructuringPrompt } from '../../core/prompts/registry';
-import { streamMessage, generateText, type ChatMessage } from '../../shared/ai/claude.client';
-import { runLevel1Guardrail } from './guardrails/level1';
-import { runLevel2Guardrail } from './guardrails/level2';
+import { db } from '../../shared/db.js';
+import { AppError, AIFailureError } from '../../shared/errors.js';
+import { logger } from '../../shared/logger.js';
+import { buildChatOpeningMessage, buildChatSystemPrompt, buildResponseStructuringPrompt } from '../../core/prompts/registry.js';
+import { streamMessage, generateText, type ChatMessage } from '../../shared/ai/claude.client.js';
+import { runLevel1Guardrail } from './guardrails/level1.js';
+import { runLevel2Guardrail } from './guardrails/level2.js';
 import type { ChatEntryPoint } from '@landednz/types';
-import { retrieveChunks, type RetrievedChunk } from './rag/retrieval';
-import type { CreateSessionResponse, BuildSystemPromptParams, ChatKbChunk } from './chat.types';
+import { retrieveChunks, type RetrievedChunk } from './rag/retrieval.js';
+import { assertUnderDailyCap } from './daily-cap.js';
+import type { CreateSessionResponse, BuildSystemPromptParams, ChatKbChunk } from './chat.types.js';
 import type { FastifyReply } from 'fastify';
 
 export async function createChatSession(
@@ -127,6 +128,9 @@ export async function sendMessage(
   if (!session.user.profile) {
     throw new AppError('PROFILE_NOT_FOUND', 'User profile not found', 404);
   }
+
+  // Before SSE headers, so a capped user gets a normal 429 JSON error
+  await assertUnderDailyCap(userId);
 
   // Set up SSE headers (C14) after validation — reply.raw required, never reply.send()
   // Prevent Railway 30s timeout (skip in test environment)

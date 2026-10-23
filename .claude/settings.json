@@ -1,6 +1,5 @@
 {
-  "model": "claude-sonnet-4-20250514",
-  "plansDirectory": "./rpi",
+  "plansDirectory": "./docs/superpowers/plans",
   "permissions": {
     "allow": [
       "Bash(npm test*)",
@@ -16,10 +15,6 @@
       "Bash(supabase start*)",
       "Bash(supabase stop*)",
       "Bash(supabase status*)",
-      "Bash(npx react-native*)",
-      "Bash(npx react-native run-ios*)",
-      "Bash(cd apps/mobile/ios && pod install*)",
-      "Bash(xcodebuild*)",
       "Edit(*)"
     ],
     "ask": [

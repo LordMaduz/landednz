@@ -1,15 +1,15 @@
 // Onboarding service — orchestrates profile creation and roadmap generation.
 // Calls core/ pure functions for task filtering, dependency resolution, and scoring.
 
-import { db } from '../../shared/db';
-import { logger } from '../../shared/logger';
-import { AppError } from '../../shared/errors';
-import { filterApplicableTasks } from '../../core/priority/filter';
-import { derivePersonaKey } from '../../core/priority/filter';
-import { resolveBlockedTasks } from '../../core/dependencies/resolver';
-import { scoreTask } from '../../core/priority/scoring';
-import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types';
-import type { PersonaKey } from '../../shared/types';
+import { db } from '../../shared/db.js';
+import { logger } from '../../shared/logger.js';
+import { AppError } from '../../shared/errors.js';
+import { filterApplicableTasks } from '../../core/priority/filter.js';
+import { derivePersonaKey } from '../../core/priority/filter.js';
+import { resolveBlockedTasks } from '../../core/dependencies/resolver.js';
+import { scoreTask } from '../../core/priority/scoring.js';
+import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
+import type { PersonaKey } from '../../shared/types.js';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

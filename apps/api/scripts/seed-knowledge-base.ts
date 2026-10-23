@@ -9,7 +9,7 @@
  * - Run from apps/api/ directory: npx ts-node scripts/seed-knowledge-base.ts
  */
 
-import { db } from '../src/shared/db'
+import { db } from '../src/shared/db.js'
 // NOTE: Using console instead of logger to avoid DATABASE_URL import dependency
 import type { VisaType, FamilySituation, Occupation, PersonaKey } from '@landednz/types'
 
@@ -240,13 +240,15 @@ const dependencyGraph: Array<{ prerequisiteId: string; dependentId: string; depe
 // Production-grade parsing with comprehensive error handling and validation
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'url'
 
 interface ParsedTaskData {
   taskEntry: TaskSeedEntry
   knowledgeBaseChunks: Array<{
     chunkKey: string
-    taskId: string
-    personaKey: string
+    taskId: string | null
+    personaKey: string | null
+    chunkType?: 'TASK_CONTENT' | 'SETTLEMENT_CONTEXT'
     content: string
     sourceUrl: string
     sourceName: string
@@ -260,7 +262,7 @@ interface ValidationError {
 }
 
 function parseKnowledgeBase(): { tasks: TaskSeedEntry[], knowledgeBaseChunks: Array<any>, errors: ValidationError[] } {
-  const kbPath = path.join(__dirname, '../../../landednz_kb_master_COMPLETE_v1.md')
+  const kbPath = path.join(import.meta.dirname, '../content/kb-master.md')
 
   if (!fs.existsSync(kbPath)) {
     throw new Error(`Knowledge base file not found: ${kbPath}`)
@@ -465,7 +467,17 @@ function parseTaskSectionProduction(lines: string[], taskId: string): ParsedTask
         content: buildChunkContent(summary, whatAndWhy, keyFacts, howTo, watchOuts, personaSoloAewv),
         sourceUrl: applyUrlReplacements(primarySource.url),
         sourceName: primarySource.title
-      }
+      },
+      // Persona-neutral settlement context (personaKey NULL passes every persona pre-filter, C07)
+      ...(taskId === 'T01' ? [{
+        chunkKey: 'CHUNK_CONTEXT_suburbs',
+        taskId: null,
+        personaKey: null,
+        chunkType: 'SETTLEMENT_CONTEXT' as const,
+        content: buildChunkContent(summary, whatAndWhy, keyFacts, howTo, watchOuts, ''),
+        sourceUrl: applyUrlReplacements(primarySource.url),
+        sourceName: primarySource.title
+      }] : [])
     ]
 
     return { taskEntry, knowledgeBaseChunks }
@@ -1048,7 +1060,7 @@ if (errors.length > 0) {
   throw new Error('Knowledge base parsing failed - see errors above')
 }
 
-async function main() {
+export async function seedKnowledgeBase(): Promise<void> {
   console.log('📦 Starting knowledge base seed script')
 
   try {
@@ -1240,7 +1252,7 @@ async function main() {
           update: {
             taskId: chunk.taskId,
             personaKey: chunk.personaKey,
-            chunkType: 'TASK_CONTENT',
+            chunkType: chunk.chunkType ?? 'TASK_CONTENT',
             content: chunk.content,
             sourceUrl: chunk.sourceUrl,
             sourceName: chunk.sourceName
@@ -1249,7 +1261,7 @@ async function main() {
             chunkKey: chunk.chunkKey,
             taskId: chunk.taskId,
             personaKey: chunk.personaKey,
-            chunkType: 'TASK_CONTENT',
+            chunkType: chunk.chunkType ?? 'TASK_CONTENT',
             content: chunk.content,
             sourceUrl: chunk.sourceUrl,
             sourceName: chunk.sourceName
@@ -1331,8 +1343,8 @@ async function validateSeedDataIntegrity() {
   }
 }
 
-// Execute main function with error handling
-main().catch((error) => {
+// Run only when executed directly, not when imported by bootstrap
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) seedKnowledgeBase().catch((error) => {
   console.error('💥 Seed script failed:', error)
   process.exit(1)
 })

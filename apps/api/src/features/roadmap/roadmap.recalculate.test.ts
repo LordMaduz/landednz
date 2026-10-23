@@ -10,9 +10,9 @@
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
-import { db } from '../../shared/db';
-import { createProfile } from '../onboarding/onboarding.service';
-import { recalculateAllRoadmaps } from './roadmap.recalculate';
+import { db } from '../../shared/db.js';
+import { createProfile } from '../onboarding/onboarding.service.js';
+import { recalculateAllRoadmaps } from './roadmap.recalculate.js';
 
 // ─── Test identifiers ─────────────────────────────────────────────────────────
 

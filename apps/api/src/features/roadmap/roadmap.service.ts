@@ -2,14 +2,14 @@
 // getRoadmap(): reads scores as stored (no recalculation).
 // completeTask(): marks a task complete, rescores only directly affected tasks via core/ functions.
 
-import { db } from '../../shared/db';
-import { logger } from '../../shared/logger';
-import { AppError } from '../../shared/errors';
-import { config } from '../../shared/config';
-import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver';
-import { scoreTask } from '../../core/priority/scoring';
-import type { PersonaKey } from '../../shared/types';
-import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types';
+import { db } from '../../shared/db.js';
+import { logger } from '../../shared/logger.js';
+import { AppError } from '../../shared/errors.js';
+import { config } from '../../shared/config.js';
+import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver.js';
+import { scoreTask } from '../../core/priority/scoring.js';
+import type { PersonaKey } from '../../shared/types.js';
+import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
 
 export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
   // 1. Look up UserProfile — need personaKey for consequenceLine resolution

@@ -2,7 +2,7 @@
 // All tests will fail initially — implementation comes after
 
 import { describe, expect, test } from 'vitest';
-import { resolveBlockedTasks, getAffectedTasks } from './resolver';
+import { resolveBlockedTasks, getAffectedTasks } from './resolver.js';
 import { DependencyType } from '@landednz/types';
 
 // ─── resolveBlockedTasks() ──────────────────────────────────────────────────

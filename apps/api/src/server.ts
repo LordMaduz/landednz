@@ -1,30 +1,29 @@
-// Load environment variables from .env.local first
-import { config as loadDotenv } from 'dotenv'
-loadDotenv({ path: '.env.local' })
-
 import Fastify from 'fastify'
-import { config } from './shared/config'
-import { logger } from './shared/logger'
-import { db } from './shared/db'
-import { registerErrorHandler } from './shared/plugins/error-handler'
-import { registerHealthRoutes } from './features/health/health.route'
-import { registerAuthRoutes } from './features/auth/auth.route'
-import { registerOnboardingRoutes } from './features/onboarding/onboarding.route'
-import { registerRoadmapRoutes } from './features/roadmap/roadmap.route'
-import { registerChatRoutes } from './features/chat/routes'
-import { registerAuthDecoration } from './shared/middleware/auth'
+import cors from '@fastify/cors'
+import { config } from './shared/config.js'
+import { logger } from './shared/logger.js'
+import { db } from './shared/db.js'
+import { registerErrorHandler } from './shared/plugins/error-handler.js'
+import { registerHealthRoutes } from './features/health/health.route.js'
+import { registerAuthRoutes } from './features/auth/auth.route.js'
+import { registerOnboardingRoutes } from './features/onboarding/onboarding.route.js'
+import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
+import { registerChatRoutes } from './features/chat/routes.js'
+import { registerAuthDecoration } from './shared/middleware/auth.js'
+import { registerRateLimit } from './shared/rate-limit.js'
 
-export function buildApp() {
+export async function buildApp() {
   const app = Fastify({ logger: false })
 
   // Enable CORS for browser requests from web app
-  app.register(require('@fastify/cors'), {
+  app.register(cors, {
     origin: config.corsOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 
   registerErrorHandler(app)
+  await registerRateLimit(app) // before routes, so the global limit attaches to each
   registerAuthDecoration(app) // must register before any route that uses authenticateRequest
   registerHealthRoutes(app)
   registerAuthRoutes(app)
@@ -36,7 +35,7 @@ export function buildApp() {
 }
 
 async function start() {
-  const app = buildApp()
+  const app = await buildApp()
 
   // Graceful shutdown — disconnect Prisma before exit to avoid connection pool leak on Railway.
   const shutdown = async () => {

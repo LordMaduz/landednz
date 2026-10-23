@@ -18,6 +18,8 @@ export type ErrorCode =
   | 'AI_FAILURE'
   | 'SESSION_NOT_FOUND'
   | 'SESSION_ACCESS_DENIED'
+  | 'CHAT_DAILY_CAP_REACHED'
+  | 'RATE_LIMITED'
 
 export class AppError extends Error {
   constructor(

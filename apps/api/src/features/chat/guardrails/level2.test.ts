@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { runLevel2Guardrail } from './level2';
+import { runLevel2Guardrail } from './level2.js';
 
 describe('runLevel2Guardrail — MISSING_CITATION', () => {
   test('response without "Source:" fires MISSING_CITATION', () => {

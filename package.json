@@ -3,18 +3,20 @@
   "private": true,
   "workspaces": [
     "apps/api",
-    "apps/mobile",
     "apps/web",
     "packages/types"
   ],
   "scripts": {
-    "dev:api": "npm run dev --workspace=apps/api"
+    "dev:all": "bash scripts/dev-all.sh",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "test": "npm run test:run -w @landednz/api && npm run test -w @landednz/web",
+    "test:e2e": "npm run test:e2e -w @landednz/web",
+    "build": "npm run build -w @landednz/api && npm run build -w @landednz/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "docker:api": "docker build -f apps/api/Dockerfile -t landednz-api . && sed -e 's/127\\.0\\.0\\.1/host.docker.internal/g' -e 's/^PORT=.*/PORT=3000/' -e 's/^NODE_ENV=.*/NODE_ENV=production/' apps/api/.env.local > apps/api/.env.docker && docker run --rm -p 3001:3000 --env-file apps/api/.env.docker landednz-api"
   },
   "engines": {
-    "node": ">=22.0.0"
-  },
-  "overrides": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1"
+    "node": ">=24"
   }
 }

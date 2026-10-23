@@ -1,9 +1,0 @@
-# Exclude backend and mobile apps from Vercel deployment
-apps/api/
-apps/mobile/
-
-# Exclude development files
-*.log
-.env.local
-.next/
-node_modules/

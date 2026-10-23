@@ -10,9 +10,9 @@
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
-import { db } from '../../shared/db';
-import { createProfile } from '../onboarding/onboarding.service';
-import { bulkOverride } from './roadmap.service';
+import { db } from '../../shared/db.js';
+import { createProfile } from '../onboarding/onboarding.service.js';
+import { bulkOverride, getRoadmap } from './roadmap.service.js';
 
 // ─── Test identifiers ─────────────────────────────────────────────────────────
 
@@ -243,13 +243,15 @@ describe('bulkOverride()', () => {
         occupation: 'TECHNOLOGY',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
+      // The DB also holds the seeded KB tasks, so compare against the roadmap before the call
+      const topThreeBefore = (await getRoadmap(TEST_USER_ID)).topThree.map(t => t.taskId);
 
       const result = await bulkOverride(TEST_USER_ID, ['T_NONEXISTENT'], CURRENT_DATE);
 
       expect(result.marked).toEqual([]);
       expect(result.skipped).toEqual([]);
-      // topThree unchanged — golden1 scenario
-      expect(result.newTopThree.map(t => t.taskId)).toEqual(['T06', 'T08', 'T03']);
+      // topThree unchanged
+      expect(result.newTopThree.map(t => t.taskId)).toEqual(topThreeBefore);
     });
   });
 });

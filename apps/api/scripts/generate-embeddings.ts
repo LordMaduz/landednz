@@ -2,20 +2,20 @@
 // Generates OpenAI text-embedding-3-small embeddings for all KnowledgeBaseChunk records.
 // Run once before creating the ivfflat index (constitutional constraint C05).
 //
-// Usage: npx ts-node scripts/generate-embeddings.ts
+// Usage: npm run db:bootstrap (runs this, then create-vector-index.ts)
 //
 // After this script completes with zero errors:
 //   1. Verify: SELECT count(*) FROM "KnowledgeBaseChunk" WHERE embedding IS NULL → 0
-//   2. THEN manually create the index:
-//      CREATE INDEX ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops);
+//   2. THEN create-vector-index.ts creates the ivfflat index
 //
 // DO NOT add the CREATE INDEX command here — C05 violation.
 
-import { db } from '../src/shared/db';
-import { logger } from '../src/shared/logger';
-import { generateEmbedding } from '../src/shared/ai/embeddings.client';
+import { db } from '../src/shared/db.js';
+import { logger } from '../src/shared/logger.js';
+import { pathToFileURL } from 'url';
+import { generateEmbedding } from '../src/shared/ai/embeddings.client.js';
 
-async function main(): Promise<void> {
+export async function generateEmbeddings(): Promise<{ processed: number; failed: number }> {
   logger.info('Starting embedding generation for KnowledgeBaseChunk records');
 
   // Fetch all chunks without embeddings via raw query (embedding column is not in Prisma schema)
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
 
   if (total === 0) {
     logger.info('All chunks already have embeddings — nothing to do');
-    return;
+    return { processed: 0, failed: 0 };
   }
 
   let processed = 0;
@@ -75,11 +75,15 @@ async function main(): Promise<void> {
 
   if (failed > 0) {
     logger.warn({ failed }, 'Some chunks failed — re-run script to retry failed chunks');
-    process.exit(1);
   }
+  return { processed, failed };
 }
 
-main()
+// Run only when executed directly, not when imported by bootstrap
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) generateEmbeddings()
+  .then(({ failed }) => {
+    if (failed > 0) process.exitCode = 1;
+  })
   .catch((error) => {
     logger.error({ error: error instanceof Error ? error.message : String(error) }, 'Fatal error in generate-embeddings');
     process.exit(1);

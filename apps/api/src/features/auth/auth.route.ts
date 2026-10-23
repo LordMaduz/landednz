@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify'
-import { logger } from '../../shared/logger'
-import { AppError } from '../../shared/errors'
-import type { AuthVerifyResponse } from '../../shared/types'
-import { verifyAndUpsertUser } from './auth.service'
+import { logger } from '../../shared/logger.js'
+import { AppError } from '../../shared/errors.js'
+import type { AuthVerifyResponse } from '../../shared/types.js'
+import { verifyAndUpsertUser } from './auth.service.js'
 
 export function registerAuthRoutes(app: FastifyInstance): void {
   app.post('/auth/verify', async (request, reply) => {

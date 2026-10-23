@@ -4,13 +4,13 @@
 
 import { describe, expect, test, beforeAll, afterAll } from 'vitest';
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
+import { db } from '../../shared/db.js';
+import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
+import { buildApp } from '../../server.js';
 
 const TS = Date.now();
-const SUB_EMAIL = `test-chat-sub-${TS}@example.com`;
-const NOSUB_EMAIL = `test-chat-nosub-${TS}@example.com`;
-const TEST_PASSWORD = 'TestPassword123!';
+let SUB_EMAIL: string;
+let NOSUB_EMAIL: string;
 const TEST_TASK_ID = `TEST-RT-${TS}`; // Test-only task — avoids seed data dependency
 
 let SUB_USER_ID: string;
@@ -19,38 +19,10 @@ let NOSUB_USER_ID: string;
 let NOSUB_JWT: string;
 let app: FastifyInstance;
 
-async function createSupabaseUser(email: string): Promise<{ userId: string; token: string }> {
-  const res = await fetch('http://127.0.0.1:54321/auth/v1/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
-    },
-    body: JSON.stringify({ email, password: TEST_PASSWORD }),
-  });
-  if (!res.ok) throw new Error(`Supabase signup failed for ${email}: ${res.status}`);
-  const data = await res.json();
-  return { userId: data.user.id, token: data.access_token };
-}
-
-async function deleteSupabaseUser(userId: string, token: string) {
-  try {
-    await fetch(`http://127.0.0.1:54321/auth/v1/admin/users/${userId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'apikey': 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
-      },
-    });
-  } catch (error) {
-    console.warn('Failed to delete Supabase test user:', error);
-  }
-}
-
 beforeAll(async () => {
   // Create real Supabase test users
-  ({ userId: SUB_USER_ID, token: SUB_JWT } = await createSupabaseUser(SUB_EMAIL));
-  ({ userId: NOSUB_USER_ID, token: NOSUB_JWT } = await createSupabaseUser(NOSUB_EMAIL));
+  ({ userId: SUB_USER_ID, jwt: SUB_JWT, email: SUB_EMAIL } = await createTestUser('test-chat-sub'));
+  ({ userId: NOSUB_USER_ID, jwt: NOSUB_JWT, email: NOSUB_EMAIL } = await createTestUser('test-chat-nosub'));
 
   // Clean up any leftover DB data
   for (const uid of [SUB_USER_ID, NOSUB_USER_ID]) {
@@ -112,7 +84,7 @@ beforeAll(async () => {
     },
   });
 
-  app = buildApp();
+  app = await buildApp();
 });
 
 afterAll(async () => {
@@ -125,8 +97,8 @@ afterAll(async () => {
   await db.taskContentVariant.deleteMany({ where: { taskId: TEST_TASK_ID } });
   await db.task.deleteMany({ where: { id: TEST_TASK_ID } });
 
-  await deleteSupabaseUser(SUB_USER_ID, SUB_JWT);
-  await deleteSupabaseUser(NOSUB_USER_ID, NOSUB_JWT);
+  await deleteTestUser(SUB_USER_ID);
+  await deleteTestUser(NOSUB_USER_ID);
 
   await db.$disconnect();
   await app.close();

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase start
+
+      - name: Write .env.local files from the local stack
+        run: |
+          eval "$(supabase status -o env)"
+          cat > apps/api/.env.local <<ENV
+          DATABASE_URL=$DB_URL
+          SUPABASE_URL=$API_URL
+          SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY
+          SUPABASE_SECRET_KEY=$SECRET_KEY
+          PORT=3001
+          NODE_ENV=test
+          CORS_ORIGIN=http://localhost:3000
+          AI_MODE=mock
+          CHAT_DAILY_CAP=50
+          ENV
+          cat > apps/web/.env.local <<ENV
+          NEXT_PUBLIC_API_URL=http://localhost:3001
+          NEXT_PUBLIC_SUPABASE_URL=$API_URL
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=$PUBLISHABLE_KEY
+          NEXT_PUBLIC_AUTH_PASSWORD_ENABLED=true
+          SUPABASE_SECRET_KEY=$SECRET_KEY
+          ENV
+
+      - run: npm run prisma:generate -w @landednz/api
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run db:bootstrap -w @landednz/api
+      - run: npm test
+      - run: npm run build
+      - run: docker build -f apps/api/Dockerfile -t landednz-api .
+
+      - name: Start API and web (production builds)
+        run: |
+          (cd apps/api && node --env-file=.env.local dist/src/server.js > ../../api.log 2>&1 &)
+          (npm run start -w @landednz/web > web.log 2>&1 &)
+          for i in $(seq 1 60); do
+            curl -sf localhost:3001/health && curl -sf -o /dev/null localhost:3000 && exit 0
+            sleep 1
+          done
+          cat api.log web.log
+          exit 1
+
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: npm run test:e2e
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            apps/web/test-results
+            api.log
+            web.log

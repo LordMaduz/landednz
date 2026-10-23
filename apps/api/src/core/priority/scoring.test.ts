@@ -2,7 +2,7 @@
 // All tests will fail initially — implementation comes after
 
 import { describe, expect, test } from 'vitest';
-import { scoreTask } from './scoring';
+import { scoreTask } from './scoring.js';
 import { PersonaKey } from '@landednz/types';
 
 interface ScoringInput {

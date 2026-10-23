@@ -5,7 +5,7 @@
  * Validates all aspects of the seeded data for production readiness
  */
 
-import { db } from '../src/shared/db'
+import { db } from '../src/shared/db.js';
 
 interface PhaseDistribution {
   [key: number]: number

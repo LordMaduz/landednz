@@ -9,55 +9,30 @@ vi.mock('../../shared/ai/claude.client', () => ({
 }));
 
 import { FastifyInstance } from 'fastify';
-import { db } from '../../shared/db';
-import { buildApp } from '../../server';
-import { streamMessage } from '../../shared/ai/claude.client';
+import { db } from '../../shared/db.js';
+import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
+import { buildApp } from '../../server.js';
+import { streamMessage } from '../../shared/ai/claude.client.js';
 
 // Get reference to the mocked function
 const mockStreamMessage = vi.mocked(streamMessage);
 
 const TS = Date.now();
-const TEST_EMAIL = `test-history-${TS}@example.com`;
-const TEST_PASSWORD = 'TestPassword123!';
+let TEST_EMAIL: string;
 let TEST_USER_ID: string;
 let TEST_JWT_TOKEN: string;
 let TEST_SESSION_ID: string;
 let app: FastifyInstance;
 
 async function createSupabaseTestUser() {
-  const signUpResponse = await fetch('http://127.0.0.1:54321/auth/v1/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
-    },
-    body: JSON.stringify({
-      email: TEST_EMAIL,
-      password: TEST_PASSWORD,
-    }),
-  });
-
-  if (!signUpResponse.ok) {
-    throw new Error(`Failed to create test user: ${signUpResponse.status}`);
-  }
-
-  const signUpData = await signUpResponse.json();
-  TEST_USER_ID = signUpData.user.id;
-  TEST_JWT_TOKEN = signUpData.access_token;
+  const user = await createTestUser('test-history');
+  TEST_USER_ID = user.userId;
+  TEST_JWT_TOKEN = user.jwt;
+  TEST_EMAIL = user.email;
 }
 
 async function deleteSupabaseTestUser() {
-  try {
-    await fetch(`http://127.0.0.1:54321/auth/v1/admin/users/${TEST_USER_ID}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${TEST_JWT_TOKEN}`,
-        'apikey': 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
-      },
-    });
-  } catch (error) {
-    console.warn('Failed to delete Supabase test user:', error);
-  }
+  await deleteTestUser(TEST_USER_ID);
 }
 
 beforeAll(async () => {
@@ -110,7 +85,7 @@ beforeAll(async () => {
   });
   TEST_SESSION_ID = session.id;
 
-  app = buildApp();
+  app = await buildApp();
 });
 
 afterAll(async () => {
@@ -233,10 +208,9 @@ describe('AC-4-14: Conversation history included on subsequent turns', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(mockStreamMessage).toHaveBeenCalledTimes(2); // This is the second call total
-
-    // Check the latest call (index 1)
-    const callArgs = mockStreamMessage.mock.calls[1];
+    // Vitest clears mock calls between tests, so this turn is the only call
+    expect(mockStreamMessage).toHaveBeenCalledTimes(1);
+    const callArgs = mockStreamMessage.mock.calls[0];
     const messages = callArgs[1] as Array<{ role: string; content: string }>;
 
     // First turn: only the current user message

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { runLevel1Guardrail } from './level1';
+import { runLevel1Guardrail } from './level1.js';
 
 describe('runLevel1Guardrail — CRISIS_SIGNAL', () => {
   test('exact AC test input fires CRISIS_SIGNAL', () => {

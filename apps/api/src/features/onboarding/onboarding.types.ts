@@ -1,4 +1,4 @@
-import type { VisaType, City, FamilySituation, Occupation, PersonaKey } from '../../shared/types';
+import type { VisaType, City, FamilySituation, Occupation, PersonaKey } from '../../shared/types.js';
 
 export interface CreateProfileRequest {
   visaType: VisaType;
