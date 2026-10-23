@@ -2,7 +2,7 @@
 # Requires Node 24 (.nvmrc), Docker and the Supabase CLI.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env dev stop db-bootstrap db-reset db-reset-live typecheck lint test test-e2e build check docker-api
+.PHONY: help setup env dev stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e build check docker-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
@@ -31,9 +31,17 @@ db-reset: ## Wipe the local DB and bootstrap again (destroys local data)
 	npm run db:bootstrap -w @landednz/api
 
 # Bootstrap only embeds chunks that have none, so real embeddings need an empty DB.
-db-reset-live: ## Wipe the local DB, bootstrap with real OpenAI embeddings (needs OPENAI_API_KEY)
+db-reset-live: ## Wipe the local DB, bootstrap with real OpenAI embeddings (needs both API keys)
 	supabase db reset
 	AI_MODE=live npm run db:bootstrap -w @landednz/api
+
+user: ## Create a confirmed local sign-in user: make user EMAIL=you@example.com PASSWORD=secret123
+	@[ -n "$(EMAIL)" ] && [ -n "$(PASSWORD)" ] || { echo "usage: make user EMAIL=... PASSWORD=..." >&2; exit 1; }
+	@set -a && . apps/web/.env.local && set +a && \
+	out=$$(curl -sS --fail-with-body -X POST "$$NEXT_PUBLIC_SUPABASE_URL/auth/v1/admin/users" \
+	  -H "apikey: $$SUPABASE_SECRET_KEY" -H 'Content-Type: application/json' \
+	  -d '{"email":"$(EMAIL)","password":"$(PASSWORD)","email_confirm":true}') || { echo "$$out" >&2; exit 1; }; \
+	echo "created $(EMAIL) — sign in at http://localhost:3000/signin"
 
 typecheck: ## Typecheck all workspaces
 	npm run typecheck
