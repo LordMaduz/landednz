@@ -269,9 +269,9 @@ Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented stat
 | Visual direction (Topo Minimal) | 1792751868-ac3c | 2026-10-23 |
 | Design system | 1792792749-975d | 2026-10-24 |
 | Workspace interaction model (next step + journey prototype) | 1792792749-975d | 2026-10-24 |
-| Landing | — | — |
-| Onboarding | — | — |
-| Sign in | — | — |
+| Landing | 1792793112-7064 | 2026-10-24 |
+| Onboarding | 1792793112-7064 | 2026-10-24 |
+| Sign in | 1792793112-7064 | 2026-10-24 |
 | Workspace | — | — |
 | Settings | — | — |
 | Legal | — | — |
