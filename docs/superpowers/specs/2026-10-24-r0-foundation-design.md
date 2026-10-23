@@ -103,8 +103,8 @@ Copy `landednz-be/src`, `scripts` (kept ones), `prisma/schema.prisma` over `apps
 1. Node 24 LTS, ESM baseline, TypeScript (see §6.1 for the TS 7 check).
 2. Fastify 5.12; add `@fastify/rate-limit`.
 3. Prisma 5.22 → **7.10, pinned with `prisma@7` / `@prisma/client@7`** (npm `latest` is an 8.0 RC). Use the `prisma-upgrade-v7` skill. pgvector column and raw-SQL search unchanged.
-4. Anthropic SDK 0.79 → 1.1. Models from env: `ANTHROPIC_MODEL_CHAT` (Claude Sonnet 5.5) and `ANTHROPIC_MODEL_FAST` (Claude Haiku 5.5) for response structuring. `max_tokens` cap unchanged. Use the `claude-api` skill.
-5. OpenAI SDK 7 (embeddings stay `text-embedding-3-small`, 1536 dims — no re-embedding), Vitest 5, zod 4 for request validation.
+4. Anthropic SDK 0.79 → 1.1. Model from env: `ANTHROPIC_MODEL` = Claude Sonnet 5.5 (`claude-sonnet-5-5`). A separate fast model is not added: `generateText` has no callers in R0. `max_tokens` cap unchanged. Use the `claude-api` skill.
+5. OpenAI SDK 7 (embeddings stay `text-embedding-3-small`, 1536 dims — no re-embedding), Vitest 5, zod 4 for config validation now; route request schemas move to zod in R2 when agent tools need them.
 
 ### 4.3 Unchanged in R0
 
