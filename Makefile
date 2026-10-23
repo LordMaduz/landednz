@@ -17,11 +17,11 @@ env: ## Create missing .env.local files from .env.example (never overwrites)
 	  [ -f $$d/.env.local ] && echo "$$d/.env.local exists" || { cp $$d/.env.example $$d/.env.local && echo "created $$d/.env.local"; }; \
 	done
 
-dev: ## Supabase + bootstrap if empty + API (:3001) + web (:3000); Ctrl-C stops
+dev: ## Supabase + bootstrap if empty + API (:3001) + web (:3000) in the background; logs in .dev/
 	npm run dev:all
 
-stop: ## Stop the local Supabase stack (data kept)
-	supabase stop
+stop: ## Stop API, web and Supabase (data kept)
+	bash scripts/dev-stop.sh
 
 db-bootstrap: ## Migrate, seed the KB, mock embeddings, vector index
 	npm run db:bootstrap -w @landednz/api

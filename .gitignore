@@ -108,3 +108,5 @@ Superbase_Endpoints.txt
 # Xcode user data
 **/*.xcworkspace/xcuserdata/
 .env.docker
+# Local dev logs and pids (scripts/dev-all.sh)
+.dev/

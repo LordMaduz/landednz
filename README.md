@@ -10,7 +10,7 @@ Prerequisites: Node 24 (see `.nvmrc`), Docker (running), the [Supabase CLI](http
 
 ```sh
 make setup        # npm ci, Prisma client, Playwright browser, .env.local files from .env.example
-make dev          # Supabase → seed DB if empty → API on :3001 → web on :3000 (Ctrl-C stops)
+make dev          # Supabase → seed DB if empty → API on :3001 → web on :3000 (returns once both answer; logs in .dev/)
 ```
 
 `make dev` takes about 30 seconds on a warm Docker. Check it at <http://localhost:3001/health> (`"dbConnected":true`) and <http://localhost:3000>.
@@ -35,7 +35,7 @@ Run `make` to list every target.
 | `make docker-api` | The production API container on :3001 against local Supabase |
 | `make db-reset` | Wipe the local DB and seed it again |
 | `make db-reset-live` | Same, with real OpenAI embeddings (needs `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`) |
-| `make stop` | Stop local Supabase (data is kept) |
+| `make stop` | Stop API, web and Supabase (data is kept) |
 
 For real Claude replies, set `AI_MODE=live`, `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`.
 
