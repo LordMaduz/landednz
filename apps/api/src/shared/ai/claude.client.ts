@@ -4,6 +4,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { config } from '../config.js';
 import { AIFailureError } from '../errors.js';
+import { mockStream } from './mock.js';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -16,13 +17,15 @@ export async function streamMessage(
   messages: ChatMessage[],
   onChunk: (text: string) => void,
 ): Promise<void> {
+  if (config.aiMode === 'mock') return mockStream(messages, onChunk);
+
   const anthropic = new Anthropic({
     apiKey: config.anthropicApiKey,
   });
 
   try {
     const stream = anthropic.messages.stream({
-      model: config.anthropicModel,
+      model: config.anthropicModel!, // required in live mode (config.ts)
       max_tokens: 1024, // Never increase per spec
       system: systemPrompt,
       messages: messages.map(msg => ({
@@ -63,7 +66,7 @@ export async function generateText(
 
   try {
     const message = await anthropic.messages.create({
-      model: config.anthropicModel,
+      model: config.anthropicModel!, // required in live mode (config.ts)
       max_tokens: 1024,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
