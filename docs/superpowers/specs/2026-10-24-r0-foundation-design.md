@@ -274,16 +274,19 @@ Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented stat
 | Legal | — | — |
 | Journey prototype | — | — |
 
-## 8. Sequencing — deployed thin system first, design in parallel
+## 8. Sequencing — local first, cloud last, design in parallel
 
-| Days | Track 1: infrastructure | Track 2: design |
+R0 is built and verified end to end **locally** before any cloud account is touched (owner decision, 2026-10-24). Local runs the production container (`docker:api`) and Vercel's build (`vercel build`) against the same Postgres/Supabase engine, so most deployment risk is retired locally; only cloud-specific risks remain for Stage C.
+
+| Stage | Track 1: build | Track 2: design |
 |---|---|---|
-| 1 | Repo cleanup and restructure; port backend; backend upgrade steps 1–5; Dockerfile; local stack (`dev:all`) | Minimalism validator skill; design-system board |
-| 2 | Supabase ×2, Render staging, Railway production, `db:bootstrap` on both; CI; health job; Sentry; fresh Next 16 app with **working sign-in** deployed to staging | Page boards; owner reviews |
-| 3 | Design-system code (tokens, shadcn restyle, `landednz-design-system` skill) once its board is approved | Remaining boards; journey prototype; approvals |
-| 4 | Pages built against approved boards; quality gates; release `r0` to production | — |
+| A. Local foundation | Repo cleanup and restructure; port backend; backend upgrade steps 1–5; Dockerfile; local stack (`dev:all`, `db:bootstrap`); CI running the full local stack; fresh Next 16 app with **working local sign-in** | Minimalism validator skill; design-system board; page boards; owner reviews |
+| B. Local UI | Design-system code (tokens, shadcn restyle, `landednz-design-system` skill) once its board is approved; pages built against approved boards; all §9 gates pass locally and in CI | Remaining boards; journey prototype; approvals |
+| C. Cloud | Owner prerequisites (§5.6); Supabase ×2, Render staging, Railway production, `db:bootstrap` on both; DNS; health job; Sentry; PostHog; staging verification with `AI_MODE=live`; release `r0` to production | — |
 
-Track 1 days 1–2 do not wait for design approval; Track 1 day 3+ does.
+Stage A's build track does not wait for design approval; Stage B does. Stage C starts only when the owner confirms they are happy with R0 locally.
+
+**Local prerequisites** (Stage A): Node 24, Docker, Supabase CLI, an Anthropic API key and an OpenAI API key (embeddings for the real KB; live AI checks). Spend limits and all other §5.6 items wait for Stage C; registering the domain early is recommended but not blocking.
 
 ## 9. Quality gates
 
