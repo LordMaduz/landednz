@@ -237,6 +237,8 @@ Project skill `.claude/skills/minimalism-validator/`, written with `superpowers:
 
 Reference board: `Chosen.dc.html` on https://claude.ai/artifact/515pzxGLq8z371DbXf9gVc
 
+Approved interaction model (2026-10-24, boards `DesignSystem`, `AppMap`, `JourneyHome` prototype, `JourneyPhone`): the workspace opens on the next task as a large card on the route; a task opens in a sheet that docks beside the route at ≥ 1100 px and slides over it below that; the assistant lives inside the task sheet with 2–3 suggested questions; task names are actions; progress is a bar plus count; every view has a URL, browser Back returns to the previous view, Close and the logo return home. Type scale 56/32/17/15/13; spacing 4, 8, 16, 24, 32, 48, 64.
+
 - Colours: ink `#0F2A3A`, teal `#0E7C7B`, muted `#4B6170`, mist `#F4F7F7`, white surfaces; aurora gradient `#3FC79A → #5AAED6 → #8B78F0` for AI elements only.
 - Type: Bricolage Grotesque (headings), Figtree (everything else).
 - Signature elements: roadmap drawn as a route with waypoints; completion stamp on done tasks; AI replies with an aurora hairline border and a one-line trace of what the assistant did; topo contour motif only on the landing hero.
@@ -265,7 +267,8 @@ Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented stat
 | Board | Version id | Approved on |
 |---|---|---|
 | Visual direction (Topo Minimal) | 1792751868-ac3c | 2026-10-23 |
-| Design system | — | — |
+| Design system | 1792792749-975d | 2026-10-24 |
+| Workspace interaction model (next step + journey prototype) | 1792792749-975d | 2026-10-24 |
 | Landing | — | — |
 | Onboarding | — | — |
 | Sign in | — | — |
