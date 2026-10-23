@@ -10,6 +10,7 @@ import { runLevel1Guardrail } from './guardrails/level1.js';
 import { runLevel2Guardrail } from './guardrails/level2.js';
 import type { ChatEntryPoint } from '@landednz/types';
 import { retrieveChunks, type RetrievedChunk } from './rag/retrieval.js';
+import { assertUnderDailyCap } from './daily-cap.js';
 import type { CreateSessionResponse, BuildSystemPromptParams, ChatKbChunk } from './chat.types.js';
 import type { FastifyReply } from 'fastify';
 
@@ -127,6 +128,9 @@ export async function sendMessage(
   if (!session.user.profile) {
     throw new AppError('PROFILE_NOT_FOUND', 'User profile not found', 404);
   }
+
+  // Before SSE headers, so a capped user gets a normal 429 JSON error
+  await assertUnderDailyCap(userId);
 
   // Set up SSE headers (C14) after validation — reply.raw required, never reply.send()
   // Prevent Railway 30s timeout (skip in test environment)

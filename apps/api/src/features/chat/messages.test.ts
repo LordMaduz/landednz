@@ -77,7 +77,7 @@ beforeAll(async () => {
   TEST_SESSION_ID = session.id;
 
   // Build app for testing
-  app = buildApp();
+  app = await buildApp();
 });
 
 afterAll(async () => {

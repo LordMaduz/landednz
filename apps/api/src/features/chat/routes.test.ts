@@ -84,7 +84,7 @@ beforeAll(async () => {
     },
   });
 
-  app = buildApp();
+  app = await buildApp();
 });
 
 afterAll(async () => {

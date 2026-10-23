@@ -10,8 +10,9 @@ import { registerOnboardingRoutes } from './features/onboarding/onboarding.route
 import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
 import { registerChatRoutes } from './features/chat/routes.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
+import { registerRateLimit } from './shared/rate-limit.js'
 
-export function buildApp() {
+export async function buildApp() {
   const app = Fastify({ logger: false })
 
   // Enable CORS for browser requests from web app
@@ -22,6 +23,7 @@ export function buildApp() {
   })
 
   registerErrorHandler(app)
+  await registerRateLimit(app) // before routes, so the global limit attaches to each
   registerAuthDecoration(app) // must register before any route that uses authenticateRequest
   registerHealthRoutes(app)
   registerAuthRoutes(app)
@@ -33,7 +35,7 @@ export function buildApp() {
 }
 
 async function start() {
-  const app = buildApp()
+  const app = await buildApp()
 
   // Graceful shutdown — disconnect Prisma before exit to avoid connection pool leak on Railway.
   const shutdown = async () => {

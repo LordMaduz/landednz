@@ -112,7 +112,7 @@ beforeAll(async () => {
   });
   TEST_SESSION_ID = session.id;
 
-  app = buildApp();
+  app = await buildApp();
 });
 
 afterAll(async () => {

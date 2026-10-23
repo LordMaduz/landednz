@@ -17,9 +17,10 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.79.0",
     "@fastify/cors": "^11.2.0",
+    "@fastify/rate-limit": "^11.2.1",
     "@landednz/types": "*",
     "@prisma/client": "^5.22.0",
-    "fastify": "^5.7.2",
+    "fastify": "5.12",
     "jose": "^6.2.1",
     "openai": "^6.32.0",
     "pino": "^9.5.0",
