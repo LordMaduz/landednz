@@ -208,10 +208,9 @@ describe('AC-4-14: Conversation history included on subsequent turns', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(mockStreamMessage).toHaveBeenCalledTimes(2); // This is the second call total
-
-    // Check the latest call (index 1)
-    const callArgs = mockStreamMessage.mock.calls[1];
+    // Vitest clears mock calls between tests, so this turn is the only call
+    expect(mockStreamMessage).toHaveBeenCalledTimes(1);
+    const callArgs = mockStreamMessage.mock.calls[0];
     const messages = callArgs[1] as Array<{ role: string; content: string }>;
 
     // First turn: only the current user message
