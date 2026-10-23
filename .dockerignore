@@ -1,0 +1,10 @@
+**/node_modules
+**/.env*
+**/dist
+apps/api/src/generated
+apps/web/*
+!apps/web/package.json
+.git
+.superpowers
+docs
+supabase

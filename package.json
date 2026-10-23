@@ -7,7 +7,8 @@
     "packages/types"
   ],
   "scripts": {
-    "dev:api": "npm run dev --workspace=apps/api"
+    "dev:api": "npm run dev --workspace=apps/api",
+    "docker:api": "docker build -f apps/api/Dockerfile -t landednz-api . && sed -e 's/127\\.0\\.0\\.1/host.docker.internal/g' -e 's/^PORT=.*/PORT=3000/' -e 's/^NODE_ENV=.*/NODE_ENV=production/' apps/api/.env.local > apps/api/.env.docker && docker run --rm -p 3001:3000 --env-file apps/api/.env.docker landednz-api"
   },
   "engines": {
     "node": ">=24"

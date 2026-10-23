@@ -49,8 +49,6 @@ coverage/
 ehthumbs.db
 Thumbs.db
 
-# Docker
-.dockerignore
 
 # React Native build artifacts
 .react-native/
@@ -109,3 +107,4 @@ OAuth.txt
 Superbase_Endpoints.txt
 # Xcode user data
 **/*.xcworkspace/xcuserdata/
+.env.docker
