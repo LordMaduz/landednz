@@ -30,6 +30,13 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Carry any refreshed session cookies, or the rotated refresh token is lost and reused.
+  const redirectTo = (url: URL) => {
+    const res = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach((cookie) => res.cookies.set(cookie))
+    return res
+  }
+
   const { pathname } = request.nextUrl
   const isProtected = PROTECTED_PATHS.some(
     (path) => pathname === path || pathname.startsWith(`${path}/`),
@@ -40,14 +47,14 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     url.pathname = '/signin'
     url.search = ''
     url.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(url)
+    return redirectTo(url)
   }
 
   if (pathname === '/signin' && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/app'
     url.search = ''
-    return NextResponse.redirect(url)
+    return redirectTo(url)
   }
 
   return supabaseResponse

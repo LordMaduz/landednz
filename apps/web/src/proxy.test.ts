@@ -8,9 +8,17 @@ import nextConfig from '../next.config'
 
 // Unit level only: the e2e suite signs in against real local Supabase.
 let user: { email: string } | null = null
+let refreshedCookie: { name: string; value: string } | null = null
+type CookieOptions = { cookies: { setAll(c: { name: string; value: string; options: object }[]): void } }
 vi.mock('@supabase/ssr', () => ({
-  createServerClient: () => ({
-    auth: { getUser: async () => ({ data: { user } }) },
+  createServerClient: (_url: string, _key: string, { cookies }: CookieOptions) => ({
+    auth: {
+      getUser: async () => {
+        // getUser() writes rotated session cookies when it refreshes the token
+        if (refreshedCookie) cookies.setAll([{ ...refreshedCookie, options: {} }])
+        return { data: { user } }
+      },
+    },
   }),
 }))
 
@@ -20,6 +28,7 @@ const origin = 'http://localhost:3000'
 describe('proxy', () => {
   beforeEach(() => {
     user = null
+    refreshedCookie = null
   })
 
   it.each(['/app', '/settings'])('sends a signed-out user on %s to /signin with redirect', async (path) => {
@@ -32,6 +41,14 @@ describe('proxy', () => {
     user = { email: 'a@b.nz' }
     const res = await proxy(new NextRequest(`${origin}/signin`))
     expect(getRedirectUrl(res)).toBe(`${origin}/app`)
+  })
+
+  it('keeps refreshed session cookies on its redirect', async () => {
+    user = { email: 'a@b.nz' }
+    refreshedCookie = { name: 'sb-auth-token', value: 'rotated' }
+    const res = await proxy(new NextRequest(`${origin}/signin`))
+    expect(getRedirectUrl(res)).toBe(`${origin}/app`)
+    expect(res.cookies.get('sb-auth-token')?.value).toBe('rotated')
   })
 
   it('lets a signed-in user through to /app', async () => {
