@@ -1,6 +1,5 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose'
-import { Prisma } from '@prisma/client'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
+import { Prisma } from '../../generated/prisma/client.js'
 import { config } from '../../shared/config.js'
 import { db } from '../../shared/db.js'
 import { logger } from '../../shared/logger.js'
@@ -49,7 +48,7 @@ export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResu
     isNewUser = true
     logger.info({ userId, email }, 'New user created from JWT')
   } catch (err) {
-    if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
       // Unique constraint violation — user already exists
       isNewUser = false
       logger.debug({ userId }, 'User already exists')

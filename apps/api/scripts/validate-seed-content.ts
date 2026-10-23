@@ -11,11 +11,9 @@
  * - Tier 1 source URLs resolve
  */
 
-import { PrismaClient } from '@prisma/client'
 import https from 'https'
 import http from 'http'
-
-const db = new PrismaClient()
+import { db } from '../src/shared/db.js'
 
 interface ValidationError {
   check: string

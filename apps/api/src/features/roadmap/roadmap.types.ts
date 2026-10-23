@@ -1,4 +1,4 @@
-import type { TaskStatus, TaskType } from '@prisma/client';
+import type { TaskStatus, TaskType } from '../../generated/prisma/enums.js';
 
 export interface RoadmapTask {
   taskId: string;
