@@ -123,6 +123,8 @@ export interface RoadmapApiTask {
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETE'
   isBlocked: boolean
   blockingTaskNames: string[]
+  blockingTaskIds: string[]
+  completedAt: string | null
   estimatedDuration: string
   taskType: 'FREE' | 'PREMIUM'
   consequenceLine: string
@@ -194,6 +196,14 @@ export async function completeTask(taskId: string, token: string): Promise<void>
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
+}
+
+export async function reopenTask(taskId: string, token: string): Promise<void> {
+  const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}/reopen`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error(`Reopen task failed: ${res.status}`)
 }
 
 // ─── User Profile ────────────────────────────────────────────────────────────

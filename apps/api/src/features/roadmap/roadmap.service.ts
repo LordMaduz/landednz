@@ -9,7 +9,7 @@ import { config } from '../../shared/config.js';
 import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver.js';
 import { scoreTask } from '../../core/priority/scoring.js';
 import type { PersonaKey } from '../../shared/types.js';
-import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
+import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, TaskReopenResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
 
 export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
   // 1. Look up UserProfile — need personaKey for consequenceLine resolution
@@ -59,10 +59,8 @@ export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
       task.contentVariants.find(v => v.personaKey === 'solo_aewv');
     const consequenceLine = variant?.consequenceLine ?? '';
 
-    // Resolve blockingTaskNames: HARD deps where prerequisite is not yet complete
-    const blockingTaskNames = task.dependencies
-      .filter(dep => !completedTaskIds.has(dep.prerequisiteId))
-      .map(dep => dep.prerequisite.name);
+    // Resolve blockers: HARD deps where prerequisite is not yet complete
+    const blockers = task.dependencies.filter(dep => !completedTaskIds.has(dep.prerequisiteId));
 
     return {
       taskId: task.id,
@@ -71,7 +69,9 @@ export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
       status: entry.status,
       priorityScore: entry.priorityScore,
       isBlocked: entry.isBlocked,
-      blockingTaskNames,
+      blockingTaskNames: blockers.map(dep => dep.prerequisite.name),
+      blockingTaskIds: blockers.map(dep => dep.prerequisiteId),
+      completedAt: entry.completedAt?.toISOString() ?? null,
       estimatedDuration: task.estimatedDuration,
       taskType: task.taskType,
       consequenceLine,
@@ -223,6 +223,95 @@ export async function completeTask(
     newTopThree: roadmap.topThree,
     unlockedTasks,
   };
+}
+
+// ─── reopenTask() ─────────────────────────────────────────────────────────────
+
+// Marks a done task not done ("Mark as not done", toast Undo) and re-blocks its
+// direct dependents — completeTask's targeted recomputation in reverse.
+export async function reopenTask(
+  userId: string,
+  taskId: string,
+  currentDate: Date = new Date(),
+): Promise<TaskReopenResponse> {
+  const entry = await db.userRoadmapEntry.findUnique({
+    where: { userId_taskId: { userId, taskId } },
+  });
+  if (!entry) {
+    throw new AppError('TASK_NOT_FOUND', `Task ${taskId} not found in user roadmap`, 404);
+  }
+
+  const reblockedTasks: string[] = [];
+
+  if (entry.status === 'COMPLETE') {
+    await db.userRoadmapEntry.update({
+      where: { userId_taskId: { userId, taskId } },
+      data: { status: 'NOT_STARTED', completedAt: null, completionMethod: null },
+    });
+
+    const [profile, allEntries, allDeps] = await Promise.all([
+      db.userProfile.findUnique({ where: { userId } }),
+      db.userRoadmapEntry.findMany({ where: { userId } }),
+      db.taskDependency.findMany(),
+    ]);
+    if (!profile) {
+      throw new AppError('PROFILE_NOT_FOUND', 'No profile found for this user', 404);
+    }
+
+    const completedTaskIds = allEntries.filter(e => e.status === 'COMPLETE').map(e => e.taskId);
+
+    // The reopened task itself plus its open direct dependents; done dependents stay done
+    const openEntries = new Map(
+      allEntries.filter(e => e.status !== 'COMPLETE').map(e => [e.taskId, e]),
+    );
+    const dependentIds = getAffectedTasks(
+      taskId,
+      allDeps.map(d => ({
+        prerequisiteId: d.prerequisiteId,
+        dependentId: d.dependentId,
+        dependencyType: d.dependencyType,
+      })),
+    );
+    const recomputeIds = [taskId, ...dependentIds].filter(id => openEntries.has(id));
+
+    const tasks = await db.task.findMany({
+      where: { id: { in: recomputeIds } },
+      include: { dependencies: { select: { prerequisiteId: true, dependencyType: true } } },
+    });
+
+    const isPreArrival = profile.arrivalDate > currentDate;
+    const scoringArrivalDate = isPreArrival ? null : profile.arrivalDate;
+
+    for (const task of tasks) {
+      const [resolved] = resolveBlockedTasks({
+        tasks: [{ id: task.id, dependencies: task.dependencies }],
+        completedTaskIds,
+      });
+      const scored = scoreTask({
+        task: { id: task.id, basePriority: task.basePriority, phase: task.phase },
+        personaKey: profile.personaKey as PersonaKey,
+        arrivalDate: scoringArrivalDate,
+        currentDate,
+        isBlocked: resolved.isBlocked,
+        isComplete: false,
+      });
+
+      await db.userRoadmapEntry.update({
+        where: { userId_taskId: { userId, taskId: task.id } },
+        data: { isBlocked: resolved.isBlocked, priorityScore: scored.finalPriority },
+      });
+
+      if (task.id !== taskId && !openEntries.get(task.id)!.isBlocked && resolved.isBlocked) {
+        reblockedTasks.push(task.id);
+      }
+    }
+
+    logger.info({ userId, taskId, reblockedTasks }, 'Task reopened, affected tasks recomputed');
+  }
+
+  const roadmap = await getRoadmap(userId);
+
+  return { taskId, status: 'NOT_STARTED', newTopThree: roadmap.topThree, reblockedTasks };
 }
 
 // ─── bulkOverride() ───────────────────────────────────────────────────────────

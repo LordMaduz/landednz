@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { authenticateRequest } from '../../shared/middleware/auth.js';
-import { getRoadmap, completeTask, bulkOverride, getTaskDetail } from './roadmap.service.js';
+import { getRoadmap, completeTask, reopenTask, bulkOverride, getTaskDetail } from './roadmap.service.js';
 import { recalculateAllRoadmaps } from './roadmap.recalculate.js';
 import { config } from '../../shared/config.js';
-import type { RoadmapResponse, TaskCompleteResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse, RecalculateResponse } from './roadmap.types.js';
+import type { RoadmapResponse, TaskCompleteResponse, TaskReopenResponse, BulkOverrideRequest, BulkOverrideResponse, TaskDetailResponse, RecalculateResponse } from './roadmap.types.js';
 
 export function registerRoadmapRoutes(app: FastifyInstance): void {
   // GET /roadmap
@@ -77,6 +77,19 @@ export function registerRoadmapRoutes(app: FastifyInstance): void {
     async (request, reply) => {
       const { taskId } = request.params;
       const result = await completeTask(request.userId, taskId);
+      reply.status(200).send(result);
+    },
+  );
+
+  // POST /roadmap/tasks/:taskId/reopen
+  // Marks a done task not done (Undo / "Mark as not done"); open dependents re-block.
+  // Idempotent: reopening a task that is not done changes nothing.
+  app.post<{ Params: { taskId: string }; Reply: TaskReopenResponse }>(
+    '/roadmap/tasks/:taskId/reopen',
+    { preHandler: authenticateRequest },
+    async (request, reply) => {
+      const { taskId } = request.params;
+      const result = await reopenTask(request.userId, taskId);
       reply.status(200).send(result);
     },
   );

@@ -8,6 +8,8 @@ export interface RoadmapTask {
   priorityScore: number;
   isBlocked: boolean;
   blockingTaskNames: string[];
+  blockingTaskIds: string[];  // same order as blockingTaskNames
+  completedAt: string | null; // ISO
   estimatedDuration: string;
   taskType: TaskType;
   consequenceLine: string;
@@ -29,6 +31,13 @@ export interface TaskCompleteResponse {
   status: 'COMPLETE';
   newTopThree: RoadmapTask[];
   unlockedTasks: string[];  // Task IDs that transitioned isBlocked true → false
+}
+
+export interface TaskReopenResponse {
+  taskId: string;
+  status: 'NOT_STARTED';
+  newTopThree: RoadmapTask[];
+  reblockedTasks: string[];  // Task IDs that transitioned isBlocked false → true
 }
 
 export interface BulkOverrideRequest {
