@@ -48,6 +48,7 @@ jobs:
           ENV
 
       - run: npm run typecheck
+      - run: npm run lint
       - run: npm run db:bootstrap -w @landednz/api
       - run: npm test
       - run: npm run build
