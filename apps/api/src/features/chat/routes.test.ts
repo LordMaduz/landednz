@@ -11,7 +11,7 @@ import { buildApp } from '../../server.js';
 const TS = Date.now();
 let SUB_EMAIL: string;
 let NOSUB_EMAIL: string;
-const TEST_TASK_ID = `TEST-RT-${TS}`; // Test-only task — avoids seed data dependency
+const TEST_TASK_ID = 'T08'; // IRD Number Application in the content bundle
 
 let SUB_USER_ID: string;
 let SUB_JWT: string;
@@ -31,8 +31,6 @@ beforeAll(async () => {
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: TEST_TASK_ID } });
-  await db.task.deleteMany({ where: { id: TEST_TASK_ID } });
 
   // Create app DB records for subscribed user
   await db.user.create({
@@ -49,39 +47,12 @@ beforeAll(async () => {
       familySituation: 'COUPLE_CONSTRAINED',
       occupation: 'TECHNOLOGY',
       arrivalDate: new Date('2026-03-13'),
-      personaKey: 'constrained_couple',
     },
   });
 
   // Create app DB records for unsubscribed user (no subscription, no profile)
   await db.user.create({
     data: { id: NOSUB_USER_ID, email: NOSUB_EMAIL, name: 'No Sub User' },
-  });
-
-  // Create test task + variant for taskContext tests (no seed data dependency)
-  await db.task.create({
-    data: {
-      id: TEST_TASK_ID,
-      name: 'Apply for your IRD number',
-      phase: 1,
-      basePriority: 80,
-      estimatedDuration: '15 minutes',
-      governmentSourceUrl: 'https://ird.govt.nz',
-      applicableVisaTypes: '["ALL"]',
-      applicableFamilySituations: '["ALL"]',
-      applicableOccupations: '["ALL"]',
-    },
-  });
-  await db.taskContentVariant.create({
-    data: {
-      taskId: TEST_TASK_ID,
-      personaKey: 'constrained_couple',
-      consequenceLine: 'Without this, your first paycheck will be taxed at 45%.',
-      steps: '["Go to ird.govt.nz", "Fill in the form"]',
-      documentsRequired: '["Passport", "Visa"]',
-      commonMistakes: '["Wrong address"]',
-      sourceUrl: 'https://ird.govt.nz',
-    },
   });
 
   app = await buildApp();
@@ -94,8 +65,6 @@ afterAll(async () => {
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: TEST_TASK_ID } });
-  await db.task.deleteMany({ where: { id: TEST_TASK_ID } });
 
   await deleteTestUser(SUB_USER_ID);
   await deleteTestUser(NOSUB_USER_ID);

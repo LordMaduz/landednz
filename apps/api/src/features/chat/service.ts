@@ -13,6 +13,7 @@ import { retrieveChunks, type RetrievedChunk } from './rag/retrieval.js';
 import { assertUnderDailyCap } from './daily-cap.js';
 import type { CreateSessionResponse, BuildSystemPromptParams, ChatKbChunk } from './chat.types.js';
 import type { FastifyReply } from 'fastify';
+import { contentVersion, itemsFor, task as contentTask } from '../../content/index.js';
 
 export async function createChatSession(
   userId: string,
@@ -46,10 +47,7 @@ export async function createChatSession(
   // Fetch task name if TASK_CARD or EMAIL_DEEPLINK entry point
   let taskContextData: { taskName: string } | null = null;
   if ((entryPoint === 'TASK_CARD' || entryPoint === 'EMAIL_DEEPLINK') && taskContext) {
-    const task = await db.task.findUnique({
-      where: { id: taskContext },
-      select: { name: true },
-    });
+    const task = contentTask(taskContext);
 
     if (!task) {
       throw new AppError('TASK_NOT_FOUND', `Task ${taskContext} not found`, 404);
@@ -184,9 +182,7 @@ export async function sendMessage(
     try {
       retrievedChunksResult = await retrieveChunks({
         query: content,
-        personaKey: session.user.profile.personaKey,
-        visaType: session.user.profile.visaType,
-        city: session.user.profile.city,
+        profile: session.user.profile,
         taskContext: session.taskContext,
       });
     } catch (error) {
@@ -199,31 +195,15 @@ export async function sendMessage(
 
     const kbChunks: ChatKbChunk[] = retrievedChunksResult.map(chunk => ({
       chunkKey: chunk.chunkKey,
-      personaKey: session.user.profile!.personaKey,
       content: chunk.content,
       sourceName: chunk.sourceName,
       sourceUrl: chunk.sourceUrl,
     }));
 
     // Fetch taskName + consequenceLine separately — Component 2 task context, not Component 6 KB
-    let taskName: string | null = null;
-    let consequenceLine: string | null = null;
-    if (session.taskContext) {
-      const task = await db.task.findUnique({
-        where: { id: session.taskContext },
-        select: { name: true },
-      });
-      taskName = task?.name ?? null;
-
-      const variant = await db.taskContentVariant.findFirst({
-        where: {
-          taskId: session.taskContext,
-          personaKey: session.user.profile.personaKey,
-        },
-        select: { consequenceLine: true },
-      });
-      consequenceLine = variant?.consequenceLine ?? null;
-    }
+    const task = session.taskContext ? contentTask(session.taskContext) : undefined;
+    const taskName = task?.name ?? null;
+    const consequenceLine = task ? itemsFor(task, session.user.profile).why?.text ?? null : null;
 
     // Calculate arrival days ago
     const arrivalDaysAgo = Math.floor(
@@ -238,10 +218,10 @@ export async function sendMessage(
       },
       orderBy: { updatedAt: 'desc' },
       take: 5,
-      include: { task: true },
+      select: { taskId: true },
     });
 
-    const recentCompletionNames = recentCompletions.map(entry => entry.task.name);
+    const recentCompletionNames = recentCompletions.flatMap(entry => contentTask(entry.taskId)?.name ?? []);
 
     // Step 5: Build system prompt
     const systemPromptParams: BuildSystemPromptParams = {
@@ -252,7 +232,6 @@ export async function sendMessage(
         city: session.user.profile.city,
         occupation: session.user.profile.occupation,
         arrivalDaysAgo,
-        personaKey: session.user.profile.personaKey,
         recentCompletions: recentCompletionNames,
       },
       entryPoint: session.entryPoint,
@@ -281,6 +260,8 @@ export async function sendMessage(
         content: fullResponse,
         guardrailFlags: JSON.stringify(level1Result.flags),
         retrievedChunks: JSON.stringify(retrievedChunksResult.map(chunk => chunk.chunkKey)),
+        contentVersion: contentVersion(),
+        usedItemIds: JSON.stringify([...new Set(retrievedChunksResult.flatMap(chunk => chunk.itemIds))]),
       },
     });
 

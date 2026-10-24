@@ -1,0 +1,34 @@
+# Onboarding answer dimensions: allowed values and their labels, in display order.
+# `npm run content:build -w @landednz/api` generates packages/types/dimensions.ts from this file.
+visa:
+  label: Visa
+  values:
+    - [AEWV, Accredited Employer Work Visa (AEWV)]
+    - [GREEN_LIST_WORK, "Green List, work to residence"]
+    - [GREEN_LIST_RESIDENCE, "Green List, straight to residence"]
+    - [PARTNER_OF_STUDENT, Partner of a student]
+    - [OTHER, Something else]
+city:
+  label: City
+  values:
+    - [AUCKLAND, Auckland]
+    - [WELLINGTON, Wellington]
+    - [CHRISTCHURCH, Christchurch]
+    - [OTHER, Somewhere else]
+family:
+  label: Family
+  values:
+    - [SOLO, Just me]
+    - [COUPLE_DUAL_WORK, "My partner, and we both work"]
+    - [COUPLE_CONSTRAINED, "My partner, who can't work yet"]
+    - [FAMILY_WITH_CHILDREN, My partner and our children]
+occupation:
+  label: Occupation
+  values:
+    - [TECHNOLOGY, Technology]
+    - [HEALTHCARE, Healthcare]
+    - [EDUCATION, Education]
+    - [FINANCE, Finance]
+    - [TRADES, Trades]
+    - [OTHER_PROFESSIONAL, Another profession]
+    - [SEEKING_WORK, "I'm still looking for work"]

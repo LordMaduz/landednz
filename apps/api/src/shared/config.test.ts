@@ -4,6 +4,7 @@ import { loadConfig } from './config.js';
 const MOCK_ENV = {
   DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
   SUPABASE_URL: 'http://127.0.0.1:54321',
+  SUPABASE_SECRET_KEY: 'sb_secret_test',
   AI_MODE: 'mock',
   CHAT_DAILY_CAP: '50',
 };
@@ -39,10 +40,23 @@ describe('loadConfig', () => {
     expect(() => loadConfig(env)).toThrow('Missing required environment variable: CHAT_DAILY_CAP');
   });
 
+  test('config throws "Missing required environment variable: SUPABASE_SECRET_KEY" when unset', () => {
+    const { SUPABASE_SECRET_KEY: _unset, ...env } = MOCK_ENV;
+    expect(() => loadConfig(env)).toThrow('Missing required environment variable: SUPABASE_SECRET_KEY');
+  });
+
   test('mock mode does not require AI keys', () => {
     const config = loadConfig(MOCK_ENV);
     expect(config.aiMode).toBe('mock');
     expect(config.chatDailyCap).toBe(50);
+  });
+
+  test('per-IP rate limit is 120 a minute unless RATE_LIMIT_PER_MINUTE says otherwise', () => {
+    expect(loadConfig(MOCK_ENV).rateLimitPerMinute).toBe(120);
+    expect(loadConfig({ ...MOCK_ENV, RATE_LIMIT_PER_MINUTE: '1000' }).rateLimitPerMinute).toBe(1000);
+    expect(() => loadConfig({ ...MOCK_ENV, RATE_LIMIT_PER_MINUTE: '0' })).toThrow(
+      'RATE_LIMIT_PER_MINUTE must be a positive integer',
+    );
   });
 
   test('live mode requires ANTHROPIC_API_KEY', () => {

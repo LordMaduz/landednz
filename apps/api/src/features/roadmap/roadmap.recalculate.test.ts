@@ -3,9 +3,8 @@
 // AC-2-11: Daily priority recalculation job runs and updates priorityScore for
 // time-sensitive tasks. Test: T16 score increases when arrivalDate set to 10 months ago.
 //
-// Uses a non-canonical task ID (unique per test run) to avoid conflicts with
-// other test files running the same canonical T16. fileParallelism: false ensures
-// sequential execution anyway, but unique IDs make teardown reliable.
+// T16 comes from the content bundle (priority 65, constrained-couple boost +5,
+// days 275-336 urgency +30).
 //
 // Database must be running: docker-compose up -d
 
@@ -18,7 +17,6 @@ import { recalculateAllRoadmaps } from './roadmap.recalculate.js';
 
 const TS = Date.now();
 const TEST_USER_ID = `test-user-ac211-${TS}`;
-// Must use canonical T16 — scoreTask() checks task ID by exact string for persona weights + urgency
 const T16_ID = 'T16';
 
 // Anchor dates:
@@ -30,10 +28,10 @@ const RECENT_ARRIVAL_DATE = '2026-03-14'; // 1 day ago — no urgency
 const OLD_ARRIVAL_DATE = new Date(CURRENT_DATE.getTime() - 285 * 24 * 60 * 60 * 1000); // 285 days ago
 
 // T16 expected scores:
-// No urgency: 65 (base) + 5 (constrained_couple) + 0 = 70
+// No urgency: 65 (priority) + 5 (COUPLE_CONSTRAINED boost) + 0 = 70
 // With urgency: 65 + 5 + 30 = 100
 const T16_BASE = 65;
-const T16_PERSONA_WEIGHT = 5;  // constrained_couple
+const T16_PERSONA_WEIGHT = 5;  // COUPLE_CONSTRAINED
 const T16_SCORE_NO_URGENCY = T16_BASE + T16_PERSONA_WEIGHT;         // 70
 const T16_SCORE_WITH_URGENCY = T16_BASE + T16_PERSONA_WEIGHT + 30;  // 100
 
@@ -43,34 +41,14 @@ beforeAll(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: T16_ID } });
-  await db.task.deleteMany({ where: { id: T16_ID } });
 
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-ac211-${TS}@example.com` } });
-
-  // Create canonical T16 — NZ driving licence. basePriority=65, no deps.
-  // Canonical ID required: scoreTask() checks taskId === 'T16' for persona weights + urgency.
-  await db.task.create({
-    data: {
-      id: T16_ID,
-      name: 'Convert your overseas driving licence to NZ',
-      phase: 2,
-      basePriority: T16_BASE,
-      estimatedDuration: '1 hour',
-      governmentSourceUrl: 'https://nzta.govt.nz',
-      applicableVisaTypes: '["ALL"]',
-      applicableFamilySituations: '["ALL"]',
-      applicableOccupations: '["ALL"]',
-    },
-  });
 });
 
 afterAll(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: T16_ID } });
-  await db.task.deleteMany({ where: { id: T16_ID } });
   await db.$disconnect();
 });
 

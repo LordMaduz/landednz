@@ -7,7 +7,6 @@ import type {
   City,
   FamilySituation,
   Occupation,
-  PersonaKey,
   ChatEntryPoint,
 } from '@landednz/types';
 

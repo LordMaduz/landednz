@@ -15,11 +15,14 @@ COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 RUN npm ci -w @landednz/api --include-workspace-root
 
+ARG CONTENT_ALLOW_UNVERIFIED=false
 COPY apps/api ./apps/api
 WORKDIR /app/apps/api
 # prisma.config.ts reads DATABASE_URL; generate never connects, so a placeholder is enough
 RUN DATABASE_URL=postgresql://build:build@localhost:5432/build npx prisma generate
 RUN npm run build
+# Fails the build on invalid content; unverified content only passes with --build-arg CONTENT_ALLOW_UNVERIFIED=true
+RUN CONTENT_ALLOW_UNVERIFIED=$CONTENT_ALLOW_UNVERIFIED npm run content:build
 
 # Stage 2 — run (prod deps only, no dev tooling)
 FROM node:24-alpine AS runner
@@ -34,6 +37,7 @@ COPY apps/api/package.json ./apps/api/
 RUN npm ci -w @landednz/api --include-workspace-root --omit=dev
 
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/content-bundle.json ./apps/api/
 COPY apps/api/prisma ./apps/api/prisma
 COPY apps/api/prisma.config.ts ./apps/api/
 

@@ -1,0 +1,145 @@
+id: T07
+name: Open NZ Bank Account In Person
+phase: 2
+priority: 95
+boosts: []
+urgency:
+  - fromDay: 1
+    toDay: 3
+    by: 30
+duration: 45–90 minutes in branch. Debit card arrives 3–5 business days later.
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn:
+  - task: T06
+    type: hard
+retired: false
+why:
+  - id: T07.why.1
+    text: Visit an ANZ or BNZ branch on Day 1 or Day 2.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+steps:
+  - id: T07.steps.1
+    text: "Key differences for new migrants: | Bank | Monthly fee | Debit card | Migrant notes | |------|-------------|-----------|---------------| | ANZ | $0 | Free | Largest branch network. Pre-arrival application available. Most flexible on address proof. | | ASB | $0 (paperless) | $5/6 months | Good migrant banking. Does NOT accept hostel/temporary addresses. Requires more permanent address. | | BNZ | $0 | Free | No appointment needed for identity verification. Online application then branch visit. | | Westpac | $0 | Free (first year) | Good migrant banking. Pre-arrival application available up to 180 days before. | | Kiwibank | $0 | $10 one-off | NZ-owned. Requires work visa of more than 1 year — AEWV qualifies. | **Recommendation for Day 1–3:** ANZ or BNZ. Most flexible on temporary accommodation addresses. Largest branch networks."
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.steps.2
+    text: "Bring: - Passport (original — not a copy) - Visa documentation (eVisa letter printed, or passport showing visa stamp) - Proof of NZ address (hotel/serviced apartment booking confirmation — accepted by ANZ, BNZ, Westpac but NOT ASB) - IRD number if already received (not mandatory but speeds the process) - NZ mobile number (from T06)"
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.steps.3
+    text: "Walk in — no appointment needed at most ANZ and BNZ branches for individual account opening. Tell the teller you are a new migrant opening a first account. The process typically takes 45–90 minutes. You will: - Complete an application form (in branch or on a tablet) - Have your identity and visa verified - Provide your NZ address - Choose account type (everyday transaction account — standard for new migrants) - Leave with your account number and BSB (bank branch) number"
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.steps.4
+    text: "Format: XX-XXXX-XXXXXXX-XX (bank code — branch — account — suffix) You will need this for: - IRD application (T08) - KiwiSaver election (T10) - Employer payroll setup - Wise/Remitly account setup (T15)"
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.steps.5
+    text: "Before leaving the branch or same day: register for online banking using your NZ mobile number and email. Download the bank's app. Enable notifications for transactions."
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.steps.6
+    text: Your debit card is mailed to your NZ address. You can use your account number for bank transfers immediately. For card payments, use Apple Pay or Google Pay linked to your new account — available as soon as you set up online banking, before the physical card arrives.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+documents:
+  - id: T07.documents.1
+    text: passport
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.documents.2
+    text: visa
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.documents.3
+    text: ird number
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+mistakes:
+  - id: T07.mistakes.1
+    text: Do not apply for a credit card at account opening. NZ banks require 3–6 months of NZ credit history and income verification for credit card approval. Applying too early results in a hard credit enquiry and likely rejection — both of which can slightly harm your emerging NZ credit file (Task T18).
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.mistakes.2
+    text: "Failing to understand: ASB's address restriction catches many migrants off guard. If you are in an Airbnb or hostel, go to ANZ or BNZ first."
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.mistakes.3
+    text: Your NZ bank account number format (XX-XXXX-XXXXXXX-XX) is different from Indian or Singaporean account formats. When providing to your employer, give the full number in the NZ format — do not abbreviate.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.mistakes.4
+    text: "Failing to understand: Internet banking typically requires SMS verification when setting up from a new device. This is why having your NZ SIM active before going to the bank (T06 before T07) matters — the bank will SMS your NZ number during setup."
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.mistakes.5
+    text: "Failing to understand: Opening bank accounts at multiple banks simultaneously is unnecessary and creates administrative complexity. Open one account, use it for 3–6 months, then add accounts if needed."
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+watchOuts:
+  - id: T07.watchOuts.1
+    text: Do not apply for a credit card at account opening. NZ banks require 3–6 months of NZ credit history and income verification for credit card approval. Applying too early results in a hard credit enquiry and likely rejection — both of which can slightly harm your emerging NZ credit file (Task T18).
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.watchOuts.2
+    text: ASB's address restriction catches many migrants off guard. If you are in an Airbnb or hostel, go to ANZ or BNZ first.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.watchOuts.3
+    text: Your NZ bank account number format (XX-XXXX-XXXXXXX-XX) is different from Indian or Singaporean account formats. When providing to your employer, give the full number in the NZ format — do not abbreviate.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.watchOuts.4
+    text: Internet banking typically requires SMS verification when setting up from a new device. This is why having your NZ SIM active before going to the bank (T06 before T07) matters — the bank will SMS your NZ number during setup.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T07.watchOuts.5
+    text: Opening bank accounts at multiple banks simultaneously is unnecessary and creates administrative complexity. Open one account, use it for 3–6 months, then add accounts if needed.
+    source: www-anz-co-nz-personal-bank-accounts-new-to-new-zealand
+    checked: 2026-03-03
+    verified: false
+    numberType: C

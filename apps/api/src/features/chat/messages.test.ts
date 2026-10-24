@@ -62,7 +62,6 @@ beforeAll(async () => {
       familySituation: 'COUPLE_CONSTRAINED',
       occupation: 'TECHNOLOGY',
       arrivalDate: new Date('2026-02-01'), // ~45 days ago
-      personaKey: 'constrained_couple',
     },
   });
 

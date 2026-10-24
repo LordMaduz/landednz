@@ -1,0 +1,32 @@
+id: T01
+name: Get your IRD number
+phase: 2
+priority: 80
+boosts:
+  - { when: { occupation: [SEEKING_WORK] }, by: 10 }
+urgency: []
+duration: 20 minutes online
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T01.why.tax-rate
+    text: Without an IRD number your employer deducts tax at {{ird.non-declaration-rate}}.
+    source: ird-tax-codes
+    checked: 2026-10-01
+    verified: true
+steps:
+  - id: T01.step.apply-online
+    text: Apply online with form IR595, or call 0800 227 774.
+    source: ird-apply
+    checked: 2026-10-01
+    verified: true
+  - id: T01.step.children
+    when: { any: [{ family: [FAMILY_WITH_CHILDREN] }, { not: { city: [AUCKLAND] } }] }
+    text: Apply for your children at the same time.
+    source: ird-apply
+    checked: 2026-10-01
+    verified: true
+documents: []
+mistakes: []
+watchOuts: []

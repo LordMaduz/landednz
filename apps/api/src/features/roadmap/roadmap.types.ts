@@ -1,4 +1,6 @@
-import type { TaskStatus, TaskType } from '../../generated/prisma/enums.js';
+import type { TaskStatus } from '../../generated/prisma/enums.js';
+
+type TaskType = 'FREE' | 'PREMIUM'; // API shape only; the enum left the database with the legacy Task table
 
 export interface RoadmapTask {
   taskId: string;
@@ -8,9 +10,12 @@ export interface RoadmapTask {
   priorityScore: number;
   isBlocked: boolean;
   blockingTaskNames: string[];
+  blockingTaskIds: string[];  // same order as blockingTaskNames
+  completedAt: string | null; // ISO
   estimatedDuration: string;
   taskType: TaskType;
   consequenceLine: string;
+  retired: boolean;  // task retired from content: shown read-only, never in topThree
 }
 
 export interface RoadmapPhase {
@@ -31,13 +36,20 @@ export interface TaskCompleteResponse {
   unlockedTasks: string[];  // Task IDs that transitioned isBlocked true → false
 }
 
+export interface TaskReopenResponse {
+  taskId: string;
+  status: 'NOT_STARTED';
+  newTopThree: RoadmapTask[];
+  reblockedTasks: string[];  // Task IDs that transitioned isBlocked false → true
+}
+
 export interface BulkOverrideRequest {
   completedTaskIds: string[];
 }
 
 export interface BulkOverrideResponse {
   marked: string[];        // Task IDs successfully marked COMPLETE in this request
-  skipped: string[];       // Task IDs already COMPLETE — silently skipped
+  skipped: string[];       // Task IDs already COMPLETE or retired (read-only) — skipped
   newTopThree: RoadmapTask[];
 }
 
@@ -54,9 +66,10 @@ export interface TaskDetailResponse {
   estimatedDuration: string;
   processingTime: string | null;
   governmentSourceUrl: string;
-  taskType: TaskType;
+  lastVerified: string | null;  // YYYY-MM-DD, the task's oldest item `checked` date
+  taskType: TaskType;  // content has no paid tier: always FREE
 
-  // From TaskContentVariant for user's personaKey (fallback: solo_aewv)
+  // Content items that match the user's answers (itemsFor)
   consequenceLine: string;
   steps: string[];
   documentsRequired: string[];
@@ -66,4 +79,13 @@ export interface TaskDetailResponse {
   relatedTasks: { taskId: string; name: string; relationship: string }[];  // always [] in MVP
   professionalAdviceRequired: boolean;
   professionalAdviceNote: string | null;
+  contentVersion: string;
+  sources: Record<'why' | 'steps' | 'documents' | 'mistakes' | 'watchOuts' | 'cost' | 'advice', ItemSource[]>;
+}
+
+export interface ItemSource {
+  itemId: string;
+  title: string;
+  url: string;
+  checked: string;  // YYYY-MM-DD
 }

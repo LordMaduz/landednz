@@ -97,6 +97,7 @@ ios/fastlane/test_output
 coverage/
 *.coverage
 test-results/
+.lighthouseci/
 
 # Supabase
 supabase/.branches/
@@ -108,3 +109,9 @@ Superbase_Endpoints.txt
 # Xcode user data
 **/*.xcworkspace/xcuserdata/
 .env.docker
+
+# Dev server logs (scripts/dev-all.sh)
+.dev/
+
+# Content bundle, built by `npm run content:build -w @landednz/api`
+apps/api/content-bundle.json

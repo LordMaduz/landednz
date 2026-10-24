@@ -4,13 +4,14 @@
 // AC-2-09: POST /roadmap/bulk-override marks all specified tasks COMPLETE in a single
 // request and returns correct newTopThree.
 //
-// Uses canonical task IDs (T06, T07, T08, T03) — fileParallelism: false ensures
+// Uses content task IDs (T06, T07, T08, T03) — fileParallelism: false ensures
 // sequential execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
+import { loadContent, useContent } from '../../content/index.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { bulkOverride, getRoadmap } from './roadmap.service.js';
 
@@ -24,8 +25,6 @@ const TEST_USER_ID = `test-user-ac209-${TS}`;
 const ARRIVAL_DATE = '2026-03-13';
 const CURRENT_DATE = new Date('2026-03-14');
 
-const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
-
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
 beforeAll(async () => {
@@ -33,81 +32,16 @@ beforeAll(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
 
   // Create test user
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-ac209-${TS}@example.com` } });
 
-  // Create canonical test tasks — IDs must match canonical values so scoreTask()
-  // applies correct persona weights (T08 constrained_couple +20) and urgency bonuses
-  await db.task.createMany({
-    data: [
-      {
-        id: 'T06',
-        name: 'Get a NZ SIM card',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '30 minutes',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T07',
-        name: 'Open a NZ bank account',
-        phase: 1,
-        basePriority: 95,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T08',
-        name: 'Apply for your IRD number',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '15 minutes',
-        governmentSourceUrl: 'https://ird.govt.nz',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T03',
-        name: 'Prepare your overseas bank account',
-        phase: 1,
-        basePriority: 82,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-    ],
-  });
-
-  // HARD dep: T06 → T07
-  await db.taskDependency.create({
-    data: { prerequisiteId: 'T06', dependentId: 'T07', dependencyType: 'HARD' },
-  });
 });
 
 afterAll(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
   await db.$disconnect();
 });
 
@@ -116,6 +50,17 @@ afterEach(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
 });
+
+// Runs fn with the given task marked retired in the loaded content, then restores the real bundle
+async function withRetired(taskId: string, fn: () => Promise<void>) {
+  const bundle = await loadContent();
+  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === taskId ? { ...t, retired: true } : t)) });
+  try {
+    await fn();
+  } finally {
+    useContent(bundle);
+  }
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -234,6 +179,28 @@ describe('bulkOverride()', () => {
     });
   });
 
+  describe('Retired tasks', () => {
+    test('Retired T03 is skipped, not marked; T06 is marked', async () => {
+      await createProfile(TEST_USER_ID, {
+      visaType: 'AEWV',
+      city: 'AUCKLAND',
+      familySituation: 'COUPLE_CONSTRAINED',
+      occupation: 'TECHNOLOGY',
+      arrivalDate: ARRIVAL_DATE,
+    }, CURRENT_DATE);
+
+      await withRetired('T03', async () => {
+        const result = await bulkOverride(TEST_USER_ID, ['T03', 'T06'], CURRENT_DATE);
+        expect(result.marked).toEqual(['T06']);
+        expect(result.skipped).toEqual(['T03']);
+      });
+      const entry = await db.userRoadmapEntry.findUnique({
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+      });
+      expect(entry!.status).toBe('NOT_STARTED');
+    });
+  });
+
   describe('Task not in roadmap', () => {
     test('T_NONEXISTENT silently ignored — not in marked or skipped', async () => {
       await createProfile(TEST_USER_ID, {
@@ -243,7 +210,6 @@ describe('bulkOverride()', () => {
         occupation: 'TECHNOLOGY',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
-      // The DB also holds the seeded KB tasks, so compare against the roadmap before the call
       const topThreeBefore = (await getRoadmap(TEST_USER_ID)).topThree.map(t => t.taskId);
 
       const result = await bulkOverride(TEST_USER_ID, ['T_NONEXISTENT'], CURRENT_DATE);

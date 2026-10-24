@@ -4,9 +4,21 @@ import { AppError } from '../../shared/errors.js';
 import { authenticateRequest } from '../../shared/middleware/auth.js';
 import { createProfile, updateProfileAndRegenerateRoadmap, getUserProfile } from './onboarding.service.js';
 import { db } from '../../shared/db.js';
-import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
+import { parsePreviewRequest, previewRoadmap } from './onboarding.preview.js';
+import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse, OnboardingPreviewResponse } from './onboarding.types.js';
 
 export function registerOnboardingRoutes(app: FastifyInstance): void {
+  // POST /onboarding/preview
+  // Public (no auth; the global per-IP rate limit applies). Returns the task list the five
+  // answers would produce, so the preview before sign-up is the real roadmap.
+  app.post<{ Reply: OnboardingPreviewResponse }>(
+    '/onboarding/preview',
+    async (request, reply) => {
+      const answers = parsePreviewRequest(request.body);
+      reply.status(200).send(await previewRoadmap(answers));
+    },
+  );
+
   // POST /onboarding/profile
   // Creates UserProfile + all applicable UserRoadmapEntry records synchronously.
   // Requires valid JWT — userId extracted by authenticateRequest preHandler.
@@ -36,7 +48,6 @@ export function registerOnboardingRoutes(app: FastifyInstance): void {
 
       const response: CreateProfileResponse = {
         profileId: result.profileId,
-        personaKey: result.personaKey,
         roadmapGenerated: result.roadmapGenerated,
       };
 
@@ -78,7 +89,6 @@ export function registerOnboardingRoutes(app: FastifyInstance): void {
 
       const response = {
         profileId: result.profileId,
-        personaKey: result.personaKey,
         roadmapRegenerated: true,
         entriesCreated: result.entriesCreated
       };

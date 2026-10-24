@@ -71,9 +71,9 @@ The Supabase config has already been updated with the Google provider block. You
    - Find: `client_id = "YOUR_GOOGLE_CLIENT_ID_HERE"`
    - Replace with your actual Client ID from Step 5
 
-2. **Edit `supabase/.env`:**
-   - Find: `SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=YOUR_GOOGLE_CLIENT_SECRET_HERE`
-   - Replace with your actual Client Secret from Step 5
+2. **Edit `supabase/.env`** (gitignored; `make env` creates it from `supabase/.env.example`):
+   - Set `SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=` to your Client Secret from Step 5
+   - Google never shows a secret again: if it is lost, use **Add secret** on the client, then disable the old one
 
 3. **Restart Supabase:**
    ```bash
@@ -100,6 +100,7 @@ SUPABASE_ANON_KEY=sb_publishable_...
 ## Troubleshooting
 
 **Google OAuth errors:**
+- Sign-in returns to the home page, still signed out: check `docker logs supabase_auth_landednz` for `invalid_client` — the secret in `supabase/.env` is missing or wrong; fix it, then `supabase stop && supabase start`
 - Verify redirect URI exactly matches: `http://127.0.0.1:54321/auth/v1/callback`
 - Check that Google+ API and People API are both enabled
 - Confirm `skip_nonce_check = true` in `supabase/config.toml` Google section

@@ -1,15 +1,14 @@
 import type { FastifyInstance } from 'fastify'
 import rateLimit from '@fastify/rate-limit'
 import { AppError } from './errors.js'
-
-const MAX_REQUESTS_PER_MINUTE = 120
+import { config } from './config.js'
 
 // Global per-IP limit. Must be awaited before routes register so it attaches to every route.
 // /health is exempt: monitoring polls it and it keeps free Supabase projects awake.
 export async function registerRateLimit(app: FastifyInstance): Promise<void> {
   await app.register(rateLimit, {
     global: true,
-    max: MAX_REQUESTS_PER_MINUTE,
+    max: config.rateLimitPerMinute,
     timeWindow: '1 minute',
     allowList: (request) => request.routeOptions.url === '/health',
     // Thrown into the global error handler, which renders AppError as { error, message }

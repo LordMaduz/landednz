@@ -1,17 +1,15 @@
 import { create } from 'zustand'
+import type { Answers } from '@/lib/answers'
 
+// Onboarding answers in memory until "See my roadmap" posts them to the answers cookie (CW06: no localStorage)
 interface OnboardingStore {
-  revealComplete: boolean
-  setRevealComplete: () => void
-  activeHint: 1 | 2 | 3 | null
-  dismissHint: () => void
+  answers: Partial<Answers>
+  setAnswer: <K extends keyof Answers>(key: K, value: Answers[K]) => void
+  setAnswers: (answers: Answers) => void
 }
 
 export const useOnboardingStore = create<OnboardingStore>((set) => ({
-  revealComplete: false,
-  setRevealComplete: () => set({ revealComplete: true }),
-  activeHint: 1,
-  dismissHint: () => set((state) => ({
-    activeHint: state.activeHint === 1 ? 2 : state.activeHint === 2 ? 3 : null
-  })),
+  answers: {},
+  setAnswer: (key, value) => set((state) => ({ answers: { ...state.answers, [key]: value } })),
+  setAnswers: (answers) => set({ answers }),
 }))

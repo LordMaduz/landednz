@@ -100,7 +100,6 @@ const mockSystemPromptParams: BuildSystemPromptParams = {
     city: 'AUCKLAND',
     occupation: 'TECHNOLOGY',
     arrivalDaysAgo: 45,
-    personaKey: 'constrained_couple',
     recentCompletions: ['NZ SIM card', 'Bank account', 'IRD number application'],
   },
   entryPoint: 'TASK_CARD',
@@ -108,8 +107,7 @@ const mockSystemPromptParams: BuildSystemPromptParams = {
   consequenceLine: 'Without this, first paycheck taxed at 45%',
   kbChunks: [
     {
-      chunkKey: 'T08-constrained_couple',
-      personaKey: 'constrained_couple',
+      chunkKey: 'CHUNK_T08_general',
       content: 'Apply for IRD number within first week. Bring passport and bank details.',
       sourceName: 'IRD number application',
       sourceUrl: 'https://ird.govt.nz/individual/ird-numbers',
@@ -230,7 +228,7 @@ describe('buildChatSystemPrompt()', () => {
   test('KB chunks formatted correctly', () => {
     const result = buildChatSystemPrompt(mockSystemPromptParams);
 
-    expect(result).toMatch(/\[CHUNK 1 — T08-constrained_couple — constrained_couple\]/);
+    expect(result).toMatch(/\[CHUNK 1 — CHUNK_T08_general\]/);
     expect(result).toMatch(/Apply for IRD number within first week/);
     expect(result).toMatch(/Source: IRD number application — https:\/\/ird\.govt\.nz/);
   });

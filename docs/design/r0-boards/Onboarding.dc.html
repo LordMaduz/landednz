@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build your roadmap</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+.ui h1,.ui h2,.ui h3,.ui p{margin:0}
+.ui h1,.ui h2{text-wrap:balance}
+.t-hero{font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.03em}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.t-strong{font-weight:500}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+.ui a.btn{text-decoration:none}
+.btn-lg{min-height:48px;padding:0 24px}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.btn:disabled{background:#F6F8F8;color:#4B6170;border-color:#F6F8F8;cursor:default}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.hairline{border:1px solid #E3E8EA;border-radius:10px}
+.row-link{display:flex;align-items:center;gap:16px;padding:16px 24px}.ui a.row-link{color:#0F2A3A;text-decoration:none}.row-link:hover{background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;box-sizing:border-box;padding-left:24px;padding-right:24px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.streaming{background-size:200% 100%;animation:aurora 3s linear infinite}
+@keyframes aurora{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media (prefers-reduced-motion: reduce){.streaming{animation:none}}
+@container (max-width: 760px){.hide-sm{display:none !important}.t-hero{font-size:32px;line-height:1.15}.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}}
+.legs,.tasks{margin:0;padding:0;list-style:none}
+.legs > li{padding-bottom:24px;background:linear-gradient(var(--line),var(--line)) 7px 0/2px 100% no-repeat}
+.legs > li:last-child.collapsed{background-size:2px 22px}
+.legs > li:last-child{padding-bottom:0}
+.leg-head,.task{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:16px}
+.leg{--line:#E3E8EA}.leg.done{--line:#0E7C7B}
+.leg-head > div{display:flex;flex-wrap:wrap;align-items:center;column-gap:16px;min-height:44px}
+.rail{height:44px;display:flex;align-items:center;justify-content:center}
+.row{font:inherit;box-sizing:border-box;width:100%;min-height:44px;text-align:left;padding:8px;border:0;border-radius:6px;background:transparent;color:#0F2A3A;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:16px;cursor:pointer}
+.row:hover,.row[aria-current="true"]{background:#F6F8F8}
+.opt{display:flex;gap:16px;align-items:center;min-height:48px;padding:8px 16px;border-radius:6px;border:1px solid #D5DFE2;background:#FFFFFF;cursor:pointer;box-sizing:border-box}
+.opt:hover{background:#F6F8F8}
+.opt.on{border-color:#0E7C7B;box-shadow:inset 0 0 0 1px #0E7C7B;background:#F6F8F8}
+.opt input{margin:0;width:16px;height:16px;accent-color:#0E7C7B}
+.save-bar{position:sticky;bottom:0;background:#FFFFFF;border-top:1px solid #E3E8EA}
+.legs > li:last-child{background-size:2px 22px}
+@container (max-width: 560px){.save-bar .btn{width:100%}}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; min-height: 900px">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container" style="height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+      <a href="/" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <span class="t-small muted">{{headerRight}}</span>
+    </div>
+  </header><div role="progressbar" aria-label="Question" aria-valuemin="1" aria-valuemax="5" aria-valuenow="{{step}}" style="height: 2px"><div style="height: 2px; background: #0E7C7B; width: {{pct}}"></div></div>
+  <sc-if value="{{asking}}" hint-placeholder-val="{{true}}">
+    <main class="container" style="max-width: 608px; padding-top: 48px; padding-bottom: 96px; display: flex; flex-direction: column; gap: 32px">
+      <div>
+        <sc-if value="{{canBack}}" hint-placeholder-val="{{false}}"><button onClick="{{back}}" class="btn btn-ghost" style="margin-left: -16px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex: none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button></sc-if>
+        <sc-if value="{{isFirst}}" hint-placeholder-val="{{true}}"><a href="/" class="btn btn-ghost" style="margin-left: -16px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex: none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</a></sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 32px">
+        <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0">
+          <legend style="padding: 0 0 16px"><h1 class="t-title">{{q.title}}</h1></legend>
+          <sc-if value="{{q.isChoice}}" hint-placeholder-val="{{true}}">
+            <sc-for list="{{q.options}}" as="o" hint-placeholder-count="4">
+              <label class="opt {{o.cls}}">
+                <input type="radio" name="{{q.key}}" checked="{{o.checked}}" onChange="{{o.pick}}">
+                <span>{{o.label}}</span>
+              </label>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{q.isDate}}" hint-placeholder-val="{{false}}">
+            <label for="arrival" class="t-strong">Arrival date</label>
+            <input id="arrival" name="arrival" type="date" class="field" value="{{arrival}}" onChange="{{setArrival}}" style="max-width: 280px">
+            <span class="t-small muted">Already here? Enter the day you arrived.</span>
+          </sc-if>
+        </fieldset>
+        <button type="button" onClick="{{next}}" disabled="{{cannotContinue}}" class="btn btn-primary btn-lg" style="align-self: flex-start">{{continueLabel}}</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{previewing}}" hint-placeholder-val="{{false}}">
+    <main class="container" style="max-width: 768px; padding-top: 48px; padding-bottom: 64px; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h1 class="t-title">Your roadmap is ready</h1>
+        <p class="muted">{{summary}}. <button onClick="{{restart}}" class="t-strong" style="font: inherit; font-weight: 500; padding: 0; border: 0; background: transparent; color: #0A6463; cursor: pointer; text-decoration: underline">Change my answers</button></p>
+      </div>
+      <ol class="legs" aria-label="Your roadmap">
+        <sc-for list="{{legs}}" as="L" hint-placeholder-count="4">
+          <li class="leg">
+            <div class="leg-head">
+              <span class="rail" aria-hidden="true"><span style="{{L.dot}}"></span></span>
+              <div><h2 style="font-size: 15px; font-weight: 600">{{L.name}}</h2><span class="t-small muted">{{L.meta}}</span></div>
+            </div>
+            <ol class="tasks">
+              <sc-for list="{{L.tasks}}" as="t" hint-placeholder-count="3">
+                <li class="task">
+                  <span class="rail" aria-hidden="true"><span style="{{t.dot}}"></span></span>
+                  <div class="row" style="cursor: default; background: transparent"><span style="flex: 1 1 240px; font-weight: {{t.weight}}">{{t.name}}</span><span class="t-small muted">{{t.meta}}</span></div>
+                </li>
+              </sc-for>
+            </ol>
+          </li>
+        </sc-for>
+      </ol>
+    </main>
+    <div class="save-bar">
+      <div class="container" style="max-width: 768px; min-height: 80px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-top: 16px; padding-bottom: 16px">
+        <span>Save it to tick tasks off and ask questions.</span>
+        <a href="/signin" class="btn btn-primary btn-lg">Save my roadmap</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scenario":{"editor":"enum","options":["questions","preview"],"default":"questions"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const preview = props.scenario === 'preview';
+    this.state = preview
+      ? { step: 6, answers: { visa: 'AEWV', city: 'AUCKLAND', family: 'SOLO', work: 'TECHNOLOGY' }, arrival: '2027-01-14' }
+      : { step: 1, answers: {}, arrival: '2027-01-14' };
+  }
+  questions() {
+    return [
+      { key: 'visa', title: 'What visa are you coming on?', options: [
+        ['AEWV', 'Accredited Employer Work Visa (AEWV)'], ['GREEN_LIST_WORK', 'Green List, work to residence'],
+        ['GREEN_LIST_RESIDENCE', 'Green List, straight to residence'], ['PARTNER_OF_STUDENT', 'Partner of a student'], ['OTHER', 'Something else']] },
+      { key: 'city', title: 'Where will you live?', options: [
+        ['AUCKLAND', 'Auckland'], ['WELLINGTON', 'Wellington'], ['CHRISTCHURCH', 'Christchurch'], ['OTHER', 'Somewhere else']] },
+      { key: 'family', title: "Who's moving with you?", options: [
+        ['SOLO', 'Just me'], ['COUPLE_DUAL_WORK', 'My partner, and we both work'],
+        ['COUPLE_CONSTRAINED', "My partner, who can't work yet"], ['FAMILY_WITH_CHILDREN', 'My partner and our children']] },
+      { key: 'work', title: 'What work do you do?', options: [
+        ['TECHNOLOGY', 'Technology'], ['HEALTHCARE', 'Healthcare'], ['EDUCATION', 'Education'], ['FINANCE', 'Finance'],
+        ['TRADES', 'Trades'], ['OTHER_PROFESSIONAL', 'Another profession'], ['SEEKING_WORK', "I'm still looking for work"]] },
+      { key: 'arrival', title: 'When do you land?', date: true }
+    ];
+  }
+  renderVals() {
+    const { step, answers, arrival } = this.state;
+    const qs = this.questions();
+    const q = qs[step - 1];
+    let qv = {};
+    if (q) {
+      qv = { title: q.title, key: q.key, isChoice: !q.date, isDate: !!q.date, options: (q.options || []).map(([value, label]) => {
+        const checked = answers[q.key] === value;
+        return { label, checked, cls: checked ? 'on' : '', pick: () => this.setState({ answers: { ...answers, [q.key]: value } }) };
+      }) };
+    }
+    const chosen = q && (q.date ? !!arrival : !!answers[q.key]);
+    const label = (key) => { const o = qs.find((x) => x.key === key).options.find((x) => x[0] === answers[key]); return o ? o[1] : ''; };
+    const short = { SOLO: 'just you', COUPLE_DUAL_WORK: 'you and your partner, both working', COUPLE_CONSTRAINED: 'you and your partner', FAMILY_WITH_CHILDREN: 'you, your partner and your children' };
+    const landing = new Date(arrival + 'T00:00:00');
+    const landText = isNaN(landing) ? '' : landing.toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric' });
+    const city = answers.city && answers.city !== 'OTHER' ? label('city') : '';
+
+    const ring = 'width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; background: #FFFFFF; ';
+    const open = ring + 'border: 1.5px solid #7A8F99';
+    const first = ring + 'width: 16px; height: 16px; border: 2px solid #0F2A3A';
+    const t = (name, meta, isFirst) => ({ name, meta: meta || '', dot: isFirst ? first : open, weight: isFirst ? 600 : 400 });
+    // task names and order from the KB (T01–T10); later legs fold into one row
+    const legs = [
+      { name: 'Before you fly', meta: '5 tasks', dot: open, tasks: [
+        t(city ? 'Research ' + city + ' suburbs' : 'Research suburbs where you will live', 'First, 4 to 6 weeks before you leave', true),
+        t('Book temporary accommodation', 'After your suburb research'), t('Prepare your overseas bank account'), t('Insure your move'), t('Sort your home-country tax')] },
+      { name: 'Arrival', meta: '2 tasks', dot: open, tasks: [t('Get an NZ SIM card', 'Day 1'), t('Open a bank account', 'Day 1 or 2, in a branch')] },
+      { name: 'Week 1', meta: '3 tasks', dot: open, tasks: [t('Apply for your IRD number', 'Before your first payday'), t('Give your employer a tax code (IR330)', 'After your IRD number'), t('Choose your KiwiSaver fund', 'With your IR330')] },
+      { name: 'Month 1 and later', meta: (answers.family === 'SOLO' ? 10 : 11) + ' tasks: renting, a GP, ACC, your rights as a tenant and more', dot: ring + 'border: 1.5px dashed #7A8F99', tasks: [] }
+    ];
+
+    return {
+      asking: step <= 5, previewing: step > 5, step, pct: Math.round((Math.min(step, 5) / 5) * 100) + '%',
+      headerRight: step <= 5 ? 'Step ' + step + ' of 5' : '',
+      q: qv, canBack: step > 1, isFirst: step === 1,
+      cannotContinue: !chosen, continueLabel: step === 5 ? 'See my roadmap' : 'Continue',
+      arrival, setArrival: (e) => this.setState({ arrival: e.target.value }),
+      next: () => { if (chosen) this.setState({ step: step + 1 }); },
+      back: () => this.setState({ step: step - 1 }),
+      restart: () => this.setState({ step: 1 }),
+      summary: [label('visa'), label('city'), short[answers.family] || '', (label('work') || '').toLowerCase(), landText ? 'landing ' + landText : ''].filter(Boolean).join(', ').replace(/^./, (c) => c.toUpperCase()),
+      legs
+    };
+  }
+}
+</script>
+</body>
+</html>

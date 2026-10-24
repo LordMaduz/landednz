@@ -8,9 +8,8 @@
 
 import { db } from '../../shared/db.js';
 import { logger } from '../../shared/logger.js';
-import { resolveBlockedTasks } from '../../core/dependencies/resolver.js';
-import { scoreTask } from '../../core/priority/scoring.js';
-import type { PersonaKey } from '../../shared/types.js';
+import { contentVersion } from '../../content/index.js';
+import { buildRoadmapEntries } from './roadmap.build.js';
 import type { RecalculateResponse } from './roadmap.types.js';
 
 export async function recalculateAllRoadmaps(
@@ -35,50 +34,19 @@ export async function recalculateAllRoadmaps(
       continue;
     }
 
-    // 3. Fetch all entries, then fetch tasks using the entry taskIds
+    // 3. Rebuild from content and rescore the user's non-COMPLETE entries.
+    // Entries whose task no longer applies are left as they are.
     const allEntries = await db.userRoadmapEntry.findMany({ where: { userId } });
-    const taskIds = allEntries.map(e => e.taskId);
-    const allTasks = await db.task.findMany({
-      where: { id: { in: taskIds } },
-      include: {
-        dependencies: { select: { prerequisiteId: true, dependencyType: true } },
-      },
-    });
+    const completedTaskIds = allEntries.filter(e => e.status === 'COMPLETE').map(e => e.taskId);
+    const openTaskIds = new Set(allEntries.filter(e => e.status !== 'COMPLETE').map(e => e.taskId));
+    const version = contentVersion();
 
-    const completedTaskIds = allEntries
-      .filter(e => e.status === 'COMPLETE')
-      .map(e => e.taskId);
-
-    // PRE_ARRIVAL: if arrivalDate is in the future, all time urgency bonuses = 0
-    const isPreArrival = profile.arrivalDate > currentDate;
-    const scoringArrivalDate = isPreArrival ? null : profile.arrivalDate;
-
-    // 4. Resolve blocked status for all tasks in one pass
-    const resolvedTasks = resolveBlockedTasks({
-      tasks: allTasks.map(t => ({ id: t.id, dependencies: t.dependencies })),
-      completedTaskIds,
-    });
-    const resolvedMap = new Map(resolvedTasks.map(r => [r.taskId, r]));
-
-    // 5. Rescore all non-COMPLETE tasks and update
-    const nonCompleteTasks = allTasks.filter(t => !completedTaskIds.includes(t.id));
-
-    for (const task of nonCompleteTasks) {
-      const resolved = resolvedMap.get(task.id)!;
-      const scored = scoreTask({
-        task: { id: task.id, basePriority: task.basePriority, phase: task.phase },
-        personaKey: profile.personaKey as PersonaKey,
-        arrivalDate: scoringArrivalDate,
-        currentDate,
-        isBlocked: resolved.isBlocked,
-        isComplete: false,
-      });
-
+    for (const e of buildRoadmapEntries(profile, profile.arrivalDate, currentDate, completedTaskIds)) {
+      if (!openTaskIds.has(e.taskId)) continue;
       await db.userRoadmapEntry.update({
-        where: { userId_taskId: { userId, taskId: task.id } },
-        data: { isBlocked: resolved.isBlocked, priorityScore: scored.finalPriority },
+        where: { userId_taskId: { userId, taskId: e.taskId } },
+        data: { isBlocked: e.isBlocked, priorityScore: e.priorityScore, contentVersion: version },
       });
-
       entriesUpdated++;
     }
   }

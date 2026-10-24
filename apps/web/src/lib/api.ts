@@ -1,7 +1,7 @@
 // Typed API client for the LandedNZ Fastify backend.
 // All fetch calls to NEXT_PUBLIC_API_URL live here — flat exported functions, no class.
 
-import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint } from '@landednz/types'
+import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint, OnboardingPreviewRequest, OnboardingPreviewResponse } from '@landednz/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -30,7 +30,19 @@ export interface GetProfileResponse {
   familySituation: FamilySituation
   occupation: Occupation
   arrivalDate: string // ISO date
-  personaKey: string
+}
+
+// Public: the roadmap the five answers would produce, before sign-up
+export async function getRoadmapPreview(answers: OnboardingPreviewRequest): Promise<OnboardingPreviewResponse> {
+  const res = await fetch(`${API_URL}/onboarding/preview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(answers),
+  })
+  if (!res.ok) {
+    throw Object.assign(new Error('Roadmap preview failed'), { status: res.status })
+  }
+  return res.json()
 }
 
 export async function submitOnboardingProfile(
@@ -123,6 +135,8 @@ export interface RoadmapApiTask {
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETE'
   isBlocked: boolean
   blockingTaskNames: string[]
+  blockingTaskIds: string[]
+  completedAt: string | null
   estimatedDuration: string
   taskType: 'FREE' | 'PREMIUM'
   consequenceLine: string
@@ -161,6 +175,7 @@ export interface TaskDetailApiResponse {
   estimatedDuration: string;
   processingTime: string | null;
   governmentSourceUrl: string;
+  lastVerified: string | null;
   taskType: 'FREE' | 'PREMIUM';
   consequenceLine: string;
   steps: string[];
@@ -171,6 +186,8 @@ export interface TaskDetailApiResponse {
   relatedTasks: { taskId: string; name: string; relationship: string }[];
   professionalAdviceRequired: boolean;
   professionalAdviceNote: string | null;
+  contentVersion?: string;
+  sources?: Record<string, { itemId: string; title: string; url: string; checked: string }[]>;
 }
 
 export async function getTaskDetail(taskId: string, token: string): Promise<TaskDetailApiResponse> {
@@ -194,6 +211,24 @@ export async function completeTask(taskId: string, token: string): Promise<void>
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
+}
+
+export async function reopenTask(taskId: string, token: string): Promise<void> {
+  const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}/reopen`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error(`Reopen task failed: ${res.status}`)
+}
+
+// ─── Account ─────────────────────────────────────────────────────────────────
+
+export async function deleteAccount(token: string): Promise<void> {
+  const res = await fetch(`${API_URL}/account`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw Object.assign(new Error(`Delete account failed: ${res.status}`), { status: res.status })
 }
 
 // ─── User Profile ────────────────────────────────────────────────────────────
@@ -232,27 +267,43 @@ export async function createChatSession(
   return res.json()
 }
 
+export interface ChatStreamError {
+  code?: string
+  message: string
+}
+
 // SSE streaming — must use fetch + ReadableStream, NOT EventSource (no auth header support).
 // Calls onChunk for each text token, onDone when stream ends, onError on failure.
+// A non-OK response reports the API's { error, message } body (e.g. 429 CHAT_DAILY_CAP_REACHED);
+// aborting through `signal` (Stop) ends quietly.
 export async function streamChat(
   sessionId: string,
   content: string,
   token: string,
   onChunk: (text: string) => void,
   onDone: () => void,
-  onError: (message: string) => void,
+  onError: (error: ChatStreamError) => void,
+  signal?: AbortSignal,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ content }),
-  })
+  let res: Response
+  try {
+    res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content }),
+      signal,
+    })
+  } catch (error) {
+    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Failed to connect to chat service' })
+    return
+  }
 
   if (!res.ok || !res.body) {
-    onError('Failed to connect to chat service')
+    const body = await res.json().catch(() => null) as { error?: string; message?: string } | null
+    onError({ code: body?.error, message: body?.message ?? 'Failed to connect to chat service' })
     return
   }
 
@@ -275,11 +326,11 @@ export async function streamChat(
           const event = JSON.parse(line.slice(6))
           if (event.type === 'chunk') onChunk(event.text)
           else if (event.type === 'done') { onDone(); return }
-          else if (event.type === 'error') { onError(event.message); return }
+          else if (event.type === 'error') { onError({ code: event.code, message: event.message }); return }
         } catch { /* skip malformed SSE lines */ }
       }
     }
   } catch (error) {
-    onError(error instanceof Error ? error.message : 'Stream failed')
+    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Stream failed' })
   }
 }

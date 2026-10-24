@@ -9,8 +9,11 @@ import { registerAuthRoutes } from './features/auth/auth.route.js'
 import { registerOnboardingRoutes } from './features/onboarding/onboarding.route.js'
 import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
 import { registerChatRoutes } from './features/chat/routes.js'
+import { registerAccountRoutes } from './features/account/account.route.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
 import { registerRateLimit } from './shared/rate-limit.js'
+import { loadContent } from './content/index.js'
+import { checkStoredTaskIds } from './content/integrity.js'
 
 export async function buildApp() {
   const app = Fastify({ logger: false })
@@ -30,11 +33,25 @@ export async function buildApp() {
   registerOnboardingRoutes(app)
   registerRoadmapRoutes(app)
   registerChatRoutes(app)
+  registerAccountRoutes(app)
 
   return app
 }
 
 async function start() {
+  try {
+    await loadContent()
+  } catch (err) {
+    logger.error({ err }, 'Failed to load content')
+    process.exit(1)
+  }
+
+  // Never blocks start-up: unknown ids are logged as warnings by the check itself
+  checkStoredTaskIds().then(
+    ({ unknown, retired }) => logger.info({ unknown: unknown.length, retired: retired.length }, 'Stored task ids checked'),
+    (err) => logger.error({ err }, 'Stored task id check failed'),
+  )
+
   const app = await buildApp()
 
   // Graceful shutdown — disconnect Prisma before exit to avoid connection pool leak on Railway.

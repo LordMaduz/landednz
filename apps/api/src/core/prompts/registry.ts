@@ -201,7 +201,7 @@ NZ-specific facts, processes, or requirements.`;
     kbChunks.forEach((chunk, index) => {
       kbContent += `
 
-[CHUNK ${index + 1} — ${chunk.chunkKey} — ${chunk.personaKey}]
+[CHUNK ${index + 1} — ${chunk.chunkKey}]
 ${chunk.content}
 Source: ${chunk.sourceName} — ${chunk.sourceUrl}`;
     });

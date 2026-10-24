@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LandedNZ: your settling-in roadmap for New Zealand</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+.ui h1,.ui h2,.ui h3,.ui p{margin:0}
+.ui h1,.ui h2{text-wrap:balance}
+.t-hero{font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.03em}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.t-strong{font-weight:500}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+.ui a.btn{text-decoration:none}
+.btn-lg{min-height:48px;padding:0 24px}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.btn:disabled{background:#F6F8F8;color:#4B6170;border-color:#F6F8F8;cursor:default}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.hairline{border:1px solid #E3E8EA;border-radius:10px}
+.row-link{display:flex;align-items:center;gap:16px;padding:16px 24px}.ui a.row-link{color:#0F2A3A;text-decoration:none}.row-link:hover{background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;box-sizing:border-box;padding-left:24px;padding-right:24px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.streaming{background-size:200% 100%;animation:aurora 3s linear infinite}
+@keyframes aurora{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media (prefers-reduced-motion: reduce){.streaming{animation:none}}
+@container (max-width: 760px){.hide-sm{display:none !important}.t-hero{font-size:32px;line-height:1.15}.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid #E3E8EA}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:64px;align-items:center;padding-top:96px;padding-bottom:96px}
+.preview{border:1px solid #E3E8EA;border-radius:10px;background:#FFFFFF;box-shadow:0 1px 2px rgba(15,42,58,0.04),0 16px 48px rgba(15,42,58,0.08);overflow:hidden}
+.p-row{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:16px;align-items:center;padding:8px 0;background:linear-gradient(var(--line,#E3E8EA),var(--line,#E3E8EA)) 7px 0/2px 100% no-repeat}
+.p-row.done{--line:#0E7C7B}
+.p-dot{width:12px;height:12px;border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;justify-self:center}
+.features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px;padding-top:64px;padding-bottom:96px}
+.features > div{display:flex;flex-direction:column;gap:8px;padding-top:24px;border-top:1px solid #0F2A3A}
+@container (max-width: 560px){.p-row{grid-template-columns:16px minmax(0,1fr);align-items:start}.p-row > .p-dot{margin-top:4px}.p-row > :nth-child(3){grid-column:2}}
+@container (max-width: 960px){.hero-grid{grid-template-columns:minmax(0,1fr);gap:48px;padding-top:48px;padding-bottom:64px}.features{grid-template-columns:minmax(0,1fr);gap:32px;padding-top:48px;padding-bottom:64px}}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; min-height: 900px">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container" style="height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+      <a href="/" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <a href="/signin" class="btn btn-quiet">Sign in</a>
+    </div>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <svg aria-hidden="true" viewBox="0 0 1440 640" preserveAspectRatio="xMaxYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+      <g fill="none" stroke="#E3E8EA" stroke-width="1">
+        <path d="M760 640 C840 520 780 420 900 360 S1140 330 1210 210 S1360 80 1460 100"/>
+        <path d="M810 680 C890 560 840 460 950 400 S1180 380 1260 260 S1390 140 1480 160"/>
+        <path d="M860 720 C940 600 900 500 1000 440 S1220 430 1310 310 S1420 200 1500 220"/>
+        <path d="M710 600 C790 480 730 380 850 320 S1100 280 1160 160 S1320 20 1420 40"/>
+        <path d="M660 560 C740 440 680 340 800 280 S1060 230 1110 110"/>
+        <path d="M910 760 C990 640 960 540 1050 480 S1260 480 1360 360"/>
+      </g>
+    </svg>
+      <div class="container hero-grid">
+        <div style="display: flex; flex-direction: column; gap: 24px; align-items: flex-start">
+          <h1 id="hero-title" class="t-hero" style="max-width: 560px">Know what to do next in New Zealand</h1>
+          <p class="muted" style="font-size: 20px; line-height: 1.5; max-width: 520px">Answer five questions and get a settling-in roadmap built for your visa, your city and the people moving with you.</p>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+            <a href="/start" class="btn btn-primary btn-lg">Build my roadmap</a>
+            <span class="t-small muted">You see it before you sign up.</span>
+          </div>
+        </div>
+
+        <figure class="preview" aria-label="Example: a roadmap on day 3" style="margin: 0">
+          <div aria-hidden="true" style="display: flex; align-items: center; gap: 16px; padding: 0 16px; height: 48px; border-bottom: 1px solid #E3E8EA">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg>
+            <span class="t-small muted">Home</span><span class="t-small t-strong" style="padding: 4px 8px; border-radius: 6px; background: #F6F8F8">Roadmap</span>
+          </div>
+          <div aria-hidden="true" style="padding: 24px; display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+              <span class="t-section">Your roadmap</span><span class="t-small muted">7 of 20 tasks done</span>
+            </div>
+            <div>
+              <div class="p-row done"><span class="p-dot" style="background: #0E7C7B"></span><span class="t-small" style="color: #4B6170">Open a bank account</span><span class="t-small muted">Done 22 Oct</span></div>
+              <div class="p-row"><span class="p-dot" style="width: 16px; height: 16px; background: #FFFFFF; border: 2px solid #0F2A3A"></span><span class="t-strong">Apply for your IRD number</span><span class="t-small muted">Next</span></div>
+              <div class="p-row"><span class="p-dot" style="background: #FFFFFF; border: 1.5px solid #7A8F99"><span style="width: 6px; height: 1.5px; background: #4B6170"></span></span><span class="t-small">Give your employer a tax code</span><span class="t-small muted">Needs your IRD number</span></div>
+              <div class="p-row" style="background-size: 2px 50%"><span class="p-dot" style="background: #FFFFFF; border: 1.5px solid #7A8F99"></span><span class="t-small">Register with a GP</span><span class="t-small muted">Month 1</span></div>
+            </div>
+            <div class="ai"><div><span class="t-small muted">Read your roadmap, checked ird.govt.nz</span><p class="t-small">Your passport, your visa details and your NZ bank account number. Yours is open, so you have everything.</p></div></div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="container features" aria-label="What you get">
+      <div>
+        <h2 style="font-size: 15px; font-weight: 600">In the right order</h2>
+        <p class="muted">Tasks that depend on each other unlock in turn, so you never start one too early.</p>
+      </div>
+      <div>
+        <h2 style="font-size: 15px; font-weight: 600">From official sources</h2>
+        <p class="muted">Each task links to the source it was checked against, such as tenancy.govt.nz or acc.co.nz, with the date.</p>
+      </div>
+      <div>
+        <h2 style="font-size: 15px; font-weight: 600">Answers about your roadmap</h2>
+        <p class="muted">Ask about any task. The assistant reads your roadmap and tells you what it checked.</p>
+      </div>
+    </section>
+  </main>
+
+<footer style="border-top: 1px solid #E3E8EA">
+    <div class="container" style="min-height: 64px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 24px; row-gap: 8px; padding-top: 16px; padding-bottom: 16px">
+      <span class="t-small muted">General information, not legal or tax advice.</span>
+      <nav aria-label="Legal" class="t-small" style="display: flex; gap: 24px"><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

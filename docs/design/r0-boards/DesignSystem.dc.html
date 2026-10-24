@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+.ui h1,.ui h2,.ui h3,.ui p{margin:0}
+.ui h1,.ui h2{text-wrap:balance}
+.t-hero{font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.03em}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.t-strong{font-weight:500}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+.ui a.btn{text-decoration:none}
+.btn-lg{min-height:48px;padding:0 24px}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.btn:disabled{background:#F6F8F8;color:#4B6170;border-color:#F6F8F8;cursor:default}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.hairline{border:1px solid #E3E8EA;border-radius:10px}
+.row-link{display:flex;align-items:center;gap:16px;padding:16px 24px}.ui a.row-link{color:#0F2A3A;text-decoration:none}.row-link:hover{background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;box-sizing:border-box;padding-left:24px;padding-right:24px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.streaming{background-size:200% 100%;animation:aurora 3s linear infinite}
+@keyframes aurora{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media (prefers-reduced-motion: reduce){.streaming{animation:none}}
+@container (max-width: 760px){.hide-sm{display:none !important}.t-hero{font-size:32px;line-height:1.15}.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}}
+.legs,.tasks{margin:0;padding:0;list-style:none}
+.legs > li{padding-bottom:24px;background:linear-gradient(var(--line),var(--line)) 7px 0/2px 100% no-repeat}
+.legs > li:last-child.collapsed{background-size:2px 22px}
+.legs > li:last-child{padding-bottom:0}
+.leg-head,.task{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:16px}
+.leg{--line:#E3E8EA}.leg.done{--line:#0E7C7B}
+.leg-head > div{display:flex;flex-wrap:wrap;align-items:center;column-gap:16px;min-height:44px}
+.rail{height:44px;display:flex;align-items:center;justify-content:center}
+.row{font:inherit;box-sizing:border-box;width:100%;min-height:44px;text-align:left;padding:8px;border:0;border-radius:6px;background:transparent;color:#0F2A3A;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:16px;cursor:pointer}
+.row:hover,.row[aria-current="true"]{background:#F6F8F8}
+.ds{padding-top:48px;padding-bottom:96px;display:flex;flex-direction:column;gap:64px}
+.ds > section{display:flex;flex-direction:column;gap:24px;padding-top:32px;border-top:1px solid #E3E8EA}
+.cap{font-size:13px;color:#4B6170}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.sw{display:flex;flex-direction:column;gap:8px}
+.sw > div{height:64px;border-radius:6px;border:1px solid #E3E8EA}
+.spec{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.legs > li{padding-bottom:0}
+@container (max-width: 960px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:minmax(0,1fr)}}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; min-height: 2720px">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container" style="height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+      <a href="/" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"/><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"/></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <span class="cap">Precise, 24 October 2026</span>
+    </div>
+  </header>
+  <main class="container ds">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h1 class="t-title">Design system</h1>
+      <p class="muted" style="max-width: 640px">Geist, hairlines over filled cards, one teal accent, 6 px radius on controls and 10 px on surfaces. Every board on this canvas is built from these parts.</p>
+    </div>
+
+    <section aria-labelledby="ds-c"><h2 id="ds-c" class="t-section">Colour</h2><div class="grid4"><div class="sw"><div style="background: #0F2A3A"></div><span class="t-strong">Ink</span><span class="cap">#0F2A3A, Text, primary button</span></div><div class="sw"><div style="background: #4B6170"></div><span class="t-strong">Muted</span><span class="cap">#4B6170, Secondary text</span></div><div class="sw"><div style="background: #7A8F99"></div><span class="t-strong">Control</span><span class="cap">#7A8F99, Field borders, open waypoints</span></div><div class="sw"><div style="background: #D5DFE2"></div><span class="t-strong">Border</span><span class="cap">#D5DFE2, Quiet buttons, option rows</span></div><div class="sw"><div style="background: #E3E8EA"></div><span class="t-strong">Hairline</span><span class="cap">#E3E8EA, Dividers, surfaces, rail</span></div><div class="sw"><div style="background: #F6F8F8"></div><span class="t-strong">Wash</span><span class="cap">#F6F8F8, Hover, selected, panels</span></div><div class="sw"><div style="background: #0E7C7B"></div><span class="t-strong">Teal</span><span class="cap">#0E7C7B, The one accent: done, progress, focus</span></div><div class="sw"><div style="background: #0A6463"></div><span class="t-strong">Teal text</span><span class="cap">#0A6463, Links (4.5:1 on white)</span></div><div class="sw"><div style="background: linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0); border: 0"></div><span class="t-strong">Aurora</span><span class="cap">AI replies only, never on other elements</span></div></div></section>
+
+    <section aria-labelledby="ds-t"><h2 id="ds-t" class="t-section">Type: Geist</h2><div><div style="display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #E3E8EA"><div style="display: flex; flex-direction: column"><span class="t-strong">48 / 600</span><span class="cap">Landing hero only</span></div><span class="t-hero">Know what to do next</span></div><div style="display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #E3E8EA"><div style="display: flex; flex-direction: column"><span class="t-strong">32 / 600</span><span class="cap">Page titles</span></div><span class="t-title">Your roadmap</span></div><div style="display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #E3E8EA"><div style="display: flex; flex-direction: column"><span class="t-strong">20 / 600</span><span class="cap">Section and sheet titles</span></div><span class="t-section">Apply for your IRD number</span></div><div style="display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #E3E8EA"><div style="display: flex; flex-direction: column"><span class="t-strong">15 / 400, 500, 600</span><span class="cap">Body, rows, controls</span></div><span class="">Your employer needs it before your first payday.</span></div><div style="display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #E3E8EA"><div style="display: flex; flex-direction: column"><span class="t-strong">13 / 400</span><span class="cap">Meta, captions, source lines</span></div><span class="t-small">Source: ird.govt.nz, checked 3 March 2026</span></div></div></section>
+
+    <section aria-labelledby="ds-s"><h2 id="ds-s" class="t-section">Spacing, radius, elevation</h2>
+      <div class="grid3">
+        <div class="spec"><span class="t-strong">Spacing: 0, 4, then multiples of 8</span><div style="display: flex; flex-direction: column; gap: 8px"><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">4</span><span style="height: 8px; width: 4px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">8</span><span style="height: 8px; width: 8px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">16</span><span style="height: 8px; width: 16px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">24</span><span style="height: 8px; width: 24px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">32</span><span style="height: 8px; width: 32px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">48</span><span style="height: 8px; width: 48px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">64</span><span style="height: 8px; width: 64px; background: #0E7C7B; border-radius: 2px"></span></div><div style="display: flex; align-items: center; gap: 16px"><span class="cap" style="width: 32px">96</span><span style="height: 8px; width: 96px; background: #0E7C7B; border-radius: 2px"></span></div></div></div>
+        <div class="spec"><span class="t-strong">Radius</span>
+          <div style="display: flex; gap: 16px; align-items: flex-end">
+            <div style="display: flex; flex-direction: column; gap: 8px"><span style="width: 64px; height: 44px; border: 1px solid #7A8F99; border-radius: 6px"></span><span class="cap">6, controls</span></div>
+            <div style="display: flex; flex-direction: column; gap: 8px"><span style="width: 96px; height: 64px; border: 1px solid #E3E8EA; border-radius: 10px"></span><span class="cap">10, surfaces</span></div>
+            <div style="display: flex; flex-direction: column; gap: 8px"><span style="width: 32px; height: 32px; border-radius: 50%; background: #E8F2F1"></span><span class="cap">Round, avatar, dots</span></div>
+          </div>
+        </div>
+        <div class="spec"><span class="t-strong">Elevation</span><span style="width: 160px; height: 96px; border: 1px solid #E3E8EA; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15,42,58,0.04),0 16px 48px rgba(15,42,58,0.08)"></span><span class="cap">One shadow: the landing preview and toasts. Everything else is a hairline.</span></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ds-ctl"><h2 id="ds-ctl" class="t-section">Controls</h2>
+      <div class="grid3">
+        <div class="spec"><span class="cap">Buttons: one primary per screen</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px"><button class="btn btn-primary">Start</button><button class="btn btn-quiet">Ask</button><button class="btn btn-ghost">Show</button><button class="btn btn-primary" disabled>Continue</button></div>
+          <button class="btn btn-primary btn-lg">Build my roadmap</button>
+        </div>
+        <div class="spec" style="align-items: stretch"><span class="cap">Field and option row</span>
+          <label class="sr" for="ds-f">Ask a question</label><input id="ds-f" class="field" placeholder="Ask a question">
+          <label style="display: flex; gap: 16px; align-items: center; min-height: 48px; padding: 8px 16px; border-radius: 6px; border: 1px solid #0E7C7B; box-shadow: inset 0 0 0 1px #0E7C7B; background: #F6F8F8"><input type="radio" checked style="margin: 0; width: 16px; height: 16px; accent-color: #0E7C7B">Auckland</label>
+          <label style="display: flex; gap: 16px; align-items: center; min-height: 48px; padding: 8px 16px; border-radius: 6px; border: 1px solid #D5DFE2"><input type="radio" style="margin: 0; width: 16px; height: 16px; accent-color: #0E7C7B">Wellington</label>
+        </div>
+        <div class="spec" style="align-items: stretch"><span class="cap">Toast: bottom centre, 4 s, the action named again</span>
+          <div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 8px 8px 16px; border: 1px solid #E3E8EA; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15,42,58,0.04),0 16px 48px rgba(15,42,58,0.08)"><span>Marked as done</span><button class="btn btn-ghost">Undo</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ds-r"><h2 id="ds-r" class="t-section">Route</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 48px"><div class="spec"><span style="height: 24px; display: flex; align-items: center"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #0E7C7B"></span></span><span class="t-strong">Done</span></div><div class="spec"><span style="height: 24px; display: flex; align-items: center"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: #FFFFFF; border: 2px solid #0F2A3A"></span></span><span class="t-strong">Current</span></div><div class="spec"><span style="height: 24px; display: flex; align-items: center"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #FFFFFF; border: 1.5px solid #7A8F99"></span></span><span class="t-strong">Available</span></div><div class="spec"><span style="height: 24px; display: flex; align-items: center"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #FFFFFF; border: 1.5px solid #7A8F99"><span style="width: 6px; height: 1.5px; background: #4B6170"></span></span></span><span class="t-strong">Blocked</span></div><div class="spec"><span style="height: 24px; display: flex; align-items: center"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #FFFFFF; border: 1.5px dashed #7A8F99"></span></span><span class="t-strong">Locked</span></div><div class="spec"><div class="stamp" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #0E7C7B; box-sizing: border-box; transform: rotate(-10deg); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0A6463; font-size: 13px; font-weight: 600; line-height: 1.1"><span>Done</span><span style="font-weight: 500">22 Oct</span></div><span class="t-strong">Stamp</span><span class="cap">On completion; 200 ms, still for reduced motion</span></div></div>
+      <div class="grid3" style="align-items: start">
+        <div class="spec" style="align-items: stretch"><span class="cap">Leg, rows and next-task card on one rail</span>
+          <ol class="legs">
+            <li class="leg done"><div class="leg-head"><span class="rail"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #0E7C7B"></span></span><div><span class="t-strong">Arrival</span><span class="t-small muted">2 of 2 done</span></div></div></li>
+            <li class="leg"><div class="leg-head"><span class="rail"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #FFFFFF; border: 2px solid #0F2A3A"></span></span><div><span class="t-strong">Week 1</span><span class="t-small muted">0 of 3 done</span></div></div>
+              <ol class="tasks"><li class="task"><span class="rail"><span style="border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 12px; height: 12px; background: #FFFFFF; border: 1.5px solid #7A8F99"><span style="width: 6px; height: 1.5px; background: #4B6170"></span></span></span><div class="row" style="cursor: default"><span class="t-strong">Give your employer a tax code</span><span class="t-small muted">Needs your IRD number first</span></div></li></ol></li>
+          </ol>
+        </div>
+        <div class="spec" style="align-items: stretch; grid-column: span 2"><span class="cap">Next-task card (the screen's one primary)</span>
+          <article class="hairline" style="padding: 24px; display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; flex-direction: column; gap: 8px"><h3 class="t-section">Apply for your IRD number</h3><p class="muted">Your employer needs it before your first payday.</p></div>
+            <div style="display: flex; align-items: center; gap: 16px"><button class="btn btn-primary">Start</button><span class="t-small muted">20–30 minutes online</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ds-a"><h2 id="ds-a" class="t-section">Assistant</h2>
+      <div class="grid3" style="align-items: start">
+        <div class="spec" style="align-items: stretch"><span class="cap">Reply: aurora hairline, one-line trace</span>
+          <div class="ai"><div><span class="t-small muted">Read your roadmap, checked ird.govt.nz</span><p>Your passport, your visa details and your NZ bank account number.</p></div></div>
+        </div>
+        <div class="spec" style="align-items: stretch"><span class="cap">Streaming: the aurora flows; input waits; Stop</span>
+          <div class="ai streaming"><div><span class="t-small muted">Checking sources</span><p>Most people get it within 1–2 …</p></div></div>
+          <div style="display: flex; gap: 8px"><label class="sr" for="ds-s2">Ask</label><input id="ds-s2" class="field" disabled placeholder="Ask a question" style="flex: 1; min-width: 0; background: #F6F8F8"><button class="btn btn-quiet">Stop</button></div>
+        </div>
+        <div class="spec"><span class="cap">Suggested questions and source line</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px"><button class="btn btn-quiet" style="font-weight: 400">What documents do I need?</button></div>
+          <p class="t-small muted">Source: <a href="#">ird.govt.nz</a>, checked 3 March 2026</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ds-p"><h2 id="ds-p" class="t-section">Empty, loading, error</h2>
+      <div class="grid3" style="align-items: start">
+        <div class="spec"><span class="cap">Empty: say what will appear and how</span><p class="muted">Nothing yet. Tasks you finish show up here with the day you did them.</p></div>
+        <div class="spec" style="align-items: stretch" aria-hidden="true"><span class="cap">Loading: still placeholders, no shimmer</span>
+          <div style="display: flex; flex-direction: column; gap: 16px"><span style="height: 16px; width: 60%; background: #F6F8F8; border-radius: 4px"></span><span style="height: 16px; width: 80%; background: #F6F8F8; border-radius: 4px"></span><span style="height: 16px; width: 40%; background: #F6F8F8; border-radius: 4px"></span></div>
+        </div>
+        <div class="spec" style="align-items: stretch"><span class="cap">Error: what happened, what's safe, one action</span>
+          <div role="alert" style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid #0F2A3A; border-radius: 10px"><span class="t-section">Can't reach LandedNZ</span><span class="muted">Your progress is saved. Check your connection, then try again.</span><button class="btn btn-primary">Try again</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2720}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

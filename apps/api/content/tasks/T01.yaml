@@ -1,0 +1,108 @@
+id: T01
+name: Auckland Suburb Research
+phase: 1
+priority: 90
+boosts:
+  - when:
+      family:
+        - FAMILY_WITH_CHILDREN
+    by: 20
+  - when:
+      family:
+        - COUPLE_DUAL_WORK
+    by: 5
+urgency: []
+duration: 2–3 hours
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T01.why.1
+    text: Research commute from candidate suburbs to your confirmed employer location.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+steps:
+  - id: T01.steps.1
+    text: Open Google Maps. Set departure time to a weekday at 8:00am. Test the commute from candidate suburbs to both anchor points. Test return journey at 5:00pm. Note total daily commute time. A 25-minute off-peak commute can become 55 minutes in peak hour on Auckland's motorways.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.steps.2
+    text: "Visit at.govt.nz (Auckland Transport journey planner). For each candidate suburb, check: - Is there a train station or busway stop within walking distance? - How frequent are services (every 10 min vs every 30 min makes a large difference)? - What is the total journey time to your anchor points by PT?"
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.steps.3
+    text: "Visit trademe.co.nz/property/rent. Filter by suburb. Search for 2-bedroom apartments or houses. Note the weekly rent range. This gives a realistic current market view — not last year's data. Remember: weekly rent is the NZ standard (not monthly)."
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.steps.4
+    text: 'For each shortlisted suburb, search: "[suburb name] Indian grocery Auckland" and "[suburb name] Sri Lankan community Auckland." This gives a sense of cultural infrastructure. Key South Asian grocery concentrations: Botany (East), Papatoetoe (South), Westgate/Henderson (West), Albany (North Shore).'
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.steps.5
+    text: Based on commute time, PT access, rental cost, and community amenity, shortlist 2–3 suburbs. These become the target zones when booking temporary accommodation (T02) and when searching for a permanent rental.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+documents: []
+mistakes:
+  - id: T01.mistakes.1
+    text: Do not judge Auckland suburbs by name recognition alone. Howick and Botany sound unfamiliar but are safe, well-serviced East Auckland suburbs with excellent Indian community infrastructure. Conversely, some central-sounding suburbs have poor PT access.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.mistakes.2
+    text: Auckland rental listings show weekly rent, not monthly. A $700/week property costs approximately $3,033/month. Do not confuse with Singapore or Indian monthly rental norms.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.mistakes.3
+    text: "Failing to understand: The Auckland Harbour Bridge is a single choke point. North Shore to CBD commutes are excellent off-peak but can be 40–60 minutes in peak hour. Test this specifically if considering North Shore."
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.mistakes.4
+    text: Do not rely on Uber or rideshare as a daily commute solution in Auckland — it is significantly more expensive than Singapore or Mumbai and not sustainable as a primary transport mode.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.mistakes.5
+    text: 'Failing to understand: Auckland suburb boundaries are not always obvious to outsiders. "Auckland City" is not a specific suburb — it refers to the wider council area. When researching, use specific suburb names (Mt Eden, Takapuna, Papatoetoe etc).'
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+watchOuts:
+  - id: T01.watchOuts.1
+    text: Do not judge Auckland suburbs by name recognition alone. Howick and Botany sound unfamiliar but are safe, well-serviced East Auckland suburbs with excellent Indian community infrastructure. Conversely, some central-sounding suburbs have poor PT access.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.watchOuts.2
+    text: Auckland rental listings show weekly rent, not monthly. A $700/week property costs approximately $3,033/month. Do not confuse with Singapore or Indian monthly rental norms.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.watchOuts.3
+    text: The Auckland Harbour Bridge is a single choke point. North Shore to CBD commutes are excellent off-peak but can be 40–60 minutes in peak hour. Test this specifically if considering North Shore.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.watchOuts.4
+    text: Do not rely on Uber or rideshare as a daily commute solution in Auckland — it is significantly more expensive than Singapore or Mumbai and not sustainable as a primary transport mode.
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false
+  - id: T01.watchOuts.5
+    text: Auckland suburb boundaries are not always obvious to outsiders. "Auckland City" is not a specific suburb — it refers to the wider council area. When researching, use specific suburb names (Mt Eden, Takapuna, Papatoetoe etc).
+    source: at-govt-nz-bus-train-ferry-journey-planner
+    checked: 2026-03-03
+    verified: false

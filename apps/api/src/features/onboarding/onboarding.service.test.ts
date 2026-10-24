@@ -4,38 +4,13 @@
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
-import { createProfile } from './onboarding.service.js';
-import { AppError } from '../../shared/errors.js';
+import { createProfile, updateProfileAndRegenerateRoadmap } from './onboarding.service.js';
+import { contentVersion, task } from '../../content/index.js';
 
 // ─── Test fixtures ───────────────────────────────────────────────────────────
 
 const TEST_USER_ID = `test-user-ac205-${Date.now()}`;
 const TEST_USER_EMAIL = `test-ac205-${Date.now()}@example.com`;
-
-// Two test tasks — distinct applicability
-const TASK_ALL = {
-  id: 'T_AC205_ALL',
-  name: 'Test Task — All personas',
-  phase: 1,
-  basePriority: 50,
-  estimatedDuration: '10 minutes',
-  governmentSourceUrl: 'https://example.com',
-  applicableVisaTypes: '["ALL"]',
-  applicableFamilySituations: '["ALL"]',
-  applicableOccupations: '["ALL"]',
-};
-
-const TASK_FAMILY_ONLY = {
-  id: 'T_AC205_FAMILY',
-  name: 'Test Task — Family only',
-  phase: 1,
-  basePriority: 40,
-  estimatedDuration: '10 minutes',
-  governmentSourceUrl: 'https://example.com',
-  applicableVisaTypes: '["ALL"]',
-  applicableFamilySituations: '["FAMILY_WITH_CHILDREN"]',
-  applicableOccupations: '["ALL"]',
-};
 
 // Fixed date: 30 days after arrival for deterministic urgency calculation
 const ARRIVAL_DATE = '2026-02-12'; // 30 days before 2026-03-14
@@ -44,15 +19,10 @@ const FUTURE_ARRIVAL_DATE = '2026-06-01'; // Future — pre-arrival state
 // ─── Setup / teardown ────────────────────────────────────────────────────────
 
 beforeAll(async () => {
-  // Create test user
   await db.user.create({ data: { id: TEST_USER_ID, email: TEST_USER_EMAIL } });
-  // Create test tasks
-  await db.task.createMany({ data: [TASK_ALL, TASK_FAMILY_ONLY] });
 });
 
 afterAll(async () => {
-  // Clean up test tasks (UserRoadmapEntries cascade via afterEach)
-  await db.task.deleteMany({ where: { id: { in: [TASK_ALL.id, TASK_FAMILY_ONLY.id] } } });
   // Clean up test user (cascades to profile and roadmap entries)
   await db.user.delete({ where: { id: TEST_USER_ID } });
   await db.$disconnect();
@@ -79,7 +49,6 @@ describe('createProfile()', () => {
       });
 
       expect(response.roadmapGenerated).toBe(true);
-      expect(response.personaKey).toBe('solo_aewv');
       expect(response.profileId).toBeTruthy();
 
       const profile = await db.userProfile.findUnique({ where: { userId: TEST_USER_ID } });
@@ -88,37 +57,12 @@ describe('createProfile()', () => {
       expect(profile!.city).toBe('AUCKLAND');
       expect(profile!.familySituation).toBe('SOLO');
       expect(profile!.occupation).toBe('TECHNOLOGY');
-      expect(profile!.personaKey).toBe('solo_aewv');
       expect(profile!.arrivalDate).toEqual(new Date(ARRIVAL_DATE));
-    });
-
-    test('COUPLE_CONSTRAINED profile → personaKey is constrained_couple', async () => {
-      const response = await createProfile(TEST_USER_ID, {
-        visaType: 'PARTNER_OF_STUDENT',
-        city: 'WELLINGTON',
-        familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'FINANCE',
-        arrivalDate: ARRIVAL_DATE,
-      });
-
-      expect(response.personaKey).toBe('constrained_couple');
-    });
-
-    test('FAMILY_WITH_CHILDREN profile → personaKey is family_with_children', async () => {
-      const response = await createProfile(TEST_USER_ID, {
-        visaType: 'AEWV',
-        city: 'AUCKLAND',
-        familySituation: 'FAMILY_WITH_CHILDREN',
-        occupation: 'TECHNOLOGY',
-        arrivalDate: ARRIVAL_DATE,
-      });
-
-      expect(response.personaKey).toBe('family_with_children');
     });
   });
 
   describe('RoadmapEntry generation — task applicability', () => {
-    test('SOLO profile → only ALL-applicable task included (family task excluded)', async () => {
+    test('SOLO profile → the 20 solo tasks (couples/family-only T21 excluded)', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
@@ -130,11 +74,12 @@ describe('createProfile()', () => {
       const entries = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
 
       const entryTaskIds = entries.map(e => e.taskId);
-      expect(entryTaskIds).toContain(TASK_ALL.id);
-      expect(entryTaskIds).not.toContain(TASK_FAMILY_ONLY.id);
+      expect(entryTaskIds).toHaveLength(20);
+      expect(entryTaskIds).toContain('T07');
+      expect(entryTaskIds).not.toContain('T21');
     });
 
-    test('FAMILY_WITH_CHILDREN profile → both tasks included', async () => {
+    test('FAMILY_WITH_CHILDREN profile → all 21 tasks, T21 included', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
@@ -146,8 +91,8 @@ describe('createProfile()', () => {
       const entries = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
 
       const entryTaskIds = entries.map(e => e.taskId);
-      expect(entryTaskIds).toContain(TASK_ALL.id);
-      expect(entryTaskIds).toContain(TASK_FAMILY_ONLY.id);
+      expect(entryTaskIds).toHaveLength(21);
+      expect(entryTaskIds).toContain('T21');
     });
 
     test('entries created with correct initial status', async () => {
@@ -165,6 +110,7 @@ describe('createProfile()', () => {
         expect(entry.status).toBe('NOT_STARTED');
         expect(entry.completedAt).toBeNull();
         expect(typeof entry.priorityScore).toBe('number');
+        expect(entry.contentVersion).toBe(contentVersion());
       }
     });
   });
@@ -185,13 +131,12 @@ describe('createProfile()', () => {
       );
 
       const entries = await db.userRoadmapEntry.findMany({
-        where: { userId: TEST_USER_ID, taskId: TASK_ALL.id },
+        where: { userId: TEST_USER_ID, taskId: 'T06' },
       });
 
       expect(entries).toHaveLength(1);
-      // Score = basePriority + personaWeight + 0 (no urgency) - 0 (not blocked)
-      // TASK_ALL: basePriority=50, personaWeight=0 (T_AC205_ALL not a special task)
-      expect(entries[0].priorityScore).toBe(50);
+      // T06 has a days-1-3 urgency rule and no boosts: pre-arrival it scores its priority only
+      expect(entries[0].priorityScore).toBe(task('T06')!.priority);
     });
   });
 
@@ -248,5 +193,46 @@ describe('createProfile()', () => {
         statusCode: 400,
       });
     });
+  });
+});
+
+describe('updateProfileAndRegenerateRoadmap()', () => {
+  test('a done task stays done, with its completedAt, after the plan changes', async () => {
+    const answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: ARRIVAL_DATE } as const;
+    await createProfile(TEST_USER_ID, answers);
+    const completedAt = new Date('2026-02-13T01:00:00.000Z');
+    await db.userRoadmapEntry.update({
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T07' } },
+      data: { status: 'COMPLETE', completedAt },
+    });
+
+    await updateProfileAndRegenerateRoadmap(TEST_USER_ID, { ...answers, city: 'WELLINGTON' });
+
+    const entry = await db.userRoadmapEntry.findUnique({ where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T07' } } });
+    expect(entry).toMatchObject({ status: 'COMPLETE', completedAt });
+  });
+});
+
+describe('updateProfileAndRegenerateRoadmap() — Review Focus 2', () => {
+  test('family change keeps completions, adds family-only tasks, removes no-longer-applicable ones', async () => {
+    const solo = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: ARRIVAL_DATE } as const;
+    await createProfile(TEST_USER_ID, solo);
+    await db.userRoadmapEntry.update({
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T07' } },
+      data: { status: 'COMPLETE', completedAt: new Date() },
+    });
+
+    const res = await updateProfileAndRegenerateRoadmap(TEST_USER_ID, { ...solo, familySituation: 'FAMILY_WITH_CHILDREN' });
+    expect(res.entriesCreated).toBe(21);
+    const family = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
+    const byId = new Map(family.map(e => [e.taskId, e]));
+    expect(byId.get('T07')!.status).toBe('COMPLETE');
+    expect(byId.get('T21')).toMatchObject({ status: 'NOT_STARTED', isBlocked: false }); // HARD dep T07 is done
+    expect(family.every(e => e.contentVersion === contentVersion())).toBe(true);
+
+    await updateProfileAndRegenerateRoadmap(TEST_USER_ID, solo);
+    const back = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
+    expect(back.map(e => e.taskId)).not.toContain('T21');
+    expect(back.find(e => e.taskId === 'T07')!.status).toBe('COMPLETE');
   });
 });

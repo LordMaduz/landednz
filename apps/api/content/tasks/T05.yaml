@@ -1,0 +1,82 @@
+id: T05
+name: Home Country Tax — Final Year Considerations
+phase: 1
+priority: 70
+boosts: []
+urgency: []
+duration: 1–2 hours (review and document gathering)
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T05.why.1
+    text: Collect your home country tax documents (equivalent of Form 16, tax credit statement, bank interest statements) before departure.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+steps: []
+documents: []
+mistakes:
+  - id: T05.mistakes.1
+    text: The NZ transitional resident exemption is automatic — you do not need to apply for it. But it only applies to passive income (interest, dividends, rent) not employment income. Your NZ salary is fully taxable in NZ from Day 1.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.mistakes.2
+    text: "Failing to understand: The exemption window is approximately 4 years — once it closes, you must declare worldwide income to IRD including any overseas rental income, interest, or dividends. Missing this transition is a common migrant tax error."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.mistakes.3
+    text: "Failing to understand: India and NZ have the same financial year (April to March). This makes the tax year boundary easier to track than for migrants from countries with calendar-year tax systems."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.mistakes.4
+    text: "Failing to understand: Filing an Indian ITR as a non-resident from overseas is possible online at incometax.gov.in but complex if you have capital gains, multiple income sources, or property. Use a CA for the first NRI return."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.mistakes.5
+    text: Do not assume you stop being an Indian taxpayer the day you leave. Indian-sourced income (rent on Indian property, Indian bank interest, dividends from Indian companies) remains taxable in India at NRI withholding rates regardless of where you live.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+watchOuts:
+  - id: T05.watchOuts.1
+    text: The NZ transitional resident exemption is automatic — you do not need to apply for it. But it only applies to passive income (interest, dividends, rent) not employment income. Your NZ salary is fully taxable in NZ from Day 1.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.watchOuts.2
+    text: The exemption window is approximately 4 years — once it closes, you must declare worldwide income to IRD including any overseas rental income, interest, or dividends. Missing this transition is a common migrant tax error.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.watchOuts.3
+    text: India and NZ have the same financial year (April to March). This makes the tax year boundary easier to track than for migrants from countries with calendar-year tax systems.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.watchOuts.4
+    text: Filing an Indian ITR as a non-resident from overseas is possible online at incometax.gov.in but complex if you have capital gains, multiple income sources, or property. Use a CA for the first NRI return.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+  - id: T05.watchOuts.5
+    text: Do not assume you stop being an Indian taxpayer the day you leave. Indian-sourced income (rent on Indian property, Indian bank interest, dividends from Indian companies) remains taxable in India at NRI withholding rates regardless of where you live.
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-03-03
+    verified: false
+advice:
+  id: T05.advice.1
+  text: '"Indian departure year tax filing, NRI status determination, and FEMA compliance are complex and fact-specific. LandedNZ provides general orientation only. Users should consult a CA (Chartered Accountant) in India before departure for their specific situation — particularly if they have property income, investments, or significant assets in India. Sri Lankan users should similarly consult a local tax advisor regarding departure year filing obligations."'
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-03-03
+  verified: false
+  required: true

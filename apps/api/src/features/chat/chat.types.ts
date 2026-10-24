@@ -27,10 +27,9 @@ export interface Level2Result {
 }
 
 export interface ChatKbChunk {
-  chunkKey: string;      // e.g. "T08-constrained_couple"
-  personaKey: string;
-  content: string;       // In Phase 4: formatted from TaskContentVariant fields
-  sourceName: string;    // e.g. task name
+  chunkKey: string;      // e.g. "CHUNK_T08_general"
+  content: string;       // task name, item texts and sources (content/chunks.ts)
+  sourceName: string;    // first cited source's title
   sourceUrl: string;
 }
 
@@ -42,7 +41,6 @@ export interface BuildSystemPromptParams {
     city: string;
     occupation: string;
     arrivalDaysAgo: number;   // calculated before call
-    personaKey: string;
     recentCompletions: string[];  // last 5 task names
   };
   entryPoint: ChatEntryPoint;

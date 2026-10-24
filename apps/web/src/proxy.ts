@@ -1,9 +1,27 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
+import { ANSWERS_COOKIE, decodeAnswers } from '@/lib/answers'
 
 const PROTECTED_PATHS = ['/app', '/settings']
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
+  // The preview needs fresh, valid answers; stale or tampered ones are cleared (Review Focus 2).
+  // Public page: no Supabase round trip.
+  if (request.nextUrl.pathname === '/onboarding/preview') {
+    if (decodeAnswers(request.cookies.get(ANSWERS_COOKIE)?.value)) return NextResponse.next()
+    const res = NextResponse.redirect(new URL('/onboarding?step=1', request.url))
+    res.cookies.set(ANSWERS_COOKIE, '', { path: '/', maxAge: 0 })
+    return res
+  }
+
+  // Landing: only a request carrying a Supabase session cookie pays the auth round trip (LCP).
+  if (
+    request.nextUrl.pathname === '/' &&
+    !request.cookies.getAll().some((c) => /^sb-.+-auth-token/.test(c.name))
+  ) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -46,11 +64,12 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     const url = request.nextUrl.clone()
     url.pathname = '/signin'
     url.search = ''
-    url.searchParams.set('redirect', pathname)
+    url.searchParams.set('redirect', pathname + request.nextUrl.search)
     return redirectTo(url)
   }
 
-  if (pathname === '/signin' && user) {
+  // /app sends a user without a roadmap on to onboarding step 1
+  if ((pathname === '/signin' || pathname === '/') && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/app'
     url.search = ''
@@ -61,6 +80,6 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  // Every page except static assets, so the Supabase session cookie stays refreshed.
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  // Other public pages (onboarding, legal) skip the Supabase round trip, which kept LCP waiting on auth.
+  matcher: ['/', '/app/:path*', '/settings/:path*', '/signin', '/onboarding/preview'],
 }

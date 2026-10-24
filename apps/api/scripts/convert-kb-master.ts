@@ -1,0 +1,1159 @@
+// One-off: turn the legacy kb-master.md into unverified YAML content (deleted in Plan 2 once every task is verified).
+// Writes sources.yaml, facts/legacy.yaml and tasks/T01..T21.yaml. dimensions.yaml is committed by hand and never touched.
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { stringify } from 'yaml';
+import { DENY_RE, isGovernmentHost } from '../src/content/rules.js';
+import type { Condition, Item, Source, TaskDef } from '../src/content/types.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { FamilySituation, Occupation, VisaType } from '@landednz/types';
+
+type PersonaKey = 'constrained_couple' | 'solo_aewv' | 'family_with_children' | 'dual_work_couple'; // kb-master.md's legacy persona vocabulary
+
+
+// Helper function to normalize applicability fields for JSON storage
+function normalizeApplicabilityField(value: string[] | string): string {
+  // If it's "ALL", convert to array ["ALL"] before JSON.stringify
+  // If it's already an array, keep as array
+  const normalized = value === "ALL" ? ["ALL"] : value;
+  return JSON.stringify(normalized);
+}
+
+// Generate missing persona content variants based on existing content
+function generateMissingPersonaVariants(baseVariants: any[], taskId: string): any[] {
+  const existingPersonas = baseVariants.map(v => v.personaKey);
+  const allPersonas: PersonaKey[] = ['constrained_couple', 'solo_aewv', 'family_with_children', 'dual_work_couple'];
+
+  const expandedVariants = [...baseVariants];
+
+  for (const targetPersona of allPersonas) {
+    if (!existingPersonas.includes(targetPersona)) {
+      // Find the closest existing persona to use as template
+      const templatePersona = getClosestPersonaTemplate(targetPersona, existingPersonas);
+      const template = baseVariants.find(v => v.personaKey === templatePersona);
+
+      if (template) {
+        const newVariant = createPersonaVariant(template, targetPersona, taskId);
+        expandedVariants.push(newVariant);
+      }
+    }
+  }
+
+  return expandedVariants;
+}
+
+function getClosestPersonaTemplate(targetPersona: PersonaKey, availablePersonas: string[]): string {
+  // Map missing personas to closest available template
+  const proximityMap: Record<string, string> = {
+    'family_with_children': 'constrained_couple', // families often have similar dynamics to constrained couples
+    'dual_work_couple': 'constrained_couple', // couples are closer than solo
+  };
+
+  return proximityMap[targetPersona] || availablePersonas[0];
+}
+
+function createPersonaVariant(template: any, targetPersona: PersonaKey, taskId: string): any {
+  const personaAdaptations = getPersonaAdaptations(targetPersona, taskId);
+
+  return {
+    personaKey: targetPersona,
+    consequenceLine: personaAdaptations.consequenceLine || template.consequenceLine,
+    steps: adaptStepsForPersona(template.steps, targetPersona, taskId),
+    documentsRequired: template.documentsRequired, // Usually same documents
+    commonMistakes: template.commonMistakes, // Often similar mistakes
+    watchOuts: adaptWatchOutsForPersona(template.watchOuts, targetPersona, taskId),
+    cost: template.cost, // Usually same costs
+    sourceUrl: template.sourceUrl, // Same government sources
+    professionalAdviceRequired: template.professionalAdviceRequired,
+    professionalAdviceNote: template.professionalAdviceNote
+  };
+}
+
+function getPersonaAdaptations(persona: PersonaKey, taskId: string): { consequenceLine?: string } {
+  // Key differences for each persona
+  const adaptations: Record<string, Record<string, { consequenceLine?: string }>> = {
+    'family_with_children': {
+      'T01': { consequenceLine: 'Choosing the wrong suburb could mean your children end up in underperforming schools or you face long commutes to quality education options.' },
+      'T08': { consequenceLine: 'Without your IRD number, you cannot claim Working for Families payments or ensure your children receive proper tax credits and benefits.' },
+      'T12': { consequenceLine: 'Delaying GP registration puts your children at risk if they need urgent medical care or vaccinations required for school enrollment.' },
+      'T16': { consequenceLine: 'Without a NZ license, school pickups, weekend activities, and family outings become complicated and expensive through rideshares.' }
+    },
+    'dual_work_couple': {
+      'T08': { consequenceLine: 'Both partners need IRD numbers to start work - delays affect your combined household income and tax obligations from day one.' },
+      'T09': { consequenceLine: 'Incorrect tax codes with dual incomes can result in significant over or underpayment, complicating your tax situation.' },
+      'T10': { consequenceLine: 'With two incomes, coordinating KiwiSaver contributions and employer matching becomes crucial for maximizing retirement savings.' },
+      'T11': { consequenceLine: 'Dual incomes give you more rental options, but landlords will scrutinize both employment contracts and visa statuses in applications.' }
+    }
+  };
+
+  return adaptations[persona]?.[taskId] || {};
+}
+
+function adaptStepsForPersona(steps: string[], persona: PersonaKey, taskId: string): string[] {
+  // Add persona-specific steps where relevant
+  if (persona === 'family_with_children' && taskId === 'T01') {
+    return [
+      ...steps,
+      'Research school zones and Education Review Office (ERO) reports for schools in your target areas',
+      'Check proximity to childcare centers, playgrounds, and family-friendly amenities'
+    ];
+  }
+
+  if (persona === 'dual_work_couple' && taskId === 'T08') {
+    return [
+      'Both partners should complete separate IRD applications',
+      ...steps,
+      'Ensure both employment contracts and visa documents are prepared for both applications'
+    ];
+  }
+
+  return steps;
+}
+
+function adaptWatchOutsForPersona(watchOuts: string[], persona: PersonaKey, taskId: string): string[] {
+  // Add persona-specific warnings
+  if (persona === 'family_with_children' && (taskId === 'T08' || taskId === 'T09')) {
+    return [
+      ...watchOuts,
+      'Remember to apply for Working for Families and Accommodation Supplement once IRD numbers are sorted'
+    ];
+  }
+
+  if (persona === 'dual_work_couple' && taskId === 'T10') {
+    return [
+      ...watchOuts,
+      'Coordinate contribution rates between both partners to avoid over-contributing to the annual cap',
+      'Compare employer KiwiSaver schemes if you have different employers'
+    ];
+  }
+
+  return watchOuts;
+}
+
+// PRODUCTION FIX: Ensure ALL family situations are supported with fallback mapping
+export function ensureCompleteFamilySituations(familySituations: FamilySituation[]): FamilySituation[] {
+  // APP REQUIREMENT: Must support all family situations or app will break
+  // Source data only has: constrained_couple + solo_aewv
+  // Fallback mapping for missing personas:
+  // - COUPLE_DUAL_WORK → use constrained_couple content (closest match)
+  // - FAMILY_WITH_CHILDREN → use constrained_couple content (closest match)
+
+  const ALL_FAMILY_SITUATIONS: FamilySituation[] = ['SOLO', 'COUPLE_DUAL_WORK', 'COUPLE_CONSTRAINED', 'FAMILY_WITH_CHILDREN'];
+
+  // An explicit couples-only list (COUPLE_ONLY_TASKS) is kept, not widened
+  if (!familySituations.includes('SOLO')) return familySituations;
+
+  if (familySituations.length < 4 ||
+      !familySituations.includes('COUPLE_DUAL_WORK') ||
+      !familySituations.includes('FAMILY_WITH_CHILDREN')) {
+    console.log(`🔧 Expanding to all family situations with fallbacks: [${familySituations.join(', ')}] → [${ALL_FAMILY_SITUATIONS.join(', ')}]`);
+    return ALL_FAMILY_SITUATIONS;
+  }
+
+  return familySituations;
+}
+
+// Tasks that apply to couples and families only (owner ruling 2026-10-24: solo movers get 20 tasks)
+const COUPLE_ONLY_TASKS = ['T21'];
+const COUPLE_SITUATIONS: FamilySituation[] = ['COUPLE_DUAL_WORK', 'COUPLE_CONSTRAINED', 'FAMILY_WITH_CHILDREN'];
+
+// TaskSeedEntry interface per spec §2.3
+interface TaskSeedEntry {
+  // ── Task-level fields (maps to Task table) ──
+  id: string;                         // "T08"
+  name: string;                       // "Apply for your IRD number"
+  phase: 1 | 2 | 3;
+  basePriority: number;               // 0–100
+  estimatedDuration: string;          // "15 minutes"
+  processingTime: string | null;      // "8–15 working days" | null
+  governmentSourceUrl: string;
+  taskType: "FREE" | "PREMIUM";
+  applicableVisaTypes: VisaType[] | "ALL";
+  applicableFamilySituations: FamilySituation[];
+  applicableOccupations: Occupation[] | "ALL";
+  lastVerifiedAt: Date | null;        // from the KB header LAST_VERIFIED
+
+  // ── Dependencies (maps to TaskDependency table) ──
+  dependencies: {
+    prerequisiteId: string;           // "T07"
+    dependencyType: "HARD" | "SOFT";
+  }[];
+
+  // ── Content variants (maps to TaskContentVariant table) ──
+  // All 4 persona variants for complete coverage
+  contentVariants: {
+    personaKey: "constrained_couple" | "solo_aewv" | "family_with_children" | "dual_work_couple";
+
+    // CONSEQUENCE_LINE — One sentence. Used in task card Layer 1.
+    consequenceLine: string;
+
+    // STEPS — Ordered array for task card Layer 2.
+    steps: string[];
+
+    // DOCUMENTS_REQUIRED — Specific to this persona + visa type.
+    documentsRequired: string[];
+
+    // COMMON_MISTAKES — Migrant-specific risk flags.
+    commonMistakes: string[];
+
+    // WATCH_OUTS — Differences from home country expectations.
+    watchOuts: string[];
+
+    // COST — null if free.
+    cost: string | null;
+
+    // SOURCE — Primary authoritative source for this content.
+    sourceUrl: string;
+
+    // PROFESSIONAL_ADVICE_REQUIRED — If true, AI must surface this note in responses.
+    professionalAdviceRequired: boolean;
+    professionalAdviceNote: string | null;
+  }[];
+}
+
+// URL replacements from AC-2-15 research (corrected broken Tier 1 URLs)
+const urlReplacements: Record<string, string> = {
+  'https://www.auckland.ac.nz/en/study/accommodation.html': 'https://www.auckland.ac.nz/en/on-campus/accommodation.html',
+  'https://at.govt.nz/bus-train-ferry/at-metro/airport-transport/airport-link/': 'https://at.govt.nz/bus-train-ferry/bus-services/airport-services',
+  'https://incometaxindia.gov.in/Pages/residential-status-for-the-purpose-of-income-tax-act.aspx': 'https://incometaxindia.gov.in/Documents/residential-status.htm',
+  'https://www.ird.govt.nz/roles/individuals/transitional-resident/exemption': 'https://www.ird.govt.nz/roles/nz-tax-residents/exemption',
+  'https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals/determining-your-tax-residency-status': 'https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals',
+  'https://incometaxindia.gov.in/Documents/Income-Tax-Notification-India-New-Zealand-DTA.pdf': 'https://incometaxindia.gov.in/Charts%20%20Tables/Residence-in-India-for-the-purpose-of-Income-Tax-Act.htm',
+  'https://www.ird.govt.nz/international-tax/individuals/coming-to-nz': 'https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents',
+  'https://www.health.govt.nz/system/files/documents/publications/primary-health-care-strategy-implementation.pdf': 'https://www.health.govt.nz/our-work/primary-health-care/about-primary-health-organisations',
+  'https://www.rbnz.govt.nz/statistics/exchange-rates/foreign-exchange-rates': 'https://www.rbnz.govt.nz/statistics/series/exchange-and-interest-rates',
+  'https://www.cbsl.gov.lk/en/statistics/exchange-rates': 'https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates',
+  'https://www.ird.govt.nz/kiwisaver/individuals/kiwisaver-switch': 'https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider',
+  'https://www.ird.govt.nz/kiwisaver/individuals/member-tax-credit': 'https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/growing-my-kiwisaver-account/getting-the-kiwisaver-government-contribution'
+}
+
+// Dependency graph from pre-analysis.md (canonical)
+const dependencyGraph: Array<{ prerequisiteId: string; dependentId: string; dependencyType: "HARD" | "SOFT" }> = [
+  { prerequisiteId: "T06", dependentId: "T07", dependencyType: "HARD" },
+  { prerequisiteId: "T07", dependentId: "T08", dependencyType: "SOFT" },
+  { prerequisiteId: "T07", dependentId: "T11", dependencyType: "HARD" },
+  { prerequisiteId: "T07", dependentId: "T15", dependencyType: "HARD" },
+  { prerequisiteId: "T07", dependentId: "T21", dependencyType: "HARD" },
+  { prerequisiteId: "T08", dependentId: "T09", dependencyType: "HARD" },
+  { prerequisiteId: "T08", dependentId: "T10", dependencyType: "SOFT" },
+  { prerequisiteId: "T08", dependentId: "T20", dependencyType: "HARD" },
+  { prerequisiteId: "T10", dependentId: "T20", dependencyType: "HARD" },
+  { prerequisiteId: "T01", dependentId: "T11", dependencyType: "SOFT" },
+  { prerequisiteId: "T11", dependentId: "T21", dependencyType: "SOFT" },
+  { prerequisiteId: "T14", dependentId: "T11", dependencyType: "SOFT" }
+]
+
+// Production-grade parsing with comprehensive error handling and validation
+
+interface ParsedTaskData {
+  taskEntry: TaskSeedEntry
+  knowledgeBaseChunks: Array<{
+    chunkKey: string
+    taskId: string | null
+    personaKey: string | null
+    chunkType?: 'TASK_CONTENT' | 'SETTLEMENT_CONTEXT'
+    content: string
+    sourceUrl: string
+    sourceName: string
+  }>
+}
+
+interface ValidationError {
+  taskId: string
+  field: string
+  issue: string
+}
+
+export function parseKnowledgeBase(): { tasks: TaskSeedEntry[], knowledgeBaseChunks: Array<any>, errors: ValidationError[] } {
+  const kbPath = path.join(import.meta.dirname, '../content/kb-master.md')
+
+  if (!fs.existsSync(kbPath)) {
+    throw new Error(`Knowledge base file not found: ${kbPath}`)
+  }
+
+  const content = fs.readFileSync(kbPath, 'utf-8')
+  const tasks: TaskSeedEntry[] = []
+  const knowledgeBaseChunks: Array<any> = []
+  const errors: ValidationError[] = []
+
+  // Split content by task boundaries with robust parsing
+  const taskSections = content.split(/---\nTASK_ID: /).slice(1) // Remove header section
+
+  console.log(`📚 Found ${taskSections.length} task sections in knowledge base`)
+
+  for (const section of taskSections) {
+    const lines = section.split('\n')
+    const taskId = lines[0].trim() // First line is the task ID
+
+    // Validate task ID format
+    if (!taskId.match(/^T\d{2}$/)) {
+      console.log(`⚠️  Skipping invalid task ID: ${taskId}`)
+      continue
+    }
+
+    console.log(`📋 Parsing task: ${taskId}`)
+
+    try {
+      // Extract task metadata and content sections with validation
+      const parsedData = parseTaskSectionProduction(lines, taskId)
+      if (parsedData) {
+        // Expand contentVariants to include missing personas with appropriate content
+        const expandedVariants = generateMissingPersonaVariants(parsedData.taskEntry.contentVariants, taskId)
+        parsedData.taskEntry.contentVariants = expandedVariants
+
+        // Generate knowledge base chunks for all personas
+        const expandedChunks = generateKnowledgeBaseChunksForAllPersonas(parsedData.knowledgeBaseChunks, expandedVariants, taskId)
+
+        tasks.push(parsedData.taskEntry)
+        knowledgeBaseChunks.push(...expandedChunks)
+      }
+    } catch (error) {
+      console.error(`💥 Error parsing task ${taskId}:`, error)
+      errors.push({
+        taskId,
+        field: 'general',
+        issue: error instanceof Error ? error.message : 'Unknown parsing error'
+      })
+    }
+  }
+
+  // Validate we have all expected tasks T01-T21
+  const expectedTasks = Array.from({ length: 21 }, (_, i) => `T${String(i + 1).padStart(2, '0')}`)
+  const foundTasks = tasks.map(t => t.id).sort()
+  const missingTasks = expectedTasks.filter(t => !foundTasks.includes(t))
+
+  if (missingTasks.length > 0) {
+    errors.push({
+      taskId: 'MISSING',
+      field: 'task_coverage',
+      issue: `Missing tasks: ${missingTasks.join(', ')}`
+    })
+  }
+
+  console.log(`✅ Parsed ${tasks.length} tasks, generated ${knowledgeBaseChunks.length} knowledge base chunks`)
+  if (errors.length > 0) {
+    console.log(`⚠️  ${errors.length} validation errors found`)
+  }
+
+  return { tasks, knowledgeBaseChunks, errors }
+}
+
+function parseTaskSectionProduction(lines: string[], taskId: string): ParsedTaskData | null {
+  try {
+    // Find section boundaries with comprehensive mapping
+    const sectionStarts = new Map<string, number>()
+    lines.forEach((line, index) => {
+      const trimmed = line.trim()
+      if (['METADATA:', 'SUMMARY:', 'WHAT_AND_WHY:', 'HOW_TO:', 'KEY_FACTS:', 'NUMBER_TYPES:',
+           'PERSONA_CONSTRAINED_COUPLE:', 'PERSONA_SOLO_AEWV:', 'CROSS_REFERENCES:',
+           'WATCH_OUTS:', 'SOURCES:'].includes(trimmed)) {
+        sectionStarts.set(trimmed.replace(':', ''), index)
+      }
+    })
+
+    // Validate required sections exist
+    const requiredSections = ['METADATA', 'SUMMARY', 'WHAT_AND_WHY', 'HOW_TO', 'SOURCES']
+    const missingSections = requiredSections.filter(section => !sectionStarts.has(section))
+    if (missingSections.length > 0) {
+      throw new Error(`Missing required sections: ${missingSections.join(', ')}`)
+    }
+
+    // Extract task name from header
+    const taskNameLine = lines.find(line => line.startsWith('TASK_NAME:'))
+    if (!taskNameLine) {
+      throw new Error('TASK_NAME not found')
+    }
+    const taskName = taskNameLine.replace('TASK_NAME:', '').trim()
+    const lastVerifiedLine = lines.find(line => line.startsWith('LAST_VERIFIED:'))?.replace('LAST_VERIFIED:', '').trim()
+    const lastVerifiedAt = lastVerifiedLine && /^\d{4}-\d{2}-\d{2}$/.test(lastVerifiedLine) ? new Date(lastVerifiedLine) : null
+
+    // Parse all content sections comprehensively
+    const metadata = extractMetadataProduction(lines, sectionStarts)
+    const summary = extractSection(lines, sectionStarts, 'SUMMARY', 'WHAT_AND_WHY')
+    const whatAndWhy = extractSection(lines, sectionStarts, 'WHAT_AND_WHY', 'HOW_TO')
+    const howTo = extractHowToStepsProduction(lines, sectionStarts)
+    const keyFacts = extractKeyFactsProduction(lines, sectionStarts)
+    const numberTypes = extractNumberTypesProduction(lines, sectionStarts)
+    const personaConstrainedCouple = extractPersonaSection(lines, sectionStarts, 'PERSONA_CONSTRAINED_COUPLE')
+    const personaSoloAewv = extractPersonaSection(lines, sectionStarts, 'PERSONA_SOLO_AEWV')
+    const watchOuts = extractWatchOutsProduction(lines, sectionStarts)
+    const sources = extractSourcesProduction(lines, sectionStarts)
+    const documentsRequired = extractDocumentsFromContent(howTo, whatAndWhy)
+    const commonMistakes = extractCommonMistakesFromWatchOuts(watchOuts)
+
+    // Validate parsed content
+    validateParsedContent(taskId, {
+      taskName, summary, whatAndWhy, howTo, keyFacts, sources
+    })
+
+    // Get dependencies for this task
+    const taskDependencies = dependencyGraph
+      .filter(dep => dep.dependentId === taskId)
+      .map(dep => ({
+        prerequisiteId: dep.prerequisiteId,
+        dependencyType: dep.dependencyType
+      }))
+
+    // Map metadata to database types
+    const phase = mapPhaseToNumber(metadata.phase)
+    const taskType = metadata.task_type === 'Free' ? 'FREE' as const : 'PREMIUM' as const
+    const estimatedDuration = metadata.time_required || '15 minutes'
+    const basePriority = metadata.priority_score || 50
+
+    // Extract processing time if available from content
+    const processingTime = extractProcessingTimeFromContent(whatAndWhy, howTo)
+
+    // Primary government source with URL correction
+    const primarySource = sources[0]
+    if (!primarySource) {
+      throw new Error(`No sources found for task ${taskId}`)
+    }
+
+    // Create enhanced consequence lines based on persona content
+    const constrainedCoupleConsequence = createConsequenceLine(taskName, personaConstrainedCouple, keyFacts)
+    const soloAewvConsequence = createConsequenceLine(taskName, personaSoloAewv, keyFacts)
+
+    // Base task entry
+    const taskEntry: TaskSeedEntry = {
+      id: taskId,
+      name: taskName,
+      phase,
+      basePriority,
+      estimatedDuration,
+      processingTime,
+      governmentSourceUrl: applyUrlReplacements(primarySource.url),
+      taskType,
+      applicableVisaTypes: "ALL", // Default for MVP
+      applicableFamilySituations: COUPLE_ONLY_TASKS.includes(taskId) ? COUPLE_SITUATIONS : ["COUPLE_CONSTRAINED", "SOLO"], // Default for MVP
+      applicableOccupations: "ALL", // Default for MVP
+      lastVerifiedAt,
+      dependencies: taskDependencies,
+      contentVariants: [
+        {
+          personaKey: "constrained_couple",
+          consequenceLine: constrainedCoupleConsequence,
+          steps: howTo,
+          documentsRequired: documentsRequired,
+          commonMistakes: commonMistakes,
+          watchOuts: watchOuts,
+          cost: extractCostFromContent(whatAndWhy, keyFacts),
+          sourceUrl: applyUrlReplacements(primarySource.url),
+          professionalAdviceRequired: metadata.professional_advice_required,
+          professionalAdviceNote: metadata.professional_advice_note
+        },
+        {
+          personaKey: "solo_aewv",
+          consequenceLine: soloAewvConsequence,
+          steps: howTo,
+          documentsRequired: documentsRequired,
+          commonMistakes: commonMistakes,
+          watchOuts: watchOuts,
+          cost: extractCostFromContent(whatAndWhy, keyFacts),
+          sourceUrl: applyUrlReplacements(primarySource.url),
+          professionalAdviceRequired: metadata.professional_advice_required,
+          professionalAdviceNote: metadata.professional_advice_note
+        }
+      ]
+    }
+
+    // Create KnowledgeBase chunks for AI/RAG (per knowledge-base-schema)
+    const knowledgeBaseChunks = [
+      {
+        chunkKey: `CHUNK_${taskId}_constrained_couple`,
+        taskId,
+        personaKey: 'constrained_couple',
+        content: buildChunkContent(summary, whatAndWhy, keyFacts, howTo, watchOuts, personaConstrainedCouple),
+        sourceUrl: applyUrlReplacements(primarySource.url),
+        sourceName: primarySource.title
+      },
+      {
+        chunkKey: `CHUNK_${taskId}_solo_aewv`,
+        taskId,
+        personaKey: 'solo_aewv',
+        content: buildChunkContent(summary, whatAndWhy, keyFacts, howTo, watchOuts, personaSoloAewv),
+        sourceUrl: applyUrlReplacements(primarySource.url),
+        sourceName: primarySource.title
+      },
+      // Persona-neutral settlement context (personaKey NULL passes every persona pre-filter, C07)
+      ...(taskId === 'T01' ? [{
+        chunkKey: 'CHUNK_CONTEXT_suburbs',
+        taskId: null,
+        personaKey: null,
+        chunkType: 'SETTLEMENT_CONTEXT' as const,
+        content: buildChunkContent(summary, whatAndWhy, keyFacts, howTo, watchOuts, ''),
+        sourceUrl: applyUrlReplacements(primarySource.url),
+        sourceName: primarySource.title
+      }] : [])
+    ]
+
+    return { taskEntry, knowledgeBaseChunks }
+
+  } catch (error) {
+    console.error(`💥 Error parsing task ${taskId}:`, error)
+    throw error // Re-throw to surface parsing errors
+  }
+}
+
+// Production-grade helper functions with comprehensive error handling
+
+function extractMetadataProduction(lines: string[], sectionStarts: Map<string, number>) {
+  const metadataStart = sectionStarts.get('METADATA')
+  const metadataEnd = sectionStarts.get('SUMMARY')
+
+  if (!metadataStart || !metadataEnd) {
+    throw new Error('METADATA or SUMMARY section not found')
+  }
+
+  const metadata: any = {} // any: Dynamic metadata parsing from unstructured markdown with variable key-value pairs
+  for (let i = metadataStart + 1; i < metadataEnd; i++) {
+    const line = lines[i].trim()
+    if (line && line.includes(':') && !line.startsWith('---')) {
+      const [key, ...valueParts] = line.split(':')
+      const value = valueParts.join(':').trim()
+
+      // Parse different value types
+      if (value === 'null') metadata[key.trim()] = null
+      else if (value === 'true') metadata[key.trim()] = true
+      else if (value === 'false') metadata[key.trim()] = false
+      else if (!isNaN(Number(value))) metadata[key.trim()] = Number(value)
+      else metadata[key.trim()] = value
+    }
+  }
+
+  // Validate required metadata fields
+  const requiredFields = ['phase', 'priority_score', 'task_type', 'professional_advice_required']
+  const missingFields = requiredFields.filter(field => metadata[field] === undefined)
+  if (missingFields.length > 0) {
+    throw new Error(`Missing metadata fields: ${missingFields.join(', ')}`)
+  }
+
+  return metadata
+}
+
+function mapPhaseToNumber(phase: string): 1 | 2 | 3 {
+  if (phase === 'Pre-Arrival') return 1
+  if (phase === 'Arrival') return 2
+  return 3 // Week 1, Month 1-2, Month 2-6 all map to 3
+}
+
+function validateParsedContent(taskId: string, content: any) {
+  const requiredFields = ['taskName', 'summary', 'whatAndWhy', 'howTo', 'sources']
+  const missingFields = requiredFields.filter(field => !content[field] || content[field].length === 0)
+
+  if (missingFields.length > 0) {
+    throw new Error(`Task ${taskId} missing required content: ${missingFields.join(', ')}`)
+  }
+
+  // Validate summary length (should be 2-3 sentences)
+  const sentences = content.summary.split(/[.!?]+/).filter((s: string) => s.trim().length > 0)
+  if (sentences.length < 2) {
+    throw new Error(`Task ${taskId} summary too short - needs 2-3 sentences`)
+  }
+
+  // Validate howTo has steps
+  if (!Array.isArray(content.howTo) || content.howTo.length === 0) {
+    throw new Error(`Task ${taskId} missing howTo steps`)
+  }
+
+  // Validate sources
+  if (!Array.isArray(content.sources) || content.sources.length === 0) {
+    throw new Error(`Task ${taskId} missing sources`)
+  }
+}
+
+function extractDocumentsFromContent(howTo: string[], whatAndWhy: string): string[] {
+  const documents: string[] = []
+  const content = [...howTo, whatAndWhy].join(' ')
+
+  // Common document patterns in NZ settlement
+  const docPatterns = [
+    /passport/gi,
+    /visa/gi,
+    /birth certificate/gi,
+    /marriage certificate/gi,
+    /qualification[s]? documents?/gi,
+    /bank statement[s]?/gi,
+    /employment letter/gi,
+    /offer of employment/gi,
+    /driver[']?s? licen[cs]e/gi,
+    /medical certificate/gi,
+    /police clearance/gi,
+    /character certificate/gi,
+    /proof of funds/gi,
+    /rental agreement/gi,
+    /bond receipt/gi,
+    /IRD number/gi,
+    /tax code/gi
+  ]
+
+  docPatterns.forEach(pattern => {
+    const matches = content.match(pattern)
+    if (matches) {
+      matches.forEach(match => {
+        const cleanMatch = match.trim().toLowerCase()
+        if (!documents.includes(cleanMatch)) {
+          documents.push(cleanMatch)
+        }
+      })
+    }
+  })
+
+  return documents.slice(0, 10) // Limit to top 10 most relevant
+}
+
+function extractCommonMistakesFromWatchOuts(watchOuts: string[]): string[] {
+  // Transform watch-outs into common mistakes format
+  return watchOuts.map(watchOut => {
+    // Convert watch-out to mistake format
+    if (watchOut.toLowerCase().includes('do not')) {
+      return watchOut
+    } else {
+      return `Failing to understand: ${watchOut}`
+    }
+  }).slice(0, 5) // Limit to top 5
+}
+
+function createConsequenceLine(taskName: string, personaContent: string, keyFacts: string[]): string {
+  // Use persona content if available, otherwise derive from key facts
+  if (personaContent && personaContent.length > 50) {
+    // Extract first sentence from persona content
+    const firstSentence = personaContent.split(/[.!?]/)[0]
+    if (firstSentence && firstSentence.length > 20) {
+      return firstSentence.trim() + '.'
+    }
+  }
+
+  // Fallback to key facts based consequence
+  if (keyFacts.length > 0) {
+    const firstFact = keyFacts[0]
+    if (firstFact.includes('without')) {
+      return firstFact
+    }
+  }
+
+  // Generic fallback
+  return `${taskName} directly impacts your settlement timeline and access to essential services.`
+}
+
+function extractCostFromContent(whatAndWhy: string, keyFacts: string[]): string | null {
+  const content = [whatAndWhy, ...keyFacts].join(' ')
+
+  // Look for cost patterns
+  const costPatterns = [
+    /free/gi,
+    /no cost/gi,
+    /NZD?\s*\$[\d,]+/gi,
+    /\$[\d,]+/gi,
+    /[\d,]+\s*dollars?/gi
+  ]
+
+  for (const pattern of costPatterns) {
+    const match = content.match(pattern)
+    if (match) {
+      const cost = match[0].toLowerCase()
+      if (cost.includes('free') || cost.includes('no cost')) {
+        return null // Free
+      } else {
+        return match[0] // Return first cost found
+      }
+    }
+  }
+
+  return null // Default to free
+}
+
+function extractProcessingTimeFromContent(whatAndWhy: string, howTo: string[]): string | null {
+  const content = [whatAndWhy, ...howTo].join(' ')
+
+  // Look for processing time patterns
+  const timePatterns = [
+    /\d+[-–]\d+\s+working days/gi,
+    /\d+[-–]\d+\s+days/gi,
+    /\d+[-–]\d+\s+weeks/gi,
+    /\d+\s+weeks/gi,
+    /\d+\s+working days/gi,
+    /up to \d+\s+weeks/gi,
+    /within \d+\s+weeks/gi
+  ]
+
+  for (const pattern of timePatterns) {
+    const match = content.match(pattern)
+    if (match) {
+      return match[0]
+    }
+  }
+
+  return null // No processing time specified
+}
+
+function buildChunkContent(summary: string, whatAndWhy: string, keyFacts: string[], howTo: string[], watchOuts: string[], personaContent: string): string {
+  // Build chunk content per knowledge-base-schema: summary + whatAndWhy + keyFacts + howTo + watchOuts
+  const sections = [
+    summary,
+    whatAndWhy,
+    keyFacts.map(fact => `• ${fact}`).join('\n'),
+    howTo.map((step, index) => `${index + 1}. ${step}`).join('\n'),
+    watchOuts.map(wo => `⚠️ ${wo}`).join('\n')
+  ].filter(section => section && section.trim().length > 0)
+
+  // Add persona-specific content if available
+  if (personaContent && personaContent.trim().length > 0) {
+    sections.push(`\nPersona-specific guidance:\n${personaContent}`)
+  }
+
+  return sections.join('\n\n')
+}
+
+function extractSection(lines: string[], sectionStarts: Map<string, number>, sectionName: string, nextSection: string): string {
+  const start = sectionStarts.get(sectionName)
+  const end = sectionStarts.get(nextSection) || lines.length
+
+  if (!start) return ''
+
+  const sectionLines = lines.slice(start + 1, end)
+    .filter(line => line.trim() && !line.startsWith('---'))
+    .map(line => line.trim())
+
+  return sectionLines.join(' ').trim()
+}
+
+function extractHowToStepsProduction(lines: string[], sectionStarts: Map<string, number>): string[] {
+  const start = sectionStarts.get('HOW_TO')
+  const end = sectionStarts.get('KEY_FACTS') || sectionStarts.get('NUMBER_TYPES') || lines.length
+
+  if (!start) {
+    throw new Error('HOW_TO section not found')
+  }
+
+  const steps: string[] = []
+  let currentStep = ''
+
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+
+    // Skip empty lines and section dividers
+    if (!line || line.startsWith('---')) {
+      continue
+    }
+
+    // New step detection (enhanced patterns)
+    if (line.match(/^\*\*Step \d+/i) || line.match(/^\d+\./)) {
+      // Save previous step if exists
+      if (currentStep.trim()) {
+        steps.push(currentStep.trim())
+      }
+
+      // Start new step, removing formatting
+      currentStep = line
+        .replace(/^\*\*Step \d+[^*]*\*\*/, '')
+        .replace(/^\d+\./, '')
+        .trim()
+    } else if (currentStep) {
+      // Continue current step
+      currentStep += ' ' + line
+    } else {
+      // First line of steps section without explicit step marker
+      currentStep = line
+    }
+  }
+
+  // Don't forget the last step
+  if (currentStep.trim()) {
+    steps.push(currentStep.trim())
+  }
+
+  // Validate we have steps
+  if (steps.length === 0) {
+    throw new Error('No HOW_TO steps found')
+  }
+
+  // Clean up and validate steps
+  const cleanSteps = steps
+    .map(step => step.replace(/\s+/g, ' ').trim())
+    .filter(step => step.length > 10) // Filter out too-short steps
+
+  if (cleanSteps.length === 0) {
+    throw new Error('No valid HOW_TO steps after cleaning')
+  }
+
+  return cleanSteps
+}
+
+function extractKeyFactsProduction(lines: string[], sectionStarts: Map<string, number>): string[] {
+  const start = sectionStarts.get('KEY_FACTS')
+  const end = sectionStarts.get('NUMBER_TYPES') || sectionStarts.get('PERSONA_CONSTRAINED_COUPLE') || lines.length
+
+  if (!start) {
+    throw new Error('KEY_FACTS section not found')
+  }
+
+  const facts: string[] = []
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+    if (line.startsWith('- ') && !line.startsWith('---')) {
+      const fact = line.substring(2).trim()
+      if (fact.length > 10) { // Filter out too-short facts
+        facts.push(fact)
+      }
+    }
+  }
+
+  if (facts.length === 0) {
+    throw new Error('No KEY_FACTS found')
+  }
+
+  return facts
+}
+
+function extractNumberTypesProduction(lines: string[], sectionStarts: Map<string, number>): Array<{
+  figure: string; type: "A" | "B" | "C"; typeLabel: "Statutory" | "Administrative" | "Market";
+  source: string; caveat: string; lastConfirmed: string;
+}> {
+  const start = sectionStarts.get('NUMBER_TYPES')
+  const end = sectionStarts.get('PERSONA_CONSTRAINED_COUPLE') || lines.length
+
+  if (!start) {
+    return [] // NUMBER_TYPES is optional
+  }
+
+  const numberTypes: any[] = []
+  let currentEntry: any = {}
+
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+
+    if (line.startsWith('- figure:')) {
+      if (Object.keys(currentEntry).length > 0) {
+        // Validate previous entry before adding
+        if (currentEntry.figure && currentEntry.type && currentEntry.typeLabel) {
+          numberTypes.push(currentEntry)
+        }
+      }
+      currentEntry = { figure: line.replace('- figure:', '').replace(/"/g, '').trim() }
+    } else if (line.includes(':') && Object.keys(currentEntry).length > 0) {
+      const [key, ...valueParts] = line.split(':')
+      const value = valueParts.join(':').replace(/"/g, '').trim()
+      const cleanKey = key.trim().replace('type_label', 'typeLabel').replace('last_confirmed', 'lastConfirmed')
+      currentEntry[cleanKey] = value
+    }
+  }
+
+  // Don't forget the last entry
+  if (Object.keys(currentEntry).length > 0 && currentEntry.figure && currentEntry.type && currentEntry.typeLabel) {
+    numberTypes.push(currentEntry)
+  }
+
+  return numberTypes
+}
+
+function extractPersonaSection(lines: string[], sectionStarts: Map<string, number>, persona: string): string {
+  const start = sectionStarts.get(persona)
+  const nextPersona = persona === 'PERSONA_CONSTRAINED_COUPLE' ? 'PERSONA_SOLO_AEWV' : 'CROSS_REFERENCES'
+  const end = sectionStarts.get(nextPersona) || sectionStarts.get('WATCH_OUTS') || lines.length
+
+  if (!start) {
+    return '' // Persona sections are optional
+  }
+
+  const sectionLines = []
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+    if (line && !line.startsWith('---')) {
+      sectionLines.push(line)
+    }
+  }
+
+  return sectionLines.join(' ').trim()
+}
+
+function extractWatchOutsProduction(lines: string[], sectionStarts: Map<string, number>): string[] {
+  const start = sectionStarts.get('WATCH_OUTS')
+  const end = sectionStarts.get('SOURCES') || lines.length
+
+  if (!start) {
+    return [] // WATCH_OUTS is optional
+  }
+
+  const watchOuts: string[] = []
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+    if (line.startsWith('- ') && !line.startsWith('---')) {
+      const watchOut = line.substring(2).trim()
+      if (watchOut.length > 10) { // Filter out too-short watch-outs
+        watchOuts.push(watchOut)
+      }
+    }
+  }
+
+  return watchOuts
+}
+
+function extractSourcesProduction(lines: string[], sectionStarts: Map<string, number>): Array<{title: string; url: string; tier: number}> {
+  const start = sectionStarts.get('SOURCES')
+
+  if (!start) {
+    throw new Error('SOURCES section not found')
+  }
+
+  const sources: any[] = []
+  let currentSource: any = {}
+
+  for (let i = start + 1; i < lines.length; i++) {
+    const line = lines[i].trim()
+
+    // Stop at next task
+    if (line.startsWith('TASK_ID:')) {
+      break
+    }
+
+    if (line.startsWith('- title:')) {
+      if (Object.keys(currentSource).length > 0) {
+        // Validate previous source before adding
+        if (currentSource.title && currentSource.url) {
+          sources.push(currentSource)
+        }
+      }
+      currentSource = { title: line.replace('- title:', '').replace(/"/g, '').trim() }
+    } else if (line.includes(':') && Object.keys(currentSource).length > 0) {
+      const [key, ...valueParts] = line.split(':')
+      const value = valueParts.join(':').replace(/"/g, '').trim()
+      currentSource[key.trim()] = value
+    }
+  }
+
+  // Don't forget the last source
+  if (Object.keys(currentSource).length > 0 && currentSource.title && currentSource.url) {
+    sources.push(currentSource)
+  }
+
+  if (sources.length === 0) {
+    throw new Error('No valid sources found')
+  }
+
+  return sources
+}
+
+
+function extractWatchOuts(lines: string[], sectionStarts: Map<string, number>): string[] {
+  const start = sectionStarts.get('WATCH_OUTS')
+  const end = sectionStarts.get('SOURCES') || lines.length
+
+  if (!start) return []
+
+  const watchOuts: string[] = []
+  for (let i = start + 1; i < end; i++) {
+    const line = lines[i].trim()
+    if (line.startsWith('- ') && !line.startsWith('---')) {
+      watchOuts.push(line.substring(2).trim())
+    }
+  }
+
+  return watchOuts
+}
+
+function extractSources(lines: string[], sectionStarts: Map<string, number>): Array<{title: string; url: string; tier: number}> {
+  const start = sectionStarts.get('SOURCES')
+
+  if (!start) return []
+
+  const sources: any[] = [] // any: Dynamic source structure with variable fields parsed from markdown
+  let currentSource: any = {} // any: Accumulator for source object with unknown structure during parsing
+
+  for (let i = start + 1; i < lines.length; i++) {
+    const line = lines[i].trim()
+
+    if (line.startsWith('- title:')) {
+      if (Object.keys(currentSource).length > 0) {
+        sources.push(currentSource)
+      }
+      currentSource = { title: line.replace('- title:', '').replace(/"/g, '').trim() }
+    } else if (line.includes(':') && Object.keys(currentSource).length > 0) {
+      const [key, value] = line.split(':').map(s => s.trim())
+      currentSource[key] = value.replace(/"/g, '').trim()
+    } else if (line.startsWith('TASK_ID:')) {
+      // Hit next task, stop parsing
+      break
+    }
+  }
+
+  if (Object.keys(currentSource).length > 0) {
+    sources.push(currentSource)
+  }
+
+  return sources
+}
+
+
+function generateKnowledgeBaseChunksForAllPersonas(baseChunks: any[], allVariants: any[], taskId: string): any[] {
+  const expandedChunks = [];
+
+  // Add all base chunks (constrained_couple and solo_aewv)
+  expandedChunks.push(...baseChunks);
+
+  // Generate chunks for any missing personas
+  for (const variant of allVariants) {
+    const chunkExists = baseChunks.some(chunk => chunk.personaKey === variant.personaKey);
+
+    if (!chunkExists) {
+      // Find a template chunk to base this on
+      const templateChunk = baseChunks.find(chunk => chunk.personaKey === getClosestPersonaTemplate(variant.personaKey, baseChunks.map(c => c.personaKey)));
+
+      if (templateChunk) {
+        const newChunk = {
+          chunkKey: `CHUNK_${taskId}_${variant.personaKey}`,
+          taskId,
+          personaKey: variant.personaKey,
+          content: buildPersonaAdaptedChunkContent(templateChunk.content, variant),
+          sourceUrl: variant.sourceUrl,
+          sourceName: templateChunk.sourceName
+        };
+        expandedChunks.push(newChunk);
+      }
+    }
+  }
+
+  return expandedChunks;
+}
+
+function buildPersonaAdaptedChunkContent(baseContent: string, variant: any): string {
+  // Start with base content and adapt for persona
+  const sections = [];
+
+  // Add persona-specific consequence line
+  if (variant.consequenceLine) {
+    sections.push(`Impact: ${variant.consequenceLine}`);
+  }
+
+  // Add adapted steps
+  if (variant.steps && variant.steps.length > 0) {
+    const stepsSection = variant.steps.map((step: string, index: number) => `${index + 1}. ${step}`).join('\n');
+    sections.push(`Steps:\n${stepsSection}`);
+  }
+
+  // Add persona-specific watch-outs
+  if (variant.watchOuts && variant.watchOuts.length > 0) {
+    const watchOutsSection = variant.watchOuts.map((wo: string) => `⚠️ ${wo}`).join('\n');
+    sections.push(`Watch-outs:\n${watchOutsSection}`);
+  }
+
+  // Add required documents if specific to persona
+  if (variant.documentsRequired && variant.documentsRequired.length > 0) {
+    const docsSection = variant.documentsRequired.map((doc: string) => `• ${doc}`).join('\n');
+    sections.push(`Documents needed:\n${docsSection}`);
+  }
+
+  // If we have persona-specific content, use it; otherwise fall back to adapted base
+  if (sections.length > 0) {
+    return sections.join('\n\n');
+  } else {
+    return baseContent; // Fallback to base content if no persona adaptations
+  }
+}
+
+function applyUrlReplacements(url: string): string {
+  return urlReplacements[url] || url
+}
+
+
+
+const CHECKED = '2026-03-03'; // the legacy KB's LAST_VERIFIED
+const FAMILY = {
+  constrained_couple: 'COUPLE_CONSTRAINED',
+  family_with_children: 'FAMILY_WITH_CHILDREN',
+  dual_work_couple: 'COUPLE_DUAL_WORK',
+  solo_aewv: 'SOLO',
+} as const;
+// The legacy persona weights (formerly PERSONA_WEIGHTS in scoring.ts), now family boosts
+const PERSONA_WEIGHTS: Record<string, Record<string, number>> = {
+  constrained_couple: { T08: 20, T09: 20, T10: 15, T11: 10, T12: 10, T16: 5, T01: 0 },
+  family_with_children: { T08: 15, T09: 15, T10: 10, T11: 15, T12: 20, T16: 15, T01: 20 },
+  solo_aewv: { T08: 10, T09: 10, T10: 5, T11: 5, T12: 5, T16: 5, T01: 0 },
+  dual_work_couple: { T08: 18, T09: 18, T10: 12, T11: 8, T12: 8, T16: 10, T01: 5 },
+};
+const URGENCY: Record<string, TaskDef['urgency']> = {
+  T06: [{ fromDay: 1, toDay: 3, by: 30 }],
+  T07: [{ fromDay: 1, toDay: 3, by: 30 }],
+  T08: [{ fromDay: 4, toDay: 14, by: 25 }, { months: [2, 3], afterFirstYear: true, by: 25 }],
+  T09: [{ months: [2, 3], afterFirstYear: true, by: 25 }],
+  T16: [{ fromDay: 275, toDay: 336, by: 30 }],
+};
+
+export function convertKbMaster(outDir: string): { dropped: number; droppedByTask: Record<string, number> } {
+  const { tasks, errors } = parseKnowledgeBase();
+  if (errors.length) throw new Error(`kb-master.md did not parse: ${JSON.stringify(errors)}`);
+
+  const sources: Record<string, Source> = {};
+  const droppedByTask: Record<string, number> = {};
+  const sourceKey = (url: string): string => {
+    const u = new URL(url);
+    const key = `${u.hostname}${u.pathname}`.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+    sources[key] ??= isGovernmentHost(u.hostname)
+      ? { url, title: u.hostname, agency: u.hostname, tier: 'government' }
+      : { url, title: u.hostname, agency: u.hostname, tier: 'provider', reason: 'legacy, unverified' };
+    return key;
+  };
+
+  mkdirSync(join(outDir, 'tasks'), { recursive: true });
+  mkdirSync(join(outDir, 'facts'), { recursive: true });
+  for (const t of tasks) {
+    const v = t.contentVariants.find((c) => c.personaKey === 'solo_aewv')!;
+    const source = sourceKey(v.sourceUrl || t.governmentSourceUrl);
+    const mk = (section: string, texts: (string | null)[]): Item[] =>
+      texts
+        .filter((x): x is string => !!x?.trim())
+        .filter((x) => !DENY_RE.test(x) || ((droppedByTask[t.id] = (droppedByTask[t.id] ?? 0) + 1), false))
+        .map((text, i) => ({
+          id: `${t.id}.${section}.${i + 1}`,
+          text,
+          source,
+          checked: CHECKED,
+          verified: false,
+          // a provider source may back only type C figures (rules.providerType)
+          ...(sources[source]!.tier === 'provider' ? { numberType: 'C' as const } : {}),
+        }));
+    const [cost] = mk('cost', [v.cost]);
+    const [advice] = v.professionalAdviceRequired ? mk('advice', [v.professionalAdviceNote]) : [];
+    const family = ensureCompleteFamilySituations(t.applicableFamilySituations);
+    const task: TaskDef = {
+      id: t.id,
+      name: t.name,
+      phase: t.phase,
+      priority: t.basePriority,
+      boosts: Object.entries(FAMILY).flatMap(([persona, fam]) => {
+        const by = PERSONA_WEIGHTS[persona]?.[t.id];
+        return by ? [{ when: { family: [fam] }, by }] : [];
+      }),
+      urgency: URGENCY[t.id] ?? [],
+      duration: t.estimatedDuration,
+      ...(t.processingTime ? { processingTime: t.processingTime } : {}),
+      appliesTo: allOrKeys({ visa: t.applicableVisaTypes, family, occupation: t.applicableOccupations }),
+      dependsOn: t.dependencies.map((d) => ({ task: d.prerequisiteId, type: d.dependencyType === 'HARD' ? 'hard' : 'soft' })),
+      retired: false,
+      why: mk('why', [v.consequenceLine]),
+      steps: mk('steps', v.steps),
+      documents: mk('documents', v.documentsRequired),
+      mistakes: mk('mistakes', v.commonMistakes),
+      watchOuts: mk('watchOuts', v.watchOuts),
+      ...(cost ? { cost } : {}),
+      ...(advice ? { advice: { ...advice, required: true } } : {}),
+    };
+    writeFileSync(join(outDir, 'tasks', `${t.id}.yaml`), stringify(task, { lineWidth: 0 }));
+  }
+  writeFileSync(join(outDir, 'sources.yaml'), stringify(sources, { lineWidth: 0 }));
+  writeFileSync(join(outDir, 'facts', 'legacy.yaml'), '{}\n');
+  const dropped = Object.values(droppedByTask).reduce((a, b) => a + b, 0);
+  return { dropped, droppedByTask };
+}
+
+// "ALL" on every dimension is the whole-population condition
+function allOrKeys(dims: Record<string, string[] | 'ALL'>): Condition {
+  const limited = Object.entries(dims).filter((e): e is [string, string[]] => e[1] !== 'ALL');
+  return limited.length ? Object.fromEntries(limited) : 'all';
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+  const report = convertKbMaster(process.env.CONTENT_DIR ? resolve(process.env.CONTENT_DIR) : resolve(import.meta.dirname, '../content'));
+  console.log(`dropped ${report.dropped} denylisted items`, report.droppedByTask);
+}

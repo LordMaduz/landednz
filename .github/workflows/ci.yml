@@ -37,6 +37,8 @@ jobs:
           CORS_ORIGIN=http://localhost:3000
           AI_MODE=mock
           CHAT_DAILY_CAP=50
+          BETA_MODE=true
+          RATE_LIMIT_PER_MINUTE=1000
           ENV
           cat > apps/web/.env.local <<ENV
           NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -47,12 +49,17 @@ jobs:
           ENV
 
       - run: npm run prisma:generate -w @landednz/api
+      - run: npm run content:build -w @landednz/api
+        env:
+          CONTENT_ALLOW_UNVERIFIED: true
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run db:bootstrap -w @landednz/api
       - run: npm test
       - run: npm run build
-      - run: docker build -f apps/api/Dockerfile -t landednz-api .
+      # Before the e2e servers: lhci starts its own `next start` on :3000; the pages it audits need no API
+      - run: npm run lighthouse
+      - run: docker build --build-arg CONTENT_ALLOW_UNVERIFIED=true -f apps/api/Dockerfile -t landednz-api .
 
       - name: Start API and web (production builds)
         run: |
@@ -75,5 +82,6 @@ jobs:
           name: e2e-artifacts
           path: |
             apps/web/test-results
+            apps/web/.lighthouseci
             api.log
             web.log

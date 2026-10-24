@@ -1,26 +1,26 @@
 import { test, expect } from '@playwright/test'
-import { TEST_USER } from './test-user'
+import { TEST_USER, holdAnswers, resetTestUser, signIn } from './test-user'
+
+test.beforeAll(resetTestUser)
 
 test('email sign-in, route guard and sign-out', async ({ page }) => {
   await page.goto('/app')
   await expect(page).toHaveURL('/signin?redirect=%2Fapp')
 
-  await page.getByLabel('Email').fill(TEST_USER.email)
-  await page.getByLabel('Password').fill(TEST_USER.password)
-  await page.getByRole('button', { name: 'Sign in' }).click()
-
+  await holdAnswers(page)
+  await signIn(page)
   await expect(page).toHaveURL('/app')
-  await expect(page.getByText(`Signed in as ${TEST_USER.email}`)).toBeVisible()
-  await expect(page.getByText('No profile yet')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(TEST_USER.email.split('@')[0])
 
   await page.goto('/roadmap')
-  await expect(page).toHaveURL('/app')
+  await expect(page).toHaveURL('/app/roadmap')
 
   await page.goto('/signin')
   await expect(page).toHaveURL('/app')
 
-  await page.getByRole('button', { name: 'Sign out' }).click()
-  await expect(page).toHaveURL('/signin')
+  await page.getByRole('button', { name: /^Account, / }).click()
+  await page.getByRole('menuitem', { name: 'Sign out' }).click()
+  await expect(page).toHaveURL('/')
   await page.goto('/app')
   await expect(page).toHaveURL('/signin?redirect=%2Fapp')
 })

@@ -4,13 +4,14 @@
 // AC-2-07: POST /roadmap/tasks/:taskId/complete marks COMPLETE, returns updated topThree
 // AC-2-08: Completing T06 causes T07 to appear in newTopThree (T06→T07 HARD dep resolved)
 //
-// Canonical tasks T06, T07, T08, T03 used — fileParallelism: false ensures sequential
+// Content tasks T06, T07, T08, T03 used — fileParallelism: false ensures sequential
 // test file execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
+import { loadContent, useContent } from '../../content/index.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask } from './roadmap.service.js';
 
@@ -25,8 +26,6 @@ const TEST_USER_NO_ROADMAP_ID = `test-user-ac207-noroadmap-${TS}`;
 const ARRIVAL_DATE = '2026-03-13';
 const CURRENT_DATE = new Date('2026-03-14');
 
-const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
-
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
 beforeAll(async () => {
@@ -36,11 +35,6 @@ beforeAll(async () => {
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
 
   // Create test users
   await db.user.createMany({
@@ -48,62 +42,6 @@ beforeAll(async () => {
       { id: TEST_USER_ID, email: `test-ac207-main-${TS}@example.com` },
       { id: TEST_USER_NO_ROADMAP_ID, email: `test-ac207-noroadmap-${TS}@example.com` },
     ],
-  });
-
-  // Create canonical test tasks — IDs must match canonical values so scoreTask()
-  // applies correct persona weights (T08 → constrained_couple +20) and urgency bonuses
-  await db.task.createMany({
-    data: [
-      {
-        id: 'T06',
-        name: 'Get a NZ SIM card',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '30 minutes',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T07',
-        name: 'Open a NZ bank account',
-        phase: 1,
-        basePriority: 95,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T08',
-        name: 'Apply for your IRD number',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '15 minutes',
-        governmentSourceUrl: 'https://ird.govt.nz',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T03',
-        name: 'Prepare your overseas bank account',
-        phase: 1,
-        basePriority: 82,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-    ],
-  });
-
-  // HARD dep: T06 → T07
-  await db.taskDependency.create({
-    data: { prerequisiteId: 'T06', dependentId: 'T07', dependencyType: 'HARD' },
   });
 
   // Create profile for no-roadmap user (profile exists but no entries — simulates edge case)
@@ -115,7 +53,6 @@ beforeAll(async () => {
       familySituation: 'SOLO',
       occupation: 'TECHNOLOGY',
       arrivalDate: new Date(ARRIVAL_DATE),
-      personaKey: 'solo_aewv',
     },
   });
 });
@@ -126,11 +63,6 @@ afterAll(async () => {
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
   await db.$disconnect();
 });
 
@@ -139,6 +71,17 @@ afterEach(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
 });
+
+// Runs fn with the given task marked retired in the loaded content, then restores the real bundle
+async function withRetired(taskId: string, fn: () => Promise<void>) {
+  const bundle = await loadContent();
+  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === taskId ? { ...t, retired: true } : t)) });
+  try {
+    await fn();
+  } finally {
+    useContent(bundle);
+  }
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -227,6 +170,28 @@ describe('completeTask()', () => {
         code: 'TASK_NOT_FOUND',
         statusCode: 404,
       });
+    });
+
+    test('Retired task → AppError TASK_RETIRED (409), entry unchanged', async () => {
+      await createProfile(TEST_USER_ID, {
+      visaType: 'AEWV',
+      city: 'AUCKLAND',
+      familySituation: 'COUPLE_CONSTRAINED',
+      occupation: 'TECHNOLOGY',
+      arrivalDate: ARRIVAL_DATE,
+    }, CURRENT_DATE);
+
+      await withRetired('T03', async () => {
+        await expect(completeTask(TEST_USER_ID, 'T03', CURRENT_DATE)).rejects.toMatchObject({
+          code: 'TASK_RETIRED',
+          statusCode: 409,
+        });
+      });
+      const entry = await db.userRoadmapEntry.findUnique({
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+      });
+      expect(entry!.status).toBe('NOT_STARTED');
+      expect(entry!.completedAt).toBeNull();
     });
 
     test('Task already COMPLETE → AppError TASK_ALREADY_COMPLETE (409)', async () => {

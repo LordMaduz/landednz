@@ -1,0 +1,138 @@
+id: T10
+name: KiwiSaver Election
+phase: 3
+priority: 90
+boosts:
+  - when:
+      family:
+        - COUPLE_CONSTRAINED
+    by: 15
+  - when:
+      family:
+        - FAMILY_WITH_CHILDREN
+    by: 10
+  - when:
+      family:
+        - COUPLE_DUAL_WORK
+    by: 12
+  - when:
+      family:
+        - SOLO
+    by: 5
+urgency: []
+duration: 30–45 minutes (including provider research)
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn:
+  - task: T08
+    type: soft
+retired: false
+why:
+  - id: T10.why.1
+    text: Join KiwiSaver — the employer 3% is free money you cannot access any other way.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+steps:
+  - id: T10.steps.1
+    text: For most AEWV skilled migrants, joining KiwiSaver is financially advantageous due to the mandatory employer contribution (3% salary top-up) and government member tax credit (up to $521.43/year). The main reason not to join is if you are certain you will leave NZ within 1–2 years and the administrative friction of withdrawal outweighs the benefit — but even then, the employer 3% contribution is worth capturing.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.steps.2
+    text: "Major providers include: Simplicity (low fees, nonprofit, recommended for cost-conscious investors), Milford, Fisher Funds, ANZ KiwiSaver, ASB KiwiSaver, Booster, Generate, SuperLife, InvestNow. Comparison tool: sorted.org.nz/kiwisaver (government-operated, fee comparison). Key criteria when choosing: - Management fees (look for under 0.5% for passive/index funds, under 1.0% for actively managed) - Fund type (growth or aggressive for long-term investors aged 30–50) - Provider stability and track record If you do not choose, you will be assigned to your employer's default provider."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.steps.3
+    text: "Options: 3%, 4%, 6%, 8%, 10% of gross salary. 3% is the minimum; 3.5% is the default (increased from 3% effective April 1, 2026). Your employer's 3% is on top of whichever rate you choose."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.steps.4
+    text: "Download the KS2 form: https://www.ird.govt.nz/forms-guides/number/forms-100-199/ks2-kiwisaver-deduction-notice Fill in your IRD number, chosen contribution rate, and chosen provider. Submit to your employer's payroll team alongside your IR330 (T09)."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.steps.5
+    text: Most KiwiSaver providers allow you to register online before your employer enrolment is processed. Visit your chosen provider's website and open an account. You will need your IRD number, NZ bank account, and passport details.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.steps.6
+    text: After your first pay, check your payslip confirms KiwiSaver deductions at your selected rate. You can view your KiwiSaver balance and contributions via myIR (ird.govt.nz/myIR) once your IRD account is active.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+documents:
+  - id: T10.documents.1
+    text: passport
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.documents.2
+    text: ird number
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+mistakes:
+  - id: T10.mistakes.1
+    text: "Failing to understand: If you take no action, you will be auto-enrolled in your employer's default fund, which may be a conservative fund inappropriate for your age and investment horizon. Act proactively to choose your fund type."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.mistakes.2
+    text: "Failing to understand: The 56-day opt-out window is firm. If you decide KiwiSaver is not right for you (rare for AEWV workers), opt out within 56 days of starting employment via your myIR account or via IRD directly. After 56 days, opting out requires a contributions holiday application."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.mistakes.3
+    text: "Failing to understand: Employer contributions are subject to Employer Superannuation Contribution Tax (ESCT) — your employer deducts this tax from their contribution before it reaches your account. This is normal and does not affect your contribution rate."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.mistakes.4
+    text: KiwiSaver funds are not bank deposits — your balance can go down as well as up. This is normal for investment funds. Do not select a conservative/defensive fund solely out of fear of loss if your investment horizon is long.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.mistakes.5
+    text: "Failing to understand: Contributions are locked until age 65 or first home purchase (with conditions), except for permanent emigration withdrawal and financial hardship applications. Plan cash flow accordingly."
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+watchOuts:
+  - id: T10.watchOuts.1
+    text: If you take no action, you will be auto-enrolled in your employer's default fund, which may be a conservative fund inappropriate for your age and investment horizon. Act proactively to choose your fund type.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.watchOuts.2
+    text: The 56-day opt-out window is firm. If you decide KiwiSaver is not right for you (rare for AEWV workers), opt out within 56 days of starting employment via your myIR account or via IRD directly. After 56 days, opting out requires a contributions holiday application.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.watchOuts.3
+    text: Employer contributions are subject to Employer Superannuation Contribution Tax (ESCT) — your employer deducts this tax from their contribution before it reaches your account. This is normal and does not affect your contribution rate.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.watchOuts.4
+    text: KiwiSaver funds are not bank deposits — your balance can go down as well as up. This is normal for investment funds. Do not select a conservative/defensive fund solely out of fear of loss if your investment horizon is long.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.watchOuts.5
+    text: Contributions are locked until age 65 or first home purchase (with conditions), except for permanent emigration withdrawal and financial hardship applications. Plan cash flow accordingly.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false
+  - id: T10.watchOuts.6
+    text: Do not confuse KiwiSaver with NZ Superannuation (NZ Super) — NZ Super is a government pension paid from age 65, separate from KiwiSaver, and available to long-term NZ residents regardless of KiwiSaver participation.
+    source: www-ird-govt-nz-kiwisaver
+    checked: 2026-03-03
+    verified: false

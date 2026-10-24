@@ -1,0 +1,114 @@
+id: T06
+name: NZ SIM Card
+phase: 2
+priority: 98
+boosts: []
+urgency:
+  - fromDay: 1
+    toDay: 3
+    by: 30
+duration: 15–30 minutes
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T06.why.1
+    text: Purchase at Auckland Airport arrivals on Day 1 if you want immediate connectivity.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+steps:
+  - id: T06.steps.1
+    text: "If you prefer to activate immediately at the airport: - Spark and One NZ have kiosks in Auckland Airport arrivals hall. Prices may be slightly higher than CBD stores. - Duty-free zone (before customs): some duty-free shops carry SIM cards at lower prices. - Plan to purchase at a carrier store in the CBD on Day 1 if you prefer to compare plans in store."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.steps.2
+    text: "For settlers (not tourists), monthly prepay is significantly better value than tourist SIM packs: - **2degrees:** Cheapest monthly prepay plans. $8–$30/month options. Strong urban coverage. Recommended for cost-conscious Auckland-based users who won't travel rurally frequently. - **Spark:** Best rural coverage. $19–$49/month prepay. Useful if planning road trips or travel outside Auckland. - **One NZ (formerly Vodafone):** Strong all-around coverage. $19–$45/month prepay. - **Skinny Mobile (on Spark network):** Budget MVNO. Available at Countdown/Woolworths, New World, Pak'nSave. $28/month for solid data plan. Online account management only."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.steps.3
+    text: "No ID required. Pay cash or card. Physical SIM: $2–$5. eSIM: activate online via carrier website — requires email and a credit/debit card. If eSIM, you can activate before landing by purchasing online."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.steps.4
+    text: Follow the activation instructions on the SIM packaging or carrier website. Add credit or activate a monthly plan. Most carriers have an app for account management. Set up auto-renew if available to avoid your plan lapsing.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.steps.5
+    text: Update your employer with your NZ number. Provide to bank when opening account (T07). Provide to IRD application (T08). Update WhatsApp and other messaging apps to your new NZ number — or use dual SIM to keep both numbers active.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+documents: []
+mistakes:
+  - id: T06.mistakes.1
+    text: Do not buy an airport tourist SIM pack if you are staying more than 3–4 weeks. They are priced for short-stay tourists and are poor value for settlers. Go to a carrier store in the CBD on Day 1 instead.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.mistakes.2
+    text: "Failing to understand: Confirm your phone is SIM unlocked before departure. Phones bought on contract in India or Singapore may be network-locked and unable to use a NZ SIM. Unlock at your carrier before departing."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.mistakes.3
+    text: "Failing to understand: eSIM compatibility varies by phone model and carrier. Confirm your specific handset supports eSIM before relying on it."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.mistakes.4
+    text: "Failing to understand: If you keep your home country SIM active in a dual-SIM setup, international roaming charges on that SIM can be high. Put the home SIM in airplane mode or data-off as soon as your NZ SIM is active."
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+watchOuts:
+  - id: T06.watchOuts.1
+    text: Do not buy an airport tourist SIM pack if you are staying more than 3–4 weeks. They are priced for short-stay tourists and are poor value for settlers. Go to a carrier store in the CBD on Day 1 instead.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.watchOuts.2
+    text: Confirm your phone is SIM unlocked before departure. Phones bought on contract in India or Singapore may be network-locked and unable to use a NZ SIM. Unlock at your carrier before departing.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.watchOuts.3
+    text: eSIM compatibility varies by phone model and carrier. Confirm your specific handset supports eSIM before relying on it.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T06.watchOuts.4
+    text: If you keep your home country SIM active in a dual-SIM setup, international roaming charges on that SIM can be high. Put the home SIM in airplane mode or data-off as soon as your NZ SIM is active.
+    source: www-2degrees-nz-plans-prepay
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+cost:
+  id: T06.cost.1
+  text: $8
+  source: www-2degrees-nz-plans-prepay
+  checked: 2026-03-03
+  verified: false
+  numberType: C

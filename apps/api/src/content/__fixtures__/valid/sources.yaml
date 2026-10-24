@@ -1,0 +1,16 @@
+ird-tax-codes:
+  url: https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals
+  title: Tax codes for individuals
+  agency: Inland Revenue
+  tier: government
+ird-apply:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers
+  title: IRD numbers
+  agency: Inland Revenue
+  tier: government
+bank-fees:
+  url: https://www.example-bank.co.nz/fees
+  title: Account fees
+  agency: Example Bank
+  tier: provider
+  reason: No government source publishes bank account fees.

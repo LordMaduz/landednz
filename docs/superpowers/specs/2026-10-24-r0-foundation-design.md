@@ -110,6 +110,16 @@ Copy `landednz-be/src`, `scripts` (kept ones), `prisma/schema.prisma` over `apps
 
 API routes and payloads, SSE event format, RAG pipeline order (C07), guardrails, prompts registry.
 
+**Amendment (2026-10-24, approved page boards):** additive, backward-compatible changes only — no existing route, field or event changes meaning:
+
+- `completedAt: string | null` (ISO) on every roadmap task in `GET /roadmap` (Home "Recently done", done dates, the stamp).
+- `blockingTaskIds: string[]` beside `blockingTaskNames` on roadmap tasks (blocked copy names the blocker in plain words).
+- `lastVerified: string | null` (ISO date, from the KB's `LAST_VERIFIED`) on `GET /roadmap/tasks/:taskId` (source line "checked 3 March 2026"); stored in a new nullable `Task.lastVerifiedAt` column (expand-only migration).
+- `POST /roadmap/tasks/:taskId/reopen` — marks a done task not done ("Mark as not done", toast Undo); blocked flags recompute.
+- `POST /onboarding/preview` — public, rate-limited; takes the five answers and returns the filtered, ordered task list, so the preview before sign-up is the real roadmap.
+- `DELETE /account` — deletes the user's rows (cascade) and their Supabase auth user.
+- KB seed: T21 (joint bank account) applies to couples and families only; solo movers get 20 tasks.
+
 ### 4.4 Changes
 
 - **pgvector**: enabled today only by `docker/init.sql`. Add `CREATE EXTENSION IF NOT EXISTS vector;` at the top of the init migration (safe: no existing databases).
@@ -177,7 +187,7 @@ Register `landednz.co.nz`; Railway Hobby account; Render account; 2 Supabase pro
 
 ### 6.1 Stack
 
-Next 16.4 (App Router), React 19.3, Tailwind 4.3 (tokens in CSS `@theme`), shadcn/ui 4 on Radix restyled with LandedNZ tokens, motion 14 (only for the moments in §7.2), lucide icons, sonner, react-markdown, Zustand 5, `@supabase/ssr` 0.12, Vitest 5, Playwright 1.64. Storybook is dropped.
+Next 16.4 (App Router), React 19.3, Tailwind 4.3 (tokens in CSS `@theme`), shadcn/ui 4 restyled with LandedNZ tokens, CSS animations for the three motion moments in §7.2 (no motion library), lucide icons, sonner, react-markdown, Zustand 5, `@supabase/ssr` 0.12, Vitest 5, Playwright 1.64. Storybook is dropped.
 
 TypeScript: try 7.0 in a half-day check at the start of R0 (Next build, Vitest, Prisma generate, typecheck). If any fails, use the latest 5.x. Decision recorded in the plan.
 
@@ -190,13 +200,15 @@ Landing → onboarding questions **without an account** → roadmap preview → 
 | Route | Screen | Access |
 |---|---|---|
 | `/` | Landing | public |
-| `/onboarding` | Questions + roadmap preview | public |
+| `/onboarding` | Questions (`?step=1`–`5`) | public |
+| `/onboarding/preview` | Roadmap preview | public |
 | `/signin`, `/auth/callback` | Sign-in | public |
-| `/app` | Workspace: roadmap (main), assistant panel (side; bottom sheet on phones), task detail in place | signed in |
-| `/settings` | Profile and account | signed in |
+| `/app` | Home: greeting, route strip, this week, recently done, your plan | signed in |
+| `/app/roadmap` | Roadmap: the route; `?task=T08` opens that task's sheet (docked ≥ 1100 px, full page below) with the assistant inside | signed in |
+| `/settings` | Your plan, account, delete account | signed in |
 | `/privacy`, `/terms` | Legal (one template) | public |
 
-Redirects: `/roadmap`, `/chat` → `/app`; `/auth/signin` → `/signin`. Dropped: `/contact` (footer mailto), `/resources` (superseded by R1), landing pricing section.
+Redirects: `/roadmap` → `/app/roadmap`; `/chat` → `/app`; `/auth/signin` → `/signin`. Dropped: `/contact` (footer mailto), `/resources` (superseded by R1), landing pricing section.
 
 The auth guard moves from `middleware.ts` to `proxy.ts` (Next 16 naming), protecting `/app` and `/settings`.
 
@@ -216,7 +228,7 @@ apps/web/src/
 └── proxy.ts
 ```
 
-Data stays client-fetched through `lib/api.ts` with the Supabase token; no new data library. Fonts via `next/font` (Bricolage Grotesque, Figtree). Sentry and PostHog initialised once in the root layout.
+Data stays client-fetched through `lib/api.ts` with the Supabase token; no new data library. Font via `next/font` (Geist). Sentry and PostHog initialised once in the root layout.
 
 ## 7. Design
 
@@ -233,9 +245,13 @@ Project skill `.claude/skills/minimalism-validator/`, written with `superpowers:
 7. Copy says each thing once, in plain words.
 8. Light theme only.
 
-### 7.2 Chosen direction: "Topo Minimal" (approved 2026-10-23)
+### 7.2 Chosen direction: "Topo Minimal", refined as "Precise" (approved 2026-10-23, refined 2026-10-24)
+
+**Precise (supersedes the type and shape details below, 2026-10-24):** Geist only (400/500/600); type scale 48 (landing hero) / 32 (page titles) / 20 (section and sheet titles) / 15 (body) / 13 (meta); spacing 0, 4, 8, 16, 24, 32, 48, 64, 96; hairlines `#E3E8EA` over filled cards; wash `#F6F8F8` (replaces mist); border `#D5DFE2`; control `#7A8F99`; teal text `#0A6463`; radius 6 (controls) and 10 (surfaces); one shadow (landing preview, toasts). Home is a separate page from the Roadmap; the route strip on Home and the route rail on the Roadmap share five legs (Before you flew T01–T05, Arrival T06–T07, Week 1 T08–T10, Month 1 T11–T14, Later T15–T21). Board sources: `docs/design/r0-boards/`.
 
 Reference board: `Chosen.dc.html` on https://claude.ai/artifact/515pzxGLq8z371DbXf9gVc
+
+Approved interaction model (2026-10-24, boards `DesignSystem`, `AppMap`, `JourneyHome` prototype, `JourneyPhone`): the workspace opens on the next task as a large card on the route; a task opens in a sheet that docks beside the route at ≥ 1100 px and slides over it below that; the assistant lives inside the task sheet with 2–3 suggested questions; task names are actions; progress is a bar plus count; every view has a URL, browser Back returns to the previous view, Close and the logo return home. Type scale 56/32/17/15/13; spacing 4, 8, 16, 24, 32, 48, 64.
 
 - Colours: ink `#0F2A3A`, teal `#0E7C7B`, muted `#4B6170`, mist `#F4F7F7`, white surfaces; aurora gradient `#3FC79A → #5AAED6 → #8B78F0` for AI elements only.
 - Type: Bricolage Grotesque (headings), Figtree (everything else).
@@ -251,7 +267,8 @@ One Design canvas, "LandedNZ R0 Design", built in this order:
    - Landing
    - Onboarding: question step, roadmap preview
    - Sign in
-   - Workspace: default, task detail open, assistant streaming, first-use empty, API-down error, mobile with assistant bottom sheet
+   - Home: default, first use
+   - Roadmap (was Workspace): default, task detail open, assistant streaming, first-use empty, API-down error, mobile with task sheet
    - Settings
    - Legal template
 3. **Clickable prototype** of the journey: landing → onboarding → preview → sign-in → workspace.
@@ -265,14 +282,16 @@ Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented stat
 | Board | Version id | Approved on |
 |---|---|---|
 | Visual direction (Topo Minimal) | 1792751868-ac3c | 2026-10-23 |
-| Design system | — | — |
-| Landing | — | — |
-| Onboarding | — | — |
-| Sign in | — | — |
-| Workspace | — | — |
-| Settings | — | — |
-| Legal | — | — |
-| Journey prototype | — | — |
+| Design system | 1792792749-975d | 2026-10-24 |
+| Workspace interaction model (next step + journey prototype) | 1792792749-975d | 2026-10-24 |
+| Landing | 1792793112-7064 | 2026-10-24 |
+| Onboarding | 1792793112-7064 | 2026-10-24 |
+| Sign in | 1792793112-7064 | 2026-10-24 |
+| Precise refinement: all page boards (Home, Roadmap + states, Landing, Onboarding + preview, Sign in, Settings, Legal, Design system), desktop and 390 | 1792798426-d102 | 2026-10-24 |
+| Workspace (now Home + Roadmap) | 1792798426-d102 | 2026-10-24 |
+| Settings | 1792798426-d102 | 2026-10-24 |
+| Legal | 1792798426-d102 | 2026-10-24 |
+| Journey prototype (Onboarding, Roadmap clickable boards) | 1792798426-d102 | 2026-10-24 |
 
 ## 8. Sequencing — local first, cloud last, design in parallel
 

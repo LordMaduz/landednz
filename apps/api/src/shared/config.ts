@@ -30,6 +30,8 @@ export function loadConfig(env: Env = process.env) {
   return {
     databaseUrl: requireEnv(env, 'DATABASE_URL'),
     supabaseUrl: requireEnv(env, 'SUPABASE_URL'),
+    // Server-only admin key: deletes Supabase auth users (DELETE /account)
+    supabaseSecretKey: requireEnv(env, 'SUPABASE_SECRET_KEY'),
     port: parseInt(env['PORT'] ?? '3000', 10),
     nodeEnv: env['NODE_ENV'] ?? 'development',
     // CORS origins — comma-separated list, defaults to localhost for development
@@ -38,6 +40,13 @@ export function loadConfig(env: Env = process.env) {
     // If not set (local dev), the check is skipped.
     adminApiKey: env['ADMIN_API_KEY'],
     aiMode,
+    // Global per-IP requests a minute; e2e raises it, one IP drives the whole journey
+    rateLimitPerMinute: parseEnv(
+      { RATE_LIMIT_PER_MINUTE: '120', ...env },
+      'RATE_LIMIT_PER_MINUTE',
+      z.coerce.number().int().positive(),
+      'RATE_LIMIT_PER_MINUTE must be a positive integer',
+    ),
     // Per-user chat messages per NZ day
     chatDailyCap: parseEnv(env, 'CHAT_DAILY_CAP', z.coerce.number().int().positive(), 'CHAT_DAILY_CAP must be a positive integer'),
     // Anthropic API — required for chat advisor (Job B) in live mode
