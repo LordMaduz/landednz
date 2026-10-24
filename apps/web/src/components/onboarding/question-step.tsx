@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
@@ -32,6 +32,8 @@ export function QuestionStep() {
   const step = Math.min(Math.max(Number(params.get("step")) || 1, 1), TOTAL)
   const { answers, setAnswer } = useOnboardingStore()
   const [saving, setSaving] = useState(false)
+  // Next keeps this screen mounted after it navigates away, so the pending state must end with the navigation
+  const [navigating, startNavigation] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
   // A reload loses the in-memory answers: go back to the first one still missing
@@ -53,8 +55,8 @@ export function QuestionStep() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(answers),
     }).catch(() => null)
-    if (res?.ok) return router.push("/onboarding/preview")
     setSaving(false)
+    if (res?.ok) return startNavigation(() => router.push("/onboarding/preview"))
     setError("Couldn't build your roadmap. Your answers are still here; check your connection and try again.")
   }
 
@@ -111,7 +113,7 @@ export function QuestionStep() {
             )}
           </fieldset>
           {error && <p role="alert" className="text-ink">{error}</p>}
-          <Button size="lg" className="self-start" disabled={!chosen || saving} onClick={next}>
+          <Button size="lg" className="self-start" disabled={!chosen || saving || navigating} onClick={next}>
             {last ? "See my roadmap" : "Continue"}
           </Button>
         </div>
