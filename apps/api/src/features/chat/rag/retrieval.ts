@@ -65,7 +65,7 @@ export async function retrieveChunks(input: RetrievalInput): Promise<RetrievedCh
       "itemIds",
       1 - (embedding <=> ${vectorLiteral}::vector) AS similarity
     FROM "KnowledgeBaseChunk"
-    WHERE "chunkKey" = ANY(${keys})
+    WHERE "chunkKey" = ANY(${keys}) AND embedding IS NOT NULL
     ORDER BY embedding <=> ${vectorLiteral}::vector
     LIMIT 10
   `;
