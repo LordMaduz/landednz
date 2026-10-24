@@ -15,8 +15,9 @@ and implement RAG retrieval in `features/chat/rag/retrieval.ts`.
 
 ```
 apps/api/scripts/
-├── seed-knowledge-base.ts      ← T01–T21 task + content variant seed data
-└── generate-embeddings.ts      ← Phase 5 — reads chunks, generates embeddings
+├── content-build.ts            ← validates content, writes the bundle
+├── sync-chunks.ts              ← upserts KB chunks from the bundle, embeds changed ones
+└── create-vector-index.ts      ← ivfflat index, only once every chunk has an embedding
 
 apps/api/src/features/chat/rag/
 └── retrieval.ts                ← retrieveChunks() — persona filter + semantic search
@@ -153,7 +154,7 @@ Critical: persona pre-filter runs as SQL — never as post-search filter.
 - Column: `embedding vector(1536)` — added via raw SQL migration, NOT Prisma schema syntax
 - Distance operator: `<=>` (cosine) — NEVER `<->` (L2/Euclidean)
 - Index: `CREATE INDEX ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)`
-  — created MANUALLY after all embeddings loaded — NEVER inside generate-embeddings.ts
+  — created MANUALLY after all embeddings loaded — NEVER inside sync-chunks.ts
 - BigInt fix: all `$queryRaw` results must use:
   `JSON.stringify(result, (_, v) => typeof v === 'bigint' ? Number(v) : v)`
 
