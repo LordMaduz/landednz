@@ -1,7 +1,7 @@
 // Typed API client for the LandedNZ Fastify backend.
 // All fetch calls to NEXT_PUBLIC_API_URL live here — flat exported functions, no class.
 
-import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint } from '@landednz/types'
+import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint, OnboardingPreviewRequest, OnboardingPreviewResponse } from '@landednz/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -31,6 +31,19 @@ export interface GetProfileResponse {
   occupation: Occupation
   arrivalDate: string // ISO date
   personaKey: string
+}
+
+// Public: the roadmap the five answers would produce, before sign-up
+export async function getRoadmapPreview(answers: OnboardingPreviewRequest): Promise<OnboardingPreviewResponse> {
+  const res = await fetch(`${API_URL}/onboarding/preview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(answers),
+  })
+  if (!res.ok) {
+    throw Object.assign(new Error('Roadmap preview failed'), { status: res.status })
+  }
+  return res.json()
 }
 
 export async function submitOnboardingProfile(
@@ -163,6 +176,7 @@ export interface TaskDetailApiResponse {
   estimatedDuration: string;
   processingTime: string | null;
   governmentSourceUrl: string;
+  lastVerified: string | null;
   taskType: 'FREE' | 'PREMIUM';
   consequenceLine: string;
   steps: string[];

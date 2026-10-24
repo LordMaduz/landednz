@@ -46,6 +46,7 @@ model Task {
   applicableVisaTypes        String
   applicableFamilySituations String
   applicableOccupations      String
+  lastVerifiedAt             DateTime?
   createdAt                  DateTime             @default(now())
   updatedAt                  DateTime             @updatedAt
   contentVariants            TaskContentVariant[]

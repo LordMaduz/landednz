@@ -483,6 +483,7 @@ export async function getTaskDetail(
     estimatedDuration: task.estimatedDuration,
     processingTime: task.processingTime ?? null,
     governmentSourceUrl: task.governmentSourceUrl,
+    lastVerified: task.lastVerifiedAt?.toISOString().slice(0, 10) ?? null,
     taskType: task.taskType,
     consequenceLine: variant?.consequenceLine ?? '',
     steps: parseJsonArray(variant?.steps),

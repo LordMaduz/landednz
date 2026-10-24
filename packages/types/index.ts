@@ -45,3 +45,16 @@ export interface AuthVerifyResponse {
   isNewUser: boolean;
   hasProfile: boolean;
 }
+// POST /onboarding/preview (public) — the five onboarding answers
+export interface OnboardingPreviewRequest {
+  visaType: VisaType;
+  city: City;
+  familySituation: FamilySituation;
+  occupation: Occupation;
+  arrivalDate: string; // YYYY-MM-DD
+}
+
+// Response from POST /onboarding/preview — tasks ordered by task id
+export interface OnboardingPreviewResponse {
+  tasks: { taskId: string; name: string; estimatedDuration: string; phase: number }[];
+}

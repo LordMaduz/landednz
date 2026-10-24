@@ -23,3 +23,9 @@ export interface GetProfileResponse {
   arrivalDate: string; // ISO date
   personaKey: PersonaKey;
 }
+
+export type OnboardingPreviewRequest = CreateProfileRequest;
+
+export interface OnboardingPreviewResponse {
+  tasks: { taskId: string; name: string; estimatedDuration: string; phase: number }[];  // ordered by task id
+}

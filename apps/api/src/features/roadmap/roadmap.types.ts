@@ -63,6 +63,7 @@ export interface TaskDetailResponse {
   estimatedDuration: string;
   processingTime: string | null;
   governmentSourceUrl: string;
+  lastVerified: string | null;  // YYYY-MM-DD, from the KB's LAST_VERIFIED
   taskType: TaskType;
 
   // From TaskContentVariant for user's personaKey (fallback: solo_aewv)

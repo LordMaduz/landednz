@@ -47,6 +47,7 @@ beforeAll(async () => {
         phase: 1,
         basePriority: 50,
         estimatedDuration: '10 minutes',
+        lastVerifiedAt: new Date('2026-03-03'),
         governmentSourceUrl: 'https://example.com',
         taskType: 'FREE',
         applicableVisaTypes: '["ALL"]',
@@ -138,6 +139,7 @@ describe('getTaskDetail()', () => {
       expect(result.watchOuts).toEqual(['Watch out 1']);
       expect(result.professionalAdviceRequired).toBe(false);
       expect(result.relatedTasks).toEqual([]);
+      expect(result.lastVerified).toBe('2026-03-03');
     });
   });
 
@@ -196,6 +198,7 @@ describe('getTaskDetail()', () => {
       expect(result.watchOuts).toEqual(['Premium watch out']);
       expect(result.professionalAdviceRequired).toBe(true);
       expect(result.professionalAdviceNote).toBe('Consult an advisor');
+      expect(result.lastVerified).toBeNull();
     });
   });
 

@@ -142,6 +142,9 @@ function ensureCompleteFamilySituations(familySituations: FamilySituation[]): Fa
 
   const ALL_FAMILY_SITUATIONS: FamilySituation[] = ['SOLO', 'COUPLE_DUAL_WORK', 'COUPLE_CONSTRAINED', 'FAMILY_WITH_CHILDREN'];
 
+  // An explicit couples-only list (COUPLE_ONLY_TASKS) is kept, not widened
+  if (!familySituations.includes('SOLO')) return familySituations;
+
   if (familySituations.length < 4 ||
       !familySituations.includes('COUPLE_DUAL_WORK') ||
       !familySituations.includes('FAMILY_WITH_CHILDREN')) {
@@ -151,6 +154,10 @@ function ensureCompleteFamilySituations(familySituations: FamilySituation[]): Fa
 
   return familySituations;
 }
+
+// Tasks that apply to couples and families only (owner ruling 2026-10-24: solo movers get 20 tasks)
+const COUPLE_ONLY_TASKS = ['T21'];
+const COUPLE_SITUATIONS: FamilySituation[] = ['COUPLE_DUAL_WORK', 'COUPLE_CONSTRAINED', 'FAMILY_WITH_CHILDREN'];
 
 // TaskSeedEntry interface per spec §2.3
 interface TaskSeedEntry {
@@ -166,6 +173,7 @@ interface TaskSeedEntry {
   applicableVisaTypes: VisaType[] | "ALL";
   applicableFamilySituations: FamilySituation[];
   applicableOccupations: Occupation[] | "ALL";
+  lastVerifiedAt: Date | null;        // from the KB header LAST_VERIFIED
 
   // ── Dependencies (maps to TaskDependency table) ──
   dependencies: {
@@ -361,6 +369,8 @@ function parseTaskSectionProduction(lines: string[], taskId: string): ParsedTask
       throw new Error('TASK_NAME not found')
     }
     const taskName = taskNameLine.replace('TASK_NAME:', '').trim()
+    const lastVerifiedLine = lines.find(line => line.startsWith('LAST_VERIFIED:'))?.replace('LAST_VERIFIED:', '').trim()
+    const lastVerifiedAt = lastVerifiedLine && /^\d{4}-\d{2}-\d{2}$/.test(lastVerifiedLine) ? new Date(lastVerifiedLine) : null
 
     // Parse all content sections comprehensively
     const metadata = extractMetadataProduction(lines, sectionStarts)
@@ -419,8 +429,9 @@ function parseTaskSectionProduction(lines: string[], taskId: string): ParsedTask
       governmentSourceUrl: applyUrlReplacements(primarySource.url),
       taskType,
       applicableVisaTypes: "ALL", // Default for MVP
-      applicableFamilySituations: ["COUPLE_CONSTRAINED", "SOLO"], // Default for MVP
+      applicableFamilySituations: COUPLE_ONLY_TASKS.includes(taskId) ? COUPLE_SITUATIONS : ["COUPLE_CONSTRAINED", "SOLO"], // Default for MVP
       applicableOccupations: "ALL", // Default for MVP
+      lastVerifiedAt,
       dependencies: taskDependencies,
       contentVariants: [
         {
@@ -1119,7 +1130,8 @@ export async function seedKnowledgeBase(): Promise<void> {
             taskType: task.taskType,
             applicableVisaTypes: normalizeApplicabilityField(task.applicableVisaTypes),
             applicableFamilySituations: normalizeApplicabilityField(ensureCompleteFamilySituations(task.applicableFamilySituations)),
-            applicableOccupations: normalizeApplicabilityField(task.applicableOccupations)
+            applicableOccupations: normalizeApplicabilityField(task.applicableOccupations),
+            lastVerifiedAt: task.lastVerifiedAt
           },
           create: {
             id: task.id,
@@ -1132,7 +1144,8 @@ export async function seedKnowledgeBase(): Promise<void> {
             taskType: task.taskType,
             applicableVisaTypes: normalizeApplicabilityField(task.applicableVisaTypes),
             applicableFamilySituations: normalizeApplicabilityField(ensureCompleteFamilySituations(task.applicableFamilySituations)),
-            applicableOccupations: normalizeApplicabilityField(task.applicableOccupations)
+            applicableOccupations: normalizeApplicabilityField(task.applicableOccupations),
+            lastVerifiedAt: task.lastVerifiedAt
           }
         })
         taskCount++
@@ -1184,7 +1197,8 @@ export async function seedKnowledgeBase(): Promise<void> {
             console.log(`📝 DEBUG: Task ${task.id} normalized JSON:`, normalized);
             return normalized;
           })(),
-          applicableOccupations: normalizeApplicabilityField(task.applicableOccupations)
+          applicableOccupations: normalizeApplicabilityField(task.applicableOccupations),
+          lastVerifiedAt: task.lastVerifiedAt
         },
         create: {
           id: task.id,
@@ -1204,7 +1218,8 @@ export async function seedKnowledgeBase(): Promise<void> {
             console.log(`📝 DEBUG: Task ${task.id} normalized JSON:`, normalized);
             return normalized;
           })(),
-          applicableOccupations: normalizeApplicabilityField(task.applicableOccupations)
+          applicableOccupations: normalizeApplicabilityField(task.applicableOccupations),
+          lastVerifiedAt: task.lastVerifiedAt
         }
       })
         for (const variant of task.contentVariants) {
