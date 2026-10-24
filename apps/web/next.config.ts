@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/roadmap", destination: "/app", permanent: true },
+      { source: "/roadmap", destination: "/app/roadmap", permanent: true },
       { source: "/chat", destination: "/app", permanent: true },
       { source: "/auth/signin", destination: "/signin", permanent: true },
     ];

@@ -42,6 +42,11 @@
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
   --container-page: 1120px;
+
+  /* Board container queries: ≤560 phone strip, ≤760 compact header, ≥1100 docked sheet */
+  --breakpoint-narrow: 561px;
+  --breakpoint-compact: 761px;
+  --breakpoint-wide: 1100px;
 }
 
 @theme inline {
@@ -74,6 +79,83 @@
   max-width: var(--container-page);
   margin-inline: auto;
   padding-inline: 24px;
+}
+
+/* Route waypoints (12 px; current 16 px; Home beads 8 px on phones) and the rail (ui_parts.ROUTE_CSS) */
+@layer components {
+  .wp {
+    flex: none;
+    box-sizing: border-box;
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wp-done { background: var(--color-teal); }
+  .wp-current { width: 16px; height: 16px; border: 2px solid var(--color-ink); }
+  .wp-leg-now { border: 2px solid var(--color-ink); }
+  .wp-available, .wp-blocked { border: 1.5px solid var(--color-control); }
+  .wp-locked { border: 1.5px dashed var(--color-control); }
+  .wp-blocked::after { content: ""; width: 6px; height: 1.5px; background: var(--color-muted); }
+  @media (width < 561px) {
+    .wp-bead { width: 8px; height: 8px; }
+    .wp-bead.wp-current { width: 12px; height: 12px; }
+  }
+
+  .route-legs > li {
+    --line: var(--color-hairline);
+    padding-bottom: 24px;
+    background: linear-gradient(var(--line), var(--line)) 7px 0 / 2px 100% no-repeat;
+  }
+  .route-legs > li.is-done { --line: var(--color-teal); }
+  .route-legs > li:last-child { padding-bottom: 0; }
+  .route-legs > li:last-child.is-folded { background-size: 2px 22px; }
+  .route-step {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    column-gap: 16px;
+  }
+  .route-dot { height: 44px; display: flex; align-items: center; justify-content: center; }
+  .route-dot-card { height: 72px; }
+
+  .route-track {
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(var(--color-hairline), var(--color-hairline)) center / 100% 2px no-repeat;
+  }
+  .route-track.is-done { background-image: linear-gradient(var(--color-teal), var(--color-teal)); }
+
+  .stamp {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 9999px;
+    border: 2px solid var(--color-teal);
+    box-sizing: border-box;
+    transform: rotate(-10deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-teal-text);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.1;
+    animation: stamp-in 200ms ease-out;
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+@keyframes stamp-in {
+  from { transform: scale(1.2) rotate(0deg); opacity: 0; }
+  to { transform: scale(1) rotate(-10deg); opacity: 1; }
 }
 
 @layer base {

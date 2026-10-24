@@ -46,7 +46,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     const url = request.nextUrl.clone()
     url.pathname = '/signin'
     url.search = ''
-    url.searchParams.set('redirect', pathname)
+    url.searchParams.set('redirect', pathname + request.nextUrl.search)
     return redirectTo(url)
   }
 
@@ -61,6 +61,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  // Every page except static assets, so the Supabase session cookie stays refreshed.
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  // Signed-in areas and sign-in only: public pages (landing, onboarding, legal) skip the
+  // Supabase round trip, which kept the landing page's LCP waiting on auth.
+  matcher: ['/app/:path*', '/settings/:path*', '/signin'],
 }

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import {
   getRedirectUrl,
+  unstable_doesMiddlewareMatch,
   unstable_getResponseFromNextConfig,
 } from 'next/experimental/testing/server'
 import nextConfig from '../next.config'
@@ -22,7 +23,7 @@ vi.mock('@supabase/ssr', () => ({
   }),
 }))
 
-const { proxy } = await import('./proxy')
+const { proxy, config } = await import('./proxy')
 const origin = 'http://localhost:3000'
 
 describe('proxy', () => {
@@ -57,15 +58,30 @@ describe('proxy', () => {
     expect(getRedirectUrl(res)).toBeNull()
   })
 
+  it('keeps the query in the sign-in redirect', async () => {
+    const res = await proxy(new NextRequest(`${origin}/app/roadmap?task=T08`))
+    expect(getRedirectUrl(res)).toBe(`${origin}/signin?redirect=%2Fapp%2Froadmap%3Ftask%3DT08`)
+  })
+
   it('passes / through for a signed-out user', async () => {
     const res = await proxy(new NextRequest(`${origin}/`))
     expect(getRedirectUrl(res)).toBeNull()
   })
 })
 
+describe('proxy matcher', () => {
+  it.each(['/', '/onboarding', '/onboarding/preview', '/privacy', '/terms'])('skips public page %s', (path) => {
+    expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(false)
+  })
+
+  it.each(['/app', '/app/roadmap', '/settings', '/signin'])('runs on %s', (path) => {
+    expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(true)
+  })
+})
+
 describe('next.config redirects', () => {
   it.each([
-    ['/roadmap', '/app'],
+    ['/roadmap', '/app/roadmap'],
     ['/chat', '/app'],
     ['/auth/signin', '/signin'],
   ])('%s permanently redirects to %s', async (from, to) => {
