@@ -1,9 +1,8 @@
 // Public roadmap preview — the five onboarding answers in, the filtered task list out,
 // so the preview before sign-up is the real roadmap (spec §4.3 amendment). No auth, no writes.
 
-import { db } from '../../shared/db.js';
 import { AppError } from '../../shared/errors.js';
-import { filterApplicableTasks } from '../../core/priority/filter.js';
+import { applicableTasks } from '../../content/index.js';
 import { City, FamilySituation, Occupation, VisaType } from '../../generated/prisma/enums.js';
 import type { OnboardingPreviewRequest, OnboardingPreviewResponse } from './onboarding.types.js';
 
@@ -42,13 +41,12 @@ export function parsePreviewRequest(body: unknown): OnboardingPreviewRequest {
 }
 
 export async function previewRoadmap(answers: OnboardingPreviewRequest): Promise<OnboardingPreviewResponse> {
-  const tasks = await db.task.findMany({ orderBy: { id: 'asc' } });
-  const applicable = filterApplicableTasks({ tasks, profile: answers }) as typeof tasks;
+  const applicable = applicableTasks(answers).sort((a, b) => a.id.localeCompare(b.id));
   return {
     tasks: applicable.map(t => ({
       taskId: t.id,
       name: t.name,
-      estimatedDuration: t.estimatedDuration,
+      estimatedDuration: t.duration,
       phase: t.phase,
     })),
   };

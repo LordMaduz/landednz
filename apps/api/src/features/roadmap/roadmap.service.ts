@@ -8,7 +8,7 @@ import { AppError } from '../../shared/errors.js';
 import { config } from '../../shared/config.js';
 import { getAffectedTasks, resolveBlockedTasks } from '../../core/dependencies/resolver.js';
 import { scoreTask } from '../../core/priority/scoring.js';
-import type { PersonaKey } from '../../shared/types.js';
+import { task as contentTask } from '../../content/index.js';
 import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, TaskReopenResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
 
 export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
@@ -192,12 +192,11 @@ export async function completeTask(
       const newIsBlocked = resolved.isBlocked;
 
       const scored = scoreTask({
-        task: { id: affectedTask.id, basePriority: affectedTask.basePriority, phase: affectedTask.phase },
-        personaKey: profile.personaKey as PersonaKey,
+        task: { id: affectedTask.id, priority: affectedTask.basePriority, boosts: contentTask(affectedTask.id)?.boosts ?? [], urgency: contentTask(affectedTask.id)?.urgency ?? [] },
+        profile,
         arrivalDate: scoringArrivalDate,
         currentDate,
         isBlocked: newIsBlocked,
-        isComplete: false,
       });
 
       await db.userRoadmapEntry.update({
@@ -288,12 +287,11 @@ export async function reopenTask(
         completedTaskIds,
       });
       const scored = scoreTask({
-        task: { id: task.id, basePriority: task.basePriority, phase: task.phase },
-        personaKey: profile.personaKey as PersonaKey,
+        task: { id: task.id, priority: task.basePriority, boosts: contentTask(task.id)?.boosts ?? [], urgency: contentTask(task.id)?.urgency ?? [] },
+        profile,
         arrivalDate: scoringArrivalDate,
         currentDate,
         isBlocked: resolved.isBlocked,
-        isComplete: false,
       });
 
       await db.userRoadmapEntry.update({
@@ -393,12 +391,11 @@ export async function bulkOverride(
   for (const task of nonCompleteTasks) {
     const resolved = resolvedMap.get(task.id)!;
     const scored = scoreTask({
-      task: { id: task.id, basePriority: task.basePriority, phase: task.phase },
-      personaKey: profile.personaKey as PersonaKey,
+      task: { id: task.id, priority: task.basePriority, boosts: contentTask(task.id)?.boosts ?? [], urgency: contentTask(task.id)?.urgency ?? [] },
+      profile,
       arrivalDate: scoringArrivalDate,
       currentDate,
       isBlocked: resolved.isBlocked,
-      isComplete: false,
     });
 
     await db.userRoadmapEntry.update({

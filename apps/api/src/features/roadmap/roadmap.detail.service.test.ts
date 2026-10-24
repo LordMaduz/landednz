@@ -116,13 +116,21 @@ afterEach(async () => {
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
 });
 
+// createProfile builds from the content bundle; the DB fixture tasks join the roadmap by hand until Task 6
+async function createProfileWithFixtures(...args: Parameters<typeof createProfile>) {
+  await createProfile(...args);
+  await db.userRoadmapEntry.createMany({
+    data: [FREE_TASK_ID, PREMIUM_TASK_ID].map(taskId => ({ userId: TEST_USER_ID, taskId, priorityScore: 0 })),
+  });
+}
+
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('getTaskDetail()', () => {
 
   describe('FREE task', () => {
     test('FREE task, no subscription → 200 with full TaskDetailResponse', async () => {
-      await createProfile(TEST_USER_ID, {
+      await createProfileWithFixtures(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
@@ -145,7 +153,7 @@ describe('getTaskDetail()', () => {
 
   describe('PREMIUM task — gate checks', () => {
     test('PREMIUM task, no subscription record → 403 PREMIUM_REQUIRED', async () => {
-      await createProfile(TEST_USER_ID, {
+      await createProfileWithFixtures(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
@@ -160,7 +168,7 @@ describe('getTaskDetail()', () => {
     });
 
     test('PREMIUM task, subscription isActive: false → 403 PREMIUM_REQUIRED', async () => {
-      await createProfile(TEST_USER_ID, {
+      await createProfileWithFixtures(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
@@ -179,7 +187,7 @@ describe('getTaskDetail()', () => {
     });
 
     test('PREMIUM task, subscription isActive: true → 200 with full detail', async () => {
-      await createProfile(TEST_USER_ID, {
+      await createProfileWithFixtures(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
@@ -204,7 +212,7 @@ describe('getTaskDetail()', () => {
 
   describe('Task not in roadmap', () => {
     test('Task not in user roadmap → 404 TASK_NOT_FOUND', async () => {
-      await createProfile(TEST_USER_ID, {
+      await createProfileWithFixtures(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',

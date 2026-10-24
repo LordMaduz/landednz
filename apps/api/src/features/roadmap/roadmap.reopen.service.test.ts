@@ -4,6 +4,7 @@
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
+import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { buildApp } from '../../server.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask, getRoadmap, reopenTask } from './roadmap.service.js';
@@ -38,6 +39,7 @@ const task = (id: string, name: string, basePriority: number) => ({
 });
 
 beforeAll(async () => {
+  await ensureLegacyTaskRows();
   await cleanUp();
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-reopen-${TS}@example.com` } });
   await db.task.createMany({

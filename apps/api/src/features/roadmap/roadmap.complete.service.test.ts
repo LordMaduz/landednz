@@ -11,6 +11,7 @@
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
+import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask } from './roadmap.service.js';
 
@@ -30,6 +31,7 @@ const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
 beforeAll(async () => {
+  await ensureLegacyTaskRows();
   // Clean up any leftover data from previous failed runs
   for (const uid of [TEST_USER_ID, TEST_USER_NO_ROADMAP_ID]) {
     await db.userRoadmapEntry.deleteMany({ where: { userId: uid } });

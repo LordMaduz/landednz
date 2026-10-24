@@ -6,6 +6,7 @@
 
 import { describe, expect, test, beforeAll, afterAll } from 'vitest';
 import { db } from '../../shared/db.js';
+import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { getRoadmap } from './roadmap.service.js';
 import { AppError } from '../../shared/errors.js';
@@ -32,6 +33,7 @@ const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
 let golden1Response: RoadmapResponse;
 
 beforeAll(async () => {
+  await ensureLegacyTaskRows();
   // Clean up any leftover data from previous failed runs
   for (const uid of [TEST_USER_ID, TEST_USER_NO_PROFILE_ID, TEST_USER_NO_ENTRIES_ID]) {
     await db.userRoadmapEntry.deleteMany({ where: { userId: uid } });
@@ -135,6 +137,8 @@ beforeAll(async () => {
     },
     CURRENT_DATE,
   );
+  // getRoadmap still picks variants by personaKey (createProfile now writes '') until Task 6
+  await db.userProfile.update({ where: { userId: TEST_USER_ID }, data: { personaKey: 'constrained_couple' } });
 
   // Create a UserProfile for the no-entries user (no roadmap entries — bypasses createProfile)
   await db.userProfile.create({

@@ -1,10 +1,9 @@
 // Public roadmap preview (spec §4.3 amendment): the five answers in, the filtered task list out.
-// Re-seeds first because other integration tests delete and recreate canonical tasks.
+// Reads the content bundle — no DB tasks involved.
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
 import { buildApp } from '../../server.js';
-import { seedKnowledgeBase } from '../../../scripts/seed-knowledge-base.js';
 import { previewRoadmap } from './onboarding.preview.js';
 
 const ANSWERS = {
@@ -18,7 +17,6 @@ const ANSWERS = {
 let app: FastifyInstance;
 
 beforeAll(async () => {
-  await seedKnowledgeBase();
   app = await buildApp();
 }, 120_000);
 

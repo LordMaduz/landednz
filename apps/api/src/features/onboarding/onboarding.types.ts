@@ -10,7 +10,7 @@ export interface CreateProfileRequest {
 
 export interface CreateProfileResponse {
   profileId: string;
-  personaKey: PersonaKey;
+  personaKey: string; // always '' — the column is dropped in Task 8
   roadmapGenerated: boolean; // always true
 }
 

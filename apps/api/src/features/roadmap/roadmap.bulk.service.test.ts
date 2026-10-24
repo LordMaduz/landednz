@@ -11,8 +11,9 @@
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
+import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
-import { bulkOverride, getRoadmap } from './roadmap.service.js';
+import { bulkOverride } from './roadmap.service.js';
 
 // ─── Test identifiers ─────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
 beforeAll(async () => {
+  await ensureLegacyTaskRows();
   // Clean up any leftover data from previous failed runs
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
@@ -243,8 +245,9 @@ describe('bulkOverride()', () => {
         occupation: 'TECHNOLOGY',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
-      // The DB also holds the seeded KB tasks, so compare against the roadmap before the call
-      const topThreeBefore = (await getRoadmap(TEST_USER_ID)).topThree.map(t => t.taskId);
+      // Baseline from the same recompute path: createProfile scores from content, bulkOverride
+      // still from this file's DB task fixtures until Task 6
+      const topThreeBefore = (await bulkOverride(TEST_USER_ID, [], CURRENT_DATE)).newTopThree.map(t => t.taskId);
 
       const result = await bulkOverride(TEST_USER_ID, ['T_NONEXISTENT'], CURRENT_DATE);
 

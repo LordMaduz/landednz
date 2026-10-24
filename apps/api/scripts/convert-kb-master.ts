@@ -6,7 +6,6 @@ import { pathToFileURL } from 'node:url';
 import { stringify } from 'yaml';
 import { DENY_RE, isGovernmentHost } from '../src/content/rules.js';
 import type { Condition, Item, Source, TaskDef } from '../src/content/types.js';
-import { PERSONA_WEIGHTS } from '../src/core/priority/scoring.js';
 import { ensureCompleteFamilySituations, parseKnowledgeBase } from './seed-knowledge-base.js';
 
 const CHECKED = '2026-03-03'; // the legacy KB's LAST_VERIFIED
@@ -16,6 +15,13 @@ const FAMILY = {
   dual_work_couple: 'COUPLE_DUAL_WORK',
   solo_aewv: 'SOLO',
 } as const;
+// The legacy persona weights (formerly PERSONA_WEIGHTS in scoring.ts), now family boosts
+const PERSONA_WEIGHTS: Record<string, Record<string, number>> = {
+  constrained_couple: { T08: 20, T09: 20, T10: 15, T11: 10, T12: 10, T16: 5, T01: 0 },
+  family_with_children: { T08: 15, T09: 15, T10: 10, T11: 15, T12: 20, T16: 15, T01: 20 },
+  solo_aewv: { T08: 10, T09: 10, T10: 5, T11: 5, T12: 5, T16: 5, T01: 0 },
+  dual_work_couple: { T08: 18, T09: 18, T10: 12, T11: 8, T12: 8, T16: 10, T01: 5 },
+};
 const URGENCY: Record<string, TaskDef['urgency']> = {
   T06: [{ fromDay: 1, toDay: 3, by: 30 }],
   T07: [{ fromDay: 1, toDay: 3, by: 30 }],
@@ -59,7 +65,6 @@ export function convertKbMaster(outDir: string): { dropped: number; droppedByTas
         }));
     const [cost] = mk('cost', [v.cost]);
     const [advice] = v.professionalAdviceRequired ? mk('advice', [v.professionalAdviceNote]) : [];
-    const weights = PERSONA_WEIGHTS as Record<string, Record<string, number>>;
     const family = ensureCompleteFamilySituations(t.applicableFamilySituations);
     const task: TaskDef = {
       id: t.id,
@@ -67,7 +72,7 @@ export function convertKbMaster(outDir: string): { dropped: number; droppedByTas
       phase: t.phase,
       priority: t.basePriority,
       boosts: Object.entries(FAMILY).flatMap(([persona, fam]) => {
-        const by = weights[persona]?.[t.id];
+        const by = PERSONA_WEIGHTS[persona]?.[t.id];
         return by ? [{ when: { family: [fam] }, by }] : [];
       }),
       urgency: URGENCY[t.id] ?? [],

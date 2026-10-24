@@ -1,13 +1,11 @@
 // Onboarding service — orchestrates profile creation and roadmap generation.
-// Calls core/ pure functions for task filtering, dependency resolution, and scoring.
+// Roadmap entries come from the content bundle via buildRoadmapEntries().
 
 import { db } from '../../shared/db.js';
 import { logger } from '../../shared/logger.js';
 import { AppError } from '../../shared/errors.js';
-import { filterApplicableTasks } from '../../core/priority/filter.js';
-import { derivePersonaKey } from '../../core/priority/filter.js';
-import { resolveBlockedTasks } from '../../core/dependencies/resolver.js';
-import { scoreTask } from '../../core/priority/scoring.js';
+import { contentVersion } from '../../content/index.js';
+import { buildRoadmapEntries } from '../roadmap/roadmap.build.js';
 import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
 import type { PersonaKey } from '../../shared/types.js';
 
@@ -42,9 +40,8 @@ export async function createProfile(
   }
 
   const arrivalDate = new Date(request.arrivalDate);
-  const personaKey: PersonaKey = derivePersonaKey(request.familySituation);
+  const personaKey = ''; // legacy column, dropped in Task 8
 
-  // Create UserProfile
   const profile = await db.userProfile.create({
     data: {
       userId,
@@ -57,68 +54,10 @@ export async function createProfile(
     },
   });
 
-  logger.info({ userId, personaKey }, 'UserProfile created');
+  logger.info({ userId }, 'UserProfile created');
 
-  // Fetch all Tasks with dependencies for pipeline
-  const allTasks = await db.task.findMany({
-    include: {
-      dependencies: {
-        select: { prerequisiteId: true, dependencyType: true },
-      },
-    },
-  });
-
-  // Step 1: filter to tasks applicable to this profile
-  const applicableTasks = filterApplicableTasks({
-    tasks: allTasks,
-    profile: {
-      visaType: request.visaType,
-      familySituation: request.familySituation,
-      occupation: request.occupation,
-    },
-  });
-
-  // Build a lookup map to access full task data (basePriority, phase) for scoring
-  const taskMap = new Map(allTasks.map(t => [t.id, t]));
-
-  // Step 2: resolve blocked tasks — new profile has no completions
-  const resolvedTasks = resolveBlockedTasks({
-    tasks: applicableTasks.map(t => {
-      const full = taskMap.get(t.id)!;
-      return { id: t.id, dependencies: full.dependencies };
-    }),
-    completedTaskIds: [],
-  });
-
-  const resolvedMap = new Map(resolvedTasks.map(r => [r.taskId, r]));
-
-  // Pre-arrival: future arrivalDate means urgency bonuses should be 0
-  const isPreArrival = arrivalDate > currentDate;
-  const scoringArrivalDate = isPreArrival ? null : arrivalDate;
-
-  // Step 3: score each applicable task
-  const roadmapEntries = applicableTasks.map(t => {
-    const full = taskMap.get(t.id)!;
-    const resolved = resolvedMap.get(t.id)!;
-
-    const scored = scoreTask({
-      task: { id: full.id, basePriority: full.basePriority, phase: full.phase },
-      personaKey,
-      arrivalDate: scoringArrivalDate,
-      currentDate,
-      isBlocked: resolved.isBlocked,
-      isComplete: false,
-    });
-
-    return {
-      userId,
-      taskId: full.id,
-      priorityScore: scored.finalPriority,
-      isBlocked: resolved.isBlocked,
-    };
-  });
-
-  // Step 4: bulk create all roadmap entries in one DB call
+  const version = contentVersion();
+  const roadmapEntries = buildRoadmapEntries(request, arrivalDate, currentDate, []).map(e => ({ ...e, userId, contentVersion: version }));
   await db.userRoadmapEntry.createMany({ data: roadmapEntries });
 
   logger.info({ userId, entryCount: roadmapEntries.length }, 'UserRoadmapEntry records created');
@@ -147,7 +86,7 @@ export async function updateProfileAndRegenerateRoadmap(
   }
 
   const arrivalDate = new Date(request.arrivalDate);
-  const personaKey: PersonaKey = derivePersonaKey(request.familySituation);
+  const personaKey = ''; // legacy column, dropped in Task 8
 
   // Use transaction to ensure atomicity
   return await db.$transaction(async (tx) => {
@@ -165,7 +104,7 @@ export async function updateProfileAndRegenerateRoadmap(
       }
     });
 
-    logger.info({ userId, personaKey }, 'UserProfile updated');
+    logger.info({ userId }, 'UserProfile updated');
 
     // Step 2: Keep the user's completions (read before the delete), then delete all existing roadmap entries
     const existingCompletions = await tx.userRoadmapEntry.findMany({
@@ -179,72 +118,18 @@ export async function updateProfileAndRegenerateRoadmap(
 
     logger.info({ userId }, 'Existing roadmap entries deleted');
 
-    // Step 3: Fetch all Tasks with dependencies for pipeline (same as createProfile)
-    const allTasks = await tx.task.findMany({
-      include: {
-        dependencies: {
-          select: { prerequisiteId: true, dependencyType: true },
-        },
-      },
-    });
-
-    // Step 4: filter to tasks applicable to this profile
-    const applicableTasks = filterApplicableTasks({
-      tasks: allTasks,
-      profile: {
-        visaType: request.visaType,
-        familySituation: request.familySituation,
-        occupation: request.occupation,
-      },
-    });
-
-    // Build a lookup map to access full task data
-    const taskMap = new Map(allTasks.map(t => [t.id, t]));
-
-    // Step 5: resolve blocked tasks — updated profile preserves existing completions
-    const completedTaskIds = existingCompletions.map(e => e.taskId);
+    // Step 3: rebuild from content — completions survive for tasks that still apply
     const completedAtById = new Map(existingCompletions.map(e => [e.taskId, e.completedAt]));
+    const version = contentVersion();
+    const roadmapEntries = buildRoadmapEntries(request, arrivalDate, currentDate, [...completedAtById.keys()]).map(e => ({
+      ...e,
+      userId,
+      contentVersion: version,
+      status: completedAtById.has(e.taskId) ? 'COMPLETE' as const : 'NOT_STARTED' as const,
+      completedAt: completedAtById.get(e.taskId) ?? null,
+    }));
 
-    const resolvedTasks = resolveBlockedTasks({
-      tasks: applicableTasks.map(t => {
-        const full = taskMap.get(t.id)!;
-        return { id: t.id, dependencies: full.dependencies };
-      }),
-      completedTaskIds,
-    });
-
-    const resolvedMap = new Map(resolvedTasks.map(r => [r.taskId, r]));
-
-    // Pre-arrival: future arrivalDate means urgency bonuses should be 0
-    const isPreArrival = arrivalDate > currentDate;
-    const scoringArrivalDate = isPreArrival ? null : arrivalDate;
-
-    // Step 6: score each applicable task
-    const roadmapEntries = applicableTasks.map(t => {
-      const full = taskMap.get(t.id)!;
-      const resolved = resolvedMap.get(t.id)!;
-      const wasCompleted = completedTaskIds.includes(t.id);
-
-      const scored = scoreTask({
-        task: { id: full.id, basePriority: full.basePriority, phase: full.phase },
-        personaKey,
-        arrivalDate: scoringArrivalDate,
-        currentDate,
-        isBlocked: resolved.isBlocked,
-        isComplete: wasCompleted,
-      });
-
-      return {
-        userId,
-        taskId: full.id,
-        priorityScore: scored.finalPriority,
-        isBlocked: resolved.isBlocked,
-        status: wasCompleted ? 'COMPLETE' as const : 'NOT_STARTED' as const,
-        completedAt: completedAtById.get(full.id) ?? null,
-      };
-    });
-
-    // Step 7: bulk create all new roadmap entries
+    // Step 4: bulk create all new roadmap entries
     await tx.userRoadmapEntry.createMany({ data: roadmapEntries });
 
     logger.info({ userId, entryCount: roadmapEntries.length }, 'New roadmap entries created');

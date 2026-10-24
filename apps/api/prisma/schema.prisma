@@ -98,8 +98,11 @@ model UserRoadmapEntry {
   completedAt      DateTime?
   completionMethod CompletionMethod?
   lastSyncVersion  Int               @default(1)
+  contentVersion   String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  // No FK in the database since content_platform_additive (taskId is a content task id);
+  // relation kept for legacy reads until Task is dropped
   task             Task              @relation(fields: [taskId], references: [id])
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -116,6 +119,11 @@ model KnowledgeBaseChunk {
   sourceUrl      String
   sourceName     String
   contentVersion Int       @default(1)
+  when           Json?
+  contentHash    String?
+  itemIds        String?
+  sourceIds      String?
+  embeddingMode  String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }
@@ -146,8 +154,17 @@ model ChatMessage {
   retrievedChunks String?
   guardrailFlags  String?
   level2Flags     String?
+  contentVersion  String?
+  usedItemIds     String? // JSON array of content item ids
   createdAt       DateTime    @default(now())
   session         ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+// Each content bundle the API has served
+model ContentRelease {
+  version    String   @id
+  builtAt    DateTime
+  servedFrom DateTime @default(now())
 }
 
 model Subscription {
