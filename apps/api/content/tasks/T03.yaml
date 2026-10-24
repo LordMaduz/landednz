@@ -1,0 +1,116 @@
+id: T03
+name: Overseas Bank Account — Final Preparation
+phase: 1
+priority: 82
+boosts: []
+urgency: []
+duration: 1–2 hours
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T03.why.1
+    text: Activate international transfer capability on your home country accounts before departure.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+steps:
+  - id: T03.steps.1
+    text: Visit your home country bank branch (or check online banking) to confirm that international outward remittances are enabled on your account. Some Indian and Sri Lankan banks require a branch visit or prior activation to enable SWIFT transfers. Test with a small transfer if unsure.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.steps.2
+    text: "Write down (and store securely): - Bank name, branch, SWIFT code - Account number and IFSC code (India) or equivalent - Your full name as it appears on the account (must match exactly for incoming transfers) You will need these when setting up Wise or Remitly to send money home from NZ (T15)."
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.steps.3
+    text: Check maturity dates of any FDs or term deposits. If a deposit matures while you are in NZ, auto-renewal will usually occur — but reinvestment instructions, TDS certificates, and interest declarations may require action. Avoid locking new deposits in the 3 months before departure if maturity would fall in your first NZ months.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.steps.4
+    text: Update your home bank account contact email to one you will actively use in NZ. Set up email statements if not already active. If your home address is changing, update the registered address or set up a trusted family member as correspondence recipient.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.steps.5
+    text: Many Indian banks require periodic KYC renewal. Ask your bank when your KYC is next due. If it falls within 12 months of departure, complete it before leaving. Aadhaar-based CKYC is available remotely for some banks — confirm with your bank whether in-person attendance would be required for renewal.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+documents: []
+mistakes:
+  - id: T03.mistakes.1
+    text: Do not close your home country bank accounts on departure. You will need them to receive remittances, manage existing assets, and maintain financial presence in your home country.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.mistakes.2
+    text: "Failing to understand: The NRE/NRO reclassification requirement under FEMA is widely ignored by NRI migrants but is a real legal obligation. Non-compliance is technically a FEMA violation. Seek CA advice — this is not a bureaucratic technicality."
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.mistakes.3
+    text: "Failing to understand: Some Indian banks freeze accounts on detecting overseas IP address login if not pre-notified. Test international online banking access from a VPN set to an overseas server before departing India."
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.mistakes.4
+    text: "Failing to understand: Term deposits in India auto-renew on maturity — but the renewal confirmation and TDS certificate may require your physical presence or advance authorisation. Plan for this before departure."
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.mistakes.5
+    text: Do not assume your home bank's mobile app works in NZ — some Indian bank apps geo-restrict functionality. Test before departure and register for net banking if not already active.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+watchOuts:
+  - id: T03.watchOuts.1
+    text: Do not close your home country bank accounts on departure. You will need them to receive remittances, manage existing assets, and maintain financial presence in your home country.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.watchOuts.2
+    text: The NRE/NRO reclassification requirement under FEMA is widely ignored by NRI migrants but is a real legal obligation. Non-compliance is technically a FEMA violation. Seek CA advice — this is not a bureaucratic technicality.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.watchOuts.3
+    text: Some Indian banks freeze accounts on detecting overseas IP address login if not pre-notified. Test international online banking access from a VPN set to an overseas server before departing India.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.watchOuts.4
+    text: Term deposits in India auto-renew on maturity — but the renewal confirmation and TDS certificate may require your physical presence or advance authorisation. Plan for this before departure.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T03.watchOuts.5
+    text: Do not assume your home bank's mobile app works in NZ — some Indian bank apps geo-restrict functionality. Test before departure and register for net banking if not already active.
+    source: www-rbi-org-in-scripts-bs-femanotifications-aspx
+    checked: 2026-03-03
+    verified: false
+    numberType: C

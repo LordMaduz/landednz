@@ -27,7 +27,7 @@ interface ScoringResult {
 // Named constants (exact values — do not deviate)
 const DEPENDENCY_PENALTY = 50;
 
-const PERSONA_WEIGHTS = {
+export const PERSONA_WEIGHTS = {
   constrained_couple: {
     T08: 20, T09: 20, T10: 15, T11: 10, T12: 10, T16: 5, T01: 0,
   },
@@ -42,7 +42,7 @@ const PERSONA_WEIGHTS = {
   },
 } as const;
 
-const URGENCY_BONUSES = {
+export const URGENCY_BONUSES = {
   DAYS_1_3_T06: 30,
   DAYS_1_3_T07: 30,
   DAYS_4_14_T08: 25,

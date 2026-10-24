@@ -1,0 +1,129 @@
+id: T19
+name: CV and LinkedIn for NZ Job Market
+phase: 3
+priority: 55
+boosts: []
+urgency: []
+duration: 3–6 hours (initial CV rewrite and LinkedIn update)
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T19.why.1
+    text: Update CV and LinkedIn within your first 2 weeks — it is a 3–6 hour task that opens NZ recruiter inbound contact immediately.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+steps:
+  - id: T19.steps.1
+    text: "- Trim to 2 pages - Remove photo, DOB, marital status, nationality - Add NZ address and NZ mobile number at the top - Rewrite each role description using achievement-oriented bullet points with measurable outcomes - Ensure the most recent 2–3 roles are given the most space - Tailor summary/objective to NZ market language"
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.steps.2
+    text: '- Change location to Auckland, New Zealand - Update headline to reflect your current NZ situation (e.g. "Senior Software Engineer | Java | Spring Boot | Auckland") - Add NZ phone number to contact info (visible to connections) - Update "about" section with a brief NZ-oriented professional summary - If comfortable, enable "Open to Work" (visible to recruiters only option available) - Request LinkedIn recommendations from previous Singapore/India managers — 2–3 strong recommendations carry weight with NZ recruiters'
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.steps.3
+    text: Create a candidate profile and upload your NZ CV. Set up job alerts for your target roles and salary range. Seek is the primary NZ job discovery channel — more actively used than LinkedIn for applications in most NZ sectors.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.steps.4
+    text: Search LinkedIn for recruiters specialising in your sector in Auckland. Send a brief connection request with a note about your background and what you are looking for. Specialist tech recruiters (e.g. Datacom, Fronde, Fusion5 for IT roles) can provide market intelligence even before you are actively job-searching.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.steps.5
+    text: Eventbrite NZ, Meetup.com Auckland, and TechWeekNZ list professional events. In-person networking remains highly effective in NZ's smaller, relationship-oriented job market. Aim for 1–2 events per month once settled.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+documents:
+  - id: T19.documents.1
+    text: visa
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+mistakes:
+  - id: T19.mistakes.1
+    text: AEWV workers cannot freely change employers — your visa is tied to your accredited employer sponsor. Do not imply open work rights on job applications if you are on a standard AEWV. Be transparent about your visa status.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.mistakes.2
+    text: "Failing to understand: NZ salary negotiation norms: it is acceptable to negotiate salary in NZ. Research market rates on seek.co.nz salary insights before any salary discussion."
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.mistakes.3
+    text: "Failing to understand: NZ employment culture is relatively flat and informal compared to corporate India or Singapore — first-name basis with senior management is standard. Titles and hierarchy are less prominent in day-to-day work."
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.mistakes.4
+    text: "Failing to understand: New migrants sometimes undervalue their experience in NZ job applications due to imposter syndrome or unfamiliarity with NZ norms. Your overseas experience is genuinely valuable — present it confidently with NZ-style achievement framing."
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.mistakes.5
+    text: "Failing to understand: Reference checks are standard in NZ — prepare 2–3 professional references who can be contacted by NZ employers. Overseas references are acceptable."
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+watchOuts:
+  - id: T19.watchOuts.1
+    text: AEWV workers cannot freely change employers — your visa is tied to your accredited employer sponsor. Do not imply open work rights on job applications if you are on a standard AEWV. Be transparent about your visa status.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.watchOuts.2
+    text: "NZ salary negotiation norms: it is acceptable to negotiate salary in NZ. Research market rates on seek.co.nz salary insights before any salary discussion."
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.watchOuts.3
+    text: NZ employment culture is relatively flat and informal compared to corporate India or Singapore — first-name basis with senior management is standard. Titles and hierarchy are less prominent in day-to-day work.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.watchOuts.4
+    text: New migrants sometimes undervalue their experience in NZ job applications due to imposter syndrome or unfamiliarity with NZ norms. Your overseas experience is genuinely valuable — present it confidently with NZ-style achievement framing.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T19.watchOuts.5
+    text: Reference checks are standard in NZ — prepare 2–3 professional references who can be contacted by NZ employers. Overseas references are acceptable.
+    source: www-seek-co-nz
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+cost:
+  id: T19.cost.1
+  text: $80,000
+  source: www-seek-co-nz
+  checked: 2026-03-03
+  verified: false
+  numberType: C

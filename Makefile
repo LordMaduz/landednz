@@ -2,7 +2,7 @@
 # Requires Node 24 (.nvmrc), Docker and the Supabase CLI.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env dev logs stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e lighthouse build check docker-api
+.PHONY: help setup env content dev logs stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e lighthouse build check docker-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
@@ -17,7 +17,10 @@ env: ## Create missing env files from their .env.example (never overwrites)
 	  [ -f $$f ] && echo "$$f exists" || { cp $${f%.local}.example $$f && echo "created $$f"; }; \
 	done
 
-dev: ## Supabase + bootstrap if empty + API (:3001) + web (:3000) in the background
+content: ## Validate the content YAML, write the bundle and packages/types/dimensions.ts
+	npm run content:build -w @landednz/api
+
+dev: content ## Supabase + bootstrap if empty + API (:3001) + web (:3000) in the background
 	npm run dev:all
 
 logs: ## Follow the API and web dev logs (.dev/)
@@ -66,7 +69,7 @@ lighthouse: ## Lighthouse on /, /onboarding, /signin against the production web 
 build: ## Build API and web
 	npm run build
 
-check: typecheck lint test build ## Everything CI runs before e2e
+check: content typecheck lint test build ## Everything CI runs before e2e
 
 docker-api: ## Run the production API container on :3001 against local Supabase
 	npm run docker:api

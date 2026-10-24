@@ -133,7 +133,7 @@ function adaptWatchOutsForPersona(watchOuts: string[], persona: PersonaKey, task
 }
 
 // PRODUCTION FIX: Ensure ALL family situations are supported with fallback mapping
-function ensureCompleteFamilySituations(familySituations: FamilySituation[]): FamilySituation[] {
+export function ensureCompleteFamilySituations(familySituations: FamilySituation[]): FamilySituation[] {
   // APP REQUIREMENT: Must support all family situations or app will break
   // Source data only has: constrained_couple + solo_aewv
   // Fallback mapping for missing personas:
@@ -269,7 +269,7 @@ interface ValidationError {
   issue: string
 }
 
-function parseKnowledgeBase(): { tasks: TaskSeedEntry[], knowledgeBaseChunks: Array<any>, errors: ValidationError[] } {
+export function parseKnowledgeBase(): { tasks: TaskSeedEntry[], knowledgeBaseChunks: Array<any>, errors: ValidationError[] } {
   const kbPath = path.join(import.meta.dirname, '../content/kb-master.md')
 
   if (!fs.existsSync(kbPath)) {

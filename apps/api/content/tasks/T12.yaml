@@ -1,0 +1,162 @@
+id: T12
+name: GP Registration and Primary Healthcare
+phase: 3
+priority: 85
+boosts:
+  - when:
+      family:
+        - COUPLE_CONSTRAINED
+    by: 10
+  - when:
+      family:
+        - FAMILY_WITH_CHILDREN
+    by: 20
+  - when:
+      family:
+        - COUPLE_DUAL_WORK
+    by: 8
+  - when:
+      family:
+        - SOLO
+    by: 5
+urgency: []
+duration: 30–60 minutes (registration process; ongoing relationship)
+appliesTo:
+  family:
+    - SOLO
+    - COUPLE_DUAL_WORK
+    - COUPLE_CONSTRAINED
+    - FAMILY_WITH_CHILDREN
+dependsOn: []
+retired: false
+why:
+  - id: T12.why.1
+    text: Register with a GP near your home or workplace within your first 2 weeks at permanent accommodation.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+steps:
+  - id: T12.steps.1
+    text: 'Use the Health New Zealand GP finder: https://www.healthpoint.co.nz Filter by location and check "accepting new patients." GP practices in central Auckland can have waitlists — start searching early. Some South Auckland practices have shorter waitlists and are accessible by PT.'
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.2
+    text: Call or email the practice. Confirm they are accepting new patients and ask what documents are needed for enrolment. Some practices have online enrolment forms.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.3
+    text: "Typically required: - Passport - Visa details (type and expiry) - NZ address - NZ mobile number - NHI (National Health Index) number if you have one from a previous NZ visit — if not, one will be assigned at registration - Previous health history summary (optional but helpful — especially for any chronic conditions, medications, or allergies)"
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.4
+    text: In person or online depending on the practice. You may be asked to complete a health questionnaire. Bring all medications you currently take and a list of any known allergies.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.5
+    text: Ask the practice what your enrolled consultation fee will be. Most practices charge $20–$60 for enrolled adults [Type B — practice-specific, varies by funding zone and practice]. If significantly higher, compare with other nearby practices. Some GP practices bulk-bill (zero co-payment) for eligible patients — these are less common but exist.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.6
+    text: Even if you are well, a new patient consultation helps establish your health record, discuss any medications, review vaccinations, and understand the NZ health system. It is also the opportunity to arrange any prescription renewals you need.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.steps.7
+    text: Your NHI (National Health Index) number is your NZ health identifier — used across all health services including hospitals, specialists, and labs. It is assigned automatically when you first interact with the NZ health system (GP, ED, or lab). Record it and keep it with your important documents.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+documents:
+  - id: T12.documents.1
+    text: passport
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.documents.2
+    text: visa
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+mistakes:
+  - id: T12.mistakes.1
+    text: Do not assume NZ operates like Singapore's polyclinic system. You cannot walk into any GP and be seen as an enrolled patient. Enrolment is required for subsidised rates.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.mistakes.2
+    text: Dental care is entirely private for adults in NZ. Do not expect public dental treatment. Budget for this separately.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.mistakes.3
+    text: Mental health support through GPs is available — GPs can refer to free or subsidised counselling under the government's Primary Mental Health scheme. Do not hesitate to raise mental health concerns at your GP consultation — this is normalised in NZ healthcare.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.mistakes.4
+    text: "Failing to understand: If you need urgent care outside GP hours, go to an Accident and Urgent Medical Clinic (e.g. Shorecare, White Cross, After Hours Medical) — not a hospital ED unless it is a genuine emergency. Hospital EDs have very long wait times for non-emergency presentations."
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.mistakes.5
+    text: "Failing to understand: Your GP visit is confidential. Visa status does not affect your right to medical care and will not be reported to Immigration NZ."
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+watchOuts:
+  - id: T12.watchOuts.1
+    text: Do not assume NZ operates like Singapore's polyclinic system. You cannot walk into any GP and be seen as an enrolled patient. Enrolment is required for subsidised rates.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.watchOuts.2
+    text: Dental care is entirely private for adults in NZ. Do not expect public dental treatment. Budget for this separately.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.watchOuts.3
+    text: Mental health support through GPs is available — GPs can refer to free or subsidised counselling under the government's Primary Mental Health scheme. Do not hesitate to raise mental health concerns at your GP consultation — this is normalised in NZ healthcare.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.watchOuts.4
+    text: If you need urgent care outside GP hours, go to an Accident and Urgent Medical Clinic (e.g. Shorecare, White Cross, After Hours Medical) — not a hospital ED unless it is a genuine emergency. Hospital EDs have very long wait times for non-emergency presentations.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.watchOuts.5
+    text: Your GP visit is confidential. Visa status does not affect your right to medical care and will not be reported to Immigration NZ.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C
+  - id: T12.watchOuts.6
+    text: New migrants sometimes delay GP registration until they are ill, then face higher casual rates and longer waits. Register proactively.
+    source: www-healthpoint-co-nz-general-practice
+    checked: 2026-03-03
+    verified: false
+    numberType: C

@@ -19,7 +19,11 @@ export const FACT_RE = /\{\{\s*([\w.-]+)\s*\}\}/g;
 // $ amounts, percentages, and a number followed by a time unit (durations, deadlines)
 const FIGURE_RE = /\$\s?\d|\d\s?%|\b\d+(?:[.,]\d+)?\s*(?:business |working )?(?:minute|hour|day|week|month|year)s?\b/i;
 // Names and phrases end at a plain word boundary (so `Priya's` is caught); bare `I` is not part of `I'm`/`I've`
-const DENY_RE = /\b(?:priya|karthik|dbs|i['’]d|we recommend)\b|\bi(?!['’]?\w)/i;
+export const DENY_RE = /\b(?:priya|karthik|dbs|i['’]d|we recommend)\b|\bi(?!['’]?\w)/i;
+// A government source must be on govt.nz or a Crown entity's own domain
+export function isGovernmentHost(host: string | undefined): boolean {
+  return !!host && (host === 'govt.nz' || host.endsWith('.govt.nz') || CROWN_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`)));
+}
 const STALE_MONTHS = { A: 12, B: 6, C: 3 } as const;
 
 export function taskItems(t: TaskDef): Item[] {
@@ -46,8 +50,7 @@ export function domain(ctx: Ctx): RuleError[] {
   return Object.entries(ctx.sources)
     .filter(([, s]) => s.tier !== 'provider')
     .filter(([, s]) => {
-      const host = URL.parse(s.url)?.hostname;
-      return !host || !(host === 'govt.nz' || host.endsWith('.govt.nz') || CROWN_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`)));
+      return !isGovernmentHost(URL.parse(s.url)?.hostname);
     })
     .map(([id, s]) => ({ file: SOURCES_FILE, id, rule: 'domain', message: `${s.tier} source ${s.url} is not on govt.nz or the Crown allowlist` }));
 }

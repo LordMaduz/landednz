@@ -1,0 +1,110 @@
+at-govt-nz-bus-train-ferry-journey-planner:
+  url: https://at.govt.nz/bus-train-ferry/journey-planner/
+  title: at.govt.nz
+  agency: at.govt.nz
+  tier: government
+www-auckland-ac-nz-en-on-campus-accommodation-html:
+  url: https://www.auckland.ac.nz/en/on-campus/accommodation.html
+  title: www.auckland.ac.nz
+  agency: www.auckland.ac.nz
+  tier: provider
+  reason: legacy, unverified
+www-rbi-org-in-scripts-bs-femanotifications-aspx:
+  url: https://www.rbi.org.in/Scripts/BS_FemaNotifications.aspx
+  title: www.rbi.org.in
+  agency: www.rbi.org.in
+  tier: provider
+  reason: legacy, unverified
+www-aainsurance-co-nz-home-contents-insurance:
+  url: https://www.aainsurance.co.nz/home-contents-insurance
+  title: www.aainsurance.co.nz
+  agency: www.aainsurance.co.nz
+  tier: provider
+  reason: legacy, unverified
+www-ird-govt-nz-roles-nz-tax-residents-exemption:
+  url: https://www.ird.govt.nz/roles/nz-tax-residents/exemption
+  title: www.ird.govt.nz
+  agency: www.ird.govt.nz
+  tier: government
+www-2degrees-nz-plans-prepay:
+  url: https://www.2degrees.nz/plans/prepay
+  title: www.2degrees.nz
+  agency: www.2degrees.nz
+  tier: provider
+  reason: legacy, unverified
+www-anz-co-nz-personal-bank-accounts-new-to-new-zealand:
+  url: https://www.anz.co.nz/personal/bank-accounts/new-to-new-zealand/
+  title: www.anz.co.nz
+  agency: www.anz.co.nz
+  tier: provider
+  reason: legacy, unverified
+www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals
+  title: www.ird.govt.nz
+  agency: www.ird.govt.nz
+  tier: government
+www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration:
+  url: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration
+  title: www.ird.govt.nz
+  agency: www.ird.govt.nz
+  tier: government
+www-ird-govt-nz-kiwisaver:
+  url: https://www.ird.govt.nz/kiwisaver
+  title: www.ird.govt.nz
+  agency: www.ird.govt.nz
+  tier: government
+www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html:
+  url: https://www.legislation.govt.nz/act/public/1986/0120/latest/DLM94278.html
+  title: www.legislation.govt.nz
+  agency: www.legislation.govt.nz
+  tier: government
+www-healthpoint-co-nz-general-practice:
+  url: https://www.healthpoint.co.nz/general-practice
+  title: www.healthpoint.co.nz
+  agency: www.healthpoint.co.nz
+  tier: provider
+  reason: legacy, unverified
+www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html:
+  url: https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html
+  title: www.legislation.govt.nz
+  agency: www.legislation.govt.nz
+  tier: government
+wise-com-nz:
+  url: https://wise.com/nz
+  title: wise.com
+  agency: wise.com
+  tier: provider
+  reason: legacy, unverified
+www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders:
+  url: https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders
+  title: www.nzta.govt.nz
+  agency: www.nzta.govt.nz
+  tier: government
+www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications:
+  url: https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/international-qualifications
+  title: www.nzqa.govt.nz
+  agency: www.nzqa.govt.nz
+  tier: government
+www-privacy-org-nz-privacy-act-2020-codes-of-practice-credit-reporting-privacy-code-2020:
+  url: https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020
+  title: www.privacy.org.nz
+  agency: www.privacy.org.nz
+  tier: provider
+  reason: legacy, unverified
+www-seek-co-nz:
+  url: https://www.seek.co.nz
+  title: www.seek.co.nz
+  agency: www.seek.co.nz
+  tier: provider
+  reason: legacy, unverified
+www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider
+  title: www.ird.govt.nz
+  agency: www.ird.govt.nz
+  tier: government
+www-anz-co-nz-personal-bank-accounts-everyday-banking-everyday-account:
+  url: https://www.anz.co.nz/personal/bank-accounts/everyday-banking/everyday-account
+  title: www.anz.co.nz
+  agency: www.anz.co.nz
+  tier: provider
+  reason: legacy, unverified
