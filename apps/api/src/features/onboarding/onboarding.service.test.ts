@@ -4,7 +4,7 @@
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
-import { createProfile } from './onboarding.service.js';
+import { createProfile, updateProfileAndRegenerateRoadmap } from './onboarding.service.js';
 import { AppError } from '../../shared/errors.js';
 
 // ─── Test fixtures ───────────────────────────────────────────────────────────
@@ -248,5 +248,22 @@ describe('createProfile()', () => {
         statusCode: 400,
       });
     });
+  });
+});
+
+describe('updateProfileAndRegenerateRoadmap()', () => {
+  test('a done task stays done, with its completedAt, after the plan changes', async () => {
+    const answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: ARRIVAL_DATE } as const;
+    await createProfile(TEST_USER_ID, answers);
+    const completedAt = new Date('2026-02-13T01:00:00.000Z');
+    await db.userRoadmapEntry.update({
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: TASK_ALL.id } },
+      data: { status: 'COMPLETE', completedAt },
+    });
+
+    await updateProfileAndRegenerateRoadmap(TEST_USER_ID, { ...answers, city: 'WELLINGTON' });
+
+    const entry = await db.userRoadmapEntry.findUnique({ where: { userId_taskId: { userId: TEST_USER_ID, taskId: TASK_ALL.id } } });
+    expect(entry).toMatchObject({ status: 'COMPLETE', completedAt });
   });
 });

@@ -167,7 +167,12 @@ export async function updateProfileAndRegenerateRoadmap(
 
     logger.info({ userId, personaKey }, 'UserProfile updated');
 
-    // Step 2: Delete all existing roadmap entries for this user
+    // Step 2: Keep the user's completions (read before the delete), then delete all existing roadmap entries
+    const existingCompletions = await tx.userRoadmapEntry.findMany({
+      where: { userId, status: 'COMPLETE' },
+      select: { taskId: true, completedAt: true },
+    });
+
     await tx.userRoadmapEntry.deleteMany({
       where: { userId }
     });
@@ -197,16 +202,8 @@ export async function updateProfileAndRegenerateRoadmap(
     const taskMap = new Map(allTasks.map(t => [t.id, t]));
 
     // Step 5: resolve blocked tasks — updated profile preserves existing completions
-    // Get existing completed tasks for this user
-    const existingCompletions = await tx.userRoadmapEntry.findMany({
-      where: {
-        userId,
-        status: 'COMPLETE'
-      },
-      select: { taskId: true }
-    });
-
     const completedTaskIds = existingCompletions.map(e => e.taskId);
+    const completedAtById = new Map(existingCompletions.map(e => [e.taskId, e.completedAt]));
 
     const resolvedTasks = resolveBlockedTasks({
       tasks: applicableTasks.map(t => {
@@ -242,7 +239,8 @@ export async function updateProfileAndRegenerateRoadmap(
         taskId: full.id,
         priorityScore: scored.finalPriority,
         isBlocked: resolved.isBlocked,
-        status: wasCompleted ? 'COMPLETE' as const : 'NOT_STARTED' as const
+        status: wasCompleted ? 'COMPLETE' as const : 'NOT_STARTED' as const,
+        completedAt: completedAtById.get(full.id) ?? null,
       };
     });
 
