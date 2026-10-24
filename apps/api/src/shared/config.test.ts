@@ -51,6 +51,14 @@ describe('loadConfig', () => {
     expect(config.chatDailyCap).toBe(50);
   });
 
+  test('per-IP rate limit is 120 a minute unless RATE_LIMIT_PER_MINUTE says otherwise', () => {
+    expect(loadConfig(MOCK_ENV).rateLimitPerMinute).toBe(120);
+    expect(loadConfig({ ...MOCK_ENV, RATE_LIMIT_PER_MINUTE: '1000' }).rateLimitPerMinute).toBe(1000);
+    expect(() => loadConfig({ ...MOCK_ENV, RATE_LIMIT_PER_MINUTE: '0' })).toThrow(
+      'RATE_LIMIT_PER_MINUTE must be a positive integer',
+    );
+  });
+
   test('live mode requires ANTHROPIC_API_KEY', () => {
     const { ANTHROPIC_API_KEY: _unset, ...env } = LIVE_ENV;
     expect(() => loadConfig(env)).toThrow('Missing required environment variable: ANTHROPIC_API_KEY');

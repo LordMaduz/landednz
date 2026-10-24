@@ -11,6 +11,7 @@
     "dev:api": "npm run dev --workspace=apps/api",
     "test": "npm run test:run -w @landednz/api && npm run test -w @landednz/web",
     "test:e2e": "npm run test:e2e -w @landednz/web",
+    "lighthouse": "npm run lighthouse -w @landednz/web",
     "build": "npm run build -w @landednz/api && npm run build -w @landednz/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",

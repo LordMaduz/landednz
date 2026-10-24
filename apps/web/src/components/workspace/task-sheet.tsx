@@ -171,7 +171,7 @@ export function TaskSheet({
         {steps && (
           <p className="text-small text-muted">
             Source:{" "}
-            <a href={steps.governmentSourceUrl} target="_blank" rel="noopener">
+            <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className="underline">
               {new URL(steps.governmentSourceUrl).hostname.replace(/^www\./, "")}
             </a>
             {steps.lastVerified && `, checked ${longDay(steps.lastVerified)}`}

@@ -28,7 +28,7 @@ Commits: Conventional Commits with scope — `feat(chat):`, `fix(web):`, `chore(
 
 ## Gotchas
 
-- **Auth is never mocked in API integration tests.** Use real local Supabase users (`apps/api/src/test-utils/supabase-user.ts`); web e2e creates its user via the admin API in `e2e/global-setup.ts`.
+- **Auth is never mocked in API integration tests.** Use real local Supabase users (`apps/api/src/test-utils/supabase-user.ts`); web e2e resets its user in each spec through `DELETE /account` (`e2e/test-user.ts`).
 - **Supabase JWTs are ES256** — verify via the JWKS endpoint (`/auth/v1/.well-known/jwks.json`) with `jose`; there is no shared JWT secret.
 - **SSE in the browser uses `fetch` + `ReadableStream`**, not `EventSource` (it cannot send `Authorization`).
 - **`app.inject()` buffers SSE** — it cannot prove progressive delivery; use `fetch` against a running server.

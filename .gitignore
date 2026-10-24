@@ -97,6 +97,7 @@ ios/fastlane/test_output
 coverage/
 *.coverage
 test-results/
+.lighthouseci/
 
 # Supabase
 supabase/.branches/

@@ -2,7 +2,7 @@
 # Requires Node 24 (.nvmrc), Docker and the Supabase CLI.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env dev stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e build check docker-api
+.PHONY: help setup env dev stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e lighthouse build check docker-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
@@ -54,6 +54,9 @@ test: ## API + web unit tests (Supabase must be running)
 
 test-e2e: ## Playwright e2e; starts API and web if they are not up
 	npm run test:e2e
+
+lighthouse: ## Lighthouse on /, /onboarding, /signin against the production web build (run make build first)
+	npm run lighthouse
 
 build: ## Build API and web
 	npm run build

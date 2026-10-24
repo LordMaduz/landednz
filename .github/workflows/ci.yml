@@ -37,6 +37,8 @@ jobs:
           CORS_ORIGIN=http://localhost:3000
           AI_MODE=mock
           CHAT_DAILY_CAP=50
+          BETA_MODE=true
+          RATE_LIMIT_PER_MINUTE=1000
           ENV
           cat > apps/web/.env.local <<ENV
           NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -52,6 +54,8 @@ jobs:
       - run: npm run db:bootstrap -w @landednz/api
       - run: npm test
       - run: npm run build
+      # Before the e2e servers: lhci starts its own `next start` on :3000; the pages it audits need no API
+      - run: npm run lighthouse
       - run: docker build -f apps/api/Dockerfile -t landednz-api .
 
       - name: Start API and web (production builds)
@@ -75,5 +79,6 @@ jobs:
           name: e2e-artifacts
           path: |
             apps/web/test-results
+            apps/web/.lighthouseci
             api.log
             web.log

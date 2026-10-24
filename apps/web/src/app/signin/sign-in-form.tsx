@@ -63,7 +63,8 @@ function SignInForm() {
       </button>
       <p className="text-small text-muted">
         <span translate="no">LandedNZ</span> gets your name and email from Google, nothing else. By continuing you agree to the{" "}
-        <Link href="/terms">terms</Link> and <Link href="/privacy">privacy policy</Link>.
+        {/* Underlined: inside muted text, colour alone does not mark a link (axe link-in-text-block) */}
+        <Link href="/terms" className="underline">terms</Link> and <Link href="/privacy" className="underline">privacy policy</Link>.
       </p>
       {passwordEnabled && (
         <form action={signInWithPassword} className="flex flex-col gap-4 border-t border-hairline pt-6">
