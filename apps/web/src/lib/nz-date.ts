@@ -12,3 +12,13 @@ export function shortDay(date: string): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', timeZone: 'UTC' })
 }
 
+
+// "21 Oct" for an instant (ISO timestamp), on the NZ calendar
+export function shortDayNZ(instant: string | Date): string {
+  return new Date(instant).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' })
+}
+
+// The NZ calendar date (YYYY-MM-DD) of an instant
+export function nzCalendarDate(instant: Date): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Pacific/Auckland' }).format(instant)
+}
