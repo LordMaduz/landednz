@@ -1,0 +1,33 @@
+id: T02
+name: Open a bank account
+phase: 2
+priority: 70
+boosts: []
+urgency:
+  - { fromDay: 0, toDay: 14, by: 5 }
+duration: 1 hour
+appliesTo: { visa: [AEWV, GREEN_LIST_WORK] }
+dependsOn:
+  - { task: T01, type: hard }
+retired: false
+why:
+  - id: T02.why.salary
+    text: Your employer pays your salary into an NZ account.
+    source: ird-apply
+    checked: 2026-08-15
+    verified: true
+steps:
+  - id: T02.step.book
+    text: Book an appointment with the bank of your choice.
+    source: ird-apply
+    checked: 2026-10-01
+    verified: true
+documents: []
+mistakes: []
+watchOuts: []
+cost:
+  id: T02.cost
+  text: "{{bank.account-fee}}"
+  source: ird-apply
+  checked: 2026-10-01
+  verified: true

@@ -112,3 +112,6 @@ Superbase_Endpoints.txt
 
 # Dev server logs (scripts/dev-all.sh)
 .dev/
+
+# Content bundle, built by `npm run content:build -w @landednz/api`
+apps/api/content-bundle.json

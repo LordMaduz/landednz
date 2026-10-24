@@ -1,6 +1,16 @@
 // The five onboarding answers: questions as the Onboarding board words them, validation,
 // and the short-lived cookie that carries them through sign-in.
-import type { City, FamilySituation, OnboardingPreviewRequest, Occupation, VisaType } from '@landednz/types'
+import {
+  CITIES,
+  FAMILY_SITUATIONS,
+  OCCUPATIONS,
+  VISA_TYPES,
+  type City,
+  type FamilySituation,
+  type OnboardingPreviewRequest,
+  type Occupation,
+  type VisaType,
+} from '@landednz/types'
 import { longDay } from './nz-date'
 
 export type Answers = OnboardingPreviewRequest
@@ -22,48 +32,24 @@ export const QUESTIONS = [
   {
     key: 'visaType',
     title: 'What visa are you coming on?',
-    options: [
-      ['AEWV', 'Accredited Employer Work Visa (AEWV)'],
-      ['GREEN_LIST_WORK', 'Green List, work to residence'],
-      ['GREEN_LIST_RESIDENCE', 'Green List, straight to residence'],
-      ['PARTNER_OF_STUDENT', 'Partner of a student'],
-      ['OTHER', 'Something else'],
-    ] satisfies [VisaType, string][],
+    options: VISA_TYPES,
   },
   {
     key: 'city',
     title: 'Where will you live?',
-    options: [
-      ['AUCKLAND', 'Auckland'],
-      ['WELLINGTON', 'Wellington'],
-      ['CHRISTCHURCH', 'Christchurch'],
-      ['OTHER', 'Somewhere else'],
-    ] satisfies [City, string][],
+    options: CITIES,
   },
   {
     key: 'familySituation',
     title: "Who's moving with you?",
-    options: [
-      ['SOLO', 'Just me'],
-      ['COUPLE_DUAL_WORK', 'My partner, and we both work'],
-      ['COUPLE_CONSTRAINED', "My partner, who can't work yet"],
-      ['FAMILY_WITH_CHILDREN', 'My partner and our children'],
-    ] satisfies [FamilySituation, string][],
+    options: FAMILY_SITUATIONS,
   },
   {
     key: 'occupation',
     title: 'What work do you do?',
-    options: [
-      ['TECHNOLOGY', 'Technology'],
-      ['HEALTHCARE', 'Healthcare'],
-      ['EDUCATION', 'Education'],
-      ['FINANCE', 'Finance'],
-      ['TRADES', 'Trades'],
-      ['OTHER_PROFESSIONAL', 'Another profession'],
-      ['SEEKING_WORK', "I'm still looking for work"],
-    ] satisfies [Occupation, string][],
+    options: OCCUPATIONS,
   },
-] as const satisfies { key: ChoiceKey; title: string; options: [string, string][] }[]
+] as const satisfies { key: ChoiceKey; title: string; options: readonly (readonly [string, string])[] }[]
 
 export const DATE_QUESTION = { key: 'arrivalDate', title: 'When do you land?' } as const
 

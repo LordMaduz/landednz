@@ -1,29 +1,9 @@
 // Shared TypeScript types between mobile and API.
 // All enums must match Prisma schema exactly.
 
-export type VisaType =
-  | "AEWV"
-  | "PARTNER_OF_STUDENT"
-  | "GREEN_LIST_WORK"
-  | "GREEN_LIST_RESIDENCE"
-  | "OTHER";
-
-export type City = "AUCKLAND" | "WELLINGTON" | "CHRISTCHURCH" | "OTHER";
-
-export type FamilySituation =
-  | "SOLO"
-  | "COUPLE_DUAL_WORK"
-  | "COUPLE_CONSTRAINED"
-  | "FAMILY_WITH_CHILDREN";
-
-export type Occupation =
-  | "TECHNOLOGY"
-  | "HEALTHCARE"
-  | "EDUCATION"
-  | "FINANCE"
-  | "TRADES"
-  | "OTHER_PROFESSIONAL"
-  | "SEEKING_WORK";
+// Onboarding dimensions: generated from apps/api/content/dimensions.yaml
+import type { City, FamilySituation, Occupation, VisaType } from "@landednz/types/dimensions";
+export * from "@landednz/types/dimensions";
 
 
 export type TaskStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETE" | "SKIPPED";

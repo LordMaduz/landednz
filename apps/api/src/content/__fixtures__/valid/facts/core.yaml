@@ -1,0 +1,12 @@
+ird.non-declaration-rate:
+  value: "45%"
+  numberType: A
+  source: ird-tax-codes
+  checked: 2026-09-01
+  verified: true
+bank.account-fee:
+  value: "$5 a month"
+  numberType: C
+  source: bank-fees
+  checked: 2026-10-01
+  verified: true
