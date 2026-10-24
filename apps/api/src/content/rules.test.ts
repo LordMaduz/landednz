@@ -77,15 +77,18 @@ describe('content rules', () => {
     expectOne(c, 'unknown-value');
   });
 
-  test('denylist', () => {
-    const c = fixture();
-    task(c, 'T01').steps[0]!.text = 'Priya applied online.';
-    expectOne(c, 'denylist');
-  });
+  test.each(['Priya applied online.', "Priya's employer pays monthly.", "Karthik's bank is open.", "Karthik’s bank is open.", "I'd apply early.", 'Then I apply.', 'We recommend applying.'])(
+    'denylist: %s',
+    (text) => {
+      const c = fixture();
+      task(c, 'T01').steps[0]!.text = text;
+      expectOne(c, 'denylist');
+    },
+  );
 
-  test('denylist is whole-word', () => {
+  test.each(['Ask priyanka at the counter.', "If I'm late, call.", "Once I've landed, apply."])('denylist passes: %s', (text) => {
     const c = fixture();
-    task(c, 'T01').steps[0]!.text = 'Ask priyanka at the counter.';
+    task(c, 'T01').steps[0]!.text = text;
     expect(runRules(c)).toEqual([]);
   });
 

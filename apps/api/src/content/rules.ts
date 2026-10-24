@@ -18,7 +18,8 @@ const CROWN_DOMAINS = ['acc.co.nz', 'sorted.org.nz'];
 export const FACT_RE = /\{\{\s*([\w.-]+)\s*\}\}/g;
 // $ amounts, percentages, and a number followed by a time unit (durations, deadlines)
 const FIGURE_RE = /\$\s?\d|\d\s?%|\b\d+(?:[.,]\d+)?\s*(?:business |working )?(?:minute|hour|day|week|month|year)s?\b/i;
-const DENY_RE = /(?<![\w'])(?:priya|karthik|dbs|i'd|i|we recommend)(?![\w'])/i;
+// Names and phrases end at a plain word boundary (so `Priya's` is caught); bare `I` is not part of `I'm`/`I've`
+const DENY_RE = /\b(?:priya|karthik|dbs|i['’]d|we recommend)\b|\bi(?!['’]?\w)/i;
 const STALE_MONTHS = { A: 12, B: 6, C: 3 } as const;
 
 export function taskItems(t: TaskDef): Item[] {
