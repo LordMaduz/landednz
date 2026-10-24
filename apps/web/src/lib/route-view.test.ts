@@ -22,6 +22,11 @@ describe('buildRouteView — Priya, day 3', () => {
     expect(task(view, 'T06')).toMatchObject({ state: 'done', meta: 'Done 21 Oct', completedAt: '2026-10-21T02:00:00.000Z' })
   })
 
+  it('drops the KB duration note in brackets, as the board shows times', () => {
+    const v = buildRouteView(roadmap([apiTask('T11', { estimatedDuration: '2–4 hours (viewings + agreement review + bond lodgement)' })]), ARRIVAL)
+    expect(task(v, 'T11')).toMatchObject({ meta: 'Next', time: '2–4 hours' })
+  })
+
   it('leg states, counts and dates', () => {
     expect(view.legs.map(l => [l.id, l.state, l.done, l.total])).toEqual([
       ['before', 'done', 5, 5],

@@ -13,6 +13,7 @@ export interface RouteTask {
   state: WaypointState
   meta: string
   time: string
+  why: string // the consequence line: what happens if it waits
   completedAt: string | null
 }
 
@@ -80,12 +81,14 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string)
               : t.isBlocked
                 ? 'blocked'
                 : 'available'
+        // KB durations carry a note in brackets ("2–4 hours (viewings + …)"); the route shows the time
+        const time = t.estimatedDuration.replace(/\s*\(.*\)\s*$/, '')
         const meta = {
           done: t.completedAt ? `Done ${shortDayNZ(t.completedAt)}` : 'Done',
           current: 'Next',
           blocked: blockedMeta(t),
-          available: t.estimatedDuration,
-          locked: t.estimatedDuration,
+          available: time,
+          locked: time,
         }[taskState]
         return {
           taskId: t.taskId,
@@ -93,7 +96,8 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string)
           topic: TASK_COPY[t.taskId]?.topic ?? t.name,
           state: taskState,
           meta,
-          time: t.estimatedDuration,
+          time,
+          why: t.consequenceLine,
           completedAt: t.completedAt,
         }
       }),
