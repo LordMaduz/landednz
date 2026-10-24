@@ -1,23 +1,31 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildRouteView } from '@/lib/route-view'
-import { priya } from '@/test/roadmap-fixtures'
+import { Toaster } from '@/components/ui/toaster'
+import { apiTask, priya } from '@/test/roadmap-fixtures'
 
 const getRoadmap = vi.fn()
 const getOnboardingProfile = vi.fn()
 const replace = vi.fn()
 const push = vi.fn()
-const router = { replace, push } // stable, like Next's
+const back = vi.fn()
+const router = { replace, push, back } // stable, like Next's
+let params = new URLSearchParams()
+const completeTask = vi.fn()
+const reopenTask = vi.fn()
 vi.mock('@/lib/api', () => ({
   getRoadmap: (token: string) => getRoadmap(token),
   getOnboardingProfile: (token: string) => getOnboardingProfile(token),
+  getTaskDetail: async (taskId: string) => ({ taskId, steps: [], governmentSourceUrl: 'https://www.ird.govt.nz', lastVerified: null }),
+  completeTask: (id: string, token: string) => completeTask(id, token),
+  reopenTask: (id: string, token: string) => reopenTask(id, token),
 }))
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } }),
 }))
 vi.mock('next/navigation', () => ({
   useRouter: () => router,
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => params,
 }))
 
 const { RoadmapView, RoadmapScreen } = await import('./roadmap-view')
@@ -33,6 +41,7 @@ const user = { name: 'Priya Sharma', initials: 'PS' }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  params = new URLSearchParams()
   getOnboardingProfile.mockResolvedValue({ arrivalDate: '2026-10-21' })
   getRoadmap.mockResolvedValue(priyaWithWhy())
 })
@@ -103,5 +112,35 @@ describe('RoadmapScreen', () => {
     render(<RoadmapScreen user={user} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Start: Apply for your IRD number' }))
     expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08', { scroll: false })
+  })
+
+  it('?task=: the sheet beside the route; Close drops task from the URL', async () => {
+    params = new URLSearchParams('task=T08')
+    render(<RoadmapScreen user={user} />)
+    expect(await screen.findByRole('complementary', { name: 'Apply for your IRD number' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Close task' }))
+    expect(push).toHaveBeenCalledWith('/app/roadmap', { scroll: false })
+  })
+
+  it('Mark as done then Undo: the route refetches and shows T09 blocked again (Review Focus 3)', async () => {
+    params = new URLSearchParams('task=T08')
+    const afterDone = priyaWithWhy()
+    for (const t of afterDone.phases.flatMap(p => p.tasks)) {
+      if (t.taskId === 'T08') Object.assign(t, apiTask('T08', { status: 'COMPLETE', completedAt: '2026-10-24T01:00:00.000Z' }))
+      if (t.taskId === 'T09') Object.assign(t, { isBlocked: false, blockingTaskIds: [], blockingTaskNames: [] })
+    }
+    getRoadmap.mockResolvedValueOnce(priyaWithWhy()).mockResolvedValueOnce(afterDone).mockResolvedValueOnce(priyaWithWhy())
+    completeTask.mockResolvedValue(undefined)
+    reopenTask.mockResolvedValue(undefined)
+    render(<><RoadmapScreen user={user} /><Toaster /></>)
+    const t09 = () => screen.getByRole('button', { name: /^Give your employer a tax code/ })
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Mark as done' }))
+    await waitFor(() => expect(t09()).not.toHaveTextContent('Needs your IRD number first'))
+    fireEvent.click(await screen.findByRole('button', { name: 'Undo' }))
+    await waitFor(() => expect(t09()).toHaveTextContent('Needs your IRD number first'))
+    expect(getRoadmap).toHaveBeenCalledTimes(3)
+    // refetches keep the sheet open: no loading state in between
+    expect(screen.getByRole('complementary', { name: 'Apply for your IRD number' })).toBeInTheDocument()
   })
 })

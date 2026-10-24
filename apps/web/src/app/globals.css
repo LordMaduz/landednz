@@ -226,6 +226,41 @@
       animation: none;
     }
   }
+
+  /* Task sheet: docked 480 px beside the route at ≥ 1100 px; below, a full page under a 48 px wash band */
+  .sheet-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    background: white;
+  }
+  @media (width >= 1100px) {
+    .sheet-layout.has-sheet { grid-template-columns: minmax(0, 1fr) 480px; }
+    .sheet {
+      position: sticky;
+      top: 24px;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-surface);
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+  }
+  @media (width < 1100px) {
+    .sheet-layout.has-sheet { margin: -48px -24px 0; }
+    .sheet-wrap { background: var(--color-wash); padding-top: 48px; }
+    .sheet {
+      border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+      border-top: 1px solid var(--color-hairline);
+    }
+  }
 }
 
 @keyframes stamp-in {

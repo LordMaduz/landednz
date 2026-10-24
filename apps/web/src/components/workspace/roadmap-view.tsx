@@ -9,7 +9,9 @@ import { RouteRail } from "@/components/route/route-rail"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildRouteView, type RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
+import { cn } from "@/lib/utils"
 import { NextTaskCard } from "./next-task-card"
+import { TaskSheet } from "./task-sheet"
 
 export function RoadmapView({
   view,
@@ -23,7 +25,8 @@ export function RoadmapView({
   onOpen(taskId: string): void
 }) {
   return (
-    <div className="flex min-w-0 flex-col gap-8">
+    // Below 1100 px the open task takes the page; the route comes back when it closes
+    <div className={cn("flex min-w-0 flex-col gap-8", selectedTaskId && "max-wide:hidden")}>
       <section aria-labelledby="rm-title" className="flex flex-col gap-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h1 id="rm-title" className="text-title">Your roadmap</h1>
@@ -56,14 +59,15 @@ export function RoadmapView({
 
 type Loaded = { view: RouteView; firstUse: boolean }
 
-// Fetches the roadmap with the browser session; ?task=<id> is the open task (the sheet, Task 12)
+// Fetches the roadmap with the browser session; ?task=<id> is the open task, shown in the sheet
 export function RoadmapScreen({ user }: { user: { name: string; initials: string } }) {
   const router = useRouter()
   const selectedTaskId = useSearchParams().get("task") ?? undefined
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
 
-  const load = useCallback(async () => {
-    setState("loading")
+  // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
+  const load = useCallback(async (refetch = false) => {
+    if (!refetch) setState("loading")
     try {
       const { data } = await createClient().auth.getSession()
       const token = data.session?.access_token
@@ -73,7 +77,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       setState({ view, firstUse: view.doneCount === 0 })
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
-      setState("down")
+      if (!refetch) setState("down")
     }
   }, [router])
 
@@ -83,6 +87,8 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   }, [load])
 
   const open = (taskId: string) => router.push(`/app/roadmap?task=${taskId}`, { scroll: false })
+  const close = useCallback(() => router.push("/app/roadmap", { scroll: false }), [router])
+  const refetch = useCallback(() => load(true), [load])
 
   return (
     <>
@@ -92,9 +98,14 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       ) : (
         <main className="container-page pt-12 pb-24">
           {state === "down" ? (
-            <ApiDown onRetry={load} />
+            <ApiDown onRetry={() => load()} />
           ) : (
-            <RoadmapView view={state.view} firstUse={state.firstUse} selectedTaskId={selectedTaskId} onOpen={open} />
+            <div className={cn("sheet-layout", selectedTaskId && "has-sheet")}>
+              <RoadmapView view={state.view} firstUse={state.firstUse} selectedTaskId={selectedTaskId} onOpen={open} />
+              {selectedTaskId && (
+                <TaskSheet taskId={selectedTaskId} route={state.view} onClose={close} onChanged={refetch} />
+              )}
+            </div>
           )}
         </main>
       )}
