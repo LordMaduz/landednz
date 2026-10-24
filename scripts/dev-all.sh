@@ -6,6 +6,9 @@ cd "$(dirname "$0")/.."
 for f in apps/api/.env.local apps/web/.env.local; do
   [[ -f $f ]] || { echo "Missing $f — copy ${f%.local}.example and fill it in" >&2; exit 1; }
 done
+# Without it Google rejects the code exchange (invalid_client) and sign-in silently lands on /.
+grep -qs '^SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=.' supabase/.env ||
+  echo "Warning: SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET not set in supabase/.env, Google sign-in will fail (docs/setup/google-oauth.md)" >&2
 
 supabase start
 npm run prisma:generate -w @landednz/api

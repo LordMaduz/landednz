@@ -12,15 +12,17 @@ setup: env ## Install deps, generate the Prisma client, install the e2e browser
 	npm run prisma:generate -w @landednz/api
 	cd apps/web && npx playwright install chromium
 
-env: ## Create missing .env.local files from .env.example (never overwrites)
-	@for d in apps/api apps/web; do \
-	  [ -f $$d/.env.local ] && echo "$$d/.env.local exists" || { cp $$d/.env.example $$d/.env.local && echo "created $$d/.env.local"; }; \
+env: ## Create missing env files from their .env.example (never overwrites)
+	@for f in apps/api/.env.local apps/web/.env.local supabase/.env; do \
+	  [ -f $$f ] && echo "$$f exists" || { cp $${f%.local}.example $$f && echo "created $$f"; }; \
 	done
 
 dev: ## Supabase + bootstrap if empty + API (:3001) + web (:3000); Ctrl-C stops
 	npm run dev:all
 
-stop: ## Stop the local Supabase stack (data kept)
+# LISTEN only: a plain port match would also kill the browser tabs connected to :3000.
+stop: ## Stop web (:3000), API (:3001) and Supabase (data kept)
+	@pids=$$(lsof -ti tcp:3000 -ti tcp:3001 -sTCP:LISTEN); [ -z "$$pids" ] || { kill $$pids && echo "stopped web/API ($$pids)"; }
 	supabase stop
 
 db-bootstrap: ## Migrate, seed the KB, mock embeddings, vector index
