@@ -29,7 +29,7 @@ No prompt string literals anywhere except core/prompts/registry.ts.
 
 **[C05] ivfflat Index Created AFTER Embeddings Load**
 CORRECT: load all embeddings → THEN run `CREATE INDEX USING ivfflat`.
-VIOLATION: ivfflat created before embeddings loaded, or in generate-embeddings.ts.
+VIOLATION: ivfflat created before embeddings loaded, or in sync-chunks.ts.
 
 **[C06] SSE Pipeline 10-Step Order Must Be Preserved**
 Step 2 (Level 1 guardrail) BEFORE step 6 (streamMessage).
