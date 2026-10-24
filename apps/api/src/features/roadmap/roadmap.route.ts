@@ -36,7 +36,6 @@ export function registerRoadmapRoutes(app: FastifyInstance): void {
 
   // GET /roadmap/tasks/:taskId
   // Returns full task detail for Layer 2 (expanded task card).
-  // 403 if task is PREMIUM and user has no active subscription.
   // 404 if task not in user's roadmap.
   app.get<{ Params: { taskId: string }; Reply: TaskDetailResponse }>(
     '/roadmap/tasks/:taskId',

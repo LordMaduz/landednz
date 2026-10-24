@@ -1,10 +1,18 @@
 // The one roadmap pipeline: applicable content tasks → blocked state → score.
 // createProfile, updateProfileAndRegenerateRoadmap and recalculateAllRoadmaps all call it.
 
-import { applicableTasks } from '../../content/index.js';
+import { applicableTasks, tasks as contentTasks } from '../../content/index.js';
+import type { ResolvedTask } from '../../content/build.js';
 import type { Profile } from '../../content/types.js';
 import { resolveBlockedTasks } from '../../core/dependencies/resolver.js';
 import { scoreTask } from '../../core/priority/scoring.js';
+
+export const dependenciesOf = (t: ResolvedTask) =>
+  t.dependsOn.map(d => ({ prerequisiteId: d.task, dependencyType: d.type === 'hard' ? 'HARD' as const : 'SOFT' as const }));
+
+// Every dependency edge across the live content tasks
+export const dependencyEdges = () =>
+  contentTasks().flatMap(t => dependenciesOf(t).map(d => ({ ...d, dependentId: t.id })));
 
 export function buildRoadmapEntries(
   profile: Profile,
@@ -17,7 +25,7 @@ export function buildRoadmapEntries(
     resolveBlockedTasks({
       tasks: tasks.map(t => ({
         id: t.id,
-        dependencies: t.dependsOn.map(d => ({ prerequisiteId: d.task, dependencyType: d.type === 'hard' ? 'HARD' as const : 'SOFT' as const })),
+        dependencies: dependenciesOf(t),
       })),
       completedTaskIds,
     }).map(r => [r.taskId, r.isBlocked]),

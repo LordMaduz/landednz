@@ -4,14 +4,13 @@
 // AC-2-07: POST /roadmap/tasks/:taskId/complete marks COMPLETE, returns updated topThree
 // AC-2-08: Completing T06 causes T07 to appear in newTopThree (T06→T07 HARD dep resolved)
 //
-// Canonical tasks T06, T07, T08, T03 used — fileParallelism: false ensures sequential
+// Content tasks T06, T07, T08, T03 used — fileParallelism: false ensures sequential
 // test file execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
-import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask } from './roadmap.service.js';
 
@@ -26,23 +25,15 @@ const TEST_USER_NO_ROADMAP_ID = `test-user-ac207-noroadmap-${TS}`;
 const ARRIVAL_DATE = '2026-03-13';
 const CURRENT_DATE = new Date('2026-03-14');
 
-const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
-
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
 beforeAll(async () => {
-  await ensureLegacyTaskRows();
   // Clean up any leftover data from previous failed runs
   for (const uid of [TEST_USER_ID, TEST_USER_NO_ROADMAP_ID]) {
     await db.userRoadmapEntry.deleteMany({ where: { userId: uid } });
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
 
   // Create test users
   await db.user.createMany({
@@ -50,62 +41,6 @@ beforeAll(async () => {
       { id: TEST_USER_ID, email: `test-ac207-main-${TS}@example.com` },
       { id: TEST_USER_NO_ROADMAP_ID, email: `test-ac207-noroadmap-${TS}@example.com` },
     ],
-  });
-
-  // Create canonical test tasks — IDs must match canonical values so scoreTask()
-  // applies correct persona weights (T08 → constrained_couple +20) and urgency bonuses
-  await db.task.createMany({
-    data: [
-      {
-        id: 'T06',
-        name: 'Get a NZ SIM card',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '30 minutes',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T07',
-        name: 'Open a NZ bank account',
-        phase: 1,
-        basePriority: 95,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T08',
-        name: 'Apply for your IRD number',
-        phase: 1,
-        basePriority: 98,
-        estimatedDuration: '15 minutes',
-        governmentSourceUrl: 'https://ird.govt.nz',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-      {
-        id: 'T03',
-        name: 'Prepare your overseas bank account',
-        phase: 1,
-        basePriority: 82,
-        estimatedDuration: '1 hour',
-        governmentSourceUrl: 'https://example.com',
-        applicableVisaTypes: '["ALL"]',
-        applicableFamilySituations: '["ALL"]',
-        applicableOccupations: '["ALL"]',
-      },
-    ],
-  });
-
-  // HARD dep: T06 → T07
-  await db.taskDependency.create({
-    data: { prerequisiteId: 'T06', dependentId: 'T07', dependencyType: 'HARD' },
   });
 
   // Create profile for no-roadmap user (profile exists but no entries — simulates edge case)
@@ -128,11 +63,6 @@ afterAll(async () => {
     await db.userProfile.deleteMany({ where: { userId: uid } });
     await db.user.deleteMany({ where: { id: uid } });
   }
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
   await db.$disconnect();
 });
 

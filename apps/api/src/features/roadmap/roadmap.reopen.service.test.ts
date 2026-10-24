@@ -4,8 +4,8 @@
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
-import { ensureLegacyTaskRows } from '../../test-utils/legacy-tasks.js';
 import { buildApp } from '../../server.js';
+import { task as contentTask } from '../../content/index.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask, getRoadmap, reopenTask } from './roadmap.service.js';
 
@@ -13,41 +13,16 @@ const TS = Date.now();
 const TEST_USER_ID = `test-user-reopen-${TS}`;
 const ARRIVAL_DATE = '2026-03-13';
 const CURRENT_DATE = new Date('2026-03-14T02:00:00.000Z');
-const TASK_IDS = ['T06', 'T07'];
 
 async function cleanUp() {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: { in: TASK_IDS } } });
-  await db.taskDependency.deleteMany({
-    where: { OR: [{ prerequisiteId: { in: TASK_IDS } }, { dependentId: { in: TASK_IDS } }] },
-  });
-  await db.task.deleteMany({ where: { id: { in: TASK_IDS } } });
 }
 
-const task = (id: string, name: string, basePriority: number) => ({
-  id,
-  name,
-  phase: 1,
-  basePriority,
-  estimatedDuration: '30 minutes',
-  governmentSourceUrl: 'https://example.com',
-  applicableVisaTypes: '["ALL"]',
-  applicableFamilySituations: '["ALL"]',
-  applicableOccupations: '["ALL"]',
-});
-
 beforeAll(async () => {
-  await ensureLegacyTaskRows();
   await cleanUp();
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-reopen-${TS}@example.com` } });
-  await db.task.createMany({
-    data: [task('T06', 'Get a NZ SIM card', 98), task('T07', 'Open a NZ bank account', 95)],
-  });
-  await db.taskDependency.create({
-    data: { prerequisiteId: 'T06', dependentId: 'T07', dependencyType: 'HARD' },
-  });
 });
 
 afterAll(async () => {
@@ -79,7 +54,7 @@ describe('getRoadmap() completedAt and blockingTaskIds', () => {
     const t07 = await findTask('T07');
     expect(t06.completedAt).toBeNull();
     expect(t07.blockingTaskIds).toEqual(['T06']);
-    expect(t07.blockingTaskNames).toEqual(['Get a NZ SIM card']);
+    expect(t07.blockingTaskNames).toEqual([contentTask('T06')!.name]);
   });
 
   test('completed task carries the stored completedAt as ISO', async () => {

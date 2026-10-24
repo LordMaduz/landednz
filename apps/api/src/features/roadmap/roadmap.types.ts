@@ -13,6 +13,7 @@ export interface RoadmapTask {
   estimatedDuration: string;
   taskType: TaskType;
   consequenceLine: string;
+  retired: boolean;  // task retired from content: shown read-only, never in topThree
 }
 
 export interface RoadmapPhase {
@@ -63,10 +64,10 @@ export interface TaskDetailResponse {
   estimatedDuration: string;
   processingTime: string | null;
   governmentSourceUrl: string;
-  lastVerified: string | null;  // YYYY-MM-DD, from the KB's LAST_VERIFIED
-  taskType: TaskType;
+  lastVerified: string | null;  // YYYY-MM-DD, the task's oldest item `checked` date
+  taskType: TaskType;  // content has no paid tier: always FREE
 
-  // From TaskContentVariant for user's personaKey (fallback: solo_aewv)
+  // Content items that match the user's answers (itemsFor)
   consequenceLine: string;
   steps: string[];
   documentsRequired: string[];
@@ -76,4 +77,13 @@ export interface TaskDetailResponse {
   relatedTasks: { taskId: string; name: string; relationship: string }[];  // always [] in MVP
   professionalAdviceRequired: boolean;
   professionalAdviceNote: string | null;
+  contentVersion: string;
+  sources: Record<'why' | 'steps' | 'documents' | 'mistakes' | 'watchOuts' | 'cost' | 'advice', ItemSource[]>;
+}
+
+export interface ItemSource {
+  itemId: string;
+  title: string;
+  url: string;
+  checked: string;  // YYYY-MM-DD
 }

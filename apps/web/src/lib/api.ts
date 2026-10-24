@@ -187,6 +187,8 @@ export interface TaskDetailApiResponse {
   relatedTasks: { taskId: string; name: string; relationship: string }[];
   professionalAdviceRequired: boolean;
   professionalAdviceNote: string | null;
+  contentVersion?: string;
+  sources?: Record<string, { itemId: string; title: string; url: string; checked: string }[]>;
 }
 
 export async function getTaskDetail(taskId: string, token: string): Promise<TaskDetailApiResponse> {
