@@ -24,18 +24,20 @@ const keys = buildChunks(fixture).map((c) => c.chunkKey);
 
 const rows = () => db.knowledgeBaseChunk.findMany({ orderBy: { chunkKey: 'asc' } });
 
-beforeAll(() => {
-  useContent(fixture);
-});
+// Embeddings are mocked here, so under AI_MODE=live the file would label mock vectors 'live'
+// and its restore would overwrite a live-synced DB with mock embeddings: skip it.
+describe.skipIf(config.aiMode === 'live')('syncChunks', () => {
+  beforeAll(() => {
+    useContent(fixture);
+  });
 
-afterAll(async () => {
-  config.aiMode = 'mock';
-  await loadContent();
-  await syncChunks();
-  await db.$disconnect();
-}, 60_000);
+  afterAll(async () => {
+    config.aiMode = 'mock';
+    await loadContent();
+    await syncChunks();
+    await db.$disconnect();
+  }, 60_000);
 
-describe('syncChunks', () => {
   it('first sync embeds every chunk, deletes chunks not in the bundle and records the release', async () => {
     await db.knowledgeBaseChunk.updateMany({ data: { contentHash: null } }); // any rows left by other runs re-embed
     const result = await syncChunks();
