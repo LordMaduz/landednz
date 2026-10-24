@@ -10,7 +10,7 @@ Prerequisites: Node 24 (see `.nvmrc`), Docker (running), the [Supabase CLI](http
 
 ```sh
 make setup        # npm ci, Prisma client, Playwright browser, .env.local files from .env.example
-make dev          # Supabase → seed DB if empty → API on :3001 → web on :3000 (Ctrl-C stops)
+make dev          # Supabase → seed DB if empty → API on :3001 → web on :3000, then returns the prompt (`make logs`, `make stop`)
 ```
 
 `make dev` takes about 30 seconds on a warm Docker. Check it at <http://localhost:3001/health> (`"dbConnected":true`) and <http://localhost:3000>.
