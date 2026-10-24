@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
+import { SITE_URL } from "@/lib/site";
 
 const geist = Geist({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "LandedNZ",
   description: "Your settlement roadmap for New Zealand",
 };

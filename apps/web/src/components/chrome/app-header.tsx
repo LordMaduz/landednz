@@ -50,7 +50,7 @@ export function AppHeader({
   return (
     <header className="border-b border-hairline">
       <div className="container-page flex h-16 items-center gap-8 max-compact:gap-2">
-        <Brand href="/app" />
+        <Brand href="/app" compact />
         <nav aria-label="Main" className="flex gap-1">
           <Link href="/app" aria-current={active === "home" ? "page" : undefined} className={navLink}>
             Home

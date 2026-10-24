@@ -34,6 +34,8 @@
   --text-small: 13px;
   --text-small--line-height: 1.45;
 
+  --tracking-brand: -0.01em;
+
   --radius-control: 6px;
   --radius-surface: 10px;
 
@@ -42,11 +44,16 @@
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
   --container-page: 1120px;
+  --container-hero-title: 560px;
+  --container-hero-lede: 520px;
+  --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header, ≥1100 docked sheet */
   --breakpoint-narrow: 561px;
   --breakpoint-compact: 761px;
   --breakpoint-wide: 1100px;
+  /* Landing ≤960: hero and features stack */
+  --breakpoint-stack: 961px;
 }
 
 @theme inline {
@@ -120,6 +127,31 @@
   }
   .route-dot { height: 44px; display: flex; align-items: center; justify-content: center; }
   .route-dot-card { height: 72px; }
+
+  /* Inside an aurora hairline: the white surface, 1 px inside the 10 px radius */
+  .ai > * {
+    border-radius: calc(var(--radius-surface) - 1px);
+    background: #FFFFFF;
+  }
+
+  /* Landing preview rows (board .p-row): dot, name, meta on the rail line; meta under the name on phones */
+  .preview-row {
+    --line: var(--color-hairline);
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    column-gap: 16px;
+    align-items: center;
+    padding-block: 8px;
+    background: linear-gradient(var(--line), var(--line)) 7px 0 / 2px 100% no-repeat;
+  }
+  .preview-row.is-done { --line: var(--color-teal); }
+  .preview-row:last-child { background-size: 2px 50%; }
+  .preview-row > .wp { justify-self: center; }
+  @media (width < 561px) {
+    .preview-row { grid-template-columns: 16px minmax(0, 1fr); align-items: start; }
+    .preview-row > .wp { margin-top: 4px; }
+    .preview-row > :nth-child(3) { grid-column: 2; }
+  }
 
   .route-track {
     height: 16px;

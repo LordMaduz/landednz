@@ -12,10 +12,14 @@ const RULES: [string, RegExp][] = [
   ['inline style colour', /style=\{\{[^}]*(#[0-9a-fA-F]{3,8}|rgba?\(|hsla?\(|oklch\()/],
 ]
 
+// ImageResponse renders outside the page CSS, so the OG image can only take literal colours
+const EXEMPT = ['app/opengraph-image.tsx']
+
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap(name => {
     const path = join(dir, name)
     if (statSync(path).isDirectory()) return sourceFiles(path)
+    if (EXEMPT.includes(relative(SRC, path))) return []
     return /\.(ts|tsx)$/.test(name) && !/\.test\.(ts|tsx)$/.test(name) ? [path] : []
   })
 }
