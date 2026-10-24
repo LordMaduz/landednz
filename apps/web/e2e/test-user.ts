@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test'
 
-// Real local Supabase user shared by global setup, teardown and specs.
+// Real local Supabase user shared by teardown and specs.
 export const TEST_USER = {
   email: 'e2e-auth@example.com',
   password: 'TestPassword123!',
