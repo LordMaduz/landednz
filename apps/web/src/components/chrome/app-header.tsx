@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import Link from "next/link"
 import { Menu } from "@base-ui/react/menu"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+import { signOutAndLeave } from "@/lib/sign-out"
 import { Brand } from "./logo"
 
 const navLink =
@@ -39,13 +39,6 @@ export function AppHeader({
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)
   }, [onAsk, askDisabled])
-
-  async function signOut() {
-    await createClient().auth.signOut()
-    // Full reload on purpose: drops every in-memory store of the signed-out user
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.assign("/")
-  }
 
   return (
     <header className="border-b border-hairline">
@@ -87,7 +80,7 @@ export function AppHeader({
                   <Menu.Item render={<Link href="/settings" />} className={menuItem}>
                     Settings
                   </Menu.Item>
-                  <Menu.Item onClick={signOut} className={menuItem}>
+                  <Menu.Item onClick={signOutAndLeave} className={menuItem}>
                     Sign out
                   </Menu.Item>
                 </Menu.Popup>

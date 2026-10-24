@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
@@ -70,6 +70,8 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   const [askFor, setAskFor] = useState<{ taskId: string; n: number } | null>(() =>
     selectedTaskId && searchParams.get("ask") ? { taskId: selectedTaskId, n: 1 } : null,
   )
+  // Ask from a page with no task in view (Settings) opens the current task once the route loads
+  const askOnLoad = useRef(!selectedTaskId && !!searchParams.get("ask"))
 
   // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
   const load = useCallback(async (refetch = false) => {
@@ -81,6 +83,11 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
       const view = buildRouteView(roadmap, profile.arrivalDate)
       setState({ view, firstUse: view.doneCount === 0 })
+      if (askOnLoad.current && view.current) {
+        askOnLoad.current = false
+        setAskFor({ taskId: view.current.taskId, n: 1 })
+        router.replace(`/app/roadmap?task=${view.current.taskId}&ask=1`, { scroll: false })
+      }
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
       if (!refetch) setState("down")

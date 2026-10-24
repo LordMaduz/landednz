@@ -167,6 +167,12 @@ describe('RoadmapScreen', () => {
     expect(box).toHaveFocus()
   })
 
+  it('?ask=1 with no task (Ask from Settings): opens the current task', async () => {
+    params = new URLSearchParams('ask=1')
+    render(<RoadmapScreen user={user} />)
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/app/roadmap?task=T08&ask=1', { scroll: false }))
+  })
+
   it('?task=T08&ask=1 (Ask from Home): the ask input is focused', async () => {
     params = new URLSearchParams('task=T08&ask=1')
     render(<RoadmapScreen user={user} />)
