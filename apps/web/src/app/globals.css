@@ -53,6 +53,7 @@
   --container-legal: 680px;
   --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
   --grid-template-columns-signin: minmax(0, 400px) minmax(0, 440px);
+  --grid-template-columns-signin-solo: minmax(0, 400px);
   --grid-template-columns-home: minmax(0, 1fr) 320px;
   --grid-template-columns-settings: minmax(0, 280px) minmax(0, 560px);
 

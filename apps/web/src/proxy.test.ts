@@ -68,6 +68,18 @@ describe('proxy', () => {
     const res = await proxy(new NextRequest(`${origin}/`))
     expect(getRedirectUrl(res)).toBeNull()
   })
+
+  it('sends a signed-in user on / to /app', async () => {
+    user = { email: 'a@b.nz' }
+    const req = new NextRequest(`${origin}/`)
+    req.cookies.set('sb-127-auth-token', 'session')
+    expect(getRedirectUrl(await proxy(req))).toBe(`${origin}/app`)
+  })
+
+  it('skips the auth check on / without a session cookie', async () => {
+    user = { email: 'a@b.nz' }
+    expect(getRedirectUrl(await proxy(new NextRequest(`${origin}/`)))).toBeNull()
+  })
 })
 
 describe('proxy on /onboarding/preview (Review Focus 2)', () => {
@@ -95,11 +107,11 @@ describe('proxy on /onboarding/preview (Review Focus 2)', () => {
 })
 
 describe('proxy matcher', () => {
-  it.each(['/', '/onboarding', '/privacy', '/terms'])('skips public page %s', (path) => {
+  it.each(['/onboarding', '/privacy', '/terms'])('skips public page %s', (path) => {
     expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(false)
   })
 
-  it.each(['/app', '/app/roadmap', '/settings', '/signin', '/onboarding/preview'])('runs on %s', (path) => {
+  it.each(['/', '/app','/app/roadmap', '/settings', '/signin', '/onboarding/preview'])('runs on %s', (path) => {
     expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(true)
   })
 })

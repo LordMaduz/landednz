@@ -139,7 +139,13 @@ function Saving({ answers }: { answers: Answers }) {
 // With onboarding answers the page saves them; without, it is a plain sign-in
 export function SignIn({ answers }: { answers: Answers | null }) {
   return (
-    <main className="container-page grid grid-cols-signin justify-between gap-16 pt-16 pb-24 max-split:grid-cols-1 max-split:gap-12 max-split:pt-8">
+    // Plain sign-in has no side panel, so the lone form is centred instead of hugging the left edge
+    <main
+      className={cn(
+        "container-page grid gap-16 pt-16 pb-24 max-split:grid-cols-1 max-split:gap-12 max-split:pt-8",
+        answers ? "grid-cols-signin justify-between" : "grid-cols-signin-solo justify-center",
+      )}
+    >
       <div className="flex flex-col gap-6">
         {answers && (
           <Link href="/onboarding/preview" className={cn(buttonVariants({ variant: "ghost" }), "-ml-4 self-start")}>

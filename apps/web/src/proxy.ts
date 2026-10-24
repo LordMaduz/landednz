@@ -14,6 +14,14 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     return res
   }
 
+  // Landing: only a request carrying a Supabase session cookie pays the auth round trip (LCP).
+  if (
+    request.nextUrl.pathname === '/' &&
+    !request.cookies.getAll().some((c) => /^sb-.+-auth-token/.test(c.name))
+  ) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -60,7 +68,8 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     return redirectTo(url)
   }
 
-  if (pathname === '/signin' && user) {
+  // /app sends a user without a roadmap on to onboarding step 1
+  if ((pathname === '/signin' || pathname === '/') && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/app'
     url.search = ''
@@ -71,7 +80,6 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  // Signed-in areas and sign-in only: public pages (landing, onboarding, legal) skip the
-  // Supabase round trip, which kept the landing page's LCP waiting on auth.
-  matcher: ['/app/:path*', '/settings/:path*', '/signin', '/onboarding/preview'],
+  // Other public pages (onboarding, legal) skip the Supabase round trip, which kept LCP waiting on auth.
+  matcher: ['/', '/app/:path*', '/settings/:path*', '/signin', '/onboarding/preview'],
 }
