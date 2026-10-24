@@ -10,7 +10,10 @@ export const conditionSchema: z.ZodType<Condition> = z.lazy(() =>
     z.literal('all'),
     z.strictObject({ any: z.array(conditionSchema) }),
     z.strictObject({ not: conditionSchema }),
-    z.record(z.string(), z.array(z.string())),
+    z.record(
+      z.string().refine((k) => k !== 'any' && k !== 'not'),
+      z.array(z.string()),
+    ),
   ]),
 );
 

@@ -17,6 +17,8 @@ describe('taskSchema', () => {
     expect(r.success).toBe(true);
   });
   test.each([
+    ['any as dimension leaf', { ...task, appliesTo: { any: ['X'] } }],
+    ['not as dimension leaf', { ...task, appliesTo: { not: ['X'] } }],
     ['item without source', { ...task, steps: [{ ...item, source: undefined }] }],
     ['bad checked date', { ...task, steps: [{ ...item, checked: '2026-13-01' }] }],
     ['phase 6', { ...task, phase: 6 }],
