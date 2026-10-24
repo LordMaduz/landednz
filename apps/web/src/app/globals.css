@@ -49,8 +49,10 @@
   --container-onboarding: 608px;
   --container-preview: 768px;
   --container-date: 280px;
+  --container-lede: 640px;
   --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
   --grid-template-columns-signin: minmax(0, 400px) minmax(0, 440px);
+  --grid-template-columns-home: minmax(0, 1fr) 320px;
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header, ≥1100 docked sheet */
   --breakpoint-narrow: 561px;
@@ -58,7 +60,7 @@
   --breakpoint-wide: 1100px;
   /* Landing ≤960: hero and features stack */
   --breakpoint-stack: 961px;
-  /* Sign in ≤860: the aside drops under the form */
+  /* Sign in and Home ≤860: the aside drops under the main column */
   --breakpoint-split: 861px;
 }
 

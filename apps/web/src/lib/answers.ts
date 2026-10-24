@@ -67,7 +67,7 @@ export const QUESTIONS = [
 
 export const DATE_QUESTION = { key: 'arrivalDate', title: 'When do you land?' } as const
 
-const label = (key: ChoiceKey, value: string) =>
+export const answerLabel = (key: ChoiceKey, value: string) =>
   QUESTIONS.find(q => q.key === key)!.options.find(([v]) => v === value)?.[1] ?? ''
 
 // A real calendar date in YYYY-MM-DD (rejects 2027-02-30)
@@ -120,10 +120,10 @@ const WHO: Record<FamilySituation, string> = {
 // "Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027"
 export function answersSummary(a: Answers): string {
   const parts = [
-    label('visaType', a.visaType),
-    a.city === 'OTHER' ? '' : label('city', a.city),
+    answerLabel('visaType', a.visaType),
+    a.city === 'OTHER' ? '' : answerLabel('city', a.city),
     WHO[a.familySituation],
-    label('occupation', a.occupation).toLowerCase(),
+    answerLabel('occupation', a.occupation).toLowerCase(),
     `landing ${longDay(a.arrivalDate)}`,
   ]
   const text = parts.filter(Boolean).join(', ')

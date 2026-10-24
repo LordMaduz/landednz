@@ -1,51 +1,26 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { connection } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api";
-import { SignOutButton } from "./sign-out-button";
+import type { Metadata } from "next"
+import { Suspense } from "react"
+import { redirect } from "next/navigation"
+import { connection } from "next/server"
+import Loading from "@/app/app/loading"
+import { HomeScreen } from "@/components/workspace/home-view"
+import { firstName } from "@/lib/home-view"
+import { createClient } from "@/lib/supabase/server"
+import { userBadge } from "@/lib/user-badge"
 
-export default function AppPage() {
-  return (
-    <main>
-      <h1>Your roadmap</h1>
-      <Suspense fallback={<p>Loading…</p>}>
-        <Account />
-      </Suspense>
-    </main>
-  );
+export const metadata: Metadata = { title: "Home" }
+
+async function Home() {
+  await connection()
+  const { data: { user } } = await (await createClient()).auth.getUser()
+  if (!user) redirect("/signin?redirect=%2Fapp")
+  return <HomeScreen user={userBadge(user)} firstName={firstName(user)} />
 }
 
-async function Account() {
-  await connection();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/signin?redirect=%2Fapp");
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  let profile: GetProfileResponse | null = null;
-  try {
-    profile = await getOnboardingProfile(session!.access_token);
-  } catch (err) {
-    if ((err as { status?: number }).status !== 404) throw err;
-  }
-
+export default function HomePage() {
   return (
-    <>
-      <p>Signed in as {user.email}</p>
-      {profile ? (
-        <p>
-          Profile: {profile.visaType}, {profile.city}
-        </p>
-      ) : (
-        <p>No profile yet</p>
-      )}
-      <SignOutButton />
-    </>
-  );
+    <Suspense fallback={<Loading />}>
+      <Home />
+    </Suspense>
+  )
 }

@@ -166,4 +166,11 @@ describe('RoadmapScreen', () => {
     fireEvent.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ }))
     expect(box).toHaveFocus()
   })
+
+  it('?task=T08&ask=1 (Ask from Home): the ask input is focused', async () => {
+    params = new URLSearchParams('task=T08&ask=1')
+    render(<RoadmapScreen user={user} />)
+    const box = await screen.findByRole('textbox', { name: 'Ask about your IRD number' })
+    await vi.waitFor(() => expect(box).toHaveFocus())
+  })
 })

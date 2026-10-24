@@ -62,10 +62,14 @@ type Loaded = { view: RouteView; firstUse: boolean }
 // Fetches the roadmap with the browser session; ?task=<id> is the open task, shown in the sheet
 export function RoadmapScreen({ user }: { user: { name: string; initials: string } }) {
   const router = useRouter()
-  const selectedTaskId = useSearchParams().get("task") ?? undefined
+  const searchParams = useSearchParams()
+  const selectedTaskId = searchParams.get("task") ?? undefined
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
-  // The header's Ask: which sheet's input to focus, and a count so a repeat press focuses again
-  const [askFor, setAskFor] = useState<{ taskId: string; n: number } | null>(null)
+  // The header's Ask: which sheet's input to focus, and a count so a repeat press focuses again.
+  // Home's Ask lands here with ?ask=1.
+  const [askFor, setAskFor] = useState<{ taskId: string; n: number } | null>(() =>
+    selectedTaskId && searchParams.get("ask") ? { taskId: selectedTaskId, n: 1 } : null,
+  )
 
   // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
   const load = useCallback(async (refetch = false) => {
