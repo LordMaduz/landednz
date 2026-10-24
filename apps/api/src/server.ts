@@ -12,6 +12,7 @@ import { registerChatRoutes } from './features/chat/routes.js'
 import { registerAccountRoutes } from './features/account/account.route.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
 import { registerRateLimit } from './shared/rate-limit.js'
+import { loadContent } from './content/index.js'
 
 export async function buildApp() {
   const app = Fastify({ logger: false })
@@ -37,6 +38,13 @@ export async function buildApp() {
 }
 
 async function start() {
+  try {
+    await loadContent()
+  } catch (err) {
+    logger.error({ err }, 'Failed to load content')
+    process.exit(1)
+  }
+
   const app = await buildApp()
 
   // Graceful shutdown — disconnect Prisma before exit to avoid connection pool leak on Railway.
