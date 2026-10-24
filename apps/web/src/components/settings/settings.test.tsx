@@ -32,7 +32,6 @@ const profile = {
   familySituation: 'SOLO',
   occupation: 'TECHNOLOGY',
   arrivalDate: '2026-10-21',
-  personaKey: 'solo_aewv',
 } as const
 const user = { name: 'Priya Sharma', email: 'priya@example.com', initials: 'PS', google: true }
 

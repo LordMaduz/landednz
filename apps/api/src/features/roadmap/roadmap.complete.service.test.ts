@@ -53,7 +53,6 @@ beforeAll(async () => {
       familySituation: 'SOLO',
       occupation: 'TECHNOLOGY',
       arrivalDate: new Date(ARRIVAL_DATE),
-      personaKey: 'solo_aewv',
     },
   });
 });

@@ -27,7 +27,6 @@ const profile = {
   familySituation: 'SOLO',
   occupation: 'TECHNOLOGY',
   arrivalDate: '2026-10-21',
-  personaKey: 'AEWV_SOLO',
 } as const
 const DAY_3 = new Date('2026-10-23T15:00:00+13:00')
 const user = { name: 'Priya Sharma', initials: 'PS' }

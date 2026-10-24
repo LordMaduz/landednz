@@ -13,6 +13,7 @@ import { registerAccountRoutes } from './features/account/account.route.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
 import { registerRateLimit } from './shared/rate-limit.js'
 import { loadContent } from './content/index.js'
+import { checkStoredTaskIds } from './content/integrity.js'
 
 export async function buildApp() {
   const app = Fastify({ logger: false })
@@ -44,6 +45,12 @@ async function start() {
     logger.error({ err }, 'Failed to load content')
     process.exit(1)
   }
+
+  // Never blocks start-up: unknown ids are logged as warnings by the check itself
+  checkStoredTaskIds().then(
+    ({ unknown, retired }) => logger.info({ unknown: unknown.length, retired: retired.length }, 'Stored task ids checked'),
+    (err) => logger.error({ err }, 'Stored task id check failed'),
+  )
 
   const app = await buildApp()
 

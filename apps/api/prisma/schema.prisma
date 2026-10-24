@@ -27,65 +27,9 @@ model UserProfile {
   familySituation FamilySituation
   occupation      Occupation
   arrivalDate     DateTime
-  personaKey      String
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Task {
-  id                         String               @id
-  name                       String
-  phase                      Int
-  basePriority               Int
-  estimatedDuration          String
-  processingTime             String?
-  governmentSourceUrl        String
-  taskType                   TaskType             @default(FREE)
-  contentVersion             Int                  @default(1)
-  applicableVisaTypes        String
-  applicableFamilySituations String
-  applicableOccupations      String
-  lastVerifiedAt             DateTime?
-  createdAt                  DateTime             @default(now())
-  updatedAt                  DateTime             @updatedAt
-  contentVariants            TaskContentVariant[]
-  dependencies               TaskDependency[]     @relation("DependentTask")
-  dependents                 TaskDependency[]     @relation("PrerequisiteTask")
-  roadmapEntries             UserRoadmapEntry[]
-}
-
-model TaskDependency {
-  id             String         @id @default(uuid())
-  prerequisiteId String
-  dependentId    String
-  dependencyType DependencyType
-  dependent      Task           @relation("DependentTask", fields: [dependentId], references: [id])
-  prerequisite   Task           @relation("PrerequisiteTask", fields: [prerequisiteId], references: [id])
-
-  @@unique([prerequisiteId, dependentId])
-}
-
-model TaskContentVariant {
-  id                         String   @id @default(uuid())
-  taskId                     String
-  personaKey                 String
-  consequenceLine            String
-  steps                      String
-  documentsRequired          String
-  commonMistakes             String
-  watchOuts                  String   @default("[]")
-  cost                       String?
-  professionalAdviceRequired Boolean  @default(false)
-  professionalAdviceNote     String?
-  sourceUrl                  String
-  contentVersion             Int      @default(1)
-  aiPersonalisationPrompt    String?
-  createdAt                  DateTime @default(now())
-  updatedAt                  DateTime @updatedAt
-  task                       Task     @relation(fields: [taskId], references: [id])
-
-  @@unique([taskId, personaKey])
 }
 
 model UserRoadmapEntry {
@@ -101,9 +45,6 @@ model UserRoadmapEntry {
   contentVersion   String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  // No FK in the database since content_platform_additive (taskId is a content task id);
-  // relation kept for legacy reads until Task is dropped
-  task             Task              @relation(fields: [taskId], references: [id])
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, taskId])
@@ -113,7 +54,6 @@ model KnowledgeBaseChunk {
   id             String    @id @default(uuid())
   chunkKey       String    @unique
   taskId         String?
-  personaKey     String?
   chunkType      ChunkType
   content        String
   sourceUrl      String
@@ -126,13 +66,6 @@ model KnowledgeBaseChunk {
   embeddingMode  String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-}
-
-model KnowledgeBaseVersion {
-  id             Int      @id @default(1)
-  currentVersion Int      @default(1)
-  lastUpdated    DateTime @default(now())
-  updatedBy      String?
 }
 
 model ChatSession {
@@ -210,16 +143,6 @@ enum Occupation {
   TRADES
   OTHER_PROFESSIONAL
   SEEKING_WORK
-}
-
-enum TaskType {
-  FREE
-  PREMIUM
-}
-
-enum DependencyType {
-  HARD
-  SOFT
 }
 
 enum TaskStatus {

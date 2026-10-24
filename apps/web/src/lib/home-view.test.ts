@@ -12,7 +12,6 @@ const profile: GetProfileResponse = {
   familySituation: 'SOLO',
   occupation: 'TECHNOLOGY',
   arrivalDate: ARRIVAL,
-  personaKey: 'AEWV_SOLO',
 }
 const user = { firstName: 'Priya' }
 // 15:00 NZ (NZDT, UTC+13) on 23 Oct = day 3

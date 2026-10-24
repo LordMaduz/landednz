@@ -1,4 +1,6 @@
-import type { TaskStatus, TaskType } from '../../generated/prisma/enums.js';
+import type { TaskStatus } from '../../generated/prisma/enums.js';
+
+type TaskType = 'FREE' | 'PREMIUM'; // API shape only; the enum left the database with the legacy Task table
 
 export interface RoadmapTask {
   taskId: string;

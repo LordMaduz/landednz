@@ -10,7 +10,7 @@ import { mockEmbedding } from './mock.js';
 let client: OpenAI | undefined;
 
 // Generate a 1536-dimension embedding vector for the given text.
-// Used by generate-embeddings.ts (script) and retrieveChunks() (RAG pipeline).
+// Used by sync-chunks.ts and retrieveChunks() (RAG pipeline).
 export async function generateEmbedding(text: string): Promise<number[]> {
   if (config.aiMode === 'mock') return mockEmbedding(text);
 

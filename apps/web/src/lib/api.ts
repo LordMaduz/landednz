@@ -30,7 +30,6 @@ export interface GetProfileResponse {
   familySituation: FamilySituation
   occupation: Occupation
   arrivalDate: string // ISO date
-  personaKey: string
 }
 
 // Public: the roadmap the five answers would produce, before sign-up

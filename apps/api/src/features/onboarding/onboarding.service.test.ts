@@ -49,7 +49,6 @@ describe('createProfile()', () => {
       });
 
       expect(response.roadmapGenerated).toBe(true);
-      expect(response.personaKey).toBe(''); // column dropped in Task 8
       expect(response.profileId).toBeTruthy();
 
       const profile = await db.userProfile.findUnique({ where: { userId: TEST_USER_ID } });
@@ -58,7 +57,6 @@ describe('createProfile()', () => {
       expect(profile!.city).toBe('AUCKLAND');
       expect(profile!.familySituation).toBe('SOLO');
       expect(profile!.occupation).toBe('TECHNOLOGY');
-      expect(profile!.personaKey).toBe('');
       expect(profile!.arrivalDate).toEqual(new Date(ARRIVAL_DATE));
     });
   });

@@ -7,7 +7,6 @@ import { AppError } from '../../shared/errors.js';
 import { contentVersion } from '../../content/index.js';
 import { buildRoadmapEntries } from '../roadmap/roadmap.build.js';
 import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
-import type { PersonaKey } from '../../shared/types.js';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -40,7 +39,6 @@ export async function createProfile(
   }
 
   const arrivalDate = new Date(request.arrivalDate);
-  const personaKey = ''; // legacy column, dropped in Task 8
 
   const profile = await db.userProfile.create({
     data: {
@@ -50,7 +48,6 @@ export async function createProfile(
       familySituation: request.familySituation,
       occupation: request.occupation,
       arrivalDate,
-      personaKey,
     },
   });
 
@@ -64,7 +61,6 @@ export async function createProfile(
 
   return {
     profileId: profile.id,
-    personaKey,
     roadmapGenerated: true,
   };
 }
@@ -86,7 +82,6 @@ export async function updateProfileAndRegenerateRoadmap(
   }
 
   const arrivalDate = new Date(request.arrivalDate);
-  const personaKey = ''; // legacy column, dropped in Task 8
 
   // Use transaction to ensure atomicity
   return await db.$transaction(async (tx) => {
@@ -99,7 +94,6 @@ export async function updateProfileAndRegenerateRoadmap(
         familySituation: request.familySituation,
         occupation: request.occupation,
         arrivalDate,
-        personaKey,
         updatedAt: new Date()
       }
     });
@@ -136,7 +130,6 @@ export async function updateProfileAndRegenerateRoadmap(
 
     return {
       profileId: updatedProfile.id,
-      personaKey,
       roadmapGenerated: true,
       entriesCreated: roadmapEntries.length
     };
@@ -161,6 +154,5 @@ export async function getUserProfile(userId: string): Promise<GetProfileResponse
     familySituation: profile.familySituation,
     occupation: profile.occupation,
     arrivalDate: profile.arrivalDate.toISOString().split('T')[0], // Convert to ISO date string
-    personaKey: profile.personaKey as PersonaKey
   };
 }

@@ -8,7 +8,6 @@ export type {
   Occupation,
   TaskStatus,
   DependencyType,
-  PersonaKey,
   ChatEntryPoint,
   ApiError,
   AuthVerifyResponse,

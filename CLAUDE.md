@@ -12,7 +12,7 @@ Current work: R0 rebuild — spec `docs/superpowers/specs/2026-10-24-r0-foundati
 
 ## Commands
 
-Use `make` targets (run `make` to list): `make setup`, `make dev`, `make check`, `make test`, `make test-e2e`, `make docker-api`, `make db-reset`, `make user EMAIL=… PASSWORD=…`. They wrap the npm scripts in the root and workspace `package.json`; CI calls npm directly.
+Use `make` targets (run `make` to list): `make setup`, `make dev`, `make check`, `make test`, `make test-e2e`, `make docker-api`, `make content`, `make db-reset`, `make kb-sync-live`, `make user EMAIL=… PASSWORD=…`. They wrap the npm scripts in the root and workspace `package.json`; CI calls npm directly.
 
 ## Workflow
 
@@ -33,7 +33,7 @@ Commits: Conventional Commits with scope — `feat(chat):`, `fix(web):`, `chore(
 - **SSE in the browser uses `fetch` + `ReadableStream`**, not `EventSource` (it cannot send `Authorization`).
 - **`app.inject()` buffers SSE** — it cannot prove progressive delivery; use `fetch` against a running server.
 - **Run `npm run prisma:generate -w @landednz/api` after every install** (`make setup` does) — no postinstall hook, prod installs lack the CLI.
-- **Bootstrap only embeds chunks without an embedding**: to swap mock embeddings for real ones, `make db-reset-live`.
+- **`content:build` must pass before the API starts or the image builds**: unverified content fails it unless `CONTENT_ALLOW_UNVERIFIED=true` (local only; Docker needs the build arg). Chunks are synced from the bundle; `make kb-sync-live` re-embeds them with real embeddings. A mock test run re-embeds chunks as mock, so re-run `make kb-sync-live` after it when you need live embeddings.
 - **Next 16 + TS 7**: `tsc` does not see Next's generated global `LayoutProps`/`PageProps` — type props explicitly. `typecheck` runs `next typegen` first.
 - **`cacheComponents` is on**: server components reading per-request data (Supabase session) go inside `<Suspense>` and call `await connection()` first.
 - **npm 11 skips dependency install scripts** (esbuild, prisma engines, sharp): builds, tests and the Docker image work without them.

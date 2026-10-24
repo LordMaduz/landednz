@@ -48,7 +48,6 @@ export function registerOnboardingRoutes(app: FastifyInstance): void {
 
       const response: CreateProfileResponse = {
         profileId: result.profileId,
-        personaKey: result.personaKey,
         roadmapGenerated: result.roadmapGenerated,
       };
 
@@ -90,7 +89,6 @@ export function registerOnboardingRoutes(app: FastifyInstance): void {
 
       const response = {
         profileId: result.profileId,
-        personaKey: result.personaKey,
         roadmapRegenerated: true,
         entriesCreated: result.entriesCreated
       };
