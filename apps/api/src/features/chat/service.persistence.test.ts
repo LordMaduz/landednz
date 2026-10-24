@@ -16,7 +16,7 @@ import { buildApp } from '../../server.js';
 
 const TS = Date.now();
 let TEST_EMAIL: string;
-const TEST_TASK_ID = 'TEST-P15'; // Test-specific ID — never conflicts with canonical task IDs
+const TEST_TASK_ID = 'T08'; // IRD Number Application in the content bundle
 let TEST_USER_ID: string;
 let TEST_JWT_TOKEN: string;
 let TEST_SESSION_ID: string;
@@ -42,8 +42,6 @@ beforeAll(async () => {
   await db.subscription.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: TEST_TASK_ID } });
-  await db.task.deleteMany({ where: { id: TEST_TASK_ID } });
 
   // Create user in app DB
   await db.user.create({
@@ -75,34 +73,7 @@ beforeAll(async () => {
     },
   });
 
-  // Create test task + variant so kbChunks are populated when session fetches task content
-  await db.task.create({
-    data: {
-      id: TEST_TASK_ID,
-      name: 'Test Task for AC-4-15 Persistence',
-      phase: 1,
-      basePriority: 50,
-      estimatedDuration: '15 minutes',
-      governmentSourceUrl: 'https://example.govt.nz',
-      applicableVisaTypes: '["ALL"]',
-      applicableFamilySituations: '["ALL"]',
-      applicableOccupations: '["ALL"]',
-    },
-  });
-
-  await db.taskContentVariant.create({
-    data: {
-      taskId: TEST_TASK_ID,
-      personaKey: 'constrained_couple',
-      consequenceLine: 'Without this, you cannot proceed.',
-      steps: '["Step 1", "Step 2"]',
-      documentsRequired: '["Passport"]',
-      commonMistakes: '["Missing signature"]',
-      sourceUrl: 'https://example.govt.nz',
-    },
-  });
-
-  // Chat session with test task context so kbChunks are populated from TaskContentVariants
+  // Chat session with task context
   const session = await db.chatSession.create({
     data: {
       userId: TEST_USER_ID,
@@ -121,8 +92,6 @@ afterAll(async () => {
   await db.subscription.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
-  await db.taskContentVariant.deleteMany({ where: { taskId: TEST_TASK_ID } });
-  await db.task.deleteMany({ where: { id: TEST_TASK_ID } });
 
   await deleteSupabaseTestUser();
 
@@ -175,15 +144,15 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
     expect(chunks.length).toBeGreaterThanOrEqual(3);
     expect(chunks.length).toBeLessThanOrEqual(5);
 
-    // Phase 5: real CHUNK_<taskId>_<personaKey> format from semantic search (not test task)
+    // CHUNK_<taskId>_<general | condition hash> keys synced from the content bundle
     chunks.forEach(key => {
       expect(key).toMatch(/^CHUNK_T\d+_/);
       expect(typeof key).toBe('string');
       expect(key.length).toBeGreaterThan(10);
     });
 
-    // Should contain real KB chunks for "bank account" query — likely T01 or T08
-    console.log('Retrieved chunks from RAG:', chunks);
+    expect(assistantMessage!.contentVersion).toMatch(/^[0-9a-f]{12}$/);
+    expect(JSON.parse(assistantMessage!.usedItemIds as string).length).toBeGreaterThan(0);
   }, 30000);
 
   test('AC-4-15: guardrailFlags populated with CRISIS_SIGNAL when triggered', async () => {

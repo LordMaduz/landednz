@@ -2,7 +2,7 @@
 # Requires Node 24 (.nvmrc), Docker and the Supabase CLI.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env content dev logs stop db-bootstrap db-reset db-reset-live user typecheck lint test test-e2e lighthouse build check docker-api
+.PHONY: help setup env content dev logs stop db-bootstrap db-reset kb-sync-live user typecheck lint test test-e2e lighthouse build check docker-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
@@ -31,16 +31,14 @@ stop: ## Stop web (:3000), API (:3001) and Supabase (data kept)
 	@pids=$$(lsof -ti tcp:3000 -ti tcp:3001 -sTCP:LISTEN); [ -z "$$pids" ] || { kill $$pids; kill -CONT $$pids 2>/dev/null; echo "stopped web/API ($$pids)"; }
 	supabase stop
 
-db-bootstrap: ## Migrate, seed the KB, mock embeddings, vector index
+db-bootstrap: ## Migrate, sync KB chunks from the content bundle, vector index
 	npm run db:bootstrap -w @landednz/api
 
 db-reset: ## Wipe the local DB and bootstrap again (destroys local data)
 	supabase db reset
 	npm run db:bootstrap -w @landednz/api
 
-# Bootstrap only embeds chunks that have none, so real embeddings need an empty DB.
-db-reset-live: ## Wipe the local DB, bootstrap with real OpenAI embeddings (needs both API keys)
-	supabase db reset
+kb-sync-live: ## Re-embed the KB chunks with real OpenAI embeddings (needs both API keys)
 	AI_MODE=live npm run db:bootstrap -w @landednz/api
 
 user: ## Create a confirmed local sign-in user: make user EMAIL=you@example.com PASSWORD=secret123

@@ -58,6 +58,7 @@ export async function loadContent(src: ContentSource = new FileContentSource()):
   return state;
 }
 
+export const currentBundle = (): Bundle => current();
 export const contentVersion = (): string => current().version;
 export const tasks = (): ResolvedTask[] => current().tasks.filter((t) => !t.retired);
 export const task = (id: string): ResolvedTask | undefined => current().tasks.find((t) => t.id === id);

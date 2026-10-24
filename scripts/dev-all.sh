@@ -18,8 +18,8 @@ done
 supabase start
 npm run prisma:generate -w @landednz/api
 
-# Fails before the first migration (no "Task" table) — treated as empty.
-count=$(docker exec supabase_db_landednz psql -U postgres -tAc 'SELECT count(*) FROM "Task"' 2>/dev/null || echo 0)
+# Fails before the first migration (no "KnowledgeBaseChunk" table) — treated as empty.
+count=$(docker exec supabase_db_landednz psql -U postgres -tAc 'SELECT count(*) FROM "KnowledgeBaseChunk"' 2>/dev/null || echo 0)
 if [[ $count == 0 ]]; then
   npm run db:bootstrap -w @landednz/api
 fi
