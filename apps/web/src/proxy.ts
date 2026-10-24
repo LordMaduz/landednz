@@ -1,9 +1,19 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
+import { ANSWERS_COOKIE, decodeAnswers } from '@/lib/answers'
 
 const PROTECTED_PATHS = ['/app', '/settings']
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
+  // The preview needs fresh, valid answers; stale or tampered ones are cleared (Review Focus 2).
+  // Public page: no Supabase round trip.
+  if (request.nextUrl.pathname === '/onboarding/preview') {
+    if (decodeAnswers(request.cookies.get(ANSWERS_COOKIE)?.value)) return NextResponse.next()
+    const res = NextResponse.redirect(new URL('/onboarding?step=1', request.url))
+    res.cookies.set(ANSWERS_COOKIE, '', { path: '/', maxAge: 0 })
+    return res
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -63,5 +73,5 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 export const config = {
   // Signed-in areas and sign-in only: public pages (landing, onboarding, legal) skip the
   // Supabase round trip, which kept the landing page's LCP waiting on auth.
-  matcher: ['/app/:path*', '/settings/:path*', '/signin'],
+  matcher: ['/app/:path*', '/settings/:path*', '/signin', '/onboarding/preview'],
 }

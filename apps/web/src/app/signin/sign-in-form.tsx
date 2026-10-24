@@ -31,8 +31,9 @@ export function SignInForm() {
       method: "POST",
       headers: { Authorization: `Bearer ${data.session.access_token}` },
     }).catch(() => {});
-    // Full navigation so proxy.ts sees the new session cookie.
-    window.location.assign(redirectTo);
+    // Full navigation so the server sees the new session cookie; /auth/complete saves any onboarding answers.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- route handler, needs a full request
+    window.location.assign(`/auth/complete?redirect=${encodeURIComponent(redirectTo)}`);
   }
 
   async function signInWithGoogle() {

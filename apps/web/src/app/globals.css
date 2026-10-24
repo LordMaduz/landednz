@@ -46,6 +46,9 @@
   --container-page: 1120px;
   --container-hero-title: 560px;
   --container-hero-lede: 520px;
+  --container-onboarding: 608px;
+  --container-preview: 768px;
+  --container-date: 280px;
   --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header, ≥1100 docked sheet */

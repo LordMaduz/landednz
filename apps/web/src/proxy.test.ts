@@ -24,6 +24,7 @@ vi.mock('@supabase/ssr', () => ({
 }))
 
 const { proxy, config } = await import('./proxy')
+const { encodeAnswers } = await import('./lib/answers')
 const origin = 'http://localhost:3000'
 
 describe('proxy', () => {
@@ -69,12 +70,36 @@ describe('proxy', () => {
   })
 })
 
+describe('proxy on /onboarding/preview (Review Focus 2)', () => {
+  const priya = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2027-01-14' } as const
+  const preview = (cookie?: string) => {
+    const req = new NextRequest(`${origin}/onboarding/preview`)
+    if (cookie !== undefined) req.cookies.set('lnz_answers', cookie)
+    return proxy(req)
+  }
+
+  it('passes fresh, valid answers through', async () => {
+    const res = await preview(encodeAnswers(priya))
+    expect(getRedirectUrl(res)).toBeNull()
+  })
+
+  it.each([
+    ['missing', undefined],
+    ['tampered', 'garbage'],
+    ['stale', Buffer.from(JSON.stringify({ ...priya, savedAt: Date.now() - 3601_000 })).toString('base64url')],
+  ])('%s answers → step 1 with the cookie cleared', async (_name, cookie) => {
+    const res = await preview(cookie)
+    expect(getRedirectUrl(res)).toBe(`${origin}/onboarding?step=1`)
+    expect(res.headers.get('set-cookie')).toMatch(/^lnz_answers=;.*Max-Age=0/)
+  })
+})
+
 describe('proxy matcher', () => {
-  it.each(['/', '/onboarding', '/onboarding/preview', '/privacy', '/terms'])('skips public page %s', (path) => {
+  it.each(['/', '/onboarding', '/privacy', '/terms'])('skips public page %s', (path) => {
     expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(false)
   })
 
-  it.each(['/app', '/app/roadmap', '/settings', '/signin'])('runs on %s', (path) => {
+  it.each(['/app', '/app/roadmap', '/settings', '/signin', '/onboarding/preview'])('runs on %s', (path) => {
     expect(unstable_doesMiddlewareMatch({ config, url: `${origin}${path}` })).toBe(true)
   })
 })

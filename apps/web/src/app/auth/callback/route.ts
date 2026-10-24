@@ -28,5 +28,8 @@ export async function GET(request: NextRequest) {
     // Non-fatal: the auth middleware on protected API routes also creates the user
   }
 
-  return NextResponse.redirect(new URL(redirectTo, request.url));
+  // /auth/complete saves any onboarding answers, then goes on to redirectTo
+  const complete = new URL("/auth/complete", request.url);
+  complete.searchParams.set("redirect", redirectTo);
+  return NextResponse.redirect(complete);
 }
