@@ -64,8 +64,12 @@ model KnowledgeBaseChunk {
   itemIds        String?
   sourceIds      String?
   embeddingMode  String?
+  embedding      Unsupported("vector(1536)")?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  // ivfflat (vector_cosine_ops) is created by scripts/create-vector-index.ts; declared so migrate diff keeps it
+  @@index([embedding], map: "kb_chunk_embedding_ivfflat")
 }
 
 model ChatSession {
