@@ -50,6 +50,7 @@
   --container-preview: 768px;
   --container-date: 280px;
   --container-lede: 640px;
+  --container-legal: 680px;
   --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
   --grid-template-columns-signin: minmax(0, 400px) minmax(0, 440px);
   --grid-template-columns-home: minmax(0, 1fr) 320px;
@@ -245,6 +246,13 @@
   .md ul { list-style: disc; }
   .md ol { list-style: decimal; }
   .md strong { font-weight: 600; }
+
+  /* Legal pages (Legal.dc.html): sections 48 apart (16 gap + 32 above each h2), 16 inside */
+  .legal { width: 100%; max-width: var(--container-legal); margin-inline: auto; padding-inline: 24px; padding-top: 64px; padding-bottom: 96px; display: flex; flex-direction: column; gap: 16px; }
+  .legal h2 { margin-top: 32px; font-size: var(--text-section); line-height: var(--text-section--line-height); letter-spacing: var(--text-section--letter-spacing); font-weight: 600; }
+  .legal p, .legal li { line-height: 1.6; }
+  .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
+  .ph { background: var(--color-wash); border-radius: 4px; padding: 0 4px; }
 
   /* Task sheet: docked 480 px beside the route at ≥ 1100 px; below, a full page under a 48 px wash band */
   .sheet-layout {
