@@ -64,6 +64,8 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   const router = useRouter()
   const selectedTaskId = useSearchParams().get("task") ?? undefined
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
+  // The header's Ask: which sheet's input to focus, and a count so a repeat press focuses again
+  const [askFor, setAskFor] = useState<{ taskId: string; n: number } | null>(null)
 
   // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
   const load = useCallback(async (refetch = false) => {
@@ -87,12 +89,21 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   }, [load])
 
   const open = (taskId: string) => router.push(`/app/roadmap?task=${taskId}`, { scroll: false })
-  const close = useCallback(() => router.push("/app/roadmap", { scroll: false }), [router])
+  const close = useCallback(() => {
+    setAskFor(null)
+    router.push("/app/roadmap", { scroll: false })
+  }, [router])
+  const askTaskId = typeof state === "object" ? (selectedTaskId ?? state.view.current?.taskId) : undefined
+  const ask = () => {
+    if (!askTaskId) return
+    setAskFor(a => ({ taskId: askTaskId, n: (a?.n ?? 0) + 1 }))
+    if (askTaskId !== selectedTaskId) open(askTaskId)
+  }
   const refetch = useCallback(() => load(true), [load])
 
   return (
     <>
-      <AppHeader active="roadmap" user={user} askDisabled={state === "down"} />
+      <AppHeader active="roadmap" user={user} onAsk={askTaskId ? ask : undefined} askDisabled={state === "down"} />
       {state === "loading" ? (
         <Loading />
       ) : (
@@ -103,7 +114,13 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
             <div className={cn("sheet-layout", selectedTaskId && "has-sheet")}>
               <RoadmapView view={state.view} firstUse={state.firstUse} selectedTaskId={selectedTaskId} onOpen={open} />
               {selectedTaskId && (
-                <TaskSheet taskId={selectedTaskId} route={state.view} onClose={close} onChanged={refetch} />
+                <TaskSheet
+                  taskId={selectedTaskId}
+                  route={state.view}
+                  onClose={close}
+                  onChanged={refetch}
+                  askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
+                />
               )}
             </div>
           )}

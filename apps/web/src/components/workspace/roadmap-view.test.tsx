@@ -16,7 +16,15 @@ const reopenTask = vi.fn()
 vi.mock('@/lib/api', () => ({
   getRoadmap: (token: string) => getRoadmap(token),
   getOnboardingProfile: (token: string) => getOnboardingProfile(token),
-  getTaskDetail: async (taskId: string) => ({ taskId, steps: [], governmentSourceUrl: 'https://www.ird.govt.nz', lastVerified: null }),
+  getTaskDetail: async (taskId: string) => ({
+    taskId,
+    steps: [],
+    governmentSourceUrl: 'https://www.ird.govt.nz',
+    lastVerified: null,
+    documentsRequired: [],
+    processingTime: null,
+    commonMistakes: [],
+  }),
   completeTask: (id: string, token: string) => completeTask(id, token),
   reopenTask: (id: string, token: string) => reopenTask(id, token),
 }))
@@ -142,5 +150,20 @@ describe('RoadmapScreen', () => {
     expect(getRoadmap).toHaveBeenCalledTimes(3)
     // refetches keep the sheet open: no loading state in between
     expect(screen.getByRole('complementary', { name: 'Apply for your IRD number' })).toBeInTheDocument()
+  })
+
+  it('header Ask with no task open: opens the current task', async () => {
+    render(<RoadmapScreen user={user} />)
+    await screen.findByRole('list', { name: 'Your route' })
+    fireEvent.click(screen.getByRole('button', { name: /^Ask/ }))
+    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08', { scroll: false })
+  })
+
+  it('header Ask with the sheet open: focuses the ask input', async () => {
+    params = new URLSearchParams('task=T08')
+    render(<RoadmapScreen user={user} />)
+    const box = await screen.findByRole('textbox', { name: 'Ask about your IRD number' })
+    fireEvent.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ }))
+    expect(box).toHaveFocus()
   })
 })

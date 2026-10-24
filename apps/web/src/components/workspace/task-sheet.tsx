@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, ExternalLink, X } from "lucide-react"
 import { toast } from "sonner"
+import { AskPanel } from "@/components/assistant/ask-panel"
 import { Stamp } from "@/components/route/stamp"
 import { Button } from "@/components/ui/button"
 import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
@@ -25,15 +26,18 @@ export function TaskSheet({
   route,
   onClose,
   onChanged,
+  askFocus,
 }: {
   taskId: string
   route: RouteView
   onClose(): void
   onChanged(): void
+  askFocus?: number // changes each time the header's Ask asks for this sheet's input
 }) {
   const router = useRouter()
   const titleId = useId()
   const titleRef = useRef<HTMLHeadingElement>(null)
+  const askRef = useRef<HTMLInputElement>(null)
   const [shown, setShown] = useState(taskId)
   const [history, setHistory] = useState<string[]>([])
   const [detail, setDetail] = useState<TaskDetailApiResponse | null>(null)
@@ -58,6 +62,10 @@ export function TaskSheet({
       live = false
     }
   }, [taskId])
+
+  useEffect(() => {
+    if (askFocus) askRef.current?.focus()
+  }, [askFocus])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
@@ -186,6 +194,8 @@ export function TaskSheet({
             )}
           </div>
         )}
+
+        <AskPanel key={taskId} taskId={taskId} topic={task.topic} detail={steps} inputRef={askRef} />
       </aside>
     </div>
   )

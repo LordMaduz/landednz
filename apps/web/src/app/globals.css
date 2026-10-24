@@ -227,6 +227,22 @@
     }
   }
 
+  /* The asked question in the sheet's thread (board .ask-q) */
+  .ask-q {
+    align-self: flex-end;
+    max-width: 85%;
+    padding: 8px 16px;
+    border-radius: var(--radius-surface);
+    background: var(--color-wash);
+  }
+
+  /* Markdown in AI replies: paragraphs and lists on the 8 px rhythm */
+  .md { display: flex; flex-direction: column; gap: 8px; }
+  .md ul, .md ol { display: flex; flex-direction: column; gap: 4px; padding-left: 24px; }
+  .md ul { list-style: disc; }
+  .md ol { list-style: decimal; }
+  .md strong { font-weight: 600; }
+
   /* Task sheet: docked 480 px beside the route at ≥ 1100 px; below, a full page under a 48 px wash band */
   .sheet-layout {
     display: grid;

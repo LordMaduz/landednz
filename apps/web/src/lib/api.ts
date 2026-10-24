@@ -266,27 +266,43 @@ export async function createChatSession(
   return res.json()
 }
 
+export interface ChatStreamError {
+  code?: string
+  message: string
+}
+
 // SSE streaming — must use fetch + ReadableStream, NOT EventSource (no auth header support).
 // Calls onChunk for each text token, onDone when stream ends, onError on failure.
+// A non-OK response reports the API's { error, message } body (e.g. 429 CHAT_DAILY_CAP_REACHED);
+// aborting through `signal` (Stop) ends quietly.
 export async function streamChat(
   sessionId: string,
   content: string,
   token: string,
   onChunk: (text: string) => void,
   onDone: () => void,
-  onError: (message: string) => void,
+  onError: (error: ChatStreamError) => void,
+  signal?: AbortSignal,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ content }),
-  })
+  let res: Response
+  try {
+    res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content }),
+      signal,
+    })
+  } catch (error) {
+    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Failed to connect to chat service' })
+    return
+  }
 
   if (!res.ok || !res.body) {
-    onError('Failed to connect to chat service')
+    const body = await res.json().catch(() => null) as { error?: string; message?: string } | null
+    onError({ code: body?.error, message: body?.message ?? 'Failed to connect to chat service' })
     return
   }
 
@@ -309,11 +325,11 @@ export async function streamChat(
           const event = JSON.parse(line.slice(6))
           if (event.type === 'chunk') onChunk(event.text)
           else if (event.type === 'done') { onDone(); return }
-          else if (event.type === 'error') { onError(event.message); return }
+          else if (event.type === 'error') { onError({ code: event.code, message: event.message }); return }
         } catch { /* skip malformed SSE lines */ }
       }
     }
   } catch (error) {
-    onError(error instanceof Error ? error.message : 'Stream failed')
+    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Stream failed' })
   }
 }
