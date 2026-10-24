@@ -4,6 +4,7 @@ import { loadConfig } from './config.js';
 const MOCK_ENV = {
   DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
   SUPABASE_URL: 'http://127.0.0.1:54321',
+  SUPABASE_SECRET_KEY: 'sb_secret_test',
   AI_MODE: 'mock',
   CHAT_DAILY_CAP: '50',
 };
@@ -37,6 +38,11 @@ describe('loadConfig', () => {
   test('config throws "Missing required environment variable: CHAT_DAILY_CAP" when unset', () => {
     const { CHAT_DAILY_CAP: _unset, ...env } = MOCK_ENV;
     expect(() => loadConfig(env)).toThrow('Missing required environment variable: CHAT_DAILY_CAP');
+  });
+
+  test('config throws "Missing required environment variable: SUPABASE_SECRET_KEY" when unset', () => {
+    const { SUPABASE_SECRET_KEY: _unset, ...env } = MOCK_ENV;
+    expect(() => loadConfig(env)).toThrow('Missing required environment variable: SUPABASE_SECRET_KEY');
   });
 
   test('mock mode does not require AI keys', () => {

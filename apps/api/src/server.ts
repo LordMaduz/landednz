@@ -9,6 +9,7 @@ import { registerAuthRoutes } from './features/auth/auth.route.js'
 import { registerOnboardingRoutes } from './features/onboarding/onboarding.route.js'
 import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
 import { registerChatRoutes } from './features/chat/routes.js'
+import { registerAccountRoutes } from './features/account/account.route.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
 import { registerRateLimit } from './shared/rate-limit.js'
 
@@ -30,6 +31,7 @@ export async function buildApp() {
   registerOnboardingRoutes(app)
   registerRoadmapRoutes(app)
   registerChatRoutes(app)
+  registerAccountRoutes(app)
 
   return app
 }

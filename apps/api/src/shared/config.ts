@@ -30,6 +30,8 @@ export function loadConfig(env: Env = process.env) {
   return {
     databaseUrl: requireEnv(env, 'DATABASE_URL'),
     supabaseUrl: requireEnv(env, 'SUPABASE_URL'),
+    // Server-only admin key: deletes Supabase auth users (DELETE /account)
+    supabaseSecretKey: requireEnv(env, 'SUPABASE_SECRET_KEY'),
     port: parseInt(env['PORT'] ?? '3000', 10),
     nodeEnv: env['NODE_ENV'] ?? 'development',
     // CORS origins — comma-separated list, defaults to localhost for development

@@ -220,6 +220,16 @@ export async function reopenTask(taskId: string, token: string): Promise<void> {
   if (!res.ok) throw new Error(`Reopen task failed: ${res.status}`)
 }
 
+// ─── Account ─────────────────────────────────────────────────────────────────
+
+export async function deleteAccount(token: string): Promise<void> {
+  const res = await fetch(`${API_URL}/account`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw Object.assign(new Error(`Delete account failed: ${res.status}`), { status: res.status })
+}
+
 // ─── User Profile ────────────────────────────────────────────────────────────
 
 // Since there's no GET profile endpoint, we get basic user data from Supabase session
