@@ -11,6 +11,13 @@ import { contentVersion, itemsFor, source, task as contentTask } from '../../con
 import { buildRoadmapEntries, dependencyEdges } from './roadmap.build.js';
 import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, TaskReopenResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
 
+// Retired tasks are served read-only (spec §8.3)
+function assertNotRetired(taskId: string) {
+  if (contentTask(taskId)?.retired) {
+    throw new AppError('TASK_RETIRED', `Task ${taskId} is retired and read-only`, 409);
+  }
+}
+
 async function findProfile(userId: string) {
   const profile = await db.userProfile.findUnique({ where: { userId } });
   if (!profile) {
@@ -115,6 +122,7 @@ export async function completeTask(
   if (!entry) {
     throw new AppError('TASK_NOT_FOUND', `Task ${taskId} not found in user roadmap`, 404);
   }
+  assertNotRetired(taskId);
   if (entry.status === 'COMPLETE') {
     throw new AppError('TASK_ALREADY_COMPLETE', `Task ${taskId} is already complete`, 409);
   }
@@ -183,6 +191,8 @@ export async function reopenTask(
     throw new AppError('TASK_NOT_FOUND', `Task ${taskId} not found in user roadmap`, 404);
   }
 
+  assertNotRetired(taskId);
+
   const reblockedTasks: string[] = [];
 
   if (entry.status === 'COMPLETE') {
@@ -238,7 +248,7 @@ export async function bulkOverride(
   for (const taskId of taskIds) {
     const entry = entryMap.get(taskId);
     if (!entry) continue; // not in roadmap — silently ignore per design decision
-    if (entry.status === 'COMPLETE') {
+    if (entry.status === 'COMPLETE' || contentTask(taskId)?.retired) {
       skipped.push(taskId);
     } else {
       toMark.push(taskId);

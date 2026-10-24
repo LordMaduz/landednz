@@ -5,7 +5,7 @@ import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
 import { buildApp } from '../../server.js';
-import { task as contentTask } from '../../content/index.js';
+import { loadContent, task as contentTask, useContent } from '../../content/index.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask, getRoadmap, reopenTask } from './roadmap.service.js';
 
@@ -46,6 +46,17 @@ const profile = () =>
 
 const findTask = async (taskId: string) =>
   (await getRoadmap(TEST_USER_ID)).phases.flatMap(p => p.tasks).find(t => t.taskId === taskId)!;
+
+// Runs fn with the given task marked retired in the loaded content, then restores the real bundle
+async function withRetired(taskId: string, fn: () => Promise<void>) {
+  const bundle = await loadContent();
+  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === taskId ? { ...t, retired: true } : t)) });
+  try {
+    await fn();
+  } finally {
+    useContent(bundle);
+  }
+}
 
 describe('getRoadmap() completedAt and blockingTaskIds', () => {
   test('open task has completedAt null; blocked T07 names T06 by id', async () => {
@@ -96,6 +107,22 @@ describe('reopenTask()', () => {
     expect(result).toMatchObject({ taskId: 'T06', status: 'NOT_STARTED', reblockedTasks: [] });
     const after = await getRoadmap(TEST_USER_ID);
     expect(after.phases).toEqual(before.phases);
+  });
+
+  test('retired done task → AppError TASK_RETIRED (409), stays COMPLETE', async () => {
+    await profile();
+    await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+
+    await withRetired('T06', async () => {
+      await expect(reopenTask(TEST_USER_ID, 'T06', CURRENT_DATE)).rejects.toMatchObject({
+        code: 'TASK_RETIRED',
+        statusCode: 409,
+      });
+    });
+    const entry = await db.userRoadmapEntry.findUnique({
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T06' } },
+    });
+    expect(entry!.status).toBe('COMPLETE');
   });
 
   test('task not in the roadmap → AppError TASK_NOT_FOUND (404)', async () => {

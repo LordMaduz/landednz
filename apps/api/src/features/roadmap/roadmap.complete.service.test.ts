@@ -11,6 +11,7 @@
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
+import { loadContent, useContent } from '../../content/index.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
 import { completeTask } from './roadmap.service.js';
 
@@ -71,6 +72,17 @@ afterEach(async () => {
   await db.userRoadmapEntry.deleteMany({ where: { userId: TEST_USER_ID } });
   await db.userProfile.deleteMany({ where: { userId: TEST_USER_ID } });
 });
+
+// Runs fn with the given task marked retired in the loaded content, then restores the real bundle
+async function withRetired(taskId: string, fn: () => Promise<void>) {
+  const bundle = await loadContent();
+  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === taskId ? { ...t, retired: true } : t)) });
+  try {
+    await fn();
+  } finally {
+    useContent(bundle);
+  }
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -159,6 +171,28 @@ describe('completeTask()', () => {
         code: 'TASK_NOT_FOUND',
         statusCode: 404,
       });
+    });
+
+    test('Retired task → AppError TASK_RETIRED (409), entry unchanged', async () => {
+      await createProfile(TEST_USER_ID, {
+      visaType: 'AEWV',
+      city: 'AUCKLAND',
+      familySituation: 'COUPLE_CONSTRAINED',
+      occupation: 'TECHNOLOGY',
+      arrivalDate: ARRIVAL_DATE,
+    }, CURRENT_DATE);
+
+      await withRetired('T03', async () => {
+        await expect(completeTask(TEST_USER_ID, 'T03', CURRENT_DATE)).rejects.toMatchObject({
+          code: 'TASK_RETIRED',
+          statusCode: 409,
+        });
+      });
+      const entry = await db.userRoadmapEntry.findUnique({
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+      });
+      expect(entry!.status).toBe('NOT_STARTED');
+      expect(entry!.completedAt).toBeNull();
     });
 
     test('Task already COMPLETE → AppError TASK_ALREADY_COMPLETE (409)', async () => {

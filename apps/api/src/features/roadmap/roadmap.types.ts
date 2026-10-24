@@ -47,7 +47,7 @@ export interface BulkOverrideRequest {
 
 export interface BulkOverrideResponse {
   marked: string[];        // Task IDs successfully marked COMPLETE in this request
-  skipped: string[];       // Task IDs already COMPLETE — silently skipped
+  skipped: string[];       // Task IDs already COMPLETE or retired (read-only) — skipped
   newTopThree: RoadmapTask[];
 }
 
