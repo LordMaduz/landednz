@@ -14,7 +14,7 @@ import { taskTitle } from "@/lib/task-copy"
 import { cn } from "@/lib/utils"
 
 // The preview's when-lines, as the Onboarding board words them
-const PREVIEW_META: Record<string, string> = {
+export const PREVIEW_META: Record<string, string> = {
   T01: "First, 4 to 6 weeks before you leave",
   T02: "After your suburb research",
   T06: "Day 1",
@@ -33,7 +33,7 @@ const SHOWN: { id: LegId; name: string }[] = [
 
 const count = (n: number) => `${n} ${n === 1 ? "task" : "tasks"}`
 
-function title(taskId: string, name: string, city: Answers["city"]) {
+export function previewTitle(taskId: string, name: string, city: Answers["city"]) {
   if (taskId !== "T01") return taskTitle(taskId, name)
   const label = QUESTIONS[1].options.find(([v]) => v === city)?.[1]
   return city === "OTHER" || !label ? "Research suburbs where you will live" : `Research ${label} suburbs`
@@ -68,7 +68,7 @@ function Legs({ tasks, city }: { tasks: Tasks; city: Answers["city"] }) {
                     <Waypoint state={first ? "current" : "available"} />
                   </span>
                   <div className="flex min-h-11 flex-wrap items-baseline justify-between gap-x-4 p-2">
-                    <span className={cn("grow basis-60", first && "font-semibold")}>{title(t.taskId, t.name, city)}</span>
+                    <span className={cn("grow basis-60", first && "font-semibold")}>{previewTitle(t.taskId, t.name, city)}</span>
                     {PREVIEW_META[t.taskId] && <span className="text-small text-muted">{PREVIEW_META[t.taskId]}</span>}
                   </div>
                 </li>
