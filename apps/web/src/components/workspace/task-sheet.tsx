@@ -14,6 +14,8 @@ import { createClient } from "@/lib/supabase/client"
 import { TASK_COPY } from "@/lib/task-copy"
 import { stepParts } from "@/lib/task-steps"
 
+type Source = NonNullable<TaskDetailApiResponse["sources"]>[string][number]
+
 async function sessionToken(): Promise<string> {
   const { data } = await createClient().auth.getSession()
   return data.session?.access_token ?? ""
@@ -83,6 +85,21 @@ export function TaskSheet({
   const actionLabel = TASK_COPY[taskId]?.actionLabel
   const previous = history.at(-1)
   const previousTitle = previous && route.legs.flatMap(l => l.tasks).find(t => t.taskId === previous)?.title
+  // One number per distinct source URL, by first appearance across the why line and the steps
+  const lineSources = steps?.sources && [steps.sources.why?.[0], ...steps.steps.map((_, i) => steps.sources?.steps?.[i])]
+  const cited = (lineSources ?? []).filter((s, i, all): s is Source => !!s && all.findIndex(o => o?.url === s.url) === i)
+  const ref = (s: Source | undefined) =>
+    s && (
+      <a
+        href={s.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
+        className="relative ml-1 align-super text-small leading-none after:absolute after:-inset-2"
+      >
+        {cited.findIndex(c => c.url === s.url) + 1}
+      </a>
+    )
 
   async function reopen(id: string) {
     try {
@@ -134,14 +151,20 @@ export function TaskSheet({
           </Button>
         </div>
 
-        {task.why && <p>{task.why}</p>}
+        {task.why && (
+          <p>
+            {task.why}
+            {ref(lineSources?.[0])}
+          </p>
+        )}
         {steps && steps.steps.length > 0 && (
           <ol className="flex list-decimal flex-col gap-2 pl-6">
-            {steps.steps.map(s => {
+            {steps.steps.map((s, i) => {
               const { lead, items } = stepParts(s)
               return (
                 <li key={s}>
                   {lead}
+                  {ref(lineSources?.[i + 1])}
                   {items.length > 0 && (
                     <ul className="mt-1 flex list-disc flex-col gap-1 pl-6">
                       {items.map(i => (
@@ -168,7 +191,22 @@ export function TaskSheet({
             <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} className="shrink-0" />
           </a>
         )}
-        {steps && (
+        {steps && cited.length > 0 && (
+          <section aria-label="Sources" className="border-t pt-4 text-small text-muted">
+            <ol className="flex list-decimal flex-col gap-1 pl-6">
+              {cited.map(s => (
+                <li key={s.url}>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer">
+                    {s.title}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  , checked {longDay(s.checked)}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+        {steps && cited.length === 0 && (
           <p className="text-small text-muted">
             Source:{" "}
             <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className="underline">

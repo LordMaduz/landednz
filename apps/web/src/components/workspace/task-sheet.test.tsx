@@ -175,4 +175,77 @@ describe('TaskSheet', () => {
     )
     expect(container).toBeEmptyDOMElement()
   })
+
+  describe('per-line sources', () => {
+    const NEW = {
+      itemId: 'T08.steps.0',
+      title: 'New arrival to New Zealand: IRD number application',
+      url: 'https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/new-arrival-to-new-zealand---ird-number-application',
+      checked: '2026-10-25',
+    }
+    const CODES = {
+      itemId: 'T08.why.0',
+      title: 'Tax codes for individuals',
+      url: 'https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/tax-codes-for-individuals',
+      checked: '2026-10-24',
+    }
+    const WORK = {
+      itemId: 'T08.steps.2',
+      title: 'Work or study in New Zealand',
+      url: 'https://www.ird.govt.nz/situations/work-or-study-in-new-zealand',
+      checked: '2026-10-25',
+    }
+    const threeSteps = ['Register for myIR.', 'Apply as a new arrival.', 'Give the IR330 to your employer.']
+
+    it('numbers each line by its source, first appearance wins; one list of sources replaces the source line', async () => {
+      getTaskDetail.mockResolvedValueOnce(
+        detail({ steps: threeSteps, sources: { why: [CODES], steps: [NEW, NEW, CODES] } }),
+      )
+      sheet('T08')
+      const why = screen.getByText(/^Your employer needs it/)
+      const ref = await within(why).findByRole('link', { name: 'Source: Tax codes for individuals, checked 24 October 2026' })
+      expect(ref).toHaveTextContent('1')
+      expect(ref).toHaveAttribute('href', CODES.url)
+      expect(ref).toHaveAttribute('target', '_blank')
+      expect(ref).toHaveAttribute('rel', 'noopener noreferrer')
+
+      const step = (t: string) => screen.getByText(t, { exact: false }).closest('li')!
+      const refs = await waitFor(() => threeSteps.map(t => within(step(t)).getByRole('link')))
+      expect(refs.map(r => r.textContent)).toEqual(['2', '2', '1'])
+      expect(refs[0]).toHaveAccessibleName(`Source: ${NEW.title}, checked 25 October 2026`)
+      expect(refs[0]).toHaveAttribute('href', NEW.url)
+      expect(refs[0]).toHaveAttribute('rel', 'noopener noreferrer')
+
+      const list = screen.getByRole('region', { name: 'Sources' })
+      const items = within(list).getAllByRole('listitem')
+      expect(items.map(i => i.textContent)).toEqual([
+        'Tax codes for individuals (opens in a new tab), checked 24 October 2026',
+        `${NEW.title} (opens in a new tab), checked 25 October 2026`,
+      ])
+      const title = within(items[0]).getByRole('link')
+      expect(title).toHaveAttribute('href', CODES.url)
+      expect(title).toHaveAttribute('target', '_blank')
+      expect(title).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(screen.queryByText(/^Source:/)).toBeNull()
+      expect(within(list).queryByText(WORK.title)).toBeNull()
+    })
+
+    it('fewer sources than steps and no why source: every step renders, unmatched lines have no number', async () => {
+      getTaskDetail.mockResolvedValueOnce(detail({ steps: threeSteps, sources: { steps: [WORK] } }))
+      sheet('T08')
+      const step = (t: string) => screen.getByText(t, { exact: false }).closest('li')!
+      await waitFor(() => expect(within(step(threeSteps[0])).getByRole('link')).toHaveTextContent('1'))
+      expect(within(step(threeSteps[1])).queryByRole('link')).toBeNull()
+      expect(within(step(threeSteps[2])).queryByRole('link')).toBeNull()
+      expect(within(screen.getByText(/^Your employer needs it/)).queryByRole('link')).toBeNull()
+      expect(within(screen.getByRole('region', { name: 'Sources' })).getAllByRole('listitem')).toHaveLength(1)
+    })
+
+    it('no sources: no numbers, no sources list, the single source line as before', async () => {
+      sheet('T08')
+      expect(await screen.findByText(/^Source:/)).toHaveTextContent('Source: ird.govt.nz, checked 3 March 2026')
+      expect(screen.queryByRole('link', { name: /^Source:/ })).toBeNull()
+      expect(screen.queryByRole('region', { name: 'Sources' })).toBeNull()
+    })
+  })
 })
