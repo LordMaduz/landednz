@@ -43,7 +43,7 @@ Subagent-driven for code tasks; the controller runs the content procedure itself
 | 2 Stage 1 inventory | controller (deep-research) | Judgement + owner gate |
 | 3 Gate hardening | `sonnet` | Small rules, fully pinned by tests |
 | 4 Review page | `sonnet` | One script over the content module |
-| 5 Dimension changes | `opus` | Enum + data migration on user rows (skipped if Task 1 approves no change) |
+| 5 Dimension changes + task structure | `opus` | Enum + data migration on user rows, inventory structure (R24) |
 | 6 Roadmap reconcile | `opus` | User state on content change |
 | 7 Pilot (IRD number) | controller | Proves the procedure; owner gate |
 | 8–12 Phase batches | controller | Content procedure per task |
