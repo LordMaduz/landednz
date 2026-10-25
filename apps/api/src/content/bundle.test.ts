@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { applicableTasks, loadContent, FileContentSource } from './index.js';
+import { applicableTasks, itemsFor, loadContent, FileContentSource } from './index.js';
+import { matches } from './matches.js';
 import type { Bundle } from './build.js';
 import type { Profile } from './types.js';
 
@@ -30,6 +31,19 @@ describe.skipIf(!populated)('real content bundle', () => {
         for (const d of t.dependsOn.filter((d) => d.type === 'hard'))
           expect(ids.has(d.task), `${t.id} hard-depends on ${d.task} for ${JSON.stringify(p)}`).toBe(true);
     }
+  });
+
+  // Legacy tasks without a why item and a step for every answer combination. Each content task removes its id;
+  // a listed task that now passes fails the test, so the list only shrinks.
+  const KNOWN_GAPS = ['T05'];
+  test('every applicable task has a why item and a step for every answer combination', () => {
+    const failing = new Set<string>();
+    for (const t of bundle.tasks.filter((t) => !t.retired))
+      for (const p of profiles.filter((p) => matches(t.appliesTo, p))) {
+        const i = itemsFor(t, p);
+        if (!i.why || i.steps.length === 0) failing.add(t.id);
+      }
+    expect([...failing].sort()).toEqual([...KNOWN_GAPS].sort());
   });
 
   test('no item text contains {{ and every item source exists', () => {
