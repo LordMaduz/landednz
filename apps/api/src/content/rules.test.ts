@@ -59,6 +59,45 @@ describe('content rules', () => {
     expect(runRules(c)).toEqual([]);
   });
 
+  test.each(['two weeks', '10 per cent', '5 hrs', 'a fortnight', 'by 31 March'])('literal-figure: words and units: %s', (figure) => {
+    const c = fixture();
+    task(c, 'T01').steps[0]!.text = `It takes ${figure}.`;
+    expectOne(c, 'literal-figure');
+  });
+
+  test('literal-figure: form IR595 and 0800 377 774 pass', () => {
+    const c = fixture();
+    task(c, 'T01').steps[0]!.text = 'Use form IR595 or call 0800 377 774.';
+    expect(runRules(c)).toEqual([]);
+  });
+
+  test('provider-item', () => {
+    const c = fixture();
+    task(c, 'T01').steps[0]!.source = 'bank-fees';
+    // a provider source may sit only behind type C facts, so the item itself is rejected
+    expect(runRules(c).map((e) => e.rule)).toContain('provider-item');
+  });
+
+  test('provider-reason: uncited source', () => {
+    const c = fixture();
+    c.sources['unused'] = { url: 'https://unused.example.co.nz', title: 'Unused', agency: 'Unused', tier: 'provider' };
+    expectOne(c, 'provider-reason');
+  });
+
+  test('provider-reason: source cited by three facts is one error', () => {
+    const c = fixture();
+    delete c.sources['bank-fees']!.reason;
+    facts(c)['bank.a'] = { ...facts(c)['bank.account-fee']! };
+    facts(c)['bank.b'] = { ...facts(c)['bank.account-fee']! };
+    expectOne(c, 'provider-reason');
+  });
+
+  test('unknown-dimension: prototype keys', () => {
+    const c = fixture();
+    task(c, 'T01').steps[1]!.when = { constructor: ['X'] } as never;
+    expectOne(c, 'unknown-dimension');
+  });
+
   test('unknown-dimension (nested in any)', () => {
     const c = fixture();
     task(c, 'T01').steps[1]!.when = { any: [{ town: ['AUCKLAND'] } as never] };
@@ -116,6 +155,24 @@ describe('content rules', () => {
     expectOne(c, 'stale');
   });
 
+  test('stale: month ends', () => {
+    const c = fixture();
+    c.now = new Date('2026-08-31T00:00:00Z');
+    Object.assign(facts(c)['ird.non-declaration-rate']!, { numberType: 'B', checked: '2026-02-28' });
+    expect(runRules(c)).toEqual([]);
+    facts(c)['ird.non-declaration-rate']!.checked = '2026-02-27';
+    expectOne(c, 'stale');
+  });
+
+  test('stale: NZ date', () => {
+    const c = fixture();
+    c.now = new Date('2026-10-24T20:00:00Z'); // 25 Oct in Auckland
+    facts(c)['bank.account-fee']!.checked = '2026-07-25';
+    expect(runRules(c)).toEqual([]);
+    facts(c)['bank.account-fee']!.checked = '2026-07-24';
+    expectOne(c, 'stale');
+  });
+
   test('duplicate-id', () => {
     const c = fixture();
     task(c, 'T02').steps[0]!.id = 'T01.step.apply-online';
@@ -150,6 +207,28 @@ describe('content rules', () => {
     const c = fixture();
     task(c, 'T01').steps[0]!.verified = false;
     expectOne(c, 'unverified');
+  });
+
+  test('unverified: fact used by a verified item', () => {
+    const c = fixture();
+    facts(c)['ird.non-declaration-rate']!.verified = false;
+    const errors = runRules(c);
+    expect(errors.map((e) => [e.rule, e.id])).toEqual([['unverified', 'ird.non-declaration-rate']]);
+  });
+
+  test.each([
+    'acc.co.nz', 'sorted.org.nz', 'privacy.org.nz', 'hdc.org.nz', 'tikatangata.org.nz', 'hrc.co.nz', 'fireandemergency.nz',
+    'nzblood.co.nz', 'publictrust.co.nz', 'teachingcouncil.nz', 'nursingcouncil.org.nz', 'pgdb.co.nz',
+  ])('domain: crown allowlist: %s', (host) => {
+    const c = fixture();
+    c.sources['ird-apply']!.url = `https://www.${host}/page`;
+    expect(runRules(c)).toEqual([]);
+  });
+
+  test('domain: example.org.nz is not Crown', () => {
+    const c = fixture();
+    c.sources['ird-apply']!.url = 'https://example.org.nz/page';
+    expectOne(c, 'domain');
   });
 
   test('allowUnverified also skips literal-figure, provider-reason and stale for that item', () => {
