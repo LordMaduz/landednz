@@ -71,6 +71,12 @@ describe('content rules', () => {
     expect(runRules(c)).toEqual([]);
   });
 
+  test('literal-figure: lowercase "may" is not a month', () => {
+    const c = fixture();
+    task(c, 'T01').steps[0]!.text = 'Step 2 may need a form.';
+    expect(runRules(c)).toEqual([]);
+  });
+
   test('provider-item', () => {
     const c = fixture();
     task(c, 'T01').steps[0]!.source = 'bank-fees';

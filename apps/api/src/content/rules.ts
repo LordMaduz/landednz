@@ -23,9 +23,11 @@ export const FACT_RE = /\{\{\s*([\w.-]+)\s*\}\}/g;
 const WORDS = 'a|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve';
 const MONTHS = 'January|February|March|April|May|June|July|August|September|October|November|December';
 const FIGURE_RE = new RegExp(
-  String.raw`\$\s?\d|\d\s?%|\d\s?per cent|\b(?:\d+(?:[.,]\d+)?\s*|(?:${WORDS})\s+)(?:business |working )?(?:(?:minute|hour|day|week|month|year)s?|hrs?|mins?|fortnights?)\b|\b\d{1,2} (?:${MONTHS})\b`,
+  String.raw`\$\s?\d|\d\s?%|\d\s?per cent|\b(?:\d+(?:[.,]\d+)?\s*|(?:${WORDS})\s+)(?:business |working )?(?:(?:minute|hour|day|week|month|year)s?|hrs?|mins?|fortnights?)\b`,
   'i',
 );
+// Case-sensitive so lowercase "may" is not a month
+const DATE_RE = new RegExp(String.raw`\b\d{1,2} (?:${MONTHS})\b`);
 // Names and phrases end at a plain word boundary (so `Priya's` is caught); bare `I` is not part of `I'm`/`I've`
 export const DENY_RE = /\b(?:priya|karthik|dbs|i['’]d|we recommend)\b|\bi(?!['’]?\w)/i;
 // A government source must be on govt.nz or a Crown entity's own domain
@@ -90,7 +92,7 @@ export function providerType(ctx: Ctx): RuleError[] {
 
 export function literalFigure(ctx: Ctx): RuleError[] {
   return items(ctx)
-    .filter(({ item }) => !exempt(ctx, item) && FIGURE_RE.test(item.text.replace(FACT_RE, '')))
+    .filter(({ item }) => !exempt(ctx, item) && [FIGURE_RE, DATE_RE].some((re) => re.test(item.text.replace(FACT_RE, ''))))
     .map(({ file, item }) => ({ file, id: item.id, rule: 'literal-figure', message: 'amounts, percentages and durations must come from a {{fact}}' }));
 }
 
