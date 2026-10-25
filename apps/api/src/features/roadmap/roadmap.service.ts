@@ -319,7 +319,7 @@ export async function getTaskDetail(
       const { title, url } = source(i.source);
       return [{ itemId: i.id, title, url, checked: i.checked }];
     });
-  const primary = items.why ?? items.steps[0];
+  const primary = items.steps[0] ?? items.why;  // the action link opens where the task starts
 
   logger.info({ userId, taskId }, 'getTaskDetail fetched');
 

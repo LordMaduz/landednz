@@ -81,7 +81,7 @@ describe('getTaskDetail()', () => {
     expect(result.professionalAdviceRequired).toBe(false);
     expect(result.professionalAdviceNote).toBeNull();
     expect(result.relatedTasks).toEqual([]);
-    expect(result.governmentSourceUrl).toBe(source(t02.why[0]!.source).url);
+    expect(result.governmentSourceUrl).toBe(source(t02.steps[0]!.source).url);
     expect(result.lastVerified).toBe(t02.checkedAt);
     expect(result.contentVersion).toBe(contentVersion());
 
@@ -91,6 +91,16 @@ describe('getTaskDetail()', () => {
     expect(result.sources.steps).toHaveLength(t02.steps.length);
     expect(result.sources.cost.map(s => s.itemId)).toEqual([t02.cost!.id]);
     expect(result.sources.advice).toEqual([]);
+  });
+
+  test('the action link opens the first step source, not the why source', async () => {
+    await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
+    const t08 = task('T08')!;
+    expect(t08.steps[0]!.source).not.toBe(t08.why[0]!.source);
+
+    const result = await getTaskDetail(TEST_USER_ID, 'T08');
+
+    expect(result.governmentSourceUrl).toBe(source(t08.steps[0]!.source).url);
   });
 
   test('advice item sets professionalAdviceRequired and its note', async () => {
