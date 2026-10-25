@@ -8,7 +8,7 @@ import { Waypoint } from "@/components/route/waypoint"
 import { buttonVariants } from "@/components/ui/button"
 import { getRoadmapPreview } from "@/lib/api"
 import { answersSummary, QUESTIONS, type Answers } from "@/lib/answers"
-import { legForTask, type LegId } from "@/lib/legs"
+import { legForPhase, type LegId } from "@/lib/legs"
 import { useOnboardingStore } from "@/lib/stores/onboardingStore"
 import { taskTitle } from "@/lib/task-copy"
 import { cn } from "@/lib/utils"
@@ -43,8 +43,8 @@ type Tasks = OnboardingPreviewResponse["tasks"]
 
 function Legs({ tasks, city }: { tasks: Tasks; city: Answers["city"] }) {
   const firstId = tasks[0]?.taskId
-  const legs = SHOWN.map(leg => ({ ...leg, tasks: tasks.filter(t => legForTask(t.taskId) === leg.id) })).filter(l => l.tasks.length)
-  const folded = tasks.filter(t => ["month1", "later"].includes(legForTask(t.taskId))).length
+  const legs = SHOWN.map(leg => ({ ...leg, tasks: tasks.filter(t => legForPhase(t.phase) === leg.id) })).filter(l => l.tasks.length)
+  const folded = tasks.filter(t => ["month1", "later"].includes(legForPhase(t.phase))).length
 
   return (
     <ol className="route-legs m-0 list-none p-0" aria-label="Your roadmap">

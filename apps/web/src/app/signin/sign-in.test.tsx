@@ -1,11 +1,12 @@
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
+import { phaseOf } from '@/test/roadmap-fixtures'
 
 // SOLO: every KB task but T21 (couples only)
 const tasks = Array.from({ length: 20 }, (_, i) => {
   const taskId = `T${String(i + 1).padStart(2, '0')}`
-  return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: 1 }
+  return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: phaseOf(taskId) }
 })
 vi.mock('@/lib/api', () => ({ getRoadmapPreview: async () => ({ tasks }) }))
 vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams() }))

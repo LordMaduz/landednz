@@ -3,19 +3,17 @@ import { addDays, shortDay } from './nz-date'
 
 export type LegId = 'before' | 'arrival' | 'week1' | 'month1' | 'later'
 
-const ids = (from: number, to: number) =>
-  Array.from({ length: to - from + 1 }, (_, i) => `T${String(from + i).padStart(2, '0')}`)
-
-export const LEGS: { id: LegId; name: string; taskIds: string[] }[] = [
-  { id: 'before', name: 'Before you flew', taskIds: ids(1, 5) },
-  { id: 'arrival', name: 'Arrival', taskIds: ids(6, 7) },
-  { id: 'week1', name: 'Week 1', taskIds: ids(8, 10) },
-  { id: 'month1', name: 'Month 1', taskIds: ids(11, 14) },
-  { id: 'later', name: 'Later', taskIds: ids(15, 21) },
+// In task phase order: phase 1 is the first leg, phase 5 the last
+export const LEGS: { id: LegId; name: string }[] = [
+  { id: 'before', name: 'Before you flew' },
+  { id: 'arrival', name: 'Arrival' },
+  { id: 'week1', name: 'Week 1' },
+  { id: 'month1', name: 'Month 1' },
+  { id: 'later', name: 'Later' },
 ]
 
-export function legForTask(taskId: string): LegId {
-  return LEGS.find(l => l.taskIds.includes(taskId))?.id ?? 'later'
+export function legForPhase(phase: number): LegId {
+  return LEGS[phase - 1]?.id ?? 'later'
 }
 
 // "21 to 22 Oct" drops the first month when both days share it

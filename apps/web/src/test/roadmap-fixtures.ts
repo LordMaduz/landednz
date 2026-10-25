@@ -2,13 +2,14 @@
 import type { RoadmapApiResponse, RoadmapApiTask } from '@/lib/api'
 
 const DURATIONS: Record<string, string> = { T10: '30–45 minutes' }
-const PHASE = (id: string) => (Number(id.slice(1)) <= 5 ? 1 : Number(id.slice(1)) <= 10 ? 2 : 3)
+// Fixture phases: T01–T05 before, T06–T07 arrival, T08–T10 week 1, T11–T14 month 1, the rest later
+export const phaseOf = (id: string) => [5, 7, 10, 14].filter(last => Number(id.slice(1)) > last).length + 1
 
 export function apiTask(taskId: string, over: Partial<RoadmapApiTask> = {}): RoadmapApiTask {
   return {
     taskId,
     name: `KB name ${taskId}`,
-    phase: PHASE(taskId),
+    phase: phaseOf(taskId),
     status: 'NOT_STARTED',
     isBlocked: false,
     blockingTaskNames: [],
@@ -23,7 +24,7 @@ export function apiTask(taskId: string, over: Partial<RoadmapApiTask> = {}): Roa
 }
 
 export function roadmap(tasks: RoadmapApiTask[]): RoadmapApiResponse {
-  const phases = [1, 2, 3].map(phase => ({ phase, tasks: tasks.filter(t => t.phase === phase).reverse() }))
+  const phases = [1, 2, 3, 4, 5].map(phase => ({ phase, tasks: tasks.filter(t => t.phase === phase).reverse() }))
   return { topThree: [], phases, lastComputedAt: '2026-10-23T00:00:00.000Z' }
 }
 

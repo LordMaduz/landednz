@@ -1,6 +1,6 @@
 // The route the Roadmap rail and Home strip draw: legs of waypoints from GET /roadmap.
 import type { RoadmapApiResponse, RoadmapApiTask } from './api'
-import { LEGS, legForTask, legWhen, type LegId } from './legs'
+import { LEGS, legForPhase, legWhen, type LegId } from './legs'
 import { shortDayNZ } from './nz-date'
 import { TASK_COPY, taskTitle } from './task-copy'
 
@@ -45,7 +45,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string)
   const isDone = (t: RoadmapApiTask) => t.status === 'COMPLETE'
   const currentId = tasks.find(t => !isDone(t) && !t.isBlocked)?.taskId ?? null
 
-  const legs = LEGS.map(leg => ({ leg, tasks: tasks.filter(t => legForTask(t.taskId) === leg.id) })).filter(
+  const legs = LEGS.map(leg => ({ leg, tasks: tasks.filter(t => legForPhase(t.phase) === leg.id) })).filter(
     l => l.tasks.length > 0,
   )
   // The leg the traveller is in: the one holding the current task, else the first with open work
