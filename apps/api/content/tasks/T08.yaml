@@ -1,6 +1,6 @@
 id: T08
-name: IRD Number Application
-phase: 3
+name: Apply for your IRD number
+phase: 2
 priority: 98
 boosts:
   - when:
@@ -29,15 +29,8 @@ urgency:
     afterFirstYear: true
     by: 25
 duration: 20–30 minutes (online application)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
-dependsOn:
-  - task: T07
-    type: soft
+appliesTo: all
+dependsOn: []
 retired: false
 why:
   - id: T08.why.1

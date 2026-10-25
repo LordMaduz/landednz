@@ -1,17 +1,12 @@
 id: T02
-name: Temporary Accommodation Booking
+name: Book temporary accommodation
 phase: 1
 priority: 88
 boosts: []
 urgency: []
 duration: 1–2 hours (research and booking)
 processingTime: 2–4 weeks
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn: []
 retired: false
 why:

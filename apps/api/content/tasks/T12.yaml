@@ -1,5 +1,5 @@
 id: T12
-name: GP Registration and Primary Healthcare
+name: Enrol with a GP
 phase: 3
 priority: 85
 boosts:
@@ -21,13 +21,10 @@ boosts:
     by: 5
 urgency: []
 duration: 30–60 minutes (registration process; ongoing relationship)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
-dependsOn: []
+appliesTo: all
+dependsOn:
+  - task: T22
+    type: soft
 retired: false
 why:
   - id: T12.why.1

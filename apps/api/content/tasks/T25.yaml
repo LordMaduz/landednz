@@ -1,0 +1,25 @@
+id: T25
+name: "Check what you can bring and how to ship it"
+phase: 1
+priority: 75
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T25.why.1
+    text: "NZ Customs sets rules on what you can bring into the country and how your household items are treated."
+    source: www-customs-govt-nz-travel-to-and-from-new-zealand-move-to-new-zealand-permanently-household-effects
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T25.steps.1
+    text: "Read the Customs guidance on household effects before you pack or ship your belongings."
+    source: www-customs-govt-nz-travel-to-and-from-new-zealand-move-to-new-zealand-permanently-household-effects
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

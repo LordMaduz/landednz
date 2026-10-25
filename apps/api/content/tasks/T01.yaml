@@ -1,5 +1,5 @@
 id: T01
-name: Auckland Suburb Research
+name: Choose where to live
 phase: 1
 priority: 90
 boosts:
@@ -13,12 +13,7 @@ boosts:
     by: 5
 urgency: []
 duration: 2–3 hours
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn: []
 retired: false
 why:

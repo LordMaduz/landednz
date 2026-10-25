@@ -1,6 +1,6 @@
 id: T16
-name: NZ Driving Licence Conversion
-phase: 3
+name: Convert your overseas driver licence
+phase: 4
 priority: 65
 boosts:
   - when:
@@ -25,12 +25,7 @@ urgency:
     by: 30
 duration: 1–2 hours (NZTA office visit)
 processingTime: 5–10 working days
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn: []
 retired: false
 why:

@@ -1,0 +1,29 @@
+id: T35
+name: "Check Working for Families"
+phase: 5
+priority: 65
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT, OTHER], family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T08
+    type: hard
+  - task: T34
+    type: soft
+retired: false
+why:
+  - id: T35.why.1
+    text: "Working for Families is a payment for families with children, and claiming it can affect your temporary tax exemption."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T35.steps.1
+    text: "Check the Inland Revenue residency rules for Working for Families before you apply."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

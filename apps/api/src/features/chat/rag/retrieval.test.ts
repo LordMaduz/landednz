@@ -7,7 +7,7 @@ import { loadContent } from '../../../content/index.js';
 import { syncChunks } from '../../../../scripts/sync-chunks.js';
 import { retrieveChunks } from './retrieval.js';
 
-const profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY' };
+const profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL' };
 const kept = 'CHUNK_T08_general';
 
 // Restoring re-embeds every chunk, which under AI_MODE=live would mean paid API calls: skip it

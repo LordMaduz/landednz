@@ -55,7 +55,7 @@ describe('QuestionStep', () => {
   it('step 5: the date question ends with "See my roadmap"', () => {
     search = 'step=5'
     useOnboardingStore.setState({
-      answers: { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY' },
+      answers: { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL' },
     })
     render(<QuestionStep />)
     const see = screen.getByRole('button', { name: 'See my roadmap' })

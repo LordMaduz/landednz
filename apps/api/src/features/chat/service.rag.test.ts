@@ -28,7 +28,7 @@ beforeAll(async () => {
     await db.user.create({ data: { id: userId, email } });
     await db.subscription.create({ data: { userId, isActive: true } });
     await db.userProfile.create({
-      data: { userId, visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'TECHNOLOGY', arrivalDate: new Date('2026-09-01') },
+      data: { userId, visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'OTHER_PROFESSIONAL', arrivalDate: new Date('2026-09-01') },
     });
     const session = await db.chatSession.create({ data: { userId, entryPoint: 'NAVIGATION' } });
     users[kind] = { userId, jwt, sessionId: session.id };

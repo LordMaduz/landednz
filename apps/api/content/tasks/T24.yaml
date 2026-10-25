@@ -1,0 +1,25 @@
+id: T24
+name: "Gather and carry your key documents"
+phase: 1
+priority: 92
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T24.why.1
+    text: "You need your key documents for official tasks after you arrive in NZ."
+    source: www-immigration-govt-nz-live-moving-to-new-zealand-planning-your-move-to-new-zealand
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T24.steps.1
+    text: "Gather the originals or certified copies of your key documents and carry them with you when you travel."
+    source: www-immigration-govt-nz-live-moving-to-new-zealand-planning-your-move-to-new-zealand
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

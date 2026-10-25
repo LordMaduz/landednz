@@ -1,0 +1,25 @@
+id: T22
+name: "Check your public health eligibility and cover"
+phase: 1
+priority: 85
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T22.why.1
+    text: "Your visa decides whether you can use publicly funded health care in NZ, so check your eligibility and cover before you travel."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T22.steps.1
+    text: "Read the Immigration NZ guidance on who can get public health care, and check each family member separately."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

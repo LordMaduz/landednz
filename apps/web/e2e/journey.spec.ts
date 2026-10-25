@@ -8,7 +8,7 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await page.goto('/')
   await page.getByRole('link', { name: 'Build my roadmap' }).click()
 
-  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Technology']) {
+  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Another job or profession']) {
     await page.getByLabel(label).check()
     await page.getByRole('button', { name: 'Continue' }).click()
   }

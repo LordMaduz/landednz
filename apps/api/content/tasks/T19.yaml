@@ -1,16 +1,11 @@
 id: T19
-name: CV and LinkedIn for NZ Job Market
-phase: 3
+name: Prepare an NZ-style CV and job search
+phase: 1
 priority: 55
 boosts: []
 urgency: []
 duration: 3–6 hours (initial CV rewrite and LinkedIn update)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: { any: [{ occupation: [SEEKING_WORK] }, { family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN] }] }
 dependsOn: []
 retired: false
 why:

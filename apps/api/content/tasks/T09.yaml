@@ -1,5 +1,5 @@
 id: T09
-name: Tax Code Declaration (IR330)
+name: Give your employer a tax code (IR330)
 phase: 3
 priority: 97
 boosts:
@@ -26,12 +26,7 @@ urgency:
     afterFirstYear: true
     by: 25
 duration: 15–20 minutes
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn:
   - task: T08
     type: hard

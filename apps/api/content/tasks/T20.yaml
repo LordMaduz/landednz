@@ -16,7 +16,7 @@ dependsOn:
     type: hard
   - task: T10
     type: hard
-retired: false
+retired: true
 why:
   - id: T20.why.1
     text: At 3 months, take 60 minutes to review your KiwiSaver setup.

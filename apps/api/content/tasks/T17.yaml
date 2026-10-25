@@ -1,18 +1,15 @@
 id: T17
-name: NZQA Qualification Recognition
-phase: 3
+name: Check whether you need a qualification assessment (IQA)
+phase: 1
 priority: 60
 boosts: []
 urgency: []
 duration: 2–4 hours (application preparation); 10 weeks (increased from 25-40 working days due to high demand) (NZQA processing)
 processingTime: 25-40 working days
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
-dependsOn: []
+appliesTo: { occupation: [EDUCATION, SEEKING_WORK] }
+dependsOn:
+  - task: T24
+    type: soft
 retired: false
 why:
   - id: T17.why.1

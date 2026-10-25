@@ -13,7 +13,7 @@
 import { describe, it, expect } from 'vitest';
 import { retrieveChunks } from '../src/features/chat/rag/retrieval.js';
 
-const profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'COUPLE_CONSTRAINED', occupation: 'TECHNOLOGY' };
+const profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'COUPLE_CONSTRAINED', occupation: 'OTHER_PROFESSIONAL' };
 
 // Mock embeddings carry no meaning, so semantic golden examples only run with AI_MODE=live
 describe.skipIf(process.env.AI_MODE === 'mock')('RAG Retrieval Golden Examples', () => {

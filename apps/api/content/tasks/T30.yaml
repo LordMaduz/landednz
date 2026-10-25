@@ -1,0 +1,29 @@
+id: T30
+name: "Enrol your child in school"
+phase: 3
+priority: 90
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T11
+    type: hard
+  - task: T01
+    type: soft
+retired: false
+why:
+  - id: T30.why.1
+    text: "Immigration NZ says getting your children into school should be a priority when you arrive."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T30.steps.1
+    text: "Contact the schools near your home to enrol your child."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

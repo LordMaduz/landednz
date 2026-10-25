@@ -12,7 +12,7 @@ vi.mock('@/lib/api', () => ({ getRoadmapPreview: () => getRoadmapPreview() }))
 
 const { PreviewRoute } = await import('./preview-route')
 
-const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2027-01-14' }
+const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2027-01-14' }
 
 describe('PreviewRoute', () => {
   it('shows three legs and folds Month 1 and Later into one row with the count', async () => {
@@ -23,7 +23,7 @@ describe('PreviewRoute', () => {
     expect(screen.getByText(/^10 tasks: renting/)).toBeInTheDocument()
     expect(screen.getByText('Research Auckland suburbs')).toBeInTheDocument()
     expect(screen.getByText('Open a bank account')).toBeInTheDocument()
-    expect(screen.getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027.', { exact: false })).toBeInTheDocument()
+    expect(screen.getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027.', { exact: false })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Save my roadmap' })).toHaveAttribute('href', '/auth/complete?redirect=%2Fapp')
     expect(screen.queryByRole('alert')).toBeNull()
   })

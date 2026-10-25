@@ -1,5 +1,5 @@
 id: T06
-name: NZ SIM Card
+name: Get an NZ SIM card
 phase: 2
 priority: 98
 boosts: []
@@ -8,12 +8,7 @@ urgency:
     toDay: 3
     by: 30
 duration: 15–30 minutes
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn: []
 retired: false
 why:

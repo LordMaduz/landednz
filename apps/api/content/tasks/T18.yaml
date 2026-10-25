@@ -12,7 +12,7 @@ appliesTo:
     - COUPLE_CONSTRAINED
     - FAMILY_WITH_CHILDREN
 dependsOn: []
-retired: false
+retired: true
 why:
   - id: T18.why.1
     text: Passive credit building starts immediately — ensure your phone, electricity, and internet are all in your name.

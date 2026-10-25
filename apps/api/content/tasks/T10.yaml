@@ -1,6 +1,6 @@
 id: T10
-name: KiwiSaver Election
-phase: 3
+name: Join KiwiSaver or review your fund
+phase: 4
 priority: 90
 boosts:
   - when:
@@ -21,15 +21,10 @@ boosts:
     by: 5
 urgency: []
 duration: 30–45 minutes (including provider research)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: { visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT, OTHER] }
 dependsOn:
   - task: T08
-    type: soft
+    type: hard
 retired: false
 why:
   - id: T10.why.1

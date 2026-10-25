@@ -1,0 +1,29 @@
+id: T23
+name: "Confirm your occupational registration before you start work"
+phase: 1
+priority: 84
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { occupation: [HEALTHCARE, EDUCATION, TRADES] }
+dependsOn:
+  - task: T24
+    type: soft
+  - task: T17
+    type: soft
+retired: false
+why:
+  - id: T23.why.1
+    text: "Some jobs in NZ need registration with a professional body before you can start work."
+    source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T23.steps.1
+    text: "Check that your registration and practising certificate are in place before your first day of work."
+    source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

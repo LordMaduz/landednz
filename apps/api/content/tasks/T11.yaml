@@ -1,5 +1,5 @@
 id: T11
-name: Rental Agreement and Bond
+name: Sign a rental and protect your bond
 phase: 3
 priority: 88
 boosts:
@@ -22,18 +22,11 @@ boosts:
 urgency: []
 duration: 2–4 hours (viewings + agreement review + bond lodgement)
 processingTime: 4 weeks
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn:
   - task: T07
     type: hard
   - task: T01
-    type: soft
-  - task: T14
     type: soft
 retired: false
 why:

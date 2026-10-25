@@ -1,0 +1,25 @@
+id: T28
+name: "Read your visa conditions on Immigration NZ"
+phase: 2
+priority: 80
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { not: { visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT] } }
+dependsOn: []
+retired: false
+why:
+  - id: T28.why.1
+    text: "Your visa conditions are set by Immigration NZ, and Immigration NZ asks new arrivals to check them."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T28.steps.1
+    text: "Read your visa conditions on the Immigration NZ website, and read them again before you change job."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

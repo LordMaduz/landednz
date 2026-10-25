@@ -11,7 +11,7 @@ const ANSWERS = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2026-10-21',
 } as const;
 

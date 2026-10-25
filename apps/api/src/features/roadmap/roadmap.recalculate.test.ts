@@ -67,7 +67,7 @@ describe('recalculateAllRoadmaps()', () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: RECENT_ARRIVAL_DATE,
     }, CURRENT_DATE);
 
@@ -106,7 +106,7 @@ describe('recalculateAllRoadmaps()', () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: futureArrival,
     }, CURRENT_DATE);
 
@@ -124,7 +124,7 @@ describe('recalculateAllRoadmaps()', () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: RECENT_ARRIVAL_DATE,
     }, CURRENT_DATE);
 

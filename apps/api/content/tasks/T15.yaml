@@ -14,7 +14,7 @@ appliesTo:
 dependsOn:
   - task: T07
     type: hard
-retired: false
+retired: true
 why:
   - id: T15.why.1
     text: Set up Wise within your first month — it takes 1–2 days to verify and is useful to have ready before you need it.

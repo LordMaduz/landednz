@@ -12,7 +12,7 @@ appliesTo:
     - COUPLE_CONSTRAINED
     - FAMILY_WITH_CHILDREN
 dependsOn: []
-retired: false
+retired: true
 why:
   - id: T03.why.1
     text: Activate international transfer capability on your home country accounts before departure.

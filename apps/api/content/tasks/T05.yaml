@@ -12,7 +12,7 @@ appliesTo:
     - COUPLE_CONSTRAINED
     - FAMILY_WITH_CHILDREN
 dependsOn: []
-retired: false
+retired: true
 why:
   - id: T05.why.1
     text: Collect your home country tax documents (equivalent of Form 16, tax credit statement, bank interest statements) before departure.

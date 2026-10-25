@@ -35,7 +35,7 @@ describe.skipIf(!populated)('real content bundle', () => {
 
   // Legacy tasks without a why item and a step for every answer combination. Each content task removes its id;
   // a listed task that now passes fails the test, so the list only shrinks.
-  const KNOWN_GAPS = ['T05'];
+  const KNOWN_GAPS: string[] = [];
   test('every applicable task has a why item and a step for every answer combination', () => {
     const failing = new Set<string>();
     for (const t of bundle.tasks.filter((t) => !t.retired))

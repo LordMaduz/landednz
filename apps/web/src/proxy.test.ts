@@ -83,7 +83,7 @@ describe('proxy', () => {
 })
 
 describe('proxy on /onboarding/preview (Review Focus 2)', () => {
-  const priya = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2027-01-14' } as const
+  const priya = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2027-01-14' } as const
   const preview = (cookie?: string) => {
     const req = new NextRequest(`${origin}/onboarding/preview`)
     if (cookie !== undefined) req.cookies.set('lnz_answers', cookie)

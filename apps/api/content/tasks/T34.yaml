@@ -1,0 +1,27 @@
+id: T34
+name: "Understand your NZ tax residency and foreign-income exemption"
+phase: 4
+priority: 70
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn:
+  - task: T08
+    type: soft
+retired: false
+why:
+  - id: T34.why.1
+    text: "Your NZ tax residency decides how your income from overseas is taxed."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T34.steps.1
+    text: "Read the Inland Revenue guidance on tax residency and the temporary tax exemption for new residents."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

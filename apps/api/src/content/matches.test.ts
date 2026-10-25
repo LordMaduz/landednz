@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { matches } from './matches.js';
 import type { Condition, Profile } from './types.js';
 
-const p: Profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY' };
+const p: Profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL' };
 
 describe('matches', () => {
   test('undefined and all match', () => {
@@ -18,7 +18,7 @@ describe('matches', () => {
     expect(matches({ city: ['AUCKLAND'], family: ['SOLO'], visa: ['AEWV'] }, p)).toBe(true);
   });
   test('any', () => {
-    expect(matches({ any: [{ visa: ['GREEN_LIST_RESIDENCE'] }, { occupation: ['TECHNOLOGY'] }] }, p)).toBe(true);
+    expect(matches({ any: [{ visa: ['STRAIGHT_TO_RESIDENCE'] }, { occupation: ['OTHER_PROFESSIONAL'] }] }, p)).toBe(true);
     expect(matches({ any: [{ visa: ['X'] }] }, p)).toBe(false);
   });
   test('not, nested', () => {

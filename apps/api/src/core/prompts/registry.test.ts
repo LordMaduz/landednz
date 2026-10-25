@@ -14,7 +14,7 @@ const mockUser = {
     visaType: 'AEWV' as const,
     familySituation: 'COUPLE_CONSTRAINED' as const,
     city: 'AUCKLAND' as const,
-    occupation: 'TECHNOLOGY' as const,
+    occupation: 'OTHER_PROFESSIONAL' as const,
   },
   completedTaskCount: 5,
 };
@@ -98,7 +98,7 @@ const mockSystemPromptParams: BuildSystemPromptParams = {
     visaType: 'AEWV',
     familySituation: 'COUPLE_CONSTRAINED',
     city: 'AUCKLAND',
-    occupation: 'TECHNOLOGY',
+    occupation: 'OTHER_PROFESSIONAL',
     arrivalDaysAgo: 45,
     recentCompletions: ['NZ SIM card', 'Bank account', 'IRD number application'],
   },

@@ -1,0 +1,29 @@
+id: T32
+name: "Enrol your child in Well Child, immunisations and free dental care"
+phase: 4
+priority: 75
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T12
+    type: hard
+  - task: T11
+    type: soft
+retired: false
+why:
+  - id: T32.why.1
+    text: "Children in NZ can get Well Child checks, immunisations and dental care."
+    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T32.steps.1
+    text: "Enrol your child with a Well Child provider, and check their immunisations and dental care."
+    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

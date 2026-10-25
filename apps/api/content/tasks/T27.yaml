@@ -1,0 +1,27 @@
+id: T27
+name: "Complete your NZ Traveller Declaration"
+phase: 1
+priority: 90
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn:
+  - task: T25
+    type: soft
+retired: false
+why:
+  - id: T27.why.1
+    text: "You must complete the NZ Traveller Declaration before you reach passport control."
+    source: www-customs-govt-nz-travel-to-and-from-new-zealand-travelling-to-new-zealand-on-your-arrival
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T27.steps.1
+    text: "Complete your NZ Traveller Declaration and check what you need to declare when you arrive."
+    source: www-customs-govt-nz-travel-to-and-from-new-zealand-travelling-to-new-zealand-on-your-arrival
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

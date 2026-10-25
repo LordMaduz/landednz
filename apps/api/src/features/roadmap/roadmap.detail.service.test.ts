@@ -19,7 +19,7 @@ const answers = (familySituation: string) => ({
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation,
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: ARRIVAL_DATE,
 }) as Parameters<typeof createProfile>[1];
 
@@ -33,11 +33,16 @@ beforeAll(async () => {
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-ac210-${TS}@example.com` } });
 
-  // Real bundle plus a family-only step on T01 (the converted content has no conditional items yet)
+  // Real bundle plus a family-only step on T01 (the converted content has no conditional items yet),
+  // and retired T05's advice item on live T06 (no live task has advice yet)
   bundle = await loadContent();
   const t01 = task('T01')!;
   const familyStep = { ...t01.steps[0]!, id: 'T01.steps.family', text: 'Family-only step', when: { family: ['FAMILY_WITH_CHILDREN'] } };
-  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === 'T01' ? { ...t, steps: [...t.steps, familyStep] } : t)) });
+  const advice = task('T05')!.advice;
+  useContent({
+    ...bundle,
+    tasks: bundle.tasks.map(t => (t.id === 'T01' ? { ...t, steps: [...t.steps, familyStep] } : t.id === 'T06' ? { ...t, advice } : t)),
+  });
 });
 
 afterAll(async () => {
@@ -90,9 +95,9 @@ describe('getTaskDetail()', () => {
 
   test('advice item sets professionalAdviceRequired and its note', async () => {
     await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
-    const advice = task('T05')!.advice!;
+    const advice = task('T06')!.advice!;
 
-    const result = await getTaskDetail(TEST_USER_ID, 'T05');
+    const result = await getTaskDetail(TEST_USER_ID, 'T06');
 
     expect(result.professionalAdviceRequired).toBe(advice.required);
     expect(result.professionalAdviceNote).toBe(advice.text);

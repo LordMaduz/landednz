@@ -1,0 +1,27 @@
+id: T31
+name: "Find early childhood education and 20 Hours ECE"
+phase: 4
+priority: 70
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T11
+    type: soft
+retired: false
+why:
+  - id: T31.why.1
+    text: "If your child is under school age, early childhood education is available, and some of it may be funded."
+    source: www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T31.steps.1
+    text: "Read the Ministry of Education guidance on who can get funded early childhood education."
+    source: www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

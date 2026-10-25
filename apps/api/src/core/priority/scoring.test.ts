@@ -9,7 +9,7 @@ import { scoreTask } from './scoring.js';
 
 type Input = Parameters<typeof scoreTask>[0];
 
-const profile = (familySituation: string): Profile => ({ visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'TECHNOLOGY' });
+const profile = (familySituation: string): Profile => ({ visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'OTHER_PROFESSIONAL' });
 // A content task's boosts + urgency with the priority the case needs
 const def = (id: string, priority: number): Input['task'] => {
   const t = contentTask(id);

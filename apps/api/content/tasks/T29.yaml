@@ -1,0 +1,25 @@
+id: T29
+name: "Know your employment rights"
+phase: 3
+priority: 80
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T29.why.1
+    text: "Every employee in NZ must have a written employment agreement."
+    source: www-employment-govt-nz-starting-employment-employment-agreements
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T29.steps.1
+    text: "Read the Employment New Zealand guidance on employment agreements before you sign yours."
+    source: www-employment-govt-nz-starting-employment-employment-agreements
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

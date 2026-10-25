@@ -1,0 +1,27 @@
+id: T36
+name: "Make a household emergency plan"
+phase: 5
+priority: 55
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn:
+  - task: T11
+    type: soft
+retired: false
+why:
+  - id: T36.why.1
+    text: "A household emergency plan helps everyone in your home know what to do in an emergency."
+    source: getready-govt-nz-prepared-household-make-a-plan
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T36.steps.1
+    text: "Make a household emergency plan using the Get Ready guidance."
+    source: getready-govt-nz-prepared-household-make-a-plan
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

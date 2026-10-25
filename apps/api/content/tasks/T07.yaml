@@ -1,5 +1,5 @@
 id: T07
-name: Open NZ Bank Account In Person
+name: Open an NZ bank account
 phase: 2
 priority: 95
 boosts: []
@@ -8,15 +8,10 @@ urgency:
     toDay: 3
     by: 30
 duration: 45–90 minutes in branch. Debit card arrives 3–5 business days later.
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn:
   - task: T06
-    type: hard
+    type: soft
 retired: false
 why:
   - id: T07.why.1

@@ -108,3 +108,68 @@ www-anz-co-nz-personal-bank-accounts-everyday-banking-everyday-account:
   agency: www.anz.co.nz
   tier: provider
   reason: legacy, unverified
+www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/getting-health-care-and-finding-a-doctor/who-can-get-public-health-care/
+  title: "Who can get public health care"
+  agency: Immigration New Zealand
+  tier: government
+www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job:
+  url: https://www.immigration.govt.nz/work/requirements-for-work-visas/green-list-occupations-qualifications-and-skills/check-if-you-need-occupational-registration-for-your-job/
+  title: "Check if you need occupational registration for your job"
+  agency: Immigration New Zealand
+  tier: government
+www-immigration-govt-nz-live-moving-to-new-zealand-planning-your-move-to-new-zealand:
+  url: https://www.immigration.govt.nz/live/moving-to-new-zealand/planning-your-move-to-new-zealand/
+  title: "Planning your move to New Zealand"
+  agency: Immigration New Zealand
+  tier: government
+www-customs-govt-nz-travel-to-and-from-new-zealand-move-to-new-zealand-permanently-household-effects:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/move-to-new-zealand-permanently/household-effects
+  title: "Household effects"
+  agency: New Zealand Customs Service
+  tier: government
+www-mpi-govt-nz-bring-send-to-nz-pets-travelling-to-nz-bringing-cats-and-dogs-to-nz-bringing-cats-and-dogs-to-nz-using-the-2026-import-health-standard-step-by-step-guide-to-bringing-cats-and-dogs-to-nz-2026:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/pets-travelling-to-nz/bringing-cats-and-dogs-to-nz/bringing-cats-and-dogs-to-nz-using-the-2026-import-health-standard/step-by-step-guide-to-bringing-cats-and-dogs-to-nz-2026
+  title: "Step-by-step guide to bringing cats and dogs to NZ (2026)"
+  agency: Ministry for Primary Industries
+  tier: government
+www-customs-govt-nz-travel-to-and-from-new-zealand-travelling-to-new-zealand-on-your-arrival:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/travelling-to-new-zealand/on-your-arrival
+  title: "On your arrival"
+  agency: New Zealand Customs Service
+  tier: government
+www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/when-you-arrive-in-new-zealand/
+  title: "When you arrive in New Zealand"
+  agency: Immigration New Zealand
+  tier: government
+www-employment-govt-nz-starting-employment-employment-agreements:
+  url: https://www.employment.govt.nz/starting-employment/employment-agreements
+  title: "Employment agreements"
+  agency: Employment New Zealand
+  tier: government
+www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility:
+  url: https://www.education.govt.nz/education-professionals/early-learning/funding-and-financials/ece-funding-handbook/chapter-4-20-hours-early-childhood-education/4-1-funding-eligibility
+  title: "ECE Funding Handbook 4-1: Funding eligibility"
+  agency: Ministry of Education
+  tier: government
+www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21:
+  url: https://www.legislation.govt.nz/secondary-legislation/pco-drafted/2026/287/en/2026-09-21/
+  title: "Healthy Futures (Pae Ora) (Eligibility) Regulations 2026 (SL 2026/287)"
+  agency: Parliamentary Counsel Office
+  tier: legislation
+www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals:
+  url: https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals
+  title: "Tax residency status for individuals"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it-residency:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it/residency
+  title: "Working for Families: residency"
+  agency: Inland Revenue
+  tier: government
+getready-govt-nz-prepared-household-make-a-plan:
+  url: https://getready.govt.nz/prepared/household/make-a-plan
+  title: "Make a plan"
+  agency: National Emergency Management Agency
+  tier: government

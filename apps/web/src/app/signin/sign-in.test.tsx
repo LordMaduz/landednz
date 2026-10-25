@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams()
 
 const { SignIn } = await import('./sign-in-form')
 
-const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2027-01-14' }
+const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2027-01-14' }
 
 afterEach(() => vi.unstubAllEnvs())
 
@@ -22,7 +22,7 @@ describe('SignIn', () => {
     expect(screen.getByRole('link', { name: 'Your roadmap preview' })).toHaveAttribute('href', '/onboarding/preview')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Save your roadmap')
     const aside = screen.getByRole('complementary', { name: "What you're saving" })
-    expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027')).toBeInTheDocument()
+    expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027')).toBeInTheDocument()
     const rows = (await within(aside).findAllByRole('listitem')).map(li => li.textContent)
     expect(rows).toEqual([
       'Research Auckland suburbsFirst, 4 to 6 weeks before you leave',

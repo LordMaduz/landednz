@@ -1,0 +1,25 @@
+id: T26
+name: "If you're bringing a cat or dog"
+phase: 1
+priority: 60
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T26.why.1
+    text: "Bringing a cat or dog to NZ takes planning and follows Ministry for Primary Industries rules. If you're not bringing a pet, mark this task as not needed."
+    source: www-mpi-govt-nz-bring-send-to-nz-pets-travelling-to-nz-bringing-cats-and-dogs-to-nz-bringing-cats-and-dogs-to-nz-using-the-2026-import-health-standard-step-by-step-guide-to-bringing-cats-and-dogs-to-nz-2026
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T26.steps.1
+    text: "Follow the Ministry for Primary Industries step-by-step guide to bringing cats and dogs to NZ."
+    source: www-mpi-govt-nz-bring-send-to-nz-pets-travelling-to-nz-bringing-cats-and-dogs-to-nz-bringing-cats-and-dogs-to-nz-using-the-2026-import-health-standard-step-by-step-guide-to-bringing-cats-and-dogs-to-nz-2026
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []

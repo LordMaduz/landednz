@@ -1,0 +1,25 @@
+id: T33
+name: "Find settlement support and English classes"
+phase: 4
+priority: 60
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T33.why.1
+    text: "Settlement support services and English classes can help you and your family settle in NZ."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+steps:
+  - id: T33.steps.1
+    text: "Find settlement support and English classes near you through Immigration NZ."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-25
+    verified: false
+documents: []
+mistakes: []
+watchOuts: []
