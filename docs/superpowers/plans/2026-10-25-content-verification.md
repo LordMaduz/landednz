@@ -94,8 +94,7 @@ Sessions (two tasks each): 1 → 1–2 · 2 → 3–4 · 3 → 5–6 · 4 → 7,
 - [ ] **Step 1: Research** official settlement guidance (Immigration NZ, IRD, NZTA, Tenancy Services, Health NZ, MBIE) from pre-arrival to month 6 against T01–T21; one source per decision. New tasks get the next free id (`T22`…); ids are never reused.
 - [ ] **Step 2: Check started tasks** — `select "taskId", count(*) from "UserRoadmapEntry" where status <> 'NOT_STARTED' group by 1` on the local DB; list any proposed-retired ids with rows (production check happens in Stage C).
 - [ ] **Step 3: Owner gate** — present the inventory; record approval in the ledger.
-- [ ] **Step 4: Apply structure only** — for retired tasks set `retired: true`; for added tasks create a YAML skeleton (`id`, `name`, `phase`, `priority`, `appliesTo`, `dependsOn`, one `why` and one step marked `verified: false`, citing the inventory source) so the bundle and roadmap know them; fix `dependsOn` edges. Gate: `CONTENT_ALLOW_UNVERIFIED=true npm run content:build -w @landednz/api` passes.
-- [ ] **Step 5: Commit** — `docs(content): stage 1 task inventory`.
+- [ ] **Step 4: Commit** — `docs(content): stage 1 task inventory`. (Applying the structure moved to Task 5, ledger R24: the new conditions name values that exist only after the dimension change.)
 
 ### Task 3: Content gate hardening
 
@@ -141,9 +140,9 @@ Sessions (two tasks each): 1 → 1–2 · 2 → 3–4 · 3 → 5–6 · 4 → 7,
 - [ ] **Step 5: Run** content tests and `npm run content:review -w @landednz/api -- T08`; open the file and check it reads.
 - [ ] **Step 6: Commit** — `feat(content): per-task review page`.
 
-### Task 5: Dimension changes (only if Task 1 approved changes)
+### Task 5: Dimension changes and task structure
 
-If Task 1 approved no change, record "Task 5: skipped (no dimension change)" in the ledger and go on.
+Task 1 approved dimension changes and Task 2 an inventory, so this task runs (ledger R24).
 
 **Files:**
 - Modify: `apps/api/content/dimensions.yaml`, `apps/api/prisma/schema.prisma` (enums), task YAML `when`/`appliesTo`/`boosts` naming changed values, `docs/design/r0-boards/` onboarding board (only if option lists change)
@@ -156,7 +155,7 @@ If Task 1 approved no change, record "Task 5: skipped (no dimension change)" in 
 
 - [ ] **Step 1: Board** — if option lists change, regenerate the Onboarding board with the new options (`docs/design/r0-boards/build_public.py`), validate with the minimalism rules, owner approves (CW02′).
 - [ ] **Step 2: Write the failing test** (Review Focus 2): seed a real local user whose profile holds each mapped old value; run the migration SQL's update; `GET /onboarding/profile` returns 200 with the mapped value and `GET /roadmap` returns a non-empty roadmap.
-- [ ] **Step 3: Implement** — copy the proposal into `dimensions.yaml`; update enums; `prisma migrate dev --create-only`, then edit the SQL so profile rows are mapped (`UPDATE … SET … WHERE …`) before old enum values are dropped; update conditions in task YAML; `npm run content:build` regenerates `dimensions.ts`.
+- [ ] **Step 3: Implement** — copy the proposal into `dimensions.yaml`; apply Task 2's inventory structure (retired tasks `retired: true`; T22–T36 skeletons with `id`, `name`, `phase`, `priority`, `appliesTo`, `dependsOn`, one `why` and one step marked `verified: false`, citing the inventory source; `dependsOn` edges per the table); update enums; `prisma migrate dev --create-only`, then edit the SQL so profile rows are mapped (`UPDATE … SET … WHERE …`) before old enum values are dropped; update conditions in task YAML; `npm run content:build` regenerates `dimensions.ts`.
 - [ ] **Step 4: Run** `make check` — PASS (includes `registry-sync.test.ts`); `make test-e2e` — onboarding specs pass with the new options.
 - [ ] **Step 5: Commit** — `feat(onboarding): apply stage 0 dimension changes`.
 
