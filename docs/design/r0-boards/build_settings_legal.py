@@ -30,10 +30,10 @@ settings_body = app_header('') + f'''
           <p class="muted">Your roadmap is built from these answers. Change one and it's rebuilt; tasks you've done stay done.</p>
         </div>
         <div class="fields">
-          {select('visa', 'Visa', ['Accredited Employer Work Visa (AEWV)', 'Green List, work to residence', 'Green List, straight to residence', 'Partner of a student', 'Something else'], 'Accredited Employer Work Visa (AEWV)')}
-          {select('city', 'City', ['Auckland', 'Wellington', 'Christchurch', 'Somewhere else'], 'Auckland')}
-          {select('family', "Who's moving with you", ['Just me', 'My partner, and we both work', "My partner, who can't work yet", 'My partner and our children'], 'Just me')}
-          {select('work', 'Work', ['Technology', 'Healthcare', 'Education', 'Finance', 'Trades', 'Another profession', "I'm still looking for work"], 'Technology')}
+          {select('visa', 'Visa', ['Accredited Employer Work Visa (AEWV)', 'Straight to Residence Visa (Green List Tier 1)', 'Skilled Migrant Category Resident Visa', 'Partner work visa (your partner is working or studying in NZ)', 'Post-Study Work Visa', 'Specific Purpose Work Visa', 'Working holiday visa', 'Another visa'], 'Accredited Employer Work Visa (AEWV)')}
+          {select('city', 'City', ['Auckland', 'Wellington region', 'Greater Christchurch (including Selwyn and Waimakariri)', 'Somewhere else in NZ'], 'Auckland')}
+          {select('family', "Who's moving with you", ['Just me', 'Me and my partner, who can already work in NZ', "Me and my partner, who can't work in NZ yet", 'Me, my partner and our children', 'Me and my children'], 'Just me')}
+          {select('work', 'Work', ['Healthcare (doctor, nurse or another registered health profession)', 'Teaching', 'Electrical, plumbing, gas or drainlaying trade', 'Another job or profession', "I'm still looking for work"], 'Another job or profession')}
           <div class="f"><label for="arrival" class="t-strong">Arrival date</label><input id="arrival" type="date" class="field" value="2026-10-21" style="max-width: 280px"></div>
           <button class="btn btn-primary" style="align-self: flex-start">Save changes</button>
         </div>
