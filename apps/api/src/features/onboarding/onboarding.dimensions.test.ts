@@ -60,6 +60,7 @@ const EXPECTED: Record<string, { visaType: string; occupation: string }> = {
 
 type Mapped = { id: string; visaType: string; occupation: string };
 let mapped: Mapped[];
+let soleParent: { v: string }[];
 
 describe('dimension_changes migration', () => {
   beforeAll(async () => {
@@ -73,13 +74,22 @@ describe('dimension_changes migration', () => {
       const rows = await tx.$queryRawUnsafe<Mapped[]>(
         `SELECT "id", "visaType"::text AS "visaType", "occupation"::text AS "occupation" FROM "UserProfile" ORDER BY "id"`,
       );
-      await tx.$executeRawUnsafe(`DROP SCHEMA "${SCHEMA}" CASCADE`);
       return rows;
     });
+    // A value added by ALTER TYPE ... ADD VALUE is usable only after commit, so cast outside the replay transaction
+    try {
+      soleParent = await db.$queryRawUnsafe<{ v: string }[]>(`SELECT 'SOLE_PARENT'::"${SCHEMA}"."FamilySituation"::text AS v`);
+    } finally {
+      await db.$executeRawUnsafe(`DROP SCHEMA "${SCHEMA}" CASCADE`);
+    }
   });
 
   test('maps every old value per the answer mapping', () => {
     expect(Object.fromEntries(mapped.map(({ id, ...rest }) => [id, rest]))).toEqual(EXPECTED);
+  });
+
+  test('SOLE_PARENT casts to the migrated FamilySituation enum', () => {
+    expect(soleParent).toEqual([{ v: 'SOLE_PARENT' }]);
   });
 });
 

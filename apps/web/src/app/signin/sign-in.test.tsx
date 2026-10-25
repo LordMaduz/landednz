@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
 import { phaseOf } from '@/test/roadmap-fixtures'
 
-// SOLO: every KB task but T21 (couples only)
+// Synthetic T01–T20 laid out by phaseOf, not the live KB tasks
 const tasks = Array.from({ length: 20 }, (_, i) => {
   const taskId = `T${String(i + 1).padStart(2, '0')}`
   return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: phaseOf(taskId) }

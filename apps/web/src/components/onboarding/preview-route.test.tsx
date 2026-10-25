@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
 import { phaseOf } from '@/test/roadmap-fixtures'
 
-// SOLO: every KB task but T21 (couples only)
+// Synthetic T01–T20 laid out by phaseOf, not the live KB tasks
 const tasks = Array.from({ length: 20 }, (_, i) => {
   const taskId = `T${String(i + 1).padStart(2, '0')}`
   return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: phaseOf(taskId) }
@@ -27,6 +27,18 @@ describe('PreviewRoute', () => {
     expect(screen.getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027.', { exact: false })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Save my roadmap' })).toHaveAttribute('href', '/auth/complete?redirect=%2Fapp')
     expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('marks the first task of the earliest phase, not the lowest id', async () => {
+    getRoadmapPreview.mockResolvedValueOnce({
+      tasks: [
+        { taskId: 'T02', name: 'KB T02', estimatedDuration: '1 day', phase: 2 },
+        { taskId: 'T08', name: 'KB T08', estimatedDuration: '1 day', phase: 1 },
+      ],
+    })
+    render(<PreviewRoute answers={priya} saveFailed={false} />)
+    expect(await screen.findByText('Apply for your IRD number')).toHaveClass('font-semibold')
+    expect(document.querySelectorAll('.font-semibold.grow')).toHaveLength(1)
   })
 
   it('API down: a retryable alert under the page h1', async () => {

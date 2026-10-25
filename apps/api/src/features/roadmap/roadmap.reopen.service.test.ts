@@ -61,9 +61,9 @@ async function withRetired(taskId: string, fn: () => Promise<void>) {
 describe('getRoadmap() completedAt and blockingTaskIds', () => {
   test('open task has completedAt null; blocked T09 names T08 by id', async () => {
     await profile();
-    const t06 = await findTask('T08');
+    const t08 = await findTask('T08');
     const t07 = await findTask('T09');
-    expect(t06.completedAt).toBeNull();
+    expect(t08.completedAt).toBeNull();
     expect(t07.blockingTaskIds).toEqual(['T08']);
     expect(t07.blockingTaskNames).toEqual([contentTask('T08')!.name]);
   });
@@ -71,8 +71,8 @@ describe('getRoadmap() completedAt and blockingTaskIds', () => {
   test('completed task carries the stored completedAt as ISO', async () => {
     await profile();
     await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
-    const t06 = await findTask('T08');
-    expect(t06.completedAt).toBe(CURRENT_DATE.toISOString());
+    const t08 = await findTask('T08');
+    expect(t08.completedAt).toBe(CURRENT_DATE.toISOString());
     expect((await findTask('T09')).blockingTaskIds).toEqual([]);
   });
 });

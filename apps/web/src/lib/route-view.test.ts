@@ -58,6 +58,12 @@ describe('buildRouteView — edges', () => {
     expect(task(view, 'T06')).toMatchObject({ state: 'blocked', meta: 'Needs another task first' })
   })
 
+  it('orders by phase before id: an earlier phase holds the current task', () => {
+    const view = buildRouteView(roadmap([apiTask('T02', { phase: 2 }), apiTask('T08', { phase: 1 })]), ARRIVAL)
+    expect(view.current?.taskId).toBe('T08')
+    expect(view.legs.map(l => [l.id, l.state])).toEqual([['before', 'current'], ['arrival', 'open']])
+  })
+
   it('blocked meta names the lowest-id blocker', () => {
     const view = buildRouteView(
       roadmap([apiTask('T10'), apiTask('T20', { isBlocked: true, blockingTaskIds: ['T10', 'T08'] })]),

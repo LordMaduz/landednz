@@ -41,7 +41,7 @@ function blockedMeta(t: RoadmapApiTask): string {
 }
 
 export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string): RouteView {
-  const tasks = roadmap.phases.flatMap(p => p.tasks).sort((a, b) => a.taskId.localeCompare(b.taskId))
+  const tasks = roadmap.phases.flatMap(p => p.tasks).sort((a, b) => a.phase - b.phase || a.taskId.localeCompare(b.taskId))
   const isDone = (t: RoadmapApiTask) => t.status === 'COMPLETE'
   const currentId = tasks.find(t => !isDone(t) && !t.isBlocked)?.taskId ?? null
 

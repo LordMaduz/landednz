@@ -42,8 +42,8 @@ export function previewTitle(taskId: string, name: string, city: Answers["city"]
 type Tasks = OnboardingPreviewResponse["tasks"]
 
 function Legs({ tasks, city }: { tasks: Tasks; city: Answers["city"] }) {
-  const firstId = tasks[0]?.taskId
   const legs = SHOWN.map(leg => ({ ...leg, tasks: tasks.filter(t => legForPhase(t.phase) === leg.id) })).filter(l => l.tasks.length)
+  const firstId = legs[0]?.tasks[0]?.taskId
   const folded = tasks.filter(t => ["month1", "later"].includes(legForPhase(t.phase))).length
 
   return (

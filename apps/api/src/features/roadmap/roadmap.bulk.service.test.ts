@@ -4,7 +4,7 @@
 // AC-2-09: POST /roadmap/bulk-override marks all specified tasks COMPLETE in a single
 // request and returns correct newTopThree.
 //
-// Uses content task IDs (T08, T09, T08, T02) — fileParallelism: false ensures
+// Uses content task IDs (T02, T08, T09) — fileParallelism: false ensures
 // sequential execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
@@ -108,8 +108,8 @@ describe('bulkOverride()', () => {
       const topThreeIds = result.newTopThree.map(t => t.taskId);
       expect(topThreeIds).toContain('T09');
 
-      const t07 = result.newTopThree.find(t => t.taskId === 'T09');
-      expect(t07!.isBlocked).toBe(false);
+      const t09 = result.newTopThree.find(t => t.taskId === 'T09');
+      expect(t09!.isBlocked).toBe(false);
     });
   });
 

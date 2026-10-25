@@ -4,7 +4,7 @@
 // AC-2-07: POST /roadmap/tasks/:taskId/complete marks COMPLETE, returns updated topThree
 // AC-2-08: Completing T08 causes T09 to appear in newTopThree (T08→T09 HARD dep resolved)
 //
-// Content tasks T08, T09, T08, T02 used — fileParallelism: false ensures sequential
+// Content tasks T02, T08, T09 used — fileParallelism: false ensures sequential
 // test file execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
@@ -114,8 +114,8 @@ describe('completeTask()', () => {
     });
 
     test('AC-2-08: Complete T08 → T09 appears in newTopThree (HARD dep resolved)', async () => {
-      // Golden1: T09 is HARD blocked by T08 (score 75, not in topThree)
-      // After completing T08: T09 unblocked, score=125, appears in newTopThree
+      // T09 is HARD blocked by T08, so it starts outside topThree
+      // After completing T08: T09 unblocked, appears in newTopThree
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
@@ -129,13 +129,13 @@ describe('completeTask()', () => {
       expect(result.taskId).toBe('T08');
       expect(result.status).toBe('COMPLETE');
 
-      // T09 must be in newTopThree — it was HARD blocked, now unblocked (score 125)
+      // T09 must be in newTopThree — it was HARD blocked, now unblocked
       const newTopThreeIds = result.newTopThree.map(t => t.taskId);
       expect(newTopThreeIds).toContain('T09');
 
       // T09 must be marked as unblocked in newTopThree
-      const t07 = result.newTopThree.find(t => t.taskId === 'T09');
-      expect(t07!.isBlocked).toBe(false);
+      const t09 = result.newTopThree.find(t => t.taskId === 'T09');
+      expect(t09!.isBlocked).toBe(false);
 
       // T09 must appear in unlockedTasks
       expect(result.unlockedTasks).toContain('T09');
