@@ -1,0 +1,25 @@
+# Inland Revenue figures. research/T08.md holds the evidence for each.
+ird.non-declaration-rate:
+  value: "45%"
+  numberType: A
+  source: ird-ir330
+  checked: 2026-10-25
+  verified: true
+ird.new-arrival-delivery:
+  value: "2 days"
+  numberType: B
+  source: ird-new-arrival
+  checked: 2026-10-25
+  verified: true
+ird.living-in-nz-id-window:
+  value: "20 days"
+  numberType: B
+  source: ird-living-in-nz
+  checked: 2026-10-25
+  verified: true
+ird.rwt-no-number-rate:
+  value: "45%"
+  numberType: A
+  source: ird-rwt-rate
+  checked: 2026-10-25
+  verified: true

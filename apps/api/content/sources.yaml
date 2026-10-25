@@ -38,11 +38,6 @@ www-anz-co-nz-personal-bank-accounts-new-to-new-zealand:
   agency: www.anz.co.nz
   tier: provider
   reason: legacy, unverified
-www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals:
-  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals
-  title: www.ird.govt.nz
-  agency: www.ird.govt.nz
-  tier: government
 www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration:
   url: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration
   title: www.ird.govt.nz
@@ -172,4 +167,54 @@ getready-govt-nz-prepared-household-make-a-plan:
   url: https://getready.govt.nz/prepared/household/make-a-plan
   title: "Make a plan"
   agency: National Emergency Management Agency
+  tier: government
+ird-new-arrival:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/new-arrival-to-new-zealand---ird-number-application
+  title: "New arrival to New Zealand: IRD number application"
+  agency: Inland Revenue
+  tier: government
+ird-work-or-study:
+  url: https://www.ird.govt.nz/situations/work-or-study-in-new-zealand
+  title: Work or study in New Zealand
+  agency: Inland Revenue
+  tier: government
+ird-myir-register:
+  url: https://www.ird.govt.nz/myir-help/register-account/personal
+  title: Register for a myIR account
+  agency: Inland Revenue
+  tier: government
+ird-living-in-nz:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/living-and-new-zealand-and-not-a-new-arrival---ird-number-application
+  title: "Living in New Zealand and not a new arrival: IRD number application"
+  agency: Inland Revenue
+  tier: government
+ird-cannot-apply-online:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/cannot-get-my-ird-number-online
+  title: I cannot get my IRD number online
+  agency: Inland Revenue
+  tier: government
+ird-find-number:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/find-my-ird-number
+  title: Find my IRD number
+  agency: Inland Revenue
+  tier: government
+ird-when-you-need-one:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/when-you-need-one
+  title: When you need an IRD number
+  agency: Inland Revenue
+  tier: government
+ird-rwt-rate:
+  url: https://www.ird.govt.nz/income-tax/withholding-taxes/resident-withholding-tax-rwt/using-the-right-rwt-tax-rate
+  title: Using the right RWT tax rate
+  agency: Inland Revenue
+  tier: government
+ird-ir330:
+  url: https://www.ird.govt.nz/-/media/project/ir/home/documents/forms-and-guides/ir300---ir399/ir330/ir330.pdf?modified=20250324034423
+  title: Tax code declaration (IR330)
+  agency: Inland Revenue
+  tier: government
+ird-phone-numbers:
+  url: https://www.ird.govt.nz/contact-us/general/phone-numbers
+  title: Phone numbers
+  agency: Inland Revenue
   tier: government
