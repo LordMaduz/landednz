@@ -11,6 +11,7 @@
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import { db } from '../../shared/db.js';
 import { createProfile } from '../onboarding/onboarding.service.js';
+import { loadContent, useContent } from '../../content/index.js';
 import { recalculateAllRoadmaps } from './roadmap.recalculate.js';
 
 // ─── Test identifiers ─────────────────────────────────────────────────────────
@@ -136,5 +137,37 @@ describe('recalculateAllRoadmaps()', () => {
 
     expect(result.usersProcessed).toBeGreaterThanOrEqual(1);
     expect(result.entriesUpdated).toBeGreaterThanOrEqual(entryCount);
+  });
+  test('a new bundle adds and drops tasks: started entries stay, open ones that no longer apply go', async () => {
+    // A profile combination narrow enough that only this user is affected by the swapped bundle
+    const answers = { visaType: 'SPECIFIC_PURPOSE_WORK', city: 'CHRISTCHURCH', familySituation: 'SOLE_PARENT', occupation: 'TRADES' } as const;
+    const exactlyThisProfile = { visa: [answers.visaType], city: [answers.city], family: [answers.familySituation], occupation: [answers.occupation] };
+    await createProfile(TEST_USER_ID, { ...answers, arrivalDate: RECENT_ARRIVAL_DATE }, CURRENT_DATE);
+    const [a, b, r] = (await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID }, orderBy: { taskId: 'asc' } })).map(e => e.taskId);
+    await db.userRoadmapEntry.update({ where: { userId_taskId: { userId: TEST_USER_ID, taskId: a! } }, data: { status: 'COMPLETE', completedAt: new Date() } });
+    const rBefore = await db.userRoadmapEntry.update({ where: { userId_taskId: { userId: TEST_USER_ID, taskId: r! } }, data: { status: 'IN_PROGRESS' } });
+
+    const bundle = await loadContent();
+    const n = { ...bundle.tasks.find(t => t.id === b)!, id: 'T97', appliesTo: exactlyThisProfile, dependsOn: [] };
+    useContent({
+      ...bundle,
+      tasks: [
+        ...bundle.tasks.map(t => (t.id === b ? { ...t, appliesTo: { not: exactlyThisProfile } } : t.id === r ? { ...t, retired: true } : t)),
+        n,
+      ],
+    });
+    try {
+      const result = await recalculateAllRoadmaps(CURRENT_DATE);
+
+      const byId = new Map((await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } })).map(e => [e.taskId, e]));
+      expect(byId.get(a!)!.status).toBe('COMPLETE');
+      expect(byId.get(r!)).toEqual(rBefore);
+      expect(byId.get('T97')!.status).toBe('NOT_STARTED');
+      expect(byId.has(b!)).toBe(false);
+      expect(result).toMatchObject({ entriesAdded: 1, entriesRemoved: 1 });
+    } finally {
+      useContent(bundle);
+      await recalculateAllRoadmaps(CURRENT_DATE); // put any other user's roadmap back on the real bundle
+    }
   });
 });

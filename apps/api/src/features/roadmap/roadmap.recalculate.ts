@@ -1,5 +1,6 @@
-// Daily priority recalculation job.
-// Re-scores all users' non-COMPLETE roadmap entries using the current date,
+// Daily priority recalculation job, also run after each content deploy.
+// Reconciles every user's roadmap with the current content (adds newly applicable
+// tasks, drops open entries that no longer apply) and rescores with the current date,
 // so time-sensitive urgency bonuses (T16 month 10-11, T06/T07 days 1-3, etc.)
 // remain accurate as time passes since onboarding.
 //
@@ -8,8 +9,7 @@
 
 import { db } from '../../shared/db.js';
 import { logger } from '../../shared/logger.js';
-import { contentVersion } from '../../content/index.js';
-import { buildRoadmapEntries } from './roadmap.build.js';
+import { reconcileRoadmap } from './roadmap.build.js';
 import type { RecalculateResponse } from './roadmap.types.js';
 
 export async function recalculateAllRoadmaps(
@@ -25,6 +25,8 @@ export async function recalculateAllRoadmaps(
   logger.info({ userCount: userIds.length, currentDate }, 'recalculateAllRoadmaps started');
 
   let entriesUpdated = 0;
+  let entriesAdded = 0;
+  let entriesRemoved = 0;
 
   for (const userId of userIds) {
     // 2. Fetch profile — skip users with no profile (shouldn't happen, but be safe)
@@ -34,24 +36,14 @@ export async function recalculateAllRoadmaps(
       continue;
     }
 
-    // 3. Rebuild from content and rescore the user's non-COMPLETE entries.
-    // Entries whose task no longer applies are left as they are.
-    const allEntries = await db.userRoadmapEntry.findMany({ where: { userId } });
-    const completedTaskIds = allEntries.filter(e => e.status === 'COMPLETE').map(e => e.taskId);
-    const openTaskIds = new Set(allEntries.filter(e => e.status !== 'COMPLETE').map(e => e.taskId));
-    const version = contentVersion();
-
-    for (const e of buildRoadmapEntries(profile, profile.arrivalDate, currentDate, completedTaskIds)) {
-      if (!openTaskIds.has(e.taskId)) continue;
-      await db.userRoadmapEntry.update({
-        where: { userId_taskId: { userId, taskId: e.taskId } },
-        data: { isBlocked: e.isBlocked, priorityScore: e.priorityScore, contentVersion: version },
-      });
-      entriesUpdated++;
-    }
+    // 3. Reconcile with the current content: add, drop and rescore
+    const r = await db.$transaction(tx => reconcileRoadmap(tx, userId, profile, profile.arrivalDate, currentDate));
+    entriesUpdated += r.updated;
+    entriesAdded += r.added;
+    entriesRemoved += r.removed;
   }
 
-  logger.info({ usersProcessed: userIds.length, entriesUpdated }, 'recalculateAllRoadmaps complete');
+  logger.info({ usersProcessed: userIds.length, entriesUpdated, entriesAdded, entriesRemoved }, 'recalculateAllRoadmaps complete');
 
-  return { usersProcessed: userIds.length, entriesUpdated };
+  return { usersProcessed: userIds.length, entriesUpdated, entriesAdded, entriesRemoved };
 }
