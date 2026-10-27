@@ -1,0 +1,55 @@
+# NZQA figures (International Qualification Assessment). research/T17.md holds the evidence for each.
+nzqa.min-learning-hours:
+  value: "400 notional learning hours"
+  numberType: B
+  source: nzqa-iqa
+  checked: 2026-10-27
+  verified: true
+nzqa.rfi-reply:
+  value: "15 days"
+  numberType: B
+  source: nzqa-apply-iqa
+  checked: 2026-10-27
+  verified: true
+nzqa.average-wait:
+  value: "10 weeks"
+  numberType: B
+  source: nzqa-apply-iqa
+  checked: 2026-10-27
+  verified: true
+nzqa.complete-turnaround:
+  value: "3 weeks (15 business days)"
+  numberType: B
+  source: nzqa-apply-iqa
+  checked: 2026-10-27
+  verified: true
+nzqa.standard-fee:
+  value: "NZ$445"
+  numberType: A
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
+nzqa.pre-1998-fee:
+  value: "NZ$275"
+  numberType: A
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
+nzqa.appeal-fee:
+  value: "NZ$765"
+  numberType: A
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
+nzqa.appeal-window:
+  value: "20 working days"
+  numberType: B
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
+nzqa.teaching-fee:
+  value: "NZ$746"
+  numberType: A
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
