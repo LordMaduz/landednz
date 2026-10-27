@@ -729,3 +729,53 @@ healthnz-dentists:
   title: Dentists
   agency: Health New Zealand
   tier: government
+ird-kiwisaver-joining:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver
+  title: Joining KiwiSaver
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-employee:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver/joining-kiwisaver-as-an-employee
+  title: Joining KiwiSaver as an employee
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-benefits:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/kiwisaver-benefits
+  title: KiwiSaver benefits
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-rates:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/employee-contributions
+  title: Employee contributions
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-choosing-fund:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver/choosing-a-kiwisaver-provider
+  title: Choosing a KiwiSaver fund
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-opt-out:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/opting-out-of-kiwisaver
+  title: Opting out of KiwiSaver
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-changes:
+  url: https://www.ird.govt.nz/updates/news-folder/2025/kiwisaver-changes
+  title: KiwiSaver changes
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-pir:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/taxing-kiwisaver-income
+  title: How your KiwiSaver income is taxed
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-early:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/getting-my-kiwisaver-funds-early
+  title: Getting my KiwiSaver savings early
+  agency: Inland Revenue
+  tier: government
+sorted-kiwisaver-which-fund:
+  url: https://sorted.org.nz/guides/kiwisaver/kiwisaver-which-fund-suits/
+  title: How to pick the right KiwiSaver fund for you
+  agency: Retirement Commission (Sorted)
+  tier: government

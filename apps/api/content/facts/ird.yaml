@@ -77,3 +77,105 @@ ird.exemption-from-date:
   source: www-ird-govt-nz-roles-nz-tax-residents-exemption
   checked: 2026-10-27
   verified: true
+ird.kiwisaver-2028-date:
+  value: "1 April 2028"
+  numberType: A
+  source: ird-kiwisaver-changes
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-rates:
+  value: "3.5%, 4%, 6%, 8% or 10%"
+  numberType: A
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-default-rate:
+  value: "3.5%"
+  numberType: A
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-rate-change-gap:
+  value: "once every 3 months"
+  numberType: B
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-employer-rate:
+  value: "3.5%"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-match:
+  value: "25 cents for every dollar"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-max:
+  value: "$260.72"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-full-contribution:
+  value: "$1042.86"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-income-limit:
+  value: "$180,000"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-default-rate-2028:
+  value: "4%"
+  numberType: A
+  source: ird-kiwisaver-changes
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-opt-out-window:
+  value: "on or after day 14 and on or before day 56"
+  numberType: B
+  source: ird-kiwisaver-opt-out
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-hold-period:
+  value: "2 months (62 days)"
+  numberType: B
+  source: ird-kiwisaver-joining
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-transfer-time:
+  value: "about 2 weeks"
+  numberType: B
+  source: www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-pir-rates:
+  value: "28%, 17.5% or 10.5%"
+  numberType: A
+  source: ird-kiwisaver-pir
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-auto-enrol-ages:
+  value: "18 to 65"
+  numberType: A
+  source: ird-kiwisaver-employee
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-contract-min:
+  value: "28 days"
+  numberType: A
+  source: ird-kiwisaver-employee
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-pir-lookback:
+  value: "two years"
+  numberType: A
+  source: ird-kiwisaver-pir
+  checked: 2026-10-27
+  verified: true
