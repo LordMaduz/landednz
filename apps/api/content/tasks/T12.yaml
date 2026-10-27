@@ -1,5 +1,5 @@
 id: T12
-name: Enrol with a GP
+name: "Enrol with a GP"
 phase: 3
 priority: 85
 boosts:
@@ -27,133 +27,96 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T12.why.1
-    text: Register with a GP near your home or workplace within your first 2 weeks at permanent accommodation.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T12.why.enrol
+    text: "Health New Zealand says everyone should enrol with a general practice to get help with all their health needs."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.why.fees
+    text: "Health New Zealand says enrolled patients pay a reduced, subsidised consultation fee, while patients who aren't enrolled usually pay a higher casual rate."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T12.steps.1
-    text: 'Use the Health New Zealand GP finder: https://www.healthpoint.co.nz Filter by location and check "accepting new patients." GP practices in central Auckland can have waitlists — start searching early. Some South Auckland practices have shorter waitlists and are accessible by PT.'
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.2
-    text: Call or email the practice. Confirm they are accepting new patients and ask what documents are needed for enrolment. Some practices have online enrolment forms.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.3
-    text: "Typically required: - Passport - Visa details (type and expiry) - NZ address - NZ mobile number - NHI (National Health Index) number if you have one from a previous NZ visit — if not, one will be assigned at registration - Previous health history summary (optional but helpful — especially for any chronic conditions, medications, or allergies)"
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.4
-    text: In person or online depending on the practice. You may be asked to complete a health questionnaire. Bring all medications you currently take and a list of any known allergies.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.5
-    text: Ask the practice what your enrolled consultation fee will be. Most practices charge $20–$60 for enrolled adults [Type B — practice-specific, varies by funding zone and practice]. If significantly higher, compare with other nearby practices. Some GP practices bulk-bill (zero co-payment) for eligible patients — these are less common but exist.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.6
-    text: Even if you are well, a new patient consultation helps establish your health record, discuss any medications, review vaccinations, and understand the NZ health system. It is also the opportunity to arrange any prescription renewals you need.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.steps.7
-    text: Your NHI (National Health Index) number is your NZ health identifier — used across all health services including hospitals, specialists, and labs. It is assigned automatically when you first interact with the NZ health system (GP, ED, or lab). Record it and keep it with your important documents.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T12.steps.find
+    text: "Search Healthpoint, which Govt.nz links from its Find a doctor page. Select 'Enrolling new patients' to see only practices that are accepting new patients."
+    source: govt-nz-find-a-doctor
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.choose
+    text: "Health New Zealand says you can choose the doctor or general practice you visit. It lists fees, distance, opening hours, after-hours services and wait times among the things to consider."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.eligibility
+    text: "Check your eligibility before you enrol. Govt.nz says practices can only enrol people who are eligible for publicly funded health services."
+    source: govt-nz-find-a-doctor
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.work-visa
+    text: "If you're on a work visa: Health New Zealand's guide lists work visas that let you stay {{health.work-visa-length}} or more among those that meet its criteria, and says time you have already been here legally counts towards that. Read the guide for your own situation."
+    when:
+      visa: [AEWV, PARTNER_WORK, POST_STUDY_WORK, SPECIFIC_PURPOSE_WORK, WORKING_HOLIDAY, OTHER]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.enrol
+    text: "Contact the practice you've chosen. Health New Zealand says enrolling is free, and you take proof of eligibility, such as a passport, and sign an enrolment form."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.full
+    text: "If a practice isn't taking new patients: Health New Zealand says it should refer you to its primary health organisation (PHO), which may put you on a waiting list and arrange care in the meantime."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.after-hours
+    text: "Ask your practice what to do when it is closed. Health New Zealand says you may need an after-hours accident and medical clinic or another practice, and Healthline (0800 611 116) gives free health advice from registered nurses at any time."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.steps.pregnant
+    text: "If you're pregnant: Govt.nz says that as soon as your pregnancy is confirmed you need to choose a lead maternity carer (LMC), most of whom are registered midwives. The same page links to Health New Zealand's pregnancy services eligibility."
+    source: govt-nz-while-pregnant
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T12.documents.1
-    text: passport
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.documents.2
-    text: visa
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T12.documents.proof
+    text: "Proof of eligibility, such as your passport (Health New Zealand's general practices page)"
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.documents.work-visa
+    text: "If you're on a work visa: Health New Zealand says to show your valid passport endorsed with a current work visa that lets you stay the required length of time"
+    when:
+      visa: [AEWV, PARTNER_WORK, POST_STUDY_WORK, SPECIFIC_PURPOSE_WORK, WORKING_HOLIDAY, OTHER]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T12.mistakes.1
-    text: Do not assume NZ operates like Singapore's polyclinic system. You cannot walk into any GP and be seen as an enrolled patient. Enrolment is required for subsidised rates.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.mistakes.2
-    text: Dental care is entirely private for adults in NZ. Do not expect public dental treatment. Budget for this separately.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.mistakes.3
-    text: Mental health support through GPs is available — GPs can refer to free or subsidised counselling under the government's Primary Mental Health scheme. Do not hesitate to raise mental health concerns at your GP consultation — this is normalised in NZ healthcare.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.mistakes.4
-    text: "Failing to understand: If you need urgent care outside GP hours, go to an Accident and Urgent Medical Clinic (e.g. Shorecare, White Cross, After Hours Medical) — not a hospital ED unless it is a genuine emergency. Hospital EDs have very long wait times for non-emergency presentations."
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.mistakes.5
-    text: "Failing to understand: Your GP visit is confidential. Visa status does not affect your right to medical care and will not be reported to Immigration NZ."
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T12.mistakes.wait
+    text: "Waiting until you are ill to enrol. Health New Zealand says patients who aren't enrolled usually pay the higher casual rate."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T12.watchOuts.1
-    text: Do not assume NZ operates like Singapore's polyclinic system. You cannot walk into any GP and be seen as an enrolled patient. Enrolment is required for subsidised rates.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.watchOuts.2
-    text: Dental care is entirely private for adults in NZ. Do not expect public dental treatment. Budget for this separately.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.watchOuts.3
-    text: Mental health support through GPs is available — GPs can refer to free or subsidised counselling under the government's Primary Mental Health scheme. Do not hesitate to raise mental health concerns at your GP consultation — this is normalised in NZ healthcare.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.watchOuts.4
-    text: If you need urgent care outside GP hours, go to an Accident and Urgent Medical Clinic (e.g. Shorecare, White Cross, After Hours Medical) — not a hospital ED unless it is a genuine emergency. Hospital EDs have very long wait times for non-emergency presentations.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.watchOuts.5
-    text: Your GP visit is confidential. Visa status does not affect your right to medical care and will not be reported to Immigration NZ.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T12.watchOuts.6
-    text: New migrants sometimes delay GP registration until they are ill, then face higher casual rates and longer waits. Register proactively.
-    source: www-healthpoint-co-nz-general-practice
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T12.watchOuts.fees
+    text: "Health New Zealand says general practices are private businesses and set their own fees, so ask each practice what it charges. It also says practices may charge separately for things like repeat prescriptions and referral letters."
+    source: healthnz-general-practices
+    checked: 2026-10-27
+    verified: true
+  - id: T12.watchOuts.acc
+    text: "ACC: Health New Zealand's eligibility guide says ACC can cover treatment for accidents and personal injuries regardless of residential status."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T12.watchOuts.dates
+    text: "Health New Zealand's guide says changes to who can get publicly funded health services take effect from {{health.eligibility-regs-start}}. Check the guide again on the date you enrol."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T12.watchOuts.pregnancy-eligibility
+    text: "If you're pregnant: Govt.nz says people who aren't NZ citizens or permanent residents may still be able to get free or subsidised pregnancy care, and points to Health New Zealand's pregnancy services eligibility to find out."
+    source: govt-nz-while-pregnant
+    checked: 2026-10-27
+    verified: true
