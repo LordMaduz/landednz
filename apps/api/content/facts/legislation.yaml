@@ -1,0 +1,13 @@
+# Figures set in Acts and regulations. The research note of the task citing each holds its evidence.
+dca.unregistered-dog-fine:
+  value: "$3,000"
+  numberType: A
+  source: dog-control-act-1996
+  checked: 2026-10-27
+  verified: true
+dca.registration-age:
+  value: "3 months"
+  numberType: A
+  source: dog-control-act-1996
+  checked: 2026-10-27
+  verified: true
