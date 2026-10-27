@@ -21,7 +21,6 @@ boosts:
     by: 5
 urgency: []
 duration: 2–4 hours (viewings + agreement review + bond lodgement)
-processingTime: 4 weeks
 appliesTo: all
 dependsOn:
   - task: T07
@@ -30,123 +29,115 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T11.why.1
-    text: As a solo migrant, consider a 1BR apartment or a room in a flatshare for the first 3–6 months — lower upfront cost and more flexibility while establishing NZ credit history and understanding suburbs.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
+  - id: T11.why.written
+    text: "Tenancy Services says tenancy agreements must be in writing, and the landlord must give you a copy of the signed agreement before the tenancy starts. It says the Residential Tenancies Act 1986 still applies even if there is no written agreement."
+    source: tenancy-agreements
+    checked: 2026-10-27
+    verified: true
+  - id: T11.why.tenant-or-flatmate
+    text: "Tenancy Services says that if you sign a tenancy agreement with a landlord you are a tenant and covered by the Residential Tenancies Act 1986. It says flatmates, who live under someone else's tenancy agreement or rent a room in the owner's own home, are not covered by the Act."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T11.steps.1
-    text: Use trademe.co.nz/property (primary NZ rental listing site) and realestate.co.nz. Filter by suburb, bedroom count, and budget. Set up email alerts for new listings. Auckland rental market moves quickly — respond to listings within hours and schedule viewings immediately.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.2
-    text: "Never sign a rental agreement for a property you have not personally inspected. Common Auckland rental issues: dampness/mould (especially in older villas), single-glazed windows (cold in winter), poor insulation, street parking only. Check heating (heat pump is preferred), water pressure, and mobile signal inside the property."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.3
-    text: "Applications typically require: photo ID (passport), proof of income (employment offer letter or payslips), NZ bank account details, previous landlord references (overseas references acceptable for new migrants), and personal references. Some property managers use tenancy application platforms (Tapi, Palace, Renti)."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.4
-    text: "Check: rent amount, bond amount (must not exceed 4 weeks rent), tenancy type (fixed or periodic), start date, names of all tenants, no letting fee charged, break clause terms (for fixed-term). Do not sign under time pressure — you are entitled to read the full agreement."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.5
-    text: Photograph every room at the start of tenancy. Note every mark, stain, scratch, and defect on the condition report. Email your completed condition report to the property manager with photos attached. Keep all copies.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.6
-    text: "Bond: maximum 4 weeks rent. Rent in advance: maximum 2 weeks. Pay by bank transfer (never cash without receipt). Keep payment confirmation records."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.7
-    text: "Within 23 working days of paying your bond, your landlord or property manager must lodge it with Tenancy Services. You will receive a bond lodgement receipt from Tenancy Services. If you do not receive this within 4 weeks, contact Tenancy Services: 0800 836 262. Check bond status at: https://www.tenancy.govt.nz/bonds/check-bond-status"
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.steps.8
-    text: "At move-in, arrange: - Electricity: Contact provider (Genesis, Contact, Mercury, Flick, or similar) to transfer account to your name. Compare at powerswitch.org.nz. - Internet: Spark, One NZ, 2degrees, Voyager — compare plans at broadbandcompare.co.nz. - Contents insurance: Arranged before or on move-in day (see T04). Landlord's insurance does NOT cover your belongings."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
+  - id: T11.steps.read-agreement
+    text: "Read the whole tenancy agreement, including its terms and conditions, before you sign. Tenancy Services says to sign only when you are sure you want the property, and to keep a signed copy and any receipts somewhere safe."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.statements
+    text: "Check that the agreement comes with the landlord's signed healthy homes standards compliance statement. Tenancy Services says all new or renewed agreements must include one, and landlords must also include insurance and insulation statements."
+    source: tenancy-required-statements
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.inspection
+    text: "Inspect the property with your landlord and record its condition on the property inspection report. Tenancy Services suggests taking photos, and says you and the landlord should both sign, date and keep a copy of the report."
+    source: tenancy-initial-inspection
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.no-fees
+    text: "Do not pay a letting fee. Tenancy Services says landlords and their agents cannot charge tenants letting fees, and that landlords cannot charge key money, except an option fee of up to {{housing.option-fee-max}} to hold the property."
+    source: tenancy-letting-fees
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.bond-lodged
+    text: "Tenancy Services says that if you pay the bond to the landlord, they must lodge it with Tenancy Services within {{housing.bond-lodge-days}} of receiving it. You and the landlord then get confirmation with the bond number."
+    source: tenancy-lodging-bond
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.bond-check
+    text: "If you have not been told your bond is lodged, contact your landlord. Tenancy Services says to do this if you have no notification within {{housing.bond-check-weeks}}."
+    source: tenancy-bond-problems
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.utilities
+    text: "Arrange your own services. Tenancy Services says you will need to get services such as electricity, gas, internet and phone connected."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.if-wrong
+    text: "If something goes wrong and you cannot sort it out by talking to your landlord, Tenancy Services lists the next options: FastTrack Resolution, mediation, or an application to the Tenancy Tribunal."
+    source: tenancy-disputes
+    checked: 2026-10-27
+    verified: true
+  - id: T11.steps.contact
+    text: "For questions about bonds or any other tenancy matter, Tenancy Services runs a Tenancy Information line on 0800 836 262, free if you're in New Zealand."
+    source: tenancy-contact-us
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T11.documents.1
-    text: passport
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.documents.2
-    text: rental agreement
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
+  - id: T11.documents.signed-agreement
+    text: "Your signed tenancy agreement, which Tenancy Services says the landlord must give you a copy of before the tenancy starts"
+    source: tenancy-agreements
+    checked: 2026-10-27
+    verified: true
+  - id: T11.documents.compliance-statement
+    text: "The landlord's signed healthy homes standards compliance statement"
+    source: tenancy-agreements
+    checked: 2026-10-27
+    verified: true
+  - id: T11.documents.inspection-report
+    text: "The property inspection report, signed and dated by you and the landlord"
+    source: tenancy-initial-inspection
+    checked: 2026-10-27
+    verified: true
+  - id: T11.documents.bond-receipt
+    text: "The receipt for your bond, which Tenancy Services says the landlord must provide"
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T11.mistakes.1
-    text: "Failing to understand: Never pay a bond in cash without an immediate written receipt. Always pay by bank transfer to a documented account."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.mistakes.2
-    text: "Failing to understand: If your landlord does not lodge the bond within 4 weeks, follow up in writing and contact Tenancy Services. Unlodged bonds are a red flag."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.mistakes.3
-    text: Do not sign a rental agreement with a letting fee included — this is illegal under the RTA and you should refuse or report to Tenancy Services.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.mistakes.4
-    text: "Failing to understand: The property condition report is your primary bond protection document. A vague or incomplete report at move-in is used by landlords to claim damage at move-out. Document everything with photos before moving any furniture in."
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.mistakes.5
-    text: Auckland rental scams exist — especially on Facebook Marketplace. Legitimate landlords do not ask for bond before a signed agreement, do not communicate only by WhatsApp, and do not claim to be overseas. Use trademe.co.nz and licensed property managers where possible.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
+  - id: T11.mistakes.skip-inspection
+    text: "Skipping the inspection report or not keeping a signed copy. Tenancy Services says the report can be evidence in a dispute, and a tenant cannot be blamed for damage recorded when the tenancy started."
+    source: tenancy-initial-inspection
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T11.watchOuts.1
-    text: Never pay a bond in cash without an immediate written receipt. Always pay by bank transfer to a documented account.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.watchOuts.2
-    text: If your landlord does not lodge the bond within 4 weeks, follow up in writing and contact Tenancy Services. Unlodged bonds are a red flag.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.watchOuts.3
-    text: Do not sign a rental agreement with a letting fee included — this is illegal under the RTA and you should refuse or report to Tenancy Services.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.watchOuts.4
-    text: The property condition report is your primary bond protection document. A vague or incomplete report at move-in is used by landlords to claim damage at move-out. Document everything with photos before moving any furniture in.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.watchOuts.5
-    text: Auckland rental scams exist — especially on Facebook Marketplace. Legitimate landlords do not ask for bond before a signed agreement, do not communicate only by WhatsApp, and do not claim to be overseas. Use trademe.co.nz and licensed property managers where possible.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
-  - id: T11.watchOuts.6
-    text: As a new migrant, you may feel pressure to accept poor-condition properties because of lack of NZ rental history. You have full rights under the RTA from day one of your tenancy — visa status does not affect tenancy rights.
-    source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-    checked: 2026-03-03
-    verified: false
+  - id: T11.watchOuts.tenant-number
+    text: "Tenancy Services says to keep your Tenant Number safe and not share it with anyone, not even your landlord."
+    source: tenancy-lodging-bond
+    checked: 2026-10-27
+    verified: true
+  - id: T11.watchOuts.discrimination
+    text: "Tenancy Services says landlords cannot refuse to rent to you or end your tenancy for reasons that breach the Human Rights Act."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
+  - id: T11.watchOuts.services-cut
+    text: "Tenancy Services says a landlord cannot cause, or directly turn off, the power or water supply unless it is necessary to avoid danger to a person or to allow repairs."
+    source: tenancy-utilities
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T11.advice.before-signing
+  text: "Tenancy Services says that if there is anything in the tenancy agreement you do not understand, you should seek advice before you sign."
+  required: false
+  source: tenancy-agreements
+  checked: 2026-10-27
+  verified: true
 cost:
-  id: T11.cost.1
-  text: $550
-  source: www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html
-  checked: 2026-03-03
-  verified: false
+  id: T11.cost.bond
+  text: "Tenancy Services says the bond can be up to {{housing.bond-max-tenancy}}, and that you should work out your total move-in cost before renting."
+  source: tenancy-new-tenants
+  checked: 2026-10-27
+  verified: true
