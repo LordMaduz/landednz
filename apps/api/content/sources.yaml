@@ -779,3 +779,28 @@ sorted-kiwisaver-which-fund:
   title: How to pick the right KiwiSaver fund for you
   agency: Retirement Commission (Sorted)
   tier: government
+moe-ece-20-hours:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/available-assistance/20-hours-funding-early-childhood-education
+  title: 20 hours funding for early childhood education
+  agency: Ministry of Education
+  tier: government
+moe-ece-enrolling:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/enrolling-and-starting-your-child-early-learning
+  title: Enrolling and starting your child in early learning
+  agency: Ministry of Education
+  tier: government
+moe-ece-types:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/types-early-learning
+  title: Types of early learning
+  agency: Ministry of Education
+  tier: government
+moe-ece-choosing:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/choosing-early-learning-service
+  title: Choosing an early learning service
+  agency: Ministry of Education
+  tier: government
+winz-childcare-subsidy:
+  url: https://www.workandincome.govt.nz/products/a-z-benefits/childcare-subsidy.html
+  title: Childcare Subsidy
+  agency: Ministry of Social Development (Work and Income)
+  tier: government

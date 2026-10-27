@@ -17,3 +17,33 @@ education.free-enrolment-age-range:
   source: moe-eligibility-enrol
   checked: 2026-10-27
   verified: true
+education.ece-age-range:
+  value: "3, 4 or 5"
+  numberType: A
+  source: moe-ece-20-hours
+  checked: 2026-10-27
+  verified: true
+education.ece-weekly-hours:
+  value: "20 hours"
+  numberType: A
+  source: moe-ece-20-hours
+  checked: 2026-10-27
+  verified: true
+education.ece-daily-cap:
+  value: "6 hours"
+  numberType: A
+  source: moe-ece-20-hours
+  checked: 2026-10-27
+  verified: true
+education.ece-enrol-age-range:
+  value: "from birth until they turn 6"
+  numberType: A
+  source: moe-ece-enrolling
+  checked: 2026-10-27
+  verified: true
+education.ece-scheme-name:
+  value: "20 Hours ECE"
+  numberType: A
+  source: moe-ece-20-hours
+  checked: 2026-10-27
+  verified: true
