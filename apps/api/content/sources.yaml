@@ -699,3 +699,33 @@ inz-learning-english-families:
   title: "Learning English for families of resident visa applicants"
   agency: Immigration New Zealand
   tier: government
+healthnz-wellchild:
+  url: https://www.healthnz.govt.nz/health-topics/pregnancy-maternity/pregnancy-birth-and-children-services/well-child-tamariki-ora
+  title: Well Child Tamariki Ora
+  agency: Health New Zealand
+  tier: government
+healthnz-wellchild-providers:
+  url: https://www.healthnz.govt.nz/health-topics/pregnancy-maternity/pregnancy-birth-and-children-services/well-child-tamariki-ora-providers
+  title: Well Child Tamariki Ora providers
+  agency: Health New Zealand
+  tier: government
+healthnz-immunisation-schedule:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/national-immunisation-schedule
+  title: National Immunisation Schedule
+  agency: Health New Zealand
+  tier: government
+healthnz-immunisation-catchup:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/catching-up-on-missed-immunisations
+  title: Catching up on missed immunisations
+  agency: Health New Zealand
+  tier: government
+healthnz-book-vaccine:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/booking-a-vaccine
+  title: Book a vaccine
+  agency: Health New Zealand
+  tier: government
+healthnz-dentists:
+  url: https://www.healthnz.govt.nz/hospitals-services/services-support/dentists
+  title: Dentists
+  agency: Health New Zealand
+  tier: government

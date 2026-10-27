@@ -4,7 +4,7 @@ phase: 4
 priority: 75
 boosts: []
 urgency: []
-duration: Varies
+duration: 1–2 hours across a few calls and bookings (app estimate)
 appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
 dependsOn:
   - task: T12
@@ -13,17 +13,77 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T32.why.1
-    text: "Children in NZ can get Well Child checks, immunisations and dental care."
-    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
-    checked: 2026-10-25
-    verified: false
+  - id: T32.why.wellchild
+    text: "Health New Zealand describes Well Child Tamariki Ora as a series of health visits and support, free to all families, for tamariki {{health.wellchild-ages}}."
+    source: healthnz-wellchild
+    checked: 2026-10-27
+    verified: true
+  - id: T32.why.free
+    text: "Health New Zealand says tamariki are eligible for publicly funded immunisations on the schedule and for Well Child Tamariki Ora services regardless of citizenship or immigration status. Its eligibility guide covers the details, including the changes from {{health.eligibility-regs-start}}."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T32.steps.1
-    text: "Enrol your child with a Well Child provider, and check their immunisations and dental care."
-    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+  - id: T32.steps.provider
+    text: "If your child is under 5: find a Well Child Tamariki Ora provider in your region on Health New Zealand's providers page. It lists Plunket, which has many regional listings, and other regional providers, each with a phone number. Plunket's is 0800 184 803 in most regions."
+    source: healthnz-wellchild-providers
+    checked: 2026-10-27
+    verified: true
+  - id: T32.steps.b4school
+    text: "Before your child starts school: Health New Zealand says the B4 School Check is a free health and development check for {{health.b4school-age}}, and its page links to the key contact in your region."
+    source: healthnz-wellchild
+    checked: 2026-10-27
+    verified: true
+  - id: T32.steps.immunisations
+    text: "Book your child's scheduled immunisations. Health New Zealand says free scheduled childhood immunisations and catch-ups can be booked online, on 0800 28 29 26, or through your doctor, nurse or healthcare provider."
+    source: healthnz-book-vaccine
+    checked: 2026-10-27
+    verified: true
+  - id: T32.steps.schedule
+    text: "Check the National Immunisation Schedule. Health New Zealand lists the age at which each childhood immunisation is due, and says all immunisations on the schedule are free for tamariki {{health.free-immunisation-age}}."
+    source: healthnz-immunisation-schedule
+    checked: 2026-10-27
+    verified: true
+  - id: T32.steps.overseas-records
+    text: "If your child has had vaccines overseas: Health New Zealand says it is helpful to give your vaccinator records of past immunisations, and you can ask your previous overseas doctor or health provider for them. If you cannot get them, tell the vaccinator, who will discuss a catch-up plan."
+    source: healthnz-immunisation-catchup
+    checked: 2026-10-27
+    verified: true
+  - id: T32.steps.dental
+    text: "Call Talk Teeth on 0800 825 583. Health New Zealand says this national helpline gives information about free dental care for under 18s and how to enrol."
+    source: healthnz-dentists
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T32.documents.immunisation-records
+    text: "Any immunisation records for your child from overseas (Health New Zealand's catch-up page)"
+    source: healthnz-immunisation-catchup
+    checked: 2026-10-27
+    verified: true
+  - id: T32.documents.eligibility
+    text: "If a service asks for proof of your child's eligibility: Health New Zealand's eligibility guide lists proof of care and control, proof that the parent or guardian is eligible, and either a passport with proof of relationship or a birth certificate with supporting identity documentation"
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T32.mistakes.wait-catchup
+    text: "Assuming missed vaccines are too late to fix. Health New Zealand says it is easy to catch up, and catch-up immunisations are free for all tamariki {{health.free-immunisation-age}}."
+    source: healthnz-immunisation-catchup
+    checked: 2026-10-27
+    verified: true
+  - id: T32.mistakes.dental-lapse
+    text: "Letting dental care lapse after school years. Health New Zealand says free care continues even if rangatahi are not at school, and ends at their {{health.free-dental-age}}."
+    source: healthnz-dentists
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T32.watchOuts.dental-extras
+    text: "Health New Zealand says standard dental treatments for tamariki are free, but some extras, such as braces, may cost money. Ask your local oral health service about costs."
+    source: healthnz-dentists
+    checked: 2026-10-27
+    verified: true
+  - id: T32.watchOuts.extra-vaccines
+    text: "Health New Zealand says extra vaccines that are not on the schedule, such as travel vaccines, usually have a charge."
+    source: healthnz-immunisation-schedule
+    checked: 2026-10-27
+    verified: true

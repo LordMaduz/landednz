@@ -23,3 +23,27 @@ health.free-gp-child-age:
   source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
   checked: 2026-10-27
   verified: true
+health.wellchild-ages:
+  value: "from around 6 weeks up to 5 years"
+  numberType: B
+  source: healthnz-wellchild
+  checked: 2026-10-27
+  verified: true
+health.free-immunisation-age:
+  value: "under 18"
+  numberType: B
+  source: healthnz-immunisation-schedule
+  checked: 2026-10-27
+  verified: true
+health.free-dental-age:
+  value: "18th birthday"
+  numberType: B
+  source: healthnz-dentists
+  checked: 2026-10-27
+  verified: true
+health.b4school-age:
+  value: "4-year-olds"
+  numberType: B
+  source: healthnz-wellchild
+  checked: 2026-10-27
+  verified: true
