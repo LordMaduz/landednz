@@ -11,3 +11,9 @@ dca.registration-age:
   source: dog-control-act-1996
   checked: 2026-10-27
   verified: true
+dta.compensation-limit:
+  value: "$100,000"
+  numberType: A
+  source: deposit-takers-act-2023
+  checked: 2026-10-27
+  verified: true

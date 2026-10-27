@@ -23,3 +23,9 @@ ird.rwt-no-number-rate:
   source: ird-rwt-rate
   checked: 2026-10-25
   verified: true
+ird.rwt-default-rate:
+  value: "33%"
+  numberType: A
+  source: ird-rwt-rate
+  checked: 2026-10-27
+  verified: true
