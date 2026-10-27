@@ -1,0 +1,19 @@
+# Ministry of Education and Govt.nz school figures. research/T30.md holds the evidence for each.
+education.school-start-age:
+  value: "5"
+  numberType: A
+  source: govt-nz-enrol-school
+  checked: 2026-10-27
+  verified: true
+education.compulsory-age-range:
+  value: "6 to 16"
+  numberType: A
+  source: govt-nz-enrol-school
+  checked: 2026-10-27
+  verified: true
+education.free-enrolment-age-range:
+  value: "5 to 19"
+  numberType: A
+  source: moe-eligibility-enrol
+  checked: 2026-10-27
+  verified: true
