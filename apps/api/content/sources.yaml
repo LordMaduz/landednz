@@ -804,3 +804,23 @@ winz-childcare-subsidy:
   title: Childcare Subsidy
   agency: Ministry of Social Development (Work and Income)
   tier: government
+nzta-converting-index:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/
+  title: Converting to a NZ driver licence
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-approved-translators:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/approved-translators
+  title: Approved translators
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-converting-car-exempt:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence/converting-a-car-licence-from-an-exempt-country
+  title: Converting a car licence from an exempt country
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-converting-car-non-exempt:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence/converting-a-car-licence-from-a-non-exempt-country
+  title: Converting a car licence from a non-exempt country
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
