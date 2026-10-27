@@ -4,7 +4,7 @@ phase: 1
 priority: 84
 boosts: []
 urgency: []
-duration: Varies
+duration: Weeks to months (set by your registration body)
 appliesTo: { occupation: [HEALTHCARE, EDUCATION, TRADES] }
 dependsOn:
   - task: T24
@@ -13,17 +13,188 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T23.why.1
-    text: "Some jobs in NZ need registration with a professional body before you can start work."
+  - id: T23.why.inz
+    text: "Immigration New Zealand says that if your job needs occupational registration, you must get it before you can apply for a work visa, and you'll need proof of it."
     source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
-    checked: 2026-10-25
-    verified: false
+    checked: 2026-10-27
+    verified: true
+  - id: T23.why.health-certificate
+    text: "The Health Practitioners Competence Assurance Act says a registered health practitioner must hold a current practising certificate to practise. Claiming to practise without one can mean a fine of up to {{hpcaa.no-certificate-fine}}."
+    when:
+      occupation: [HEALTHCARE]
+    source: hpcaa-2003
+    checked: 2026-10-27
+    verified: true
+  - id: T23.why.teaching-certificate
+    text: "The Teaching Council says you can't teach with registration alone: a practising certificate is what lets you teach legally in New Zealand."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-register-overseas
+    checked: 2026-10-27
+    verified: true
+  - id: T23.why.trades-licence
+    text: "The Plumbers, Gasfitters and Drainlayers Board says restricted plumbing, gasfitting and drainlaying work without a current New Zealand licence is illegal."
+    when:
+      occupation: [TRADES]
+    source: pgdb-overseas-qualifications
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T23.steps.1
-    text: "Check that your registration and practising certificate are in place before your first day of work."
+  - id: T23.steps.check-inz
+    text: "Open Immigration New Zealand's page on occupational registration to see whether your job needs it, and contact the registration authority it names."
     source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.start-early
+    text: "Start the registration process as soon as possible, as Immigration New Zealand advises."
+    source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.nurse-trumerit
+    text: "If you're a nurse: verify your documents with TruMerit first. The Nursing Council says you can't apply to it until you've done this."
+    when:
+      occupation: [HEALTHCARE]
+    source: nursing-council-iqn
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.nurse-next
+    text: "If you're a nurse: after verification, complete the Nursing Council's online courses and criminal history check, and the competence assessment if the Council requires it."
+    when:
+      occupation: [HEALTHCARE]
+    source: nursing-council-iqn
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.health-other
+    text: "For other health professions: check with the authority responsible for your profession, which issues the practising certificate."
+    when:
+      occupation: [HEALTHCARE]
+    source: hpcaa-2003
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.teacher-iqa
+    text: "If you're a teacher: get your Teaching IQA first where the Teaching Council requires it, then apply for registration and a practising certificate."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-requirements
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.teacher-police
+    text: "If you're a teacher: order a police clearance from any country you've lived in for {{teaching.police-residence}} or more in the {{teaching.police-lookback}} before you apply."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-requirements
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.electrical
+    text: "If you're an electrical worker: apply in the Electrical Workers Registration Board's EW Portal. Overseas-trained applicants must hold a Limited Certificate before they can apply for a practising licence."
+    when:
+      occupation: [TRADES]
+    source: ewrb-overseas-trained
+    checked: 2026-10-27
+    verified: true
+  - id: T23.steps.pgdb
+    text: "If you're a plumber, gasfitter or drainlayer: submit an Overseas Qualification Pathway application with your evidence to the Plumbers, Gasfitters and Drainlayers Board."
+    when:
+      occupation: [TRADES]
+    source: pgdb-overseas-qualifications
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T23.documents.nurse
+    text: "If you're a nurse: identity documents, the registrations you've held in the last {{nursing.registration-lookback}}, your nursing qualifications, English language proof and evidence of your practice hours, sent to TruMerit"
+    when:
+      occupation: [HEALTHCARE]
+    source: nursing-council-iqn
+    checked: 2026-10-27
+    verified: true
+  - id: T23.documents.teacher
+    text: "If you're a teacher: your qualifications and transcripts, your Teaching IQA report where it applies, English language evidence, police clearances, statements of professional standing, testimonials and your CV"
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-register-overseas
+    checked: 2026-10-27
+    verified: true
+  - id: T23.documents.electrical
+    text: "If you're an electrician: certified proof of identity, certified colour copies of your qualifications, certified English translations, and certified, signed, dated work references on letterhead"
+    when:
+      occupation: [TRADES]
+    source: ewrb-electrician-pathway
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T23.mistakes.nurse-hours
+    text: "If you're a nurse: applying to TruMerit before you have the {{nursing.practice-hours}} of practice the Nursing Council requires."
+    when:
+      occupation: [HEALTHCARE]
+    source: nursing-council-rn-requirements
+    checked: 2026-10-27
+    verified: true
+  - id: T23.mistakes.electrical-hours
+    text: "If you're an electrician: applying before you've completed the {{ewrb.electrician-hours}} of training and experience or can show evidence of employment. The Electrical Workers Registration Board says the application will be declined and the fee won't be refunded."
+    when:
+      occupation: [TRADES]
+    source: ewrb-electrician-pathway
+    checked: 2026-10-27
+    verified: true
+  - id: T23.mistakes.references
+    text: "Falsifying work references. The Electrical Workers Registration Board says this is fraud."
+    when:
+      occupation: [TRADES]
+    source: ewrb-electrician-pathway
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T23.watchOuts.changes
+    text: "Immigration New Zealand says registration requirements can change, so confirm them with the registration authority."
+    source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.nurse-fee
+    text: "If you're a nurse: the Nursing Council's fee to process your application is {{nursing.processing-fee}}, and it isn't refundable. External providers charge their own costs."
+    when:
+      occupation: [HEALTHCARE]
+    source: nursing-council-overseas-faqs
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.teacher-time
+    text: "If you're a teacher: the Teaching Council says applications usually take {{teaching.processing-time}} to process, and longer if a panel review is needed."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-register-overseas
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.teacher-police-trial
+    text: "If you're a teacher: the Teaching Council's current overseas police clearance arrangements are being trialled until {{teaching.police-trial-end}}."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-police-clearance
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.electrical
+    text: "If you're an electrical worker: the overseas-trained application fee is {{ewrb.application-fee}}, and the Board aims to process applications within {{ewrb.processing-target}}."
+    when:
+      occupation: [TRADES]
+    source: ewrb-overseas-trained
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.pgdb
+    text: "If you're a plumber, gasfitter or drainlayer: a provisional licence lets you work for up to {{pgdb.provisional-period}} while you prepare for the registration exam."
+    when:
+      occupation: [TRADES]
+    source: pgdb-overseas-qualifications
+    checked: 2026-10-27
+    verified: true
+  - id: T23.watchOuts.pgdb-fees
+    text: "If you're a plumber, gasfitter or drainlayer: the Board's fees table lists a first-time total of {{pgdb.first-time-total}} when you hold no other licence that year."
+    when:
+      occupation: [TRADES]
+    source: pgdb-fees
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T23.advice.authority
+  text: "Immigration New Zealand says to contact the registration authority to find out what you need."
+  required: false
+  source: www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job
+  checked: 2026-10-27
+  verified: true
