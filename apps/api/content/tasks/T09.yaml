@@ -32,112 +32,79 @@ dependsOn:
     type: hard
 retired: false
 why:
-  - id: T09.why.1
-    text: Complete T08 (IRD number) first — you cannot fill in the IR330 without it.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
+  - id: T09.why.deduction
+    text: "Inland Revenue says your tax code tells your employer how much tax to deduct from your pay, and that choosing the right one helps you avoid a tax bill at the end of the tax year."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.why.non-declaration
+    text: "If you don't give your employer an IR330, Inland Revenue says they deduct tax at the non-declaration rate of {{ird.non-declaration-rate}}."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T09.steps.1
-    text: You cannot complete the IR330 without your IRD number. Complete T08 first and wait for your IRD number to be issued (typically 1–2 business days).
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.steps.2
-    text: "URL: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration Download the PDF. The form is one page."
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.steps.3
-    text: 'For most skilled migrants in their first NZ job, the answer is straightforward: - **"M"** — Your main (or only) income source. Use this if this is your only job in New Zealand. - **"M SL"** — Use this only if you have a New Zealand student loan (most new migrants do not). - **"SB", "S", "SH", "ST"** — Secondary income codes. Use only if you have a second job or additional income source in NZ. - **"SB SL", "S SL" etc** — Secondary income with student loan. Not applicable to most new migrants. - **"WT"** — Schedular payments (contract/freelance). Not applicable to AEWV salaried employees. **Most AEWV skilled migrants select "M". If in doubt, use "M".**'
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.steps.4
-    text: 'Fill in: - Your full legal name (as per passport) - Your IRD number (8 or 9 digits) - Your date of birth - Your tax code selection (circle or tick "M" for main income) - Sign and date'
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.steps.5
-    text: Hand the completed IR330 to your employer's HR or payroll team. Do this before your first pay day. Most NZ employers have a standard onboarding packet that includes the IR330 — if your employer provides one, complete that copy rather than downloading your own (same form, same result).
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.steps.6
-    text: On your first payslip, verify that the tax code shown matches "M" and that deductions look reasonable relative to your salary and the NZ tax brackets. If anything looks wrong, contact HR and IRD promptly.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
+  - id: T09.steps.open-ir330
+    text: "Open Inland Revenue's tax code declaration (IR330). Its flowcharts help you work out which code to use. You'll need your IRD number from the previous task."
+    source: ird-ir330
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.main-code
+    text: "Choose one tax code for your main or highest source of income. Inland Revenue says the code depends on the type and amount of that income."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.sections
+    text: "Complete your details (including your IRD number), your tax code and the declaration. The IR330 says that if you leave out any of these, your employer must deduct tax at the non-notified rate of {{ird.non-declaration-rate}} plus earners' levy."
+    source: ird-ir330
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.give-employer
+    text: "Give the completed IR330 to your employer. Inland Revenue says that once they have it they can deduct the right amount of tax."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.second-job
+    text: "If you're getting income from more than one source at the same time: Inland Revenue says you may need a secondary tax code for the extra income, because it can push you into a higher tax bracket."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.seeking-work
+    text: "If you're still looking for work: do this when your job starts. Inland Revenue says you complete the IR330 and give it to your employer or payer."
+    when:
+      occupation: [SEEKING_WORK]
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.steps.changes
+    text: "If your tax code changes later, Inland Revenue says you need to give your employer or payer a new IR330."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T09.documents.1
-    text: passport
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.documents.2
-    text: ird number
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.documents.3
-    text: tax code
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
+  - id: T09.documents.ird-number
+    text: "Your IRD number, which the IR330 asks for in section 1"
+    source: ird-ir330
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T09.mistakes.1
-    text: "Failing to understand: The most common mistake is simply not submitting the IR330 before the first pay day. Add it to your Day 1 employer checklist alongside your employment agreement, bank account details, and emergency contacts."
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.mistakes.2
-    text: 'Failing to understand: Tax code "M" is not a flat 10.5% rate — it triggers the full progressive marginal rate schedule. Your effective tax rate will be higher than 10.5% if your income exceeds $14,000 per year (which it will for most skilled migrants).'
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.mistakes.3
-    text: "Failing to understand: New Zealand has no tax-free threshold in the way some countries do — tax applies from dollar one of income."
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.mistakes.4
-    text: Do not use a secondary tax code (SB, S, SH, ST) for your main job. Secondary codes apply only to secondary income sources. Using SB on your main income means 10.5% flat rate — which will result in a tax bill at year end.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.mistakes.5
-    text: 'Failing to understand: If your visa allows work but you are technically self-employed or contracting, the relevant code is "WT" (schedular payments) — not "M." Confirm with your employer whether you are an employee or contractor before selecting a code.'
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
+  - id: T09.mistakes.m-twice
+    text: "Using the M tax code on two sources of income at the same time. Inland Revenue says it will ask your employer or payer to change the code and will notify you."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T09.watchOuts.1
-    text: The most common mistake is simply not submitting the IR330 before the first pay day. Add it to your Day 1 employer checklist alongside your employment agreement, bank account details, and emergency contacts.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.watchOuts.2
-    text: Tax code "M" is not a flat 10.5% rate — it triggers the full progressive marginal rate schedule. Your effective tax rate will be higher than 10.5% if your income exceeds $14,000 per year (which it will for most skilled migrants).
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.watchOuts.3
-    text: New Zealand has no tax-free threshold in the way some countries do — tax applies from dollar one of income.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.watchOuts.4
-    text: Do not use a secondary tax code (SB, S, SH, ST) for your main job. Secondary codes apply only to secondary income sources. Using SB on your main income means 10.5% flat rate — which will result in a tax bill at year end.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.watchOuts.5
-    text: If your visa allows work but you are technically self-employed or contracting, the relevant code is "WT" (schedular payments) — not "M." Confirm with your employer whether you are an employee or contractor before selecting a code.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
-  - id: T09.watchOuts.6
-    text: The NZ tax year ends 31 March. If you arrive mid-year, you will file a partial-year return for your first NZ tax year. IRD handles this automatically for PAYE employees — no manual calculation needed.
-    source: www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration
-    checked: 2026-03-03
-    verified: false
+  - id: T09.watchOuts.acc-levy
+    text: "Inland Revenue says all employees pay an ACC earners' levy, deducted along with the tax in your PAYE. The current rate is {{ird.earners-levy-rate}} of income, on income up to {{ird.earners-levy-max}}, so expect a levy line on your payslip."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.watchOuts.wrong-code
+    text: "Inland Revenue says that if it sees you using an unsuitable tax code, it may suggest you change it or apply for a tailored tax code."
+    source: ird-tax-codes
+    checked: 2026-10-27
+    verified: true
+  - id: T09.watchOuts.contractor
+    text: "If you're a contractor using the WT tax code, the IR330 says to use the IR330C form instead."
+    source: ird-ir330
+    checked: 2026-10-27
+    verified: true

@@ -15,11 +15,6 @@ www-ird-govt-nz-roles-nz-tax-residents-exemption:
   title: www.ird.govt.nz
   agency: www.ird.govt.nz
   tier: government
-www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration:
-  url: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration
-  title: www.ird.govt.nz
-  agency: www.ird.govt.nz
-  tier: government
 www-ird-govt-nz-kiwisaver:
   url: https://www.ird.govt.nz/kiwisaver
   title: www.ird.govt.nz
@@ -30,12 +25,6 @@ www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html:
   title: www.legislation.govt.nz
   agency: www.legislation.govt.nz
   tier: government
-www-healthpoint-co-nz-general-practice:
-  url: https://www.healthpoint.co.nz/general-practice
-  title: www.healthpoint.co.nz
-  agency: www.healthpoint.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html:
   url: https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html
   title: www.legislation.govt.nz
@@ -593,4 +582,110 @@ govt-utility-complaints:
   url: https://www.govt.nz/browse/consumer-rights-and-credit-record/how-to-complain/complain-about-your-utility-provider/
   title: Complain about your utility provider
   agency: govt.nz (DIA)
+  tier: government
+ird-tax-codes:
+  url: https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/tax-codes-for-individuals
+  title: About tax codes
+  agency: Inland Revenue
+  tier: government
+employment-nz-employee-rights:
+  url: https://www.employment.govt.nz/starting-employment/rights-and-responsibilities/employee-rights-and-responsibilities
+  title: Employee rights and responsibilities
+  agency: Employment New Zealand
+  tier: government
+employment-nz-minimum-wage-rates:
+  url: https://www.employment.govt.nz/pay-and-hours/pay-and-wages/minimum-wage/minimum-wage-rates-and-types
+  title: Minimum wage rates and types
+  agency: Employment New Zealand
+  tier: government
+employment-nz-payslips:
+  url: https://www.employment.govt.nz/pay-and-hours/pay-and-wages/payslips
+  title: Payslips
+  agency: Employment New Zealand
+  tier: government
+employment-nz-migrant-exploitation:
+  url: https://www.employment.govt.nz/resolving-problems/types-of-problems/migrant-exploitation
+  title: Migrant exploitation
+  agency: Employment New Zealand
+  tier: government
+moe-domestic-student-definition:
+  url: https://www.education.govt.nz/our-work/legislation/international-student-legislation/definition-domestic-student-new-zealand
+  title: Definition of a domestic student in New Zealand
+  agency: Ministry of Education
+  tier: government
+moe-eligibility-enrol:
+  url: https://www.education.govt.nz/education-professionals/schools-year-0-13/enrolment/eligibility-enrol-new-zealand-schools
+  title: Eligibility to enrol in New Zealand schools
+  agency: Ministry of Education
+  tier: government
+moe-enrolling-overseas:
+  url: https://www.education.govt.nz/education-professionals/schools-year-0-13/enrolment/enrolling-students-overseas
+  title: Enrolling students from overseas
+  agency: Ministry of Education
+  tier: government
+moe-cohort-entry:
+  url: https://www.education.govt.nz/parents-and-caregivers/schools-year-0-13/starting-school/cohort-or-group-entry-children-starting-school
+  title: Cohort or group entry for children starting school
+  agency: Ministry of Education
+  tier: government
+moe-enrolment-scheme-faqs-2025:
+  url: https://web-assets.education.govt.nz/s3fs-public/2025-08/FAQs%20about%20Enrolment%20Schemes_English%20(3).pdf?VersionId=njg2rBfQhkL2U44LPUdrt6KGSqyuCePB
+  title: FAQs about Enrolment Schemes
+  agency: Ministry of Education
+  tier: government
+moe-eligibility-appendix-a:
+  url: https://web-assets.education.govt.nz/s3fs-public/2026-04/Circular-2020-08-Appendix-1.pdf?VersionId=1DB95V2869wdpI5.NP3fzz_7Q_Enu4a4
+  title: "Appendix A: Eligibility to enrol in New Zealand Schools"
+  agency: Ministry of Education
+  tier: government
+tenancy-agreements:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/tenancy-agreements/
+  title: Tenancy agreements
+  agency: Tenancy Services
+  tier: government
+tenancy-required-statements:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/tenancy-agreements/required-statements-for-tenancy-agreements/
+  title: Required statements for tenancy agreements
+  agency: Tenancy Services
+  tier: government
+tenancy-initial-inspection:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/new-to-tenancy/initial-property-inspection/
+  title: Initial property inspection
+  agency: Tenancy Services
+  tier: government
+tenancy-lodging-bond:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/bond/about-lodging-a-bond/
+  title: About lodging a bond
+  agency: Tenancy Services
+  tier: government
+tenancy-disputes:
+  url: https://www.tenancy.govt.nz/disputes/
+  title: Disputes
+  agency: Tenancy Services
+  tier: government
+tenancy-contact-us:
+  url: https://www.tenancy.govt.nz/about-tenancy-services/contact-us/
+  title: Contact us
+  agency: Tenancy Services
+  tier: government
+tenancy-utilities:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/utilities-and-other-payments/
+  title: Utilities and other payments
+  agency: Tenancy Services
+  tier: government
+# target: sources.yaml
+govt-nz-find-a-doctor:
+  url: https://www.govt.nz/browse/health/gps-and-prescriptions/find-a-doctor/
+  title: Find a doctor
+  agency: Govt.nz (Health New Zealand, Ministry of Health)
+  tier: government
+healthnz-general-practices:
+  url: https://www.healthnz.govt.nz/hospitals-services/services-support/general-practices
+  title: General practices
+  agency: Health New Zealand | Te Whatu Ora
+  tier: government
+govt-nz-while-pregnant:
+  url: https://www.govt.nz/browse/family-and-whanau/having-a-baby/while-youre-pregnant/
+  title: While you’re pregnant
+  agency: Govt.nz (Health New Zealand, Ministry of Health)
   tier: government

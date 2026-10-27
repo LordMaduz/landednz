@@ -29,3 +29,15 @@ ird.rwt-default-rate:
   source: ird-rwt-rate
   checked: 2026-10-27
   verified: true
+ird.earners-levy-rate:
+  value: "$1.75 for each $100"
+  numberType: A
+  source: ird-tax-codes
+  checked: 2026-10-27
+  verified: true
+ird.earners-levy-max:
+  value: "$156,641"
+  numberType: A
+  source: ird-tax-codes
+  checked: 2026-10-27
+  verified: true
