@@ -4,24 +4,105 @@ phase: 1
 priority: 90
 boosts: []
 urgency: []
-duration: Varies
+duration: about 10 minutes (online)
 appliesTo: all
 dependsOn:
   - task: T25
     type: soft
 retired: false
 why:
-  - id: T27.why.1
-    text: "You must complete the NZ Traveller Declaration before you reach passport control."
-    source: www-customs-govt-nz-travel-to-and-from-new-zealand-travelling-to-new-zealand-on-your-arrival
-    checked: 2026-10-25
-    verified: false
+  - id: T27.why.everyone
+    text: "Everyone travelling into New Zealand must complete a New Zealand Traveller Declaration, including New Zealand passport holders, babies and children."
+    source: nztd-home
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T27.steps.1
-    text: "Complete your NZ Traveller Declaration and check what you need to declare when you arrive."
-    source: www-customs-govt-nz-travel-to-and-from-new-zealand-travelling-to-new-zealand-on-your-arrival
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+  - id: T27.steps.open-official
+    text: "Complete your declaration on the official New Zealand Traveller Declaration website or in the NZTD app."
+    source: nztd-home
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.when
+    text: "If you're flying, the earliest you can submit it is {{customs.nztd-earliest}} before your trip to New Zealand starts. It must be done before you reach passport control."
+    source: nztd-completing
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.details
+    text: "Have ready your passport, your first address in New Zealand, your travel history for the last {{customs.nztd-travel-history}}, your flight details, and your visa or NZeTA details if you need one."
+    source: nztd-completing
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.goods
+    text: "Declare goods you got overseas worth more than {{customs.goods-allowance}} in total, including gifts, and alcohol or tobacco over the allowances."
+    source: customs-on-arrival
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.cash
+    text: "Declare cash of {{customs.cash-threshold}} or more, goods for business use, and goods you're carrying for someone else."
+    source: customs-on-arrival
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.biosecurity
+    text: "Declare food, plants, wooden items, animal products and used outdoor equipment."
+    source: mpi-how-to-declare
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.medicine
+    text: "Declare medicine that is more than {{customs.medicine-supply}} supply or that isn't prescribed to you."
+    source: customs-on-arrival
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.changes
+    text: "If your details change or you change your flight booking, update your declaration and submit it again. If the airline changes your flight to another day, update it too."
+    source: nztd-completing
+    checked: 2026-10-27
+    verified: true
+  - id: T27.steps.unsure
+    text: "If you're not sure about an item when you land, use the amnesty bins or ask a quarantine officer."
+    source: mpi-how-to-declare
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T27.documents.medicine-letter
+    text: "For prescription medicine: a copy of the prescription or a letter from your doctor, with the medicine in its original packaging"
+    source: customs-medicines
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T27.mistakes.paid-site
+    text: "Paying a website to complete the declaration for you. Customs says these sites are not affiliated with the New Zealand Government."
+    source: customs-nztd-official-site
+    checked: 2026-10-27
+    verified: true
+  - id: T27.mistakes.forgot
+    text: "Leaving an item off by accident. Forgetting isn't accepted as a reason for not declaring it."
+    source: mpi-fail-to-declare
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T27.watchOuts.fine
+    text: "Customs says you could face a {{customs.instant-fine}} instant fine if you fail to declare restricted or prohibited items, or make a false or incorrect declaration."
+    source: customs-on-arrival
+    checked: 2026-10-27
+    verified: true
+  - id: T27.watchOuts.controlled-drugs
+    text: "Controlled drugs must be declared, and you can bring no more than {{customs.controlled-drug-supply}} of supply."
+    source: customs-medicines
+    checked: 2026-10-27
+    verified: true
+  - id: T27.watchOuts.paper-form
+    text: "If you can't use the app or website, a paper form is available when you arrive."
+    source: nztd-completing
+    checked: 2026-10-27
+    verified: true
+  - id: T27.watchOuts.contact
+    text: "For help with the declaration, the Customs contact centre is on 0800 359 269 in New Zealand or +64 4 931 5799 from overseas."
+    source: customs-nztd-official-site
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T27.cost.free
+  text: "Completing the declaration is free."
+  source: nztd-home
+  checked: 2026-10-27
+  verified: true
