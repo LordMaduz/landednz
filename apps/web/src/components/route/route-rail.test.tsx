@@ -13,11 +13,11 @@ describe('RouteRail', () => {
     const show = screen.getByRole('button', { name: 'Show Before you flew tasks' })
     expect(show).toHaveAttribute('aria-expanded', 'false')
     expect(screen.getByRole('button', { name: 'Show Later tasks' })).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByText('Research Auckland suburbs')).toBeNull()
+    expect(screen.queryByText('Choose where to live')).toBeNull()
 
     fireEvent.click(show)
     expect(screen.getByRole('button', { name: 'Hide Before you flew tasks' })).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText('Research Auckland suburbs')).toBeInTheDocument()
+    expect(screen.getByText('Choose where to live')).toBeInTheDocument()
   })
 
   it('open legs show their tasks; each leg heading carries its count', () => {

@@ -1,0 +1,37 @@
+# Renting figures (Tenancy Services, Immigration New Zealand). The research note of the task citing each holds its evidence.
+housing.bond-max:
+  value: "4 weeks"
+  numberType: A
+  source: inz-cost-of-living
+  checked: 2026-10-27
+  verified: true
+housing.rent-in-advance-max:
+  value: "2 weeks’"
+  numberType: A
+  source: tenancy-charging-rent
+  checked: 2026-10-27
+  verified: true
+housing.market-rent-window:
+  value: "6 months"
+  numberType: B
+  source: tenancy-market-rent
+  checked: 2026-10-27
+  verified: true
+housing.short-fixed-term-max:
+  value: "90 days"
+  numberType: A
+  source: tenancy-short-fixed-term
+  checked: 2026-10-27
+  verified: true
+housing.option-fee-max:
+  value: "one week’s rent"
+  numberType: A
+  source: tenancy-letting-fees
+  checked: 2026-10-27
+  verified: true
+housing.bond-max-tenancy:
+  value: "4 weeks’ rent"
+  numberType: A
+  source: tenancy-new-tenants
+  checked: 2026-10-27
+  verified: false

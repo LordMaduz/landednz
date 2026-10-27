@@ -12,92 +12,129 @@ boosts:
         - COUPLE_DUAL_WORK
     by: 5
 urgency: []
-duration: 2–3 hours
+duration: 2–3 hours (comparing areas)
 appliesTo: all
 dependsOn: []
 retired: false
 why:
-  - id: T01.why.1
-    text: Research commute from candidate suburbs to your confirmed employer location.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
+  - id: T01.why.job
+    text: "Immigration New Zealand says where you live might depend on your job or where you want to study, and other things can affect the decision too."
+    source: inz-choosing-where-to-live
+    checked: 2026-10-27
+    verified: true
+  - id: T01.why.cost
+    text: "Immigration New Zealand says housing costs vary by region, and houses in larger cities like Auckland and Wellington are much more expensive than in smaller places."
+    source: inz-cost-of-living
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T01.steps.1
-    text: Open Google Maps. Set departure time to a weekday at 8:00am. Test the commute from candidate suburbs to both anchor points. Test return journey at 5:00pm. Note total daily commute time. A 25-minute off-peak commute can become 55 minutes in peak hour on Auckland's motorways.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.steps.2
-    text: "Visit at.govt.nz (Auckland Transport journey planner). For each candidate suburb, check: - Is there a train station or busway stop within walking distance? - How frequent are services (every 10 min vs every 30 min makes a large difference)? - What is the total journey time to your anchor points by PT?"
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.steps.3
-    text: "Visit trademe.co.nz/property/rent. Filter by suburb. Search for 2-bedroom apartments or houses. Note the weekly rent range. This gives a realistic current market view — not last year's data. Remember: weekly rent is the NZ standard (not monthly)."
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.steps.4
-    text: 'For each shortlisted suburb, search: "[suburb name] Indian grocery Auckland" and "[suburb name] Sri Lankan community Auckland." This gives a sense of cultural infrastructure. Key South Asian grocery concentrations: Botany (East), Papatoetoe (South), Westgate/Henderson (West), Albany (North Shore).'
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.steps.5
-    text: Based on commute time, PT access, rental cost, and community amenity, shortlist 2–3 suburbs. These become the target zones when booking temporary accommodation (T02) and when searching for a permanent rental.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-documents: []
+  - id: T01.steps.open-inz
+    text: "Open Immigration New Zealand's page on choosing where to live and note what matters for your household."
+    source: inz-choosing-where-to-live
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.market-rent
+    text: "Look up the weekly rent for the areas and types of home you're considering in Tenancy Services' market rent tool."
+    source: tenancy-market-rent
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.home-check
+    text: "When you look at homes, check how each one is insulated and heated, and how much sun it gets."
+    source: inz-choosing-where-to-live
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.auckland
+    text: "If you're looking at Auckland: Auckland Transport is responsible for its buses, trains and ferries."
+    when:
+      city: [AUCKLAND]
+    source: at-transport-reform
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.wellington
+    text: "If you're looking at the Wellington region: plan journeys on buses, trains and ferries with Metlink."
+    when:
+      city: [WELLINGTON]
+    source: gw-metlink
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.school-zone
+    text: "If you want your child at a particular school, check whether it has an enrolment zone. The Ministry of Education points to Education Counts to find schools near you."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+  - id: T01.steps.scheme
+    text: "For a school with a zone, you can see a copy of its enrolment scheme at the school."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: moe-enrolment-scheme-faqs
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T01.documents.proof-of-address
+    text: "Proof of where you live, such as a tenancy agreement or a utility bill with your address, which a school with a zone may ask for"
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: moe-enrolment-scheme-faqs
+    checked: 2026-10-27
+    verified: true
+  - id: T01.documents.child-visa
+    text: "Evidence of your child's visa status, which a school may ask for"
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: inz-childcare-schools
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T01.mistakes.1
-    text: Do not judge Auckland suburbs by name recognition alone. Howick and Botany sound unfamiliar but are safe, well-serviced East Auckland suburbs with excellent Indian community infrastructure. Conversely, some central-sounding suburbs have poor PT access.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.mistakes.2
-    text: Auckland rental listings show weekly rent, not monthly. A $700/week property costs approximately $3,033/month. Do not confuse with Singapore or Indian monthly rental norms.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.mistakes.3
-    text: "Failing to understand: The Auckland Harbour Bridge is a single choke point. North Shore to CBD commutes are excellent off-peak but can be 40–60 minutes in peak hour. Test this specifically if considering North Shore."
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.mistakes.4
-    text: Do not rely on Uber or rideshare as a daily commute solution in Auckland — it is significantly more expensive than Singapore or Mumbai and not sustainable as a primary transport mode.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.mistakes.5
-    text: 'Failing to understand: Auckland suburb boundaries are not always obvious to outsiders. "Auckland City" is not a specific suburb — it refers to the wider council area. When researching, use specific suburb names (Mt Eden, Takapuna, Papatoetoe etc).'
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
+  - id: T01.mistakes.market-rent-alone
+    text: "Relying on the market rent figure alone. Tenancy Services says it's based on bonds from the previous {{housing.market-rent-window}} and shouldn't be used alone to work out the rent for any property."
+    source: tenancy-market-rent
+    checked: 2026-10-27
+    verified: true
+  - id: T01.mistakes.temporary-move
+    text: "Moving into a school zone only for a while to get a place. The Ministry of Education says you can't do this."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+  - id: T01.mistakes.move-in-cost
+    text: "Not working out the total move-in cost, including bond and any rent in advance, before you rent."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T01.watchOuts.1
-    text: Do not judge Auckland suburbs by name recognition alone. Howick and Botany sound unfamiliar but are safe, well-serviced East Auckland suburbs with excellent Indian community infrastructure. Conversely, some central-sounding suburbs have poor PT access.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.watchOuts.2
-    text: Auckland rental listings show weekly rent, not monthly. A $700/week property costs approximately $3,033/month. Do not confuse with Singapore or Indian monthly rental norms.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.watchOuts.3
-    text: The Auckland Harbour Bridge is a single choke point. North Shore to CBD commutes are excellent off-peak but can be 40–60 minutes in peak hour. Test this specifically if considering North Shore.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.watchOuts.4
-    text: Do not rely on Uber or rideshare as a daily commute solution in Auckland — it is significantly more expensive than Singapore or Mumbai and not sustainable as a primary transport mode.
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
-  - id: T01.watchOuts.5
-    text: Auckland suburb boundaries are not always obvious to outsiders. "Auckland City" is not a specific suburb — it refers to the wider council area. When researching, use specific suburb names (Mt Eden, Takapuna, Papatoetoe etc).
-    source: at-govt-nz-bus-train-ferry-journey-planner
-    checked: 2026-03-03
-    verified: false
+  - id: T01.watchOuts.heating
+    text: "Immigration New Zealand says houses don't normally have central heating."
+    source: inz-choosing-where-to-live
+    checked: 2026-10-27
+    verified: true
+  - id: T01.watchOuts.transport
+    text: "Public transport can be limited in smaller centres, and in rural areas you may have to rely on a car."
+    source: inz-choosing-where-to-live
+    checked: 2026-10-27
+    verified: true
+  - id: T01.watchOuts.flatting
+    text: "Immigration New Zealand says that when you first arrive you may share a house or flat, which matters if you're bringing a partner or family."
+    source: inz-cost-of-living
+    checked: 2026-10-27
+    verified: true
+  - id: T01.watchOuts.rent-in-advance
+    text: "Tenancy Services says it's unlawful for a landlord to ask for more than {{housing.rent-in-advance-max}} rent in advance."
+    source: tenancy-charging-rent
+    checked: 2026-10-27
+    verified: true
+  - id: T01.watchOuts.no-guarantee
+    text: "Not all schools have zones. If you live outside a school's zone, you may still be able to apply, but your child isn't guaranteed a place."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T01.cost.bond
+  text: "Immigration New Zealand says rent is typically charged each week, and you may be charged up to {{housing.bond-max}} of rent as bond."
+  source: inz-cost-of-living
+  checked: 2026-10-27
+  verified: true

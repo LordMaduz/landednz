@@ -124,7 +124,9 @@ describe('getTaskDetail()', () => {
     await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
     const solo = await getTaskDetail(TEST_USER_ID, 'T01');
     expect(solo.steps).not.toContain('Family-only step');
-    expect(solo.steps).toHaveLength(family.steps.length - 1);
+    // T01 has real child-only steps too, so solo is a strict subset rather than exactly one fewer
+    expect(family.steps).toEqual(expect.arrayContaining(solo.steps));
+    expect(solo.steps.length).toBeLessThan(family.steps.length);
   });
 
   test('Task not in user roadmap → 404 TASK_NOT_FOUND', async () => {

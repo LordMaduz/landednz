@@ -9,7 +9,7 @@ export interface TaskCopy {
 }
 
 export const TASK_COPY: Record<string, TaskCopy> = {
-  T01: { title: 'Research Auckland suburbs', topic: 'suburbs', brief: 'a suburb to live in' },
+  T01: { title: 'Choose where to live', topic: 'where to live', brief: 'where to live' },
   T02: { title: 'Book temporary accommodation', topic: 'temporary accommodation', brief: 'somewhere to stay first' },
   T03: { title: 'Prepare your overseas bank account', topic: 'your overseas account', brief: 'your overseas bank account' },
   T04: { title: 'Insure your move', topic: 'moving insurance', brief: 'moving insurance' },
@@ -25,9 +25,9 @@ export const TASK_COPY: Record<string, TaskCopy> = {
   T14: { title: 'Know your rights as a tenant', topic: 'tenant rights', brief: 'your rights as a tenant' },
   T15: { title: 'Set up money transfers home', topic: 'sending money home', brief: 'money transfers home' },
   T16: { title: 'Convert your driving licence', topic: 'driving licences', brief: 'your driving licence' },
-  T17: { title: 'Get your qualifications recognised', topic: 'NZQA', brief: 'your qualifications' },
+  T17: { title: 'Check whether you need a qualification assessment', topic: 'NZQA', brief: 'your qualifications' },
   T18: { title: 'Build an NZ credit history', topic: 'credit history', brief: 'an NZ credit history' },
-  T19: { title: 'Update your CV and LinkedIn for NZ', topic: 'CVs', brief: 'your CV' },
+  T19: { title: 'Prepare an NZ-style CV', topic: 'CVs', brief: 'your CV' },
   T20: { title: 'Review your KiwiSaver fund', topic: 'KiwiSaver reviews', brief: 'a KiwiSaver review' },
   T21: { title: 'Open a joint bank account', topic: 'joint accounts', brief: 'a joint account' },
 }
