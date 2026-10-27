@@ -41,3 +41,39 @@ ird.earners-levy-max:
   source: ird-tax-codes
   checked: 2026-10-27
   verified: true
+ird.residency-days-present:
+  value: "183 days"
+  numberType: A
+  source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+  checked: 2026-10-27
+  verified: true
+ird.nonresident-days-absent:
+  value: "325 days"
+  numberType: A
+  source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+  checked: 2026-10-27
+  verified: true
+ird.exemption-length:
+  value: "4 years"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
+ird.exemption-lookback:
+  value: "10 years"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
+ird.fif-threshold:
+  value: "$50,000"
+  numberType: A
+  source: ird-tax-residents-international
+  checked: 2026-10-27
+  verified: true
+ird.exemption-from-date:
+  value: "1 April 2006"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
