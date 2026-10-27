@@ -15,18 +15,6 @@ www-ird-govt-nz-roles-nz-tax-residents-exemption:
   title: www.ird.govt.nz
   agency: www.ird.govt.nz
   tier: government
-www-2degrees-nz-plans-prepay:
-  url: https://www.2degrees.nz/plans/prepay
-  title: www.2degrees.nz
-  agency: www.2degrees.nz
-  tier: provider
-  reason: legacy, unverified
-www-anz-co-nz-personal-bank-accounts-new-to-new-zealand:
-  url: https://www.anz.co.nz/personal/bank-accounts/new-to-new-zealand/
-  title: www.anz.co.nz
-  agency: www.anz.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration:
   url: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration
   title: www.ird.govt.nz
@@ -530,4 +518,79 @@ consumer-protection-scams:
   url: https://www.consumerprotection.govt.nz/news-and-media/scammers-defraud-kiwis-of-265-million
   title: Scammers defraud Kiwis of $265 million
   agency: Consumer Protection (MBIE)
+  tier: government
+inz-variation-of-conditions:
+  url: https://www.immigration.govt.nz/formshelp/application-for-a-variation-of-conditions
+  title: Application for a variation of conditions
+  agency: Immigration New Zealand
+  tier: government
+immigration-act-2009:
+  url: https://www.legislation.govt.nz/act/public/2009/51/en/latest/
+  title: Immigration Act 2009
+  agency: Parliamentary Counsel Office
+  tier: government
+immigration-advisers-act-2007:
+  url: https://www.legislation.govt.nz/act/public/2007/15/en/latest/
+  title: Immigration Advisers Licensing Act 2007
+  agency: Parliamentary Counsel Office
+  tier: government
+ird-rwt:
+  url: https://www.ird.govt.nz/income-tax/withholding-taxes/resident-withholding-tax-rwt
+  title: Resident withholding tax (RWT)
+  agency: Inland Revenue
+  tier: government
+aml-cft-act-2009:
+  url: https://www.legislation.govt.nz/act/public/2009/0035/latest/whole.html
+  title: Anti-Money Laundering and Countering Financing of Terrorism Act 2009
+  agency: Parliamentary Counsel Office
+  tier: government
+deposit-takers-act-2023:
+  url: https://www.legislation.govt.nz/act/public/2023/0035/latest/whole.html
+  title: Deposit Takers Act 2023
+  agency: Parliamentary Counsel Office
+  tier: government
+fma-disputes:
+  url: https://www.fma.govt.nz/consumer/everyday-finance/disputes-and-consumer-protection/
+  title: Disputes and consumer protection
+  agency: Financial Markets Authority
+  tier: government
+consumer-protection-scamwatch:
+  url: https://www.consumerprotection.govt.nz/general-help/scamwatch
+  title: Scamwatch
+  agency: Consumer Protection (MBIE)
+  tier: government
+sorted-credit-reports:
+  url: https://sorted.org.nz/guides/tackling-debt/credit-reports/
+  title: Credit reports
+  agency: Retirement Commission (Sorted)
+  tier: government
+police-call-111:
+  url: https://www.police.govt.nz/call-111
+  title: Call 111
+  agency: New Zealand Police
+  tier: government
+police-new-arrivals-communicating:
+  url: https://www.police.govt.nz/advice/personal-community/new-arrivals/english/communicating
+  title: "New arrivals: communicating"
+  agency: New Zealand Police
+  tier: government
+comcom-number-portability:
+  url: https://www.comcom.govt.nz/regulated-industries/telecommunications/regulated-services/copper-services/local-and-mobile-number-portability/
+  title: Local and mobile number portability
+  agency: Commerce Commission
+  tier: government
+consumer-protection-scam-types:
+  url: https://www.consumerprotection.govt.nz/general-help/scamwatch/types-of-scams
+  title: Types of scams
+  agency: Consumer Protection (MBIE)
+  tier: government
+dia-txt-spam:
+  url: https://www.dia.govt.nz/Spam-Report-TXT-Spam
+  title: Report TXT spam
+  agency: Department of Internal Affairs
+  tier: government
+govt-utility-complaints:
+  url: https://www.govt.nz/browse/consumer-rights-and-credit-record/how-to-complain/complain-about-your-utility-provider/
+  title: Complain about your utility provider
+  agency: govt.nz (DIA)
   tier: government
