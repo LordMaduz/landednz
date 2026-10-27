@@ -1,0 +1,19 @@
+# NZ Transport Agency figures. research/T24.md holds the evidence for each.
+nzta.licence-change-date:
+  value: "1 November 2026"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.licence-period-from-change:
+  value: "12 months"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.licence-period-before-change:
+  value: "18 months"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
