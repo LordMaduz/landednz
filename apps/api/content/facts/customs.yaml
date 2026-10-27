@@ -1,0 +1,61 @@
+# New Zealand Customs Service figures (including the NZ Traveller Declaration). The research note of the task citing each holds its evidence.
+customs.nztd-earliest:
+  value: "24 hours"
+  numberType: B
+  source: nztd-completing
+  checked: 2026-10-27
+  verified: true
+customs.nztd-travel-history:
+  value: "30 days"
+  numberType: B
+  source: nztd-completing
+  checked: 2026-10-27
+  verified: true
+customs.goods-allowance:
+  value: "NZ$700"
+  numberType: A
+  source: customs-on-arrival
+  checked: 2026-10-27
+  verified: true
+customs.cash-threshold:
+  value: "NZ$10,000"
+  numberType: A
+  source: customs-on-arrival
+  checked: 2026-10-27
+  verified: true
+customs.medicine-supply:
+  value: "three months'"
+  numberType: B
+  source: customs-on-arrival
+  checked: 2026-10-27
+  verified: true
+customs.controlled-drug-supply:
+  value: "one month"
+  numberType: B
+  source: customs-medicines
+  checked: 2026-10-27
+  verified: true
+customs.instant-fine:
+  value: "$400"
+  numberType: A
+  source: customs-on-arrival
+  checked: 2026-10-27
+  verified: true
+customs.household-away-period:
+  value: "21 months"
+  numberType: B
+  source: customs-household-effects
+  checked: 2026-10-27
+  verified: true
+customs.household-work-visa-length:
+  value: "12 months"
+  numberType: B
+  source: customs-household-effects
+  checked: 2026-10-27
+  verified: true
+customs.household-late-arrival:
+  value: "five years"
+  numberType: B
+  source: customs-household-effects
+  checked: 2026-10-27
+  verified: true
