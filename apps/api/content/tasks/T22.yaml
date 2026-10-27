@@ -4,22 +4,128 @@ phase: 1
 priority: 85
 boosts: []
 urgency: []
-duration: Varies
+duration: 1–2 hours (reading the criteria for each person)
 appliesTo: all
 dependsOn: []
 retired: false
 why:
-  - id: T22.why.1
-    text: "Your visa decides whether you can use publicly funded health care in NZ, so check your eligibility and cover before you travel."
+  - id: T22.why.who-decides
+    text: "Immigration New Zealand says the Ministry of Health decides who can get publicly funded health care, and if you qualify you don't pay for those services."
     source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
-    checked: 2026-10-25
-    verified: false
+    checked: 2026-10-27
+    verified: true
+  - id: T22.why.otherwise-pay
+    text: "If you can't get publicly funded care, Immigration New Zealand says you, or your sponsor if you have one, must pay for any health care you need."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T22.steps.1
-    text: "Read the Immigration NZ guidance on who can get public health care, and check each family member separately."
+  - id: T22.steps.open-guide
+    text: "Open Health New Zealand's guide to eligibility and use its Check if you are eligible section to find the group that matches your visa."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.dates
+    text: "Check which rules apply on the date you'll get care. New eligibility regulations come into force on {{health.eligibility-regs-start}}."
+    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.work-visa
+    text: "If you're on a work visa, read the criteria for work visas. Health New Zealand's guide sets a test of {{health.work-visa-length}} or more, which can include time you've already been in New Zealand legally."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.partner
+    text: "Check your partner separately. Health New Zealand says that, except for maternity services, partners must meet the eligibility criteria themselves."
+    when:
+      family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.children
+    text: "Check each child under the guide's section for children, which links a child's eligibility to a parent's or guardian's."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.pregnant
+    text: "If anyone moving is pregnant, read Immigration New Zealand's page for pregnant visa applicants and the maternity criteria in Health New Zealand's guide."
+    source: inz-if-pregnant
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.proof
+    text: "Note the proof each person is asked to show a health provider, and keep it with you."
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.insurance
+    text: "If the criteria show someone isn't covered, look at insurance. Immigration New Zealand strongly recommends comprehensive travel insurance, including full health insurance."
     source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+    checked: 2026-10-27
+    verified: true
+  - id: T22.steps.dispute
+    text: "If a question about eligibility remains, the new regulations say the Ministry of Health must decide it when asked in writing."
+    source: www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T22.documents.work-visa
+    text: "For a work visa holder: your valid passport with a current work visa that lets you stay {{health.work-visa-length}} or more, which Health New Zealand names as proof"
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T22.documents.evisa
+    text: "Your eVisa letter, which Immigration New Zealand gives as an example of proof to show a provider"
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-27
+    verified: true
+  - id: T22.documents.child
+    text: "For each child: proof the child is in your care, your own proof of eligibility, and either the child's passport with proof of your relationship, or the child's birth certificate with supporting ID"
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T22.mistakes.no-proof
+    text: "Turning up without proof. Immigration New Zealand says that if you don't have any proof, you may have to pay."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-27
+    verified: true
+  - id: T22.mistakes.partner
+    text: "Assuming your partner is covered because you are."
+    when:
+      family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN]
+    source: healthnz-eligibility-guide
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T22.watchOuts.temporary
+    text: "Immigration New Zealand says that, in general, people on temporary visas to visit, study and work can't get publicly funded health care, and to check the conditions of your visa."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-27
+    verified: true
+  - id: T22.watchOuts.maternity-funds
+    text: "For some temporary visa holders who are pregnant and can't get publicly funded care, Immigration New Zealand says you must show at least {{health.maternity-funds}} to pay for maternity care."
+    source: inz-if-pregnant
+    checked: 2026-10-27
+    verified: true
+  - id: T22.watchOuts.limited-visa
+    text: "Immigration New Zealand says holders of a Limited Visa can't get publicly funded maternity care."
+    source: inz-if-pregnant
+    checked: 2026-10-27
+    verified: true
+  - id: T22.watchOuts.acc
+    text: "Immigration New Zealand says ACC usually covers most treatment costs after an accident for residents and visitors, and ACC must accept the claim first."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T22.cost.children-gp
+  text: "Immigration New Zealand says most doctors' practices offer free visits for children under {{health.free-gp-child-age}}."
+  when:
+    family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+  source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care
+  checked: 2026-10-27
+  verified: true
