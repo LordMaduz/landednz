@@ -689,3 +689,13 @@ govt-nz-while-pregnant:
   title: While you’re pregnant
   agency: Govt.nz (Health New Zealand, Ministry of Health)
   tier: government
+inz-learning-english:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/learning-english-in-new-zealand/
+  title: "Learning English in New Zealand"
+  agency: Immigration New Zealand
+  tier: government
+inz-learning-english-families:
+  url: https://www.immigration.govt.nz/process-to-apply/applying-for-a-visa/providing-evidence-and-documents-to-support-your-visa-application/english-language-requirements/learning-english-for-families-of-resident-visa-applicants/
+  title: "Learning English for families of resident visa applicants"
+  agency: Immigration New Zealand
+  tier: government

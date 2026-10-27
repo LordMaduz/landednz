@@ -9,17 +9,77 @@ appliesTo: all
 dependsOn: []
 retired: false
 why:
-  - id: T33.why.1
-    text: "Settlement support services and English classes can help you and your family settle in NZ."
+  - id: T33.why.help
+    text: "Immigration New Zealand says that when you move to a new country you may need help and ongoing support, and its arrival page lists where to find it."
     source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
-    checked: 2026-10-25
-    verified: false
+    checked: 2026-10-27
+    verified: true
+  - id: T33.why.english
+    text: "Immigration New Zealand says courses in English for Speakers of Other Languages (ESOL) can focus on everyday English, academic English or business English, and can be full-time or part-time."
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T33.steps.1
-    text: "Find settlement support and English classes near you through Immigration NZ."
+  - id: T33.steps.help-section
+    text: "Start with the Getting help and support section of Immigration New Zealand's arrival page. It covers interpreting, community information, ethnic community support and translation."
     source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.cab
+    text: "Visit a Citizens Advice Bureau (CAB) if you want to talk to someone about settlement information or services in your area. Immigration New Zealand says CABs also run workshops and seminars for recent migrants, and you can ask for an interpreter."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.community
+    text: "Look for local community connections. Immigration New Zealand links to Newcomers' Networks for community information, and to the Ministry for Ethnic Communities directory of ethnic community organisations and support services, which you can search by service, location, faith and ethnicity."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.interpreter
+    text: "Ask for an interpreter when you deal with government. Immigration New Zealand says Language Assistance Services is a free government service with phone and video interpreting."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.english-options
+    text: "If you or your partner want to improve your English: Immigration New Zealand says there are many options, from formal lessons and qualifications to conversation groups. Read its Learning English in New Zealand page."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.prepaid
+    text: "If you or your partner have pre-purchased English classes with a visa: Immigration New Zealand says you can access approved courses at no extra cost. The Tertiary Education Commission (TEC) lists the approved courses, and its toll free Help Line (0800 601 301 from New Zealand, +64 4 462 5201 from overseas) can talk through course options with an English for Migrants Adviser."
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
+  - id: T33.steps.enrol
+    text: "If you have pre-purchased classes: Immigration New Zealand says it will give you an Agreement and schedule. Take it and your passport when you enrol."
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T33.documents.passport
+    text: "Your passport, if you are enrolling in a pre-purchased ESOL course"
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
+  - id: T33.documents.agreement
+    text: "The Agreement and schedule from Immigration New Zealand, if you have pre-purchased English classes"
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T33.mistakes.free
+    text: "Assuming every English course is free. Immigration New Zealand's no-extra-cost wording applies to approved courses you have pre-purchased with your visa."
+    source: inz-learning-english
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T33.watchOuts.pre-purchase
+    text: "Immigration New Zealand says that for some residence visas, a partner or child aged 16 or over who cannot show the required English standard must have ESOL classes paid for before the application can be approved. Its page says the cost depends on test results, and the maximum charge applies if no test is taken. Check the page for your visa."
+    source: inz-learning-english-families
+    checked: 2026-10-27
+    verified: true
+  - id: T33.watchOuts.las-scope
+    text: "Immigration New Zealand says Language Assistance Services lets you talk to participating government agencies."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
