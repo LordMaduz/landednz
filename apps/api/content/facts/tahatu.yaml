@@ -1,0 +1,19 @@
+# Tahatū Career Navigator figures (CVs and job applications). research/T19.md holds the evidence for each.
+tahatu.cv-length:
+  value: "2 pages"
+  numberType: B
+  source: tahatu-write-cv
+  checked: 2026-10-27
+  verified: true
+tahatu.cover-letter-length:
+  value: "1 page"
+  numberType: B
+  source: tahatu-cover-letter
+  checked: 2026-10-27
+  verified: true
+tahatu.referees:
+  value: "2"
+  numberType: B
+  source: tahatu-write-cv
+  checked: 2026-10-27
+  verified: true

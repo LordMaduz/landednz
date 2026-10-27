@@ -1,124 +1,157 @@
 id: T19
-name: Prepare an NZ-style CV and job search
+name: "Prepare an NZ-style CV and start your job search"
 phase: 1
 priority: 55
 boosts: []
 urgency: []
-duration: 3–6 hours (initial CV rewrite and LinkedIn update)
+duration: 3–6 hours (first CV rewrite)
 appliesTo: { any: [{ occupation: [SEEKING_WORK] }, { family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN] }] }
 dependsOn: []
 retired: false
 why:
-  - id: T19.why.1
-    text: Update CV and LinkedIn within your first 2 weeks — it is a 3–6 hour task that opens NZ recruiter inbound contact immediately.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T19.why.style
+    text: "Tahatū, the government's careers service, says to keep a CV simple, short and reworded for each job, so it's easy to read and gets through the software some employers use to screen applications."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.why.offer-before-visa
+    text: "Immigration New Zealand says employers can offer a job to someone overseas before that person has a visa, but the person must hold a visa that lets them work by the time they start."
+    source: inz-offering-job-overseas
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T19.steps.1
-    text: "- Trim to 2 pages - Remove photo, DOB, marital status, nationality - Add NZ address and NZ mobile number at the top - Rewrite each role description using achievement-oriented bullet points with measurable outcomes - Ensure the most recent 2–3 roles are given the most space - Tailor summary/objective to NZ market language"
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.steps.2
-    text: '- Change location to Auckland, New Zealand - Update headline to reflect your current NZ situation (e.g. "Senior Software Engineer | Java | Spring Boot | Auckland") - Add NZ phone number to contact info (visible to connections) - Update "about" section with a brief NZ-oriented professional summary - If comfortable, enable "Open to Work" (visible to recruiters only option available) - Request LinkedIn recommendations from previous Singapore/India managers — 2–3 strong recommendations carry weight with NZ recruiters'
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.steps.3
-    text: Create a candidate profile and upload your NZ CV. Set up job alerts for your target roles and salary range. Seek is the primary NZ job discovery channel — more actively used than LinkedIn for applications in most NZ sectors.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.steps.4
-    text: Search LinkedIn for recruiters specialising in your sector in Auckland. Send a brief connection request with a note about your background and what you are looking for. Specialist tech recruiters (e.g. Datacom, Fronde, Fusion5 for IT roles) can provide market intelligence even before you are actively job-searching.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.steps.5
-    text: Eventbrite NZ, Meetup.com Auckland, and TechWeekNZ list professional events. In-person networking remains highly effective in NZ's smaller, relationship-oriented job market. Aim for 1–2 events per month once settled.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T19.steps.open-tahatu
+    text: "Open Tahatū's How to write a CV page and download the template and example that suit you."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.format
+    text: "Use a plain black font, bullet points and short sentences, and don't use images."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.content
+    text: "Include your name and contact details, a personal statement, your key skills, your work history (most recent first) and your education."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.length
+    text: "Keep your CV to {{tahatu.cv-length}} if you can."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.tailor
+    text: "Reword your CV for each job ad, using the ad's keywords."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.cover-letter
+    text: "Write a cover letter of {{tahatu.cover-letter-length}} that shows how your skills and experience match the job."
+    source: tahatu-cover-letter
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.search
+    text: "Search job websites and recruitment companies, and contact employers directly. Immigration New Zealand calls a direct approach accepted and often successful."
+    source: inz-find-a-job
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.apply
+    text: "Follow each ad's application instructions exactly, and check your application was sent and received."
+    source: tahatu-application-checklist
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.agreement
+    text: "Before you accept a job, read the written employment agreement and ask about anything you're unsure of."
+    source: employment-nz-agreement
+    checked: 2026-10-27
+    verified: true
+  - id: T19.steps.partner-conditions
+    text: "If your partner will look for work: they can check their visa conditions, which are recorded in their eVisa, before they apply."
+    when:
+      family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN]
+    source: inz-visa-conditions
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T19.documents.1
-    text: visa
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T19.documents.template
+    text: "Tahatū's CV template and example for the type of CV you need"
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.documents.pdf
+    text: "Your CV as a PDF named with your first and last name and 'CV', with a Word copy ready if an employer asks for one"
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.documents.referees
+    text: "Contact details for at least {{tahatu.referees}} referees"
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T19.mistakes.1
-    text: AEWV workers cannot freely change employers — your visa is tied to your accredited employer sponsor. Do not imply open work rights on job applications if you are on a standard AEWV. Be transparent about your visa status.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.mistakes.2
-    text: "Failing to understand: NZ salary negotiation norms: it is acceptable to negotiate salary in NZ. Research market rates on seek.co.nz salary insights before any salary discussion."
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.mistakes.3
-    text: "Failing to understand: NZ employment culture is relatively flat and informal compared to corporate India or Singapore — first-name basis with senior management is standard. Titles and hierarchy are less prominent in day-to-day work."
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.mistakes.4
-    text: "Failing to understand: New migrants sometimes undervalue their experience in NZ job applications due to imposter syndrome or unfamiliarity with NZ norms. Your overseas experience is genuinely valuable — present it confidently with NZ-style achievement framing."
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.mistakes.5
-    text: "Failing to understand: Reference checks are standard in NZ — prepare 2–3 professional references who can be contacted by NZ employers. Overseas references are acceptable."
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T19.mistakes.same-cv
+    text: "Sending the same CV to every employer instead of rewording it for each ad."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.mistakes.layout
+    text: "Leaving images, text boxes or tables in your CV. Tahatū's workbook checklist says to remove them."
+    source: tahatu-cv-workbook
+    checked: 2026-10-27
+    verified: true
+  - id: T19.mistakes.referees
+    text: "Listing referees without telling them first."
+    source: tahatu-job-hunters-workbook
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T19.watchOuts.1
-    text: AEWV workers cannot freely change employers — your visa is tied to your accredited employer sponsor. Do not imply open work rights on job applications if you are on a standard AEWV. Be transparent about your visa status.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.watchOuts.2
-    text: "NZ salary negotiation norms: it is acceptable to negotiate salary in NZ. Research market rates on seek.co.nz salary insights before any salary discussion."
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.watchOuts.3
-    text: NZ employment culture is relatively flat and informal compared to corporate India or Singapore — first-name basis with senior management is standard. Titles and hierarchy are less prominent in day-to-day work.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.watchOuts.4
-    text: New migrants sometimes undervalue their experience in NZ job applications due to imposter syndrome or unfamiliarity with NZ norms. Your overseas experience is genuinely valuable — present it confidently with NZ-style achievement framing.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T19.watchOuts.5
-    text: Reference checks are standard in NZ — prepare 2–3 professional references who can be contacted by NZ employers. Overseas references are acceptable.
-    source: www-seek-co-nz
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T19.watchOuts.cv-builders
+    text: "Tahatū says to check online CV builders for fees or hidden costs and for where they store your data (New Zealand or Australia preferred), and not to share sensitive personal data such as bank account numbers or passwords."
+    source: tahatu-write-cv
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.registration
+    text: "Immigration New Zealand says some jobs need registration with a professional body before you can get the job and a visa."
+    source: inz-find-a-job
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.no-fees
+    text: "Immigration New Zealand says New Zealand employers can't charge you fees for a job."
+    source: inz-scams
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.bank-details
+    text: "Own Your Online says a genuine employer won't need your bank account details until you've accepted a job."
+    source: own-your-online-job-scams
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.scam-signs
+    text: "Own Your Online lists warning signs of a job scam, including an unexpected job offer and being moved quickly to instant messaging."
+    source: own-your-online-job-scams
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.discrimination
+    text: "Employment New Zealand says it's unlawful for an employer to ask job applicants questions that suggest an intention to discriminate, on grounds that include age and marital or family status."
+    source: employment-nz-discrimination
+    checked: 2026-10-27
+    verified: true
+  - id: T19.watchOuts.partner-limits
+    text: "If your partner will look for work: their visa conditions can limit who they work for, what job they do and where."
+    when:
+      family: [COUPLE_DUAL_WORK, COUPLE_CONSTRAINED, FAMILY_WITH_CHILDREN]
+    source: inz-visa-conditions
+    checked: 2026-10-27
+    verified: true
 cost:
-  id: T19.cost.1
-  text: $80,000
-  source: www-seek-co-nz
-  checked: 2026-03-03
-  verified: false
-  numberType: C
+  id: T19.cost.agencies
+  text: "Immigration New Zealand says you don't need to pay a recruitment company or agency: the employer pays them when they place someone in a job."
+  source: inz-find-a-job
+  checked: 2026-10-27
+  verified: true
+advice:
+  id: T19.advice.agreement
+  text: "Employment New Zealand says you can get professional advice on an employment agreement before you agree to take the job."
+  required: false
+  source: employment-nz-agreement
+  checked: 2026-10-27
+  verified: true
