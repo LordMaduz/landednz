@@ -54,30 +54,74 @@ beforeEach(() => {
   getRoadmap.mockResolvedValue(priyaWithWhy())
 })
 
+const NOW = new Date('2026-10-23T10:00:00+13:00')
+const renderView = (over: Partial<{ arrivalDate: string; now: Date; firstUse: boolean; onOpen: (id: string) => void }> = {}) =>
+  render(<RoadmapView view={view()} arrivalDate="2026-10-21" now={NOW} firstUse={false} onOpen={() => {}} {...over} />)
+
 describe('RoadmapView', () => {
-  it('title, done count and progress bar', () => {
-    render(<RoadmapView view={view()} firstUse={false} onOpen={() => {}} />)
+  it('title and the done/landed subline', () => {
+    renderView()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Your roadmap')
-    expect(screen.getByText('7 of 20 tasks done')).toBeInTheDocument()
-    const bar = screen.getByRole('progressbar', { name: 'Tasks done' })
-    expect(bar).toHaveAttribute('aria-valuenow', '7')
-    expect(bar).toHaveAttribute('aria-valuemax', '20')
+    expect(screen.getByText('7 of 20 done · landed 21 October 2026')).toBeInTheDocument()
     expect(screen.queryByText('Done some already? Open a task and mark it done.')).toBeNull()
   })
 
-  it('no task selected: the current task is the next-task card with the only primary', () => {
+  it('before arrival the subline says arriving', () => {
+    renderView({ arrivalDate: '2026-11-05' })
+    expect(screen.getByText(/· arriving 5 November 2026$/)).toBeInTheDocument()
+  })
+
+  it('the current stage lists every task; the current one is Up next', () => {
     const onOpen = vi.fn()
-    render(<RoadmapView view={view()} firstUse={false} onOpen={onOpen} />)
-    const card = screen.getByRole('heading', { level: 3, name: 'Apply for your IRD number' }).closest('article')!
+    renderView({ onOpen })
+    const stage = screen.getByRole('region', { name: 'Week 1' })
+    expect(within(stage).getAllByRole('button')).toHaveLength(3)
+    expect(within(stage).getByText('Up next')).toBeInTheDocument()
+    expect(within(stage).getByText('0 of 3 · to 28 Oct')).toBeInTheDocument()
+    fireEvent.click(within(stage).getByRole('button', { name: /Give your employer a tax code/ }))
+    expect(onOpen).toHaveBeenCalledWith('T09')
+  })
+
+  it('Up next card: why, and Start task links to the task', () => {
+    renderView()
+    const card = screen.getByRole('region', { name: 'Up next' })
+    expect(within(card).getByRole('heading', { level: 3, name: 'Apply for your IRD number' })).toBeInTheDocument()
     expect(within(card).getByText('Your employer needs it before your first payday.')).toBeInTheDocument()
-    expect(within(card).getByText('1 hour')).toBeInTheDocument()
-    fireEvent.click(within(card).getByRole('button', { name: 'Start: Apply for your IRD number' }))
-    expect(onOpen).toHaveBeenCalledWith('T08')
-    expect(document.querySelectorAll('button.bg-ink')).toHaveLength(1)
+    expect(within(card).getByRole('link', { name: /Start task/ })).toHaveAttribute('href', '/app/roadmap?task=T08')
+    expect(document.querySelectorAll('.bg-ink')).toHaveLength(1)
+  })
+
+  it('Other stages: remaining first, then done; Show reveals the tasks', () => {
+    renderView()
+    const other = screen.getByRole('region', { name: 'Other stages' })
+    const names = within(other).getAllByRole('listitem').map(li => li.textContent)
+    expect(names[0]).toMatch(/^Month 1.*4 tasks · to 20 Nov/)
+    expect(names[1]).toMatch(/^Later.*6 tasks · from November/)
+    expect(names[2]).toMatch(/^Before you flew.*5 of 5 done/)
+    const show = within(other).getByRole('button', { name: 'Show Month 1 tasks' })
+    expect(show).toHaveAttribute('aria-expanded', 'false')
+    expect(within(other).queryByRole('button', { name: /Enrol with a GP/ })).toBeNull()
+    fireEvent.click(show)
+    expect(show).toHaveAttribute('aria-expanded', 'true')
+    expect(within(other).getByRole('button', { name: /Enrol with a GP/ })).toBeInTheDocument()
+  })
+
+  it('Key dates after landing, and the link to change the arrival date', () => {
+    renderView()
+    const dates = screen.getByRole('region', { name: 'Key dates' })
+    expect(within(dates).getByText('You landed').previousElementSibling).toHaveTextContent('21 Oct')
+    expect(within(dates).getByText('Week 1 ends').previousElementSibling).toHaveTextContent('28 Oct')
+    expect(within(dates).getByText('Month 1 ends').previousElementSibling).toHaveTextContent('20 Nov')
+    expect(within(dates).getByRole('link', { name: 'Change your arrival date' })).toHaveAttribute('href', '/settings')
+  })
+
+  it('Key dates before landing say Arriving', () => {
+    renderView({ arrivalDate: '2026-11-05' })
+    expect(screen.getByText('Arriving')).toBeInTheDocument()
   })
 
   it('first use: the hint', () => {
-    render(<RoadmapView view={view()} firstUse onOpen={() => {}} />)
+    renderView({ firstUse: true })
     expect(screen.getByText('Done some already? Open a task and mark it done.')).toBeInTheDocument()
   })
 })
@@ -85,7 +129,7 @@ describe('RoadmapView', () => {
 describe('RoadmapScreen', () => {
   it('fetches with the session token and shows the route', async () => {
     render(<RoadmapScreen user={user} />)
-    expect(await screen.findByRole('list', { name: 'Your route' })).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'Other stages' })).toBeInTheDocument()
     expect(getRoadmap).toHaveBeenCalledWith('tok')
   })
 
@@ -96,9 +140,9 @@ describe('RoadmapScreen', () => {
     expect(within(alert).getByRole('heading', { level: 1 })).toHaveTextContent("Can't reach LandedNZ")
     expect(alert).toHaveTextContent('Your progress is saved. Check your connection, then try again.')
     expect(screen.getByRole('button', { name: /^Ask/ })).toBeDisabled()
-    expect(screen.queryByRole('list', { name: 'Your route' })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Other stages' })).toBeNull()
     fireEvent.click(within(alert).getByRole('button', { name: 'Try again' }))
-    expect(await screen.findByRole('list', { name: 'Your route' })).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'Other stages' })).toBeInTheDocument()
     expect(getRoadmap).toHaveBeenCalledTimes(2)
   })
 
@@ -111,7 +155,7 @@ describe('RoadmapScreen', () => {
 
   it('opening a task puts it in the URL', async () => {
     render(<RoadmapScreen user={user} />)
-    fireEvent.click(await screen.findByRole('button', { name: 'Start: Apply for your IRD number' }))
+    fireEvent.click(await screen.findByRole('button', { name: /^Apply for your IRD number/ }))
     expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08')
   })
 
@@ -119,7 +163,7 @@ describe('RoadmapScreen', () => {
     params = new URLSearchParams('task=T08')
     render(<RoadmapScreen user={user} />)
     expect(await screen.findByRole('article', { name: 'Apply for your IRD number' })).toBeInTheDocument()
-    expect(screen.queryByRole('list', { name: 'Your route' })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Other stages' })).toBeNull()
   })
 
   it('Mark as done then Undo: the route refetches each time and the page stays (Review Focus 3)', async () => {
@@ -143,7 +187,7 @@ describe('RoadmapScreen', () => {
 
   it('header Ask with no task open: opens the current task', async () => {
     render(<RoadmapScreen user={user} />)
-    await screen.findByRole('list', { name: 'Your route' })
+    await screen.findByRole('region', { name: 'Other stages' })
     fireEvent.click(screen.getByRole('button', { name: /^Ask/ }))
     expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08')
   })

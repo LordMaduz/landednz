@@ -29,9 +29,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
 
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Roadmap' }).click()
   await expect(page).toHaveURL('/app/roadmap')
-  // The IRD number is an Arrival task (phase 2), and the Arrival leg is open on arrival day
-  const arrival = page.getByRole('list', { name: 'Your route' }).getByRole('listitem').filter({ has: page.getByRole('heading', { name: /^Arrival/ }) })
-  await arrival.getByRole('button', { name: /^Apply for your IRD number/ }).click()
+  // The IRD number is an Arrival task (phase 2); Arrival is folded under Other stages until opened
+  await page.getByRole('button', { name: 'Show Arrival tasks' }).click()
+  await page.getByRole('button', { name: /^Apply for your IRD number/ }).click()
 
   const ask = page.getByRole('textbox', { name: /^Ask about / })
   await ask.fill('What documents do I need?')

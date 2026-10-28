@@ -1,55 +1,98 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { Fragment, useCallback, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
-import { RouteRail } from "@/components/route/route-rail"
+import { RouteTrack } from "@/components/route/route-track"
+import { StageList } from "@/components/route/stage-list"
+import { buttonVariants } from "@/components/ui/button"
+import { Card, CardHead } from "@/components/ui/card"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
+import { journeyDay } from "@/lib/journey-day"
+import { addDays, longDay, shortDay } from "@/lib/nz-date"
 import { buildRouteView, type RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
-import { NextTaskCard } from "./next-task-card"
 import { TaskSheet } from "./task-sheet"
 
 export function RoadmapView({
   view,
+  arrivalDate,
+  now,
   firstUse,
   onOpen,
 }: {
   view: RouteView
+  arrivalDate: string
+  now: Date
   firstUse: boolean
   onOpen(taskId: string): void
 }) {
+  const { current } = view
+  const landed = journeyDay(arrivalDate, now) >= 1
+  const dates = [
+    { date: arrivalDate, what: landed ? "You landed" : "Arriving" },
+    { date: addDays(arrivalDate, 7), what: "Week 1 ends" },
+    { date: addDays(arrivalDate, 30), what: "Month 1 ends" },
+  ]
   return (
-    <div className="flex min-w-0 flex-col gap-8">
-      <section aria-labelledby="rm-title" className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 id="rm-title" className="text-title">Your roadmap</h1>
-          <span className="text-small text-muted">
-            {view.doneCount} of {view.total} tasks done
-          </span>
-        </div>
-        <div
-          className="progress"
-          role="progressbar"
-          aria-label="Tasks done"
-          aria-valuemin={0}
-          aria-valuemax={view.total}
-          aria-valuenow={view.doneCount}
-        >
-          <span style={{ width: `${view.total ? Math.round((view.doneCount / view.total) * 100) : 0}%` }} />
-        </div>
-        {firstUse && <p className="text-muted">Done some already? Open a task and mark it done.</p>}
+    <div className="flex min-w-0 flex-col gap-4">
+      <section aria-labelledby="rm-title" className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h1 id="rm-title" className="text-title">Your roadmap</h1>
+        <p className="text-muted">
+          {view.doneCount} of {view.total} done · {landed ? "landed" : "arriving"} {longDay(arrivalDate)}
+        </p>
+        {firstUse && <p className="basis-full text-muted">Done some already? Open a task and mark it done.</p>}
       </section>
-      <RouteRail legs={view.legs} onOpen={onOpen} renderCurrent={task => <NextTaskCard task={task} onOpen={onOpen} />} />
+      <Card aria-label="Where you are">
+        <RouteTrack route={view} arrivalDate={arrivalDate} now={now} height={120} />
+      </Card>
+      <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">
+        <div className="flex min-w-0 flex-col gap-4">
+          <StageList legs={view.legs} onOpen={onOpen} />
+        </div>
+        <div className="flex min-w-0 flex-col gap-4">
+          <Card aria-labelledby="rm-next">
+            <CardHead title="Up next" titleId="rm-next" aside={current && <span className="text-small text-muted">About {current.time}</span>} />
+            {current ? (
+              <>
+                <div className="flex flex-col gap-1.5">
+                  <h3 className="text-section">{current.title}</h3>
+                  {current.why && <p className="max-w-lede text-muted">{current.why}</p>}
+                </div>
+                <Link href={`/app/roadmap?task=${current.taskId}`} className={buttonVariants({ className: "self-start" })}>
+                  Start task<span className="sr-only">: {current.title}</span>
+                </Link>
+              </>
+            ) : (
+              <p className="text-muted">You have finished every task on your roadmap.</p>
+            )}
+          </Card>
+          <Card aria-labelledby="rm-dates">
+            <CardHead title="Key dates" titleId="rm-dates" />
+            <dl className="m-0 grid grid-cols-plan items-baseline gap-x-3 gap-y-2">
+              {dates.map(d => (
+                <Fragment key={d.what}>
+                  <dt className="text-small text-muted">{shortDay(d.date)}</dt>
+                  <dd className="m-0 font-medium">{d.what}</dd>
+                </Fragment>
+              ))}
+            </dl>
+            <Link href="/settings" className="mt-auto inline-flex min-h-6 items-center self-start text-small font-medium">
+              Change your arrival date
+            </Link>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }
 
-type Loaded = { view: RouteView; firstUse: boolean }
+type Loaded = { view: RouteView; arrivalDate: string; now: Date; firstUse: boolean }
 
 // Fetches the roadmap with the browser session; ?task=<id> is the open task, shown as a page in place of the route
 export function RoadmapScreen({ user }: { user: { name: string; initials: string } }) {
@@ -73,8 +116,9 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       const token = data.session?.access_token
       if (!token) return router.replace("/signin?redirect=%2Fapp%2Froadmap")
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
-      const view = buildRouteView(roadmap, profile.arrivalDate, new Date())
-      setState({ view, firstUse: view.doneCount === 0 })
+      const now = new Date()
+      const view = buildRouteView(roadmap, profile.arrivalDate, now)
+      setState({ view, arrivalDate: profile.arrivalDate, now, firstUse: view.doneCount === 0 })
       if (askOnLoad.current && view.current) {
         askOnLoad.current = false
         setAskFor({ taskId: view.current.taskId, n: 1 })
@@ -107,7 +151,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
         <Loading />
       ) : (
         <>
-          <main className={cn("container-page pb-24", !selectedTaskId && "pt-12")}>
+          <main className={cn("container-page", selectedTaskId ? "pb-24" : "py-6")}>
             {state === "down" ? (
               <ApiDown onRetry={() => load()} />
             ) : selectedTaskId ? (
@@ -118,7 +162,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
                 askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
               />
             ) : (
-              <RoadmapView view={state.view} firstUse={state.firstUse} onOpen={open} />
+              <RoadmapView {...state} onOpen={open} />
             )}
           </main>
           <PublicFooter />
