@@ -9,6 +9,12 @@ const NOW = new Date('2026-10-23T10:00:00+13:00')
 const route = buildRouteView(priya(), '2026-10-21', NOW)
 
 describe('RouteTrack', () => {
+  it('gives each track its own gradient id', () => {
+    const { container } = render(<><RouteTrack route={route} arrivalDate="2026-10-21" now={NOW} height={96} /><RouteTrack route={route} arrivalDate="2026-10-21" now={NOW} height={96} /></>)
+    const ids = [...container.querySelectorAll('linearGradient')].map(g => g.id)
+    expect(new Set(ids).size).toBe(2)
+  })
+
   it('exposes the progress as text, not the drawing', () => {
     const { container } = render(<RouteTrack route={route} arrivalDate="2026-10-21" now={NOW} height={96} />)
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')

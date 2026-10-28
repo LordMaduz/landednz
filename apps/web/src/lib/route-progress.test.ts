@@ -59,6 +59,13 @@ describe('routeProgress', () => {
     expect(p.passed[2]).toBe(true)
   })
 
+  it('from arrival with the before stage unfinished: pin on the first flag, no NaN', () => {
+    const p = routeProgress(view([5, 0, 0, 0, 0]), ARRIVAL, DAY_3)
+    expect(p.x).toBe(200)
+    expect(p.label).toBe('You · day 3')
+    expect(p.summary).not.toMatch(/NaN/)
+  })
+
   it('no tasks at all', () => {
     const p = routeProgress({ total: 0, doneCount: 0, current: null, legs: [] }, ARRIVAL, DAY_3)
     expect(Number.isFinite(p.x)).toBe(true)

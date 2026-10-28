@@ -16,6 +16,7 @@
   --color-ink-hover: #24465A;
   --color-avatar: #E8F2F1;
   --color-mark: #3FC9B7;
+  --color-track: #C9D3D7;
 
   --text-hero: 48px;
   --text-hero--line-height: 1.05;
@@ -42,6 +43,7 @@
 
   --shadow-lift: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
   /* chosen option row: inset teal hairline beside the teal border (a 2 px edge, not elevation) */
+  --shadow-pin-halo: 0 0 0 6px rgba(15, 42, 58, 0.08);
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
   --container-page: 1120px;
@@ -293,22 +295,22 @@
   .track-rv path { vector-effect: non-scaling-stroke; }
   .track-pin { position: absolute; transform: translate(-50%, -50%); }
   .track-contour { stroke: var(--color-hairline); stroke-width: 1; fill: none; }
-  .track-ahead { stroke: #C9D3D7; stroke-width: 2; fill: none; stroke-dasharray: 4 5; }
+  .track-ahead { stroke: var(--color-track); stroke-width: 2; fill: none; stroke-dasharray: 4 5; }
   .track-walked { stroke: var(--color-teal); stroke-width: 2.5; fill: none; }
   .track-grad { stop-color: var(--color-teal); }
-  .track-flag { fill: #FFFFFF; stroke: var(--color-control); stroke-width: 1.5; stroke-linejoin: round; }
+  .track-flag { fill: var(--color-white); stroke: var(--color-control); stroke-width: 1.5; stroke-linejoin: round; }
   .track-flag-on { fill: var(--color-teal); stroke: var(--color-teal); }
   .track-you { display: flex; flex-direction: column; align-items: center; gap: 4px; transform: translate(-50%, calc(-100% + 7px)); }
   /* Near either end the tag stays inside the track and the dot stays on its x */
   .track-you[data-edge="end"] { align-items: flex-end; transform: translate(calc(-100% + 7px), calc(-100% + 7px)); }
   .track-you[data-edge="start"] { align-items: flex-start; transform: translate(-7px, calc(-100% + 7px)); }
-  .track-you-tag { font-size: 13px; font-weight: 600; color: #FFFFFF; background: var(--color-ink); border-radius: 9999px; padding: 2px 10px; white-space: nowrap; }
-  .track-you-dot { width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; border: 3px solid var(--color-ink); box-sizing: border-box; box-shadow: 0 0 0 6px rgba(15, 42, 58, 0.08); }
-  .track-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.45; }
+  .track-you-tag { font-size: var(--text-small); font-weight: 600; color: var(--color-white); background: var(--color-ink); border-radius: 9999px; padding: 2px 10px; white-space: nowrap; }
+  .track-you-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--color-white); border: 3px solid var(--color-ink); box-sizing: border-box; box-shadow: var(--shadow-pin-halo); }
+  .track-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; font-size: var(--text-small); line-height: var(--text-small--line-height); }
   .track-stage { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .track-stage-name { font-weight: 600; color: var(--color-ink); }
   .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-muted); }
-  .track-sum { display: none; margin: 0; font-size: 13px; }
+  .track-sum { display: none; margin: 0; font-size: var(--text-small); }
   @container (max-width: 560px) {
     .track-stages { display: none; }
     .track-sum { display: block; }

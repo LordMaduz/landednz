@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { routeProgress, stageLabels, terrainY, TRACK_FLAGS } from '@/lib/route-progress'
 import type { RouteView } from '@/lib/route-view'
 
@@ -7,6 +8,7 @@ const XS = Array.from({ length: 51 }, (_, i) => i * 20)
 // Home's track: a hill profile with the walked part filled, a flag per stage and a "You" pin.
 // It only draws; the SVG is aria-hidden and the progress is also written out as text.
 export function RouteTrack({ route, arrivalDate, now, height }: { route: RouteView; arrivalDate: string; now: Date; height: 96 | 120 }) {
+  const gid = `track-walk-${useId().replace(/:/g, '')}`
   const { x: dx, label, summary, passed } = routeProgress(route, arrivalDate, now)
   const profile = XS.map(x => [x, terrainY(x)] as const)
   const line = "M" + profile.map(([x, y]) => pt(x, y)).join(" L")
@@ -19,13 +21,13 @@ export function RouteTrack({ route, arrivalDate, now, height }: { route: RouteVi
       <div className="track-rv" style={{ height, marginTop: 18 }}>
         <svg aria-hidden="true" viewBox={`0 0 1000 ${height}`} preserveAspectRatio="none" height={height}>
           <defs>
-            <linearGradient id="track-walk" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" className="track-grad" stopOpacity=".22" />
               <stop offset="1" className="track-grad" stopOpacity="0" />
             </linearGradient>
           </defs>
           {[12, 24].map(off => <path key={off} d={contour(off)} className="track-contour" />)}
-          <path d={`${walked} L${dx},${height} L0,${height} Z`} fill="url(#track-walk)" />
+          <path d={`${walked} L${dx},${height} L0,${height} Z`} fill={`url(#${gid})`} />
           <path d={line} className="track-ahead" />
           <path d={walked} className="track-walked" />
         </svg>
@@ -42,8 +44,8 @@ export function RouteTrack({ route, arrivalDate, now, height }: { route: RouteVi
         </div>
       </div>
       <ol className="track-stages">
-        {stageLabels(route, arrivalDate, now).map((s, i) => (
-          <li key={s.id} className={`track-stage${s.now ? "" : " track-stage-off"}${i === 0 || i === 4 ? " track-edge" : ""}`}>
+        {stageLabels(route, arrivalDate, now).map(s => (
+          <li key={s.id} className={`track-stage${s.now ? "" : " track-stage-off"}`}>
             <span className="track-stage-name">{s.name}</span>
             <span className="text-muted">{s.state}</span>
           </li>
