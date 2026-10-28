@@ -21,8 +21,8 @@ describe('PreviewRoute', () => {
     const route = await screen.findByRole('list', { name: 'Your roadmap' })
     const legs = within(route).getAllByRole('heading', { level: 2 }).map(h => h.textContent)
     expect(legs).toEqual(['Before you fly', 'Arrival', 'Week 1', 'Month 1 and later'])
-    expect(screen.getByText(/^10 tasks: renting/)).toBeInTheDocument()
-    expect(screen.getByText('Research Auckland suburbs')).toBeInTheDocument()
+    expect(screen.getByText(/^10 tasks: [^,]+, [^,]+, [^,]+, and more$/)).toBeInTheDocument()
+    expect(screen.getByText('Choose where to live')).toBeInTheDocument()
     expect(screen.getByText('Open a bank account')).toBeInTheDocument()
     expect(screen.getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027.', { exact: false })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Save my roadmap' })).toHaveAttribute('href', '/auth/complete?redirect=%2Fapp')
@@ -51,6 +51,6 @@ describe('PreviewRoute', () => {
   it('says when saving failed', async () => {
     render(<PreviewRoute answers={{ ...priya, city: 'OTHER' }} saveFailed />)
     expect(screen.getByRole('alert')).toHaveTextContent("Your roadmap wasn't saved")
-    expect(await screen.findByText('Research suburbs where you will live')).toBeInTheDocument()
+    expect(await screen.findByText('Choose where to live')).toBeInTheDocument()
   })
 })

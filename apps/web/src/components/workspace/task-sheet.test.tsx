@@ -92,6 +92,15 @@ describe('TaskSheet', () => {
     expect(getTaskDetail).toHaveBeenCalledWith('T08', 'tok')
   })
 
+  it('an empty detail (retired task) renders without a source line or an empty link', async () => {
+    getTaskDetail.mockResolvedValue(detail({ steps: [], governmentSourceUrl: '', lastVerified: null }))
+    sheet('T08')
+    const aside = screen.getByRole('complementary', { name: 'Apply for your IRD number' })
+    await waitFor(() => expect(getTaskDetail).toHaveBeenCalled())
+    expect(within(aside).queryByRole('link')).toBeNull()
+    expect(within(aside).queryByText(/Source:/)).toBeNull()
+  })
+
   it('a step with inline items: lead line and a nested list, no markdown markers', async () => {
     getTaskDetail.mockResolvedValueOnce(detail({ steps: ['You will need: - **Your passport** - Your visa details'] }))
     sheet('T08')

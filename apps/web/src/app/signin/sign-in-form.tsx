@@ -112,7 +112,7 @@ function Saving({ answers }: { answers: Answers }) {
                   <Waypoint state={i === 0 ? "current" : "available"} />
                 </span>
                 <div className="flex min-h-11 flex-wrap items-center gap-x-4">
-                  <span className={cn(i === 0 && "font-medium")}>{previewTitle(t.taskId, t.name, answers.city)}</span>
+                  <span className={cn(i === 0 && "font-medium")}>{previewTitle(t.taskId, t.name)}</span>
                   {i === 0 && PREVIEW_META[t.taskId] && <span className="text-small text-muted">{PREVIEW_META[t.taskId]}</span>}
                 </div>
               </div>

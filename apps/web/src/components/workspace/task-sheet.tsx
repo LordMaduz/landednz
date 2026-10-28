@@ -177,7 +177,7 @@ export function TaskSheet({
             })}
           </ol>
         )}
-        {steps && actionLabel && !doneOn && (
+        {steps?.governmentSourceUrl && actionLabel && !doneOn && (
           <a
             href={steps.governmentSourceUrl}
             target="_blank"
@@ -206,7 +206,7 @@ export function TaskSheet({
             </ol>
           </section>
         )}
-        {steps && cited.length === 0 && (
+        {steps?.governmentSourceUrl && cited.length === 0 && (
           <p className="text-small text-muted">
             Source:{" "}
             <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className="underline">

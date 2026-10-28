@@ -26,7 +26,7 @@ describe('SignIn', () => {
     expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027')).toBeInTheDocument()
     const rows = (await within(aside).findAllByRole('listitem')).map(li => li.textContent)
     expect(rows).toEqual([
-      'Research Auckland suburbsFirst, 4 to 6 weeks before you leave',
+      'Choose where to liveFirst, 4 to 6 weeks before you leave',
       'Book temporary accommodation',
       '18 more tasks, in the order they unlock',
     ])
