@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sizing rules</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{container-type:inline-size;font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;-webkit-font-smoothing:antialiased;min-height:100%;font-feature-settings:"ss01"}
+.ui h1,.ui h2,.ui h3,.ui p,.ui dl,.ui dd,.ui ol,.ui ul{margin:0}
+.ui ol,.ui ul{padding:0;list-style:none}
+.ui a{color:#0A6463;text-decoration:none;transition:color .15s}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.ui ::selection{background:#CFE7E5}
+.t-page{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-0.015em;text-wrap:balance}
+.t-task{font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-0.01em;text-wrap:balance}
+.t-card{font-size:15px;line-height:1.4;font-weight:600}
+.t-small{font-size:13px;line-height:1.45}
+.muted{color:#4B6170}
+.tnum{font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:500;min-height:40px;padding:0 16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box;transition:background-color .15s,border-color .15s,color .15s}
+.btn-sm{min-height:32px;padding:0 12px;font-size:13px}
+.ui a.btn{text-decoration:none}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}.btn-primary:active{background:#071C28}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8;border-color:#7A8F99}.btn-quiet:active{background:#E3E8EA}
+.hdr{background:#FFFFFF;border-bottom:1px solid #E4E9EB}
+.ftr{border-top:1px solid #E4E9EB;margin-top:8px}
+.wrap{max-width:1120px;margin:0 auto;box-sizing:border-box;padding:0 24px}
+.nav{display:flex;gap:24px;align-self:stretch}
+.nav a{display:flex;align-items:center;color:#4B6170;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ui .nav a:hover{color:#0F2A3A;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;border-bottom-color:#0F2A3A}
+.avatar{width:32px;height:32px;border-radius:50%;background:#E8F2F1;color:#0A6463;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.card{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;box-shadow:0 1px 2px rgba(15,42,58,0.04), 0 16px 48px rgba(15,42,58,0.08);padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;box-sizing:border-box}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.card-foot{margin-top:auto}
+.card-head a,a.card-foot,.ftr a{display:inline-flex;align-items:center;min-height:24px}
+.btn-primary:disabled{background:#E3E8EA;border-color:#E3E8EA;color:#4B6170;cursor:not-allowed}
+.rows > li{margin:0 -20px;border-top:1px solid #E3E8EA}
+.row{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 20px;box-sizing:border-box;transition:background-color .15s}
+.ui a.row{color:#0F2A3A;text-decoration:none}.ui a.row:hover{background:rgba(15,42,58,.035)}.ui a.row:active{background:rgba(15,42,58,.07)}
+.ellip{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wp{flex:none;box-sizing:border-box;width:10px;height:10px;border-radius:50%;background:#FFFFFF;border:1.5px solid #7A8F99}
+.wp-now{width:14px;height:14px;border:2px solid #0F2A3A}
+.wp-done{background:#0E7C7B;border-color:#0E7C7B}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px}
+.legs{display:flex;gap:20px}
+.leg{display:flex;flex-direction:column;gap:10px;min-width:max-content}
+.track{height:14px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#E3E8EA,#E3E8EA) center/100% 2px no-repeat}
+.leg-label{display:flex;flex-direction:column;white-space:nowrap}
+.hero-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero-btns{display:flex;gap:8px}
+.plan{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px 12px;align-items:baseline}
+.plan dt{font-size:13px;color:#4B6170}.plan dd{font-weight:500}
+.tick{flex:none;width:16px;height:16px;border-radius:50%;background:#E8F2F1;display:flex;align-items:center;justify-content:center}
+.label{font-size:13px;font-weight:500}
+.field{font:inherit;font-size:15px;height:40px;padding:8px 12px;border-radius:8px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.form > div{display:flex;flex-direction:column;gap:6px;min-width:0}
+@container (max-width: 860px){.grid{grid-template-columns:minmax(0,1fr)}.span2{grid-row:auto!important}}
+@container (max-width: 560px){
+.wrap{padding:0 16px}.t-page{font-size:22px}
+.btn{min-height:44px}.btn-sm{min-height:44px}.field{height:44px;font-size:16px}
+.card{padding:16px}.rows > li{margin:0 -16px}.row{padding:8px 16px;min-height:44px}
+.legs{gap:8px}.leg{min-width:0}.leg-off .leg-label{display:none}.wp{width:8px;height:8px}.wp-now{width:12px;height:12px}
+.hero-btns{width:100%;flex-direction:column-reverse}.hero-btns .btn{width:100%}
+.form{grid-template-columns:minmax(0,1fr)}.ellip{white-space:normal}
+.wordmark,.kbd,.hide-sm{display:none}.nav{gap:16px}
+}
+
+.rv{position:relative}
+.rv > svg{position:absolute;inset:0;width:100%;overflow:visible}
+.pin{position:absolute;transform:translate(-50%,-50%)}
+.stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+.you{display:flex;flex-direction:column;align-items:center;gap:4px}
+.you-tag{font-size:13px;font-weight:600;color:#FFFFFF;background:#0F2A3A;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.you-dot{width:14px;height:14px;border-radius:50%;background:#FFFFFF;border:3px solid #0F2A3A;box-sizing:border-box;box-shadow:0 0 0 6px rgba(15,42,58,.08)}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.tile{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E3E8EA;border-radius:10px;min-width:0}
+.tile-now{border-color:#0F2A3A;box-shadow:inset 0 0 0 1px #0F2A3A}
+.tile-off{background:#FAFBFB}
+.stage-sum{display:none;font-size:13px}
+@container (max-width: 560px){
+.stages{display:none}.stage-sum{display:block}
+.tiles{gap:6px}.tile{padding:8px 0;justify-content:center}.tile-text{display:none!important}
+}
+
+.sk{display:block;border-radius:6px;background:#EEF2F3}
+.err{color:#A3292B}
+.field-err{border-color:#A3292B;box-shadow:0 0 0 1px #A3292B}
+.toast{display:flex;align-items:center;gap:12px;align-self:flex-start;background:#0F2A3A;color:#FFFFFF;border-radius:10px;padding:10px 10px 10px 14px;box-shadow:0 8px 24px rgba(15,42,58,.18)}
+.toast-btn{font:inherit;font-weight:600;background:transparent;border:0;color:#7FE0D3;cursor:pointer;min-height:32px;padding:0 8px;border-radius:6px}
+.dots{display:inline-flex;gap:3px}.dots i{width:5px;height:5px;border-radius:50%;background:#0E7C7B;opacity:.4}
+.dialog{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(15,42,58,.06),0 24px 64px rgba(15,42,58,.18)}
+.btn-danger{background:#A3292B;color:#FFFFFF;border:1px solid #A3292B}
+.card-now{border-color:#0F2A3A}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</helmet>
+<div class="ui" style="padding: 40px; box-sizing: border-box; height: 100%">
+  <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; align-items: stretch">
+    <section class="card" aria-labelledby="ty" style="gap: 8px">
+      <h2 id="ty" class="t-card">Type: one family, four sizes</h2>
+      <p class="t-small muted" style="margin-bottom: 8px">Geist stays. It's a clean product sans with tabular figures; a second family would only add noise. Steps are about 1.2× apart, so roles read clearly without anything shouting. The old 32 px titles and 48 px numbers are gone.</p>
+      <div style="display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 16px; align-items: baseline; padding: 10px 0; border-top: 1px solid #E3E8EA">
+      <span class="t-small muted tnum">24 / 600<br>Page title</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing:-0.015em">Welcome to Christchurch</span><span class="t-small muted">One per page, task titles too. 22 px on phones.</span></div>
+    </div>
+      <div style="display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 16px; align-items: baseline; padding: 10px 0; border-top: 1px solid #E3E8EA">
+      <span class="t-small muted tnum">18 / 600<br>Section title</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 18px; font-weight: 600; line-height: 1.3; letter-spacing:-0.01em">Apply for your IRD number</span><span class="t-small muted">The Up next task and task-page sections.</span></div>
+    </div>
+      <div style="display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 16px; align-items: baseline; padding: 10px 0; border-top: 1px solid #E3E8EA">
+      <span class="t-small muted tnum">15 / 600<br>Card title</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 15px; font-weight: 600; line-height: 1.3; ">Your plan</span><span class="t-small muted">Same size as body; weight does the work.</span></div>
+    </div>
+      <div style="display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 16px; align-items: baseline; padding: 10px 0; border-top: 1px solid #E3E8EA">
+      <span class="t-small muted tnum">15 / 400<br>Body</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 15px; font-weight: 400; line-height: 1.3; ">Me, my partner and our children</span><span class="t-small muted">Everything you read. Inputs are 16 px on phones.</span></div>
+    </div>
+      <div style="display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 16px; align-items: baseline; padding: 10px 0; border-top: 1px solid #E3E8EA">
+      <span class="t-small muted tnum">13 / 400<br>Meta</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 13px; font-weight: 400; line-height: 1.3; ">2 Mar · 14 of 25 done</span><span class="t-small muted">Dates, counts, hints. Only citation numbers go smaller (12 px, 24 px tap area).</span></div>
+    </div>
+    </section>
+    <section class="card" aria-labelledby="ct">
+      <h2 id="ct" class="t-card">Controls: two heights</h2>
+      <p class="t-small muted">40 px on desktop. On phones every button, chip and field is 44 px. Small buttons (32 px) only in desktop headers and task nav. Text links get at least a 24 px tap area. Radius 8.</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+        <span class="btn btn-primary">Save changes</span><span class="btn btn-quiet">Ask about this</span><span class="btn btn-quiet btn-sm">Previous</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><span class="label">City</span><span class="field"><span>Greater Christchurch</span><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6.5 8 9.5l3-3" stroke="#4B6170" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <p class="t-small muted">Fields are as wide as their column, never the full page. Labels sit above, 13 px medium.</p>
+      <div style="display: grid; grid-template-columns: auto repeat(4, auto); gap: 8px; align-items: center; justify-content: start; font-size: 13px; color: #4B6170">
+        <span></span><span>Rest</span><span>Hover</span><span>Pressed</span><span>Busy</span>
+        <span>Primary</span>
+        <span class="btn btn-sm" style="background:#0F2A3A;color:#fff;border:1px solid #0F2A3A">Done</span>
+        <span class="btn btn-sm" style="background:#24465A;color:#fff;border:1px solid #24465A">Done</span>
+        <span class="btn btn-sm" style="background:#071C28;color:#fff;border:1px solid #071C28">Done</span>
+        <span class="btn btn-sm" style="background:#24465A;color:#fff;border:1px solid #24465A">Saving…</span>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="sf">
+      <h2 id="sf" class="t-card">Surfaces and spacing</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E3E8EA; box-shadow: 0 1px 2px rgba(15,42,58,0.04), 0 16px 48px rgba(15,42,58,0.08)"></div><span class="t-small"><b style="font-weight:500">Card</b> <span class="muted">white, border #E3E8EA, landing lift shadow</span></span></div>
+      </div>
+      <p class="t-small muted">The page is plain white, like the landing page. Cards are the landing-page card exactly: bright white, hairline #E3E8EA border and the same lift shadow, so they float off the page. Radius 12, 20 px padding (16 on phones).</p>
+      <p class="t-small muted">Every page ends with the same footer as the landing page.</p>
+      <p class="t-small muted">Spacing on a 4 px base: 4 · 8 · 12 · 16 · 20 · 24. 16 between cards and between page sections.</p>
+      <p class="t-small muted">Cards in the same row share a height; columns keep their own width (main grows, side is 360 px on every page). Home lists cap at 3 rows and link to the rest, so a card never grows with your data. Sources always list every source the page cites.</p>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":580}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

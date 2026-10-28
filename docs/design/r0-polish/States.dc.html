@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>States</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{container-type:inline-size;font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;-webkit-font-smoothing:antialiased;min-height:100%;font-feature-settings:"ss01"}
+.ui h1,.ui h2,.ui h3,.ui p,.ui dl,.ui dd,.ui ol,.ui ul{margin:0}
+.ui ol,.ui ul{padding:0;list-style:none}
+.ui a{color:#0A6463;text-decoration:none;transition:color .15s}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.ui ::selection{background:#CFE7E5}
+.t-page{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-0.015em;text-wrap:balance}
+.t-task{font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-0.01em;text-wrap:balance}
+.t-card{font-size:15px;line-height:1.4;font-weight:600}
+.t-small{font-size:13px;line-height:1.45}
+.muted{color:#4B6170}
+.tnum{font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:500;min-height:40px;padding:0 16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box;transition:background-color .15s,border-color .15s,color .15s}
+.btn-sm{min-height:32px;padding:0 12px;font-size:13px}
+.ui a.btn{text-decoration:none}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}.btn-primary:active{background:#071C28}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8;border-color:#7A8F99}.btn-quiet:active{background:#E3E8EA}
+.hdr{background:#FFFFFF;border-bottom:1px solid #E4E9EB}
+.ftr{border-top:1px solid #E4E9EB;margin-top:8px}
+.wrap{max-width:1120px;margin:0 auto;box-sizing:border-box;padding:0 24px}
+.nav{display:flex;gap:24px;align-self:stretch}
+.nav a{display:flex;align-items:center;color:#4B6170;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ui .nav a:hover{color:#0F2A3A;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;border-bottom-color:#0F2A3A}
+.avatar{width:32px;height:32px;border-radius:50%;background:#E8F2F1;color:#0A6463;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.card{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;box-shadow:0 1px 2px rgba(15,42,58,0.04), 0 16px 48px rgba(15,42,58,0.08);padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;box-sizing:border-box}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.card-foot{margin-top:auto}
+.card-head a,a.card-foot,.ftr a{display:inline-flex;align-items:center;min-height:24px}
+.btn-primary:disabled{background:#E3E8EA;border-color:#E3E8EA;color:#4B6170;cursor:not-allowed}
+.rows > li{margin:0 -20px;border-top:1px solid #E3E8EA}
+.row{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 20px;box-sizing:border-box;transition:background-color .15s}
+.ui a.row{color:#0F2A3A;text-decoration:none}.ui a.row:hover{background:rgba(15,42,58,.035)}.ui a.row:active{background:rgba(15,42,58,.07)}
+.ellip{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wp{flex:none;box-sizing:border-box;width:10px;height:10px;border-radius:50%;background:#FFFFFF;border:1.5px solid #7A8F99}
+.wp-now{width:14px;height:14px;border:2px solid #0F2A3A}
+.wp-done{background:#0E7C7B;border-color:#0E7C7B}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px}
+.legs{display:flex;gap:20px}
+.leg{display:flex;flex-direction:column;gap:10px;min-width:max-content}
+.track{height:14px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#E3E8EA,#E3E8EA) center/100% 2px no-repeat}
+.leg-label{display:flex;flex-direction:column;white-space:nowrap}
+.hero-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero-btns{display:flex;gap:8px}
+.plan{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px 12px;align-items:baseline}
+.plan dt{font-size:13px;color:#4B6170}.plan dd{font-weight:500}
+.tick{flex:none;width:16px;height:16px;border-radius:50%;background:#E8F2F1;display:flex;align-items:center;justify-content:center}
+.label{font-size:13px;font-weight:500}
+.field{font:inherit;font-size:15px;height:40px;padding:8px 12px;border-radius:8px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.form > div{display:flex;flex-direction:column;gap:6px;min-width:0}
+@container (max-width: 860px){.grid{grid-template-columns:minmax(0,1fr)}.span2{grid-row:auto!important}}
+@container (max-width: 560px){
+.wrap{padding:0 16px}.t-page{font-size:22px}
+.btn{min-height:44px}.btn-sm{min-height:44px}.field{height:44px;font-size:16px}
+.card{padding:16px}.rows > li{margin:0 -16px}.row{padding:8px 16px;min-height:44px}
+.legs{gap:8px}.leg{min-width:0}.leg-off .leg-label{display:none}.wp{width:8px;height:8px}.wp-now{width:12px;height:12px}
+.hero-btns{width:100%;flex-direction:column-reverse}.hero-btns .btn{width:100%}
+.form{grid-template-columns:minmax(0,1fr)}.ellip{white-space:normal}
+.wordmark,.kbd,.hide-sm{display:none}.nav{gap:16px}
+}
+
+.rv{position:relative}
+.rv > svg{position:absolute;inset:0;width:100%;overflow:visible}
+.pin{position:absolute;transform:translate(-50%,-50%)}
+.stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+.you{display:flex;flex-direction:column;align-items:center;gap:4px}
+.you-tag{font-size:13px;font-weight:600;color:#FFFFFF;background:#0F2A3A;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.you-dot{width:14px;height:14px;border-radius:50%;background:#FFFFFF;border:3px solid #0F2A3A;box-sizing:border-box;box-shadow:0 0 0 6px rgba(15,42,58,.08)}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.tile{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E3E8EA;border-radius:10px;min-width:0}
+.tile-now{border-color:#0F2A3A;box-shadow:inset 0 0 0 1px #0F2A3A}
+.tile-off{background:#FAFBFB}
+.stage-sum{display:none;font-size:13px}
+@container (max-width: 560px){
+.stages{display:none}.stage-sum{display:block}
+.tiles{gap:6px}.tile{padding:8px 0;justify-content:center}.tile-text{display:none!important}
+}
+
+.sk{display:block;border-radius:6px;background:#EEF2F3}
+.err{color:#A3292B}
+.field-err{border-color:#A3292B;box-shadow:0 0 0 1px #A3292B}
+.toast{display:flex;align-items:center;gap:12px;align-self:flex-start;background:#0F2A3A;color:#FFFFFF;border-radius:10px;padding:10px 10px 10px 14px;box-shadow:0 8px 24px rgba(15,42,58,.18)}
+.toast-btn{font:inherit;font-weight:600;background:transparent;border:0;color:#7FE0D3;cursor:pointer;min-height:32px;padding:0 8px;border-radius:6px}
+.dots{display:inline-flex;gap:3px}.dots i{width:5px;height:5px;border-radius:50%;background:#0E7C7B;opacity:.4}
+.dialog{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(15,42,58,.06),0 24px 64px rgba(15,42,58,.18)}
+.btn-danger{background:#A3292B;color:#FFFFFF;border:1px solid #A3292B}
+.card-now{border-color:#0F2A3A}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</helmet>
+<div class="ui" style="padding: 40px; box-sizing: border-box">
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 40px 32px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Loading</p>
+      <section class="card" aria-busy="true"><span class="sk" style="width: 40%; height: 14px"></span><span class="sk" style="width: 100%; height: 12px"></span><span class="sk" style="width: 85%; height: 12px"></span><span class="sk" style="width: 60%; height: 12px"></span></section>
+      <p class="t-small muted">Grey blocks in the shape of the cards. They pulse gently, and not at all with reduced motion. Shown after 300 ms, never as a full-page spinner.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Can't reach LandedNZ</p>
+      <section class="card" role="alert" style="gap: 12px"><h2 class="t-card">Can&apos;t reach LandedNZ</h2><p class="muted">Your progress is saved. Check your connection, then try again.</p><button class="btn btn-primary" style="align-self: flex-start">Try again</button></section>
+      <p class="t-small muted">The same card on every page. One way forward.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Field error</p>
+      <section class="card" style="gap: 6px"><span class="label" id="ad">Arrival date</span><span class="field field-err" role="button" aria-labelledby="ad" aria-describedby="ade"><span>28 February 2026</span><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="3.5" width="11" height="10" rx="2" stroke="#4B6170" stroke-width="1.3"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" stroke="#4B6170" stroke-width="1.3" stroke-linecap="round"/></svg></span><p id="ade" class="t-small err">Pick a date from today onwards.</p></section>
+      <p class="t-small muted">Says what to do, under the field. Shown on save, not while typing.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Saved</p>
+      <div class="toast" role="status"><span class="tick" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.2 5.2 4.2 7.1 7.8 3" stroke="#0A6463" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Plan saved. Your roadmap was rebuilt.</span><button class="toast-btn">Undo</button></div>
+      <p class="t-small muted">Bottom centre, 6 seconds, stays while hovered or focused. Undo puts the old answers back.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Task done</p>
+      <section class="card" style="gap: 0"><ol class="rows" style="margin-top: -14px"><li style="border-top: 0"><span class="row"><span class="tick" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2.2 5.2 4.2 7.1 7.8 3" stroke="#0A6463" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ellip muted">Apply for your IRD number</span><button class="toast-btn" style="color: #0A6463">Undo</button></span></li></ol></section>
+      <p class="t-small muted">The row stays in place with a tick and Undo for 6 seconds, then moves to Recently done.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Saving</p>
+      <section class="card" style="gap: 12px; flex-direction: row; justify-content: flex-end; align-items: center"><button class="btn btn-primary" aria-busy="true" style="background: #24465A; border-color: #24465A">Saving…</button></section>
+      <p class="t-small muted">The button keeps its width and says what it&apos;s doing. No spinner icon.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Ask: thinking</p>
+      <section class="card" style="gap: 12px"><p class="t-small muted">You asked</p><p style="font-weight: 500">Can my partner work while I study?</p><p class="t-small muted" role="status" style="display: flex; align-items: center; gap: 8px"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>Checking official sources…</p></section>
+      
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Ask: couldn&apos;t answer</p>
+      <section class="card" style="gap: 12px"><p style="font-weight: 500">Can my partner work while I study?</p><p class="muted" role="alert">That didn&apos;t work. Your question is still here, so you can send it again.</p><div style="display: flex; gap: 8px"><button class="btn btn-quiet">Try again</button></div></section>
+      <p class="t-small muted">Keeps the question. Over the daily limit it says when Ask opens again.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Delete account</p>
+      <div class="dialog" role="dialog" aria-labelledby="dt" aria-modal="true"><h2 id="dt" class="t-card">Delete your account?</h2><p class="t-small muted">This removes your answers, your roadmap and your questions to the assistant. It can&apos;t be undone.</p><div style="display: flex; justify-content: flex-end; gap: 8px"><button class="btn btn-quiet">Keep my account</button><button class="btn btn-danger">Delete account</button></div></div>
+      <p class="t-small muted">Focus starts on Keep my account. Escape closes it.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Empty: nothing this week</p>
+      <section class="card" style="gap: 8px"><h2 class="t-card">Also this week</h2><p class="muted">Nothing else this week. Next week starts on 9 March.</p></section>
+      <p class="t-small muted">Empty cards say what happens next, never just &quot;No items&quot;.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Focus</p>
+      <section class="card" style="flex-direction: row; gap: 12px; align-items: center"><button class="btn btn-primary" style="outline: 2px solid #0E7C7B; outline-offset: 2px">Start task</button><a href="#" class="t-small" style="font-weight: 500; outline: 2px solid #0E7C7B; outline-offset: 2px; border-radius: 4px">Open roadmap</a></section>
+      <p class="t-small muted">Teal 2 px ring, 2 px gap, on every control. Keyboard only.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+      <p class="t-small" style="font-weight: 600">Disabled</p>
+      <section class="card" style="flex-direction: row; gap: 12px; align-items: center; justify-content: flex-end"><span class="t-small muted">No unsaved changes</span><button class="btn btn-primary" disabled>Save changes</button></section>
+      <p class="t-small muted">Disabled controls say why, next to them.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":949}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

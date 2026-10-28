@@ -88,8 +88,8 @@ landednz/
 
 ### `.claude/` after R0
 
-- **Constitution** keeps C02–C08, C10, C12–C16 unchanged; keeps C01 (Job A/B separation) for R0 only — R2 rewrites it; removes C09, C11 (RevenueCat). Web rules keep CW01, CW03–CW06 (updated for Tailwind 4); CW02 (Storybook) is replaced by **CW02′: every UI change matches its approved artifact and passes the minimalism validator**; adds **CW07 minimalism** and **CW08 light theme only**.
-- **Skills** keep `priority-engine`, `knowledge-base-schema`, `ai-guardrails`, `chat-system-prompt`, `web-chat-streaming` (refreshed); add `minimalism-validator` (§7.1) and `landednz-design-system` (generated from the approved design-system board).
+- **Constitution** keeps C02–C08, C10, C12–C16 unchanged; keeps C01 (Job A/B separation) for R0 only — R2 rewrites it; removes C09, C11 (RevenueCat). Web rules keep CW01, CW03–CW06 (updated for Tailwind 4); CW02 (Storybook) is replaced by **CW02′: every UI change matches its approved artifact and passes the minimalism validator**; adds **CW07 minimalism** and **CW08 light theme only**. (2026-10-28: CW07 and the validator retired; CW02′ now requires no P0/P1 impeccable findings. See `2026-10-28-r0-polish-and-stage-c-design.md` §2.)
+- **Skills** keep `priority-engine`, `knowledge-base-schema`, `ai-guardrails`, `chat-system-prompt`, `web-chat-streaming` (refreshed); add `minimalism-validator` (§7.1, retired 2026-10-28) and `landednz-design-system` (generated from the approved design-system board).
 - **settings.json**: remove the `claude-sonnet-4` model pin and React Native/Xcode permissions; keep the golden-examples PostToolUse hook (path updated).
 
 ## 4. Backend
@@ -232,7 +232,7 @@ Data stays client-fetched through `lib/api.ts` with the Supabase token; no new d
 
 ## 7. Design
 
-### 7.1 Minimalism validator (built first)
+### 7.1 Minimalism validator (built first) — retired 2026-10-28, see `2026-10-28-r0-polish-and-stage-c-design.md` §2
 
 Project skill `.claude/skills/minimalism-validator/`, written with `superpowers:writing-skills` and tested against pass/fail example designs before use. It returns pass/fail per check with a reason, and runs on every design board and every UI PR. Checks:
 
@@ -275,7 +275,7 @@ One Design canvas, "LandedNZ R0 Design", built in this order:
 
 Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented statistics.
 
-**Gate per board**: minimalism validator + `web-design-guidelines` + `copywriting` pass and their findings are fixed → owner reviews on the canvas, revisions → owner says "approved" → recorded below with the artifact version id. **No implementation of a page before its board is approved. No page implementation at all before the design-system board is approved.**
+**Gate per board**: impeccable `critique` (no P0/P1; was the minimalism validator until 2026-10-28) + `web-design-guidelines` + `copywriting` pass and their findings are fixed → owner reviews on the canvas, revisions → owner says "approved" → recorded below with the artifact version id. **No implementation of a page before its board is approved. No page implementation at all before the design-system board is approved.**
 
 ### 7.4 Design approvals
 
@@ -292,6 +292,7 @@ Content is real (tasks from the KB's T01–T21); no lorem ipsum or invented stat
 | Settings | 1792798426-d102 | 2026-10-24 |
 | Legal | 1792798426-d102 | 2026-10-24 |
 | Journey prototype (Onboarding, Roadmap clickable boards) | 1792798426-d102 | 2026-10-24 |
+| Polish (Home, Your roadmap card B, Roadmap page, task page, Settings, States, sizing rules; supersedes those boards in `r0-boards/`; `docs/design/r0-polish/`) | 1793169870-b87a | 2026-10-28 |
 
 ## 8. Sequencing — local first, cloud last, design in parallel
 
@@ -312,7 +313,7 @@ Stage A's build track does not wait for design approval; Stage B does. Stage C s
 - **Accessibility**: WCAG 2.2 AA; axe on every page in Playwright; Lighthouse accessibility ≥ 95.
 - **Performance**: Lighthouse performance ≥ 90 (mobile) on landing; LCP < 2.5 s; per-route JS budget set in the plan from the first build.
 - **SEO** (landing): metadata, OG image, sitemap, robots, structured data; `seo-audit` skill.
-- **Design**: minimalism validator and `web-design-guidelines` pass on every UI PR; built pages match approved boards.
+- **Design**: impeccable `critique`/`audit` (no P0/P1) and `web-design-guidelines` pass on every UI PR; built pages match approved boards.
 - **Tests**:
   - API: existing suite + golden examples green after every upgrade step.
   - Web unit: Vitest on carried and new logic.
@@ -335,7 +336,7 @@ Secrets only in platform env vars and GitHub secrets; CORS per environment; per-
 
 | Step | Skills |
 |---|---|
-| Direction, design-system and page boards | `frontend-design`, `artifact-design`, `minimalism-validator`, `web-design-guidelines`, `accessibility`, `copywriting`, `copy-editing`, `humanizer`, `dataviz` (progress visuals), `review-animations` |
+| Direction, design-system and page boards | `frontend-design`, `artifact-design`, `impeccable`, `web-design-guidelines`, `accessibility`, `copywriting`, `copy-editing`, `humanizer`, `dataviz` (progress visuals), `review-animations` |
 | Repo and backend | `prisma-upgrade-v7`, `claude-api`, `supabase`, `supabase-postgres-best-practices` |
 | Web implementation | `shadcn`, `vercel-react-best-practices`, `landednz-design-system`, `review-animations` |
 | Testing and verification | `superpowers:test-driven-development`, `playwright-cli`, `run`, `anthropic-skills:chrome-browser`, `web-perf`, `seo-audit`, `superpowers:verification-before-completion` |
