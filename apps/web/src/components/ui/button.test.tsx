@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { Button } from './button'
 
 describe('Button', () => {
-  it('defaults to primary: ink fill, 44 px target', () => {
+  it('defaults to primary: ink fill, 40 px target (44 on phones)', () => {
     render(<Button>Start</Button>)
-    expect(screen.getByRole('button', { name: 'Start' })).toHaveClass('bg-ink', 'min-h-11')
+    expect(screen.getByRole('button', { name: 'Start' })).toHaveClass('bg-ink', 'min-h-10', 'max-narrow:min-h-11')
   })
 
   it('quiet has the border colour', () => {
@@ -19,6 +19,11 @@ describe('Button', () => {
     expect(button).toBeDisabled()
     expect(button).toHaveClass('bg-wash', 'text-muted')
     expect(button).not.toHaveClass('bg-ink')
+  })
+
+  it('size sm is 32 px tall', () => {
+    render(<Button size="sm">Edit</Button>)
+    expect(screen.getByRole('button', { name: 'Edit' })).toHaveClass('min-h-8', 'px-3')
   })
 
   it('size lg is 48 px tall', () => {

@@ -21,23 +21,24 @@
   --text-hero--line-height: 1.05;
   --text-hero--letter-spacing: -0.03em;
   --text-hero--font-weight: 600;
-  --text-title: 32px;
-  --text-title--line-height: 1.15;
-  --text-title--letter-spacing: -0.025em;
+  --text-title: 24px;
+  --text-title--line-height: 1.25;
+  --text-title--letter-spacing: -0.015em;
   --text-title--font-weight: 600;
-  --text-section: 20px;
-  --text-section--line-height: 1.3;
+  --text-section: 18px;
+  --text-section--line-height: 1.35;
   --text-section--letter-spacing: -0.01em;
   --text-section--font-weight: 600;
   --text-body: 15px;
   --text-body--line-height: 1.5;
   --text-small: 13px;
   --text-small--line-height: 1.45;
+  --text-citation: 12px;
 
   --tracking-brand: -0.01em;
 
-  --radius-control: 6px;
-  --radius-surface: 10px;
+  --radius-control: 8px;
+  --radius-surface: 12px;
 
   --shadow-lift: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
   /* chosen option row: inset teal hairline beside the teal border (a 2 px edge, not elevation) */
@@ -54,9 +55,9 @@
   --grid-template-columns-hero: minmax(0, 1fr) minmax(0, 480px);
   --grid-template-columns-signin: minmax(0, 400px) minmax(0, 440px);
   --grid-template-columns-signin-solo: minmax(0, 400px);
-  --grid-template-columns-home: minmax(0, 1fr) 320px;
-  --grid-template-columns-settings: minmax(0, 280px) minmax(0, 560px);
-  --grid-template-columns-task: minmax(0, 680px) minmax(280px, 1fr);
+  --grid-template-columns-home: minmax(0, 1fr) 360px;
+  --grid-template-columns-settings: minmax(0, 1fr) 360px;
+  --grid-template-columns-task: minmax(0, 1fr) 360px;
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header */
   --breakpoint-narrow: 561px;
@@ -304,6 +305,9 @@
   }
   h1, h2 {
     text-wrap: balance;
+  }
+  @media (width < 561px) {
+    .text-title { font-size: 22px; }
   }
   a {
     @apply text-teal-text;

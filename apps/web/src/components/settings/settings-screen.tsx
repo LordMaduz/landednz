@@ -10,6 +10,7 @@ import { AccountSection } from "./account-section"
 import { DeleteAccount } from "./delete-account"
 import { PlanForm } from "./plan-form"
 import { SettingsSection } from "./settings-section"
+import { PublicFooter } from "@/components/chrome/public-footer"
 
 type User = { name: string; initials: string; email: string; google: boolean }
 
@@ -59,6 +60,7 @@ export function SettingsScreen({ user }: { user: User }) {
           <DeleteAccount />
         </div>
       </main>
+      <PublicFooter />
     </>
   )
 }

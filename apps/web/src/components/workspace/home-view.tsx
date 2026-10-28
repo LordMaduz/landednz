@@ -13,6 +13,7 @@ import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildHomeView, type HomeView as Home } from "@/lib/home-view"
 import { buildRouteView, type RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
+import { PublicFooter } from "@/components/chrome/public-footer"
 
 const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 
@@ -149,9 +150,12 @@ export function HomeScreen({ user, firstName }: { user: { name: string; initials
       {state === "loading" ? (
         <Loading />
       ) : (
-        <main className="container-page pt-12 pb-24">
-          {state === "down" ? <ApiDown onRetry={load} /> : <HomeView home={state.home} route={state.route} />}
-        </main>
+        <>
+          <main className="container-page pt-12 pb-24">
+            {state === "down" ? <ApiDown onRetry={load} /> : <HomeView home={state.home} route={state.route} />}
+          </main>
+          <PublicFooter />
+        </>
       )}
     </>
   )

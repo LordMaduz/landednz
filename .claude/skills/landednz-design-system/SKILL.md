@@ -34,13 +34,13 @@ Every visual value is a token in `apps/web/src/app/globals.css` `@theme`. Code u
 
 Rows are divided by `hairline`, never `border`. No filled cards: a surface is a hairline box on white.
 
-## Type: five roles, Geist 400/500/600
+## Type: six roles, Geist 400/500/600
 
-`text-hero` 48 (landing h1 only) · `text-title` 32 (page h1) · `text-section` 20 (section, card and sheet titles) · `text-body` 15 (default) · `text-small` 13 (meta). Emphasis inside body is `font-medium`. No other sizes.
+`text-hero` 48 (landing h1 only) · `text-title` 24 (page h1; 22 under 561 px) · `text-section` 18 (section, card and sheet titles) · `text-body` 15 (default) · `text-small` 13 (meta) · `text-citation` 12 (citation numbers, 24 px tap area). Emphasis inside body is `font-medium`. No other sizes.
 
 ## Space, shape, elevation
 
-Spacing only 0, 4, 8, 16, 24, 32, 48, 64, 96 (`1 2 4 6 8 12 16 24` steps). `rounded-control` (6) for controls, `rounded-surface` (10) for surfaces. `shadow-lift` only on the landing preview and toasts; everything else is a hairline. Page width: `container-page` (1120 + 24 side padding). Targets ≥ 44 px: `Button`, `Field`, `Select` already have `min-h-11`; give other clickable rows `min-h-11` too.
+Spacing only 0, 4, 8, 16, 24, 32, 48, 64, 96 (`1 2 4 6 8 12 16 24` steps). `rounded-control` (8) for controls, `rounded-surface` (12) for surfaces. Card padding 20 (16 under 561 px), gap 16, side column 360. Every card is white + 1 px hairline + `shadow-lift` (use `Card` from `@/components/ui/card`); no wash or cream card backgrounds. Page width: `container-page` (1120 + 24 side padding). Targets are 40 px on desktop and 44 px under 561 px: `Button`, `Field`, `Select` already have `min-h-10 max-narrow:min-h-11`; give other clickable rows the same. `Button size="sm"` is 32 px on desktop, 44 on phones.
 
 ## Components (one file each: `@/components/ui/button`, `field`, `select`, `option-row`, `alert-dialog`, `toaster`; no barrel)
 

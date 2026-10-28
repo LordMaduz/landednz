@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
 import { QuestionStep } from "@/components/onboarding/question-step"
+import { PublicFooter } from "@/components/chrome/public-footer"
 
 export const metadata: Metadata = {
   title: "Build your roadmap",
@@ -9,8 +10,11 @@ export const metadata: Metadata = {
 
 export default function OnboardingPage() {
   return (
-    <Suspense>
-      <QuestionStep />
-    </Suspense>
+    <>
+      <Suspense>
+        <QuestionStep />
+      </Suspense>
+      <PublicFooter />
+    </>
   )
 }

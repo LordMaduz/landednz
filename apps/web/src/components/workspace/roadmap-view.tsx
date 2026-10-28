@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { NextTaskCard } from "./next-task-card"
 import { TaskSheet } from "./task-sheet"
+import { PublicFooter } from "@/components/chrome/public-footer"
 
 export function RoadmapView({
   view,
@@ -105,20 +106,23 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       {state === "loading" ? (
         <Loading />
       ) : (
-        <main className={cn("container-page pb-24", !selectedTaskId && "pt-12")}>
-          {state === "down" ? (
-            <ApiDown onRetry={() => load()} />
-          ) : selectedTaskId ? (
-            <TaskSheet
-              taskId={selectedTaskId}
-              route={state.view}
-              onChanged={refetch}
-              askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
-            />
-          ) : (
-            <RoadmapView view={state.view} firstUse={state.firstUse} onOpen={open} />
-          )}
-        </main>
+        <>
+          <main className={cn("container-page pb-24", !selectedTaskId && "pt-12")}>
+            {state === "down" ? (
+              <ApiDown onRetry={() => load()} />
+            ) : selectedTaskId ? (
+              <TaskSheet
+                taskId={selectedTaskId}
+                route={state.view}
+                onChanged={refetch}
+                askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
+              />
+            ) : (
+              <RoadmapView view={state.view} firstUse={state.firstUse} onOpen={open} />
+            )}
+          </main>
+          <PublicFooter />
+        </>
       )}
     </>
   )
