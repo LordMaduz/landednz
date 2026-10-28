@@ -8,7 +8,7 @@ import { unlocksOf, waitsOn, type RouteTask, type RouteView } from './route-view
 export interface Itinerary {
   done: { when: string; summary: string; topics: string; count: number; tasks: RouteTask[] } | null
   today: { date: string; day: number | null; meta: string; task: RouteTask; unlocks: { title: string; stage: string; topic: string }[] } | null
-  current: { name: string; count: number; when: string; daysLeft: number | null; rows: { task: RouteTask; meta: string }[]; more: RouteTask[] } | null
+  current: { name: string; count: number; carried: { stage: string; count: number }[]; carriedFrom: Record<string, string>; when: string; daysLeft: number | null; rows: { task: RouteTask; meta: string }[]; more: RouteTask[] } | null
   later: { name: string; count: number; wait: string | null; when: string; tasks: RouteTask[] }[]
 }
 
@@ -32,9 +32,13 @@ export function buildItinerary(route: RouteView, arrivalDate: string, now: Date)
   const stageIndex = before ? topIndex : Math.max(topIndex, stageIndexOn(day))
   const stageId = LEGS[stageIndex].id
   // Open tasks of earlier stages fold in, so the Roadmap lists every open task
-  const rest = top
-    ? route.legs.filter(l => LEGS.findIndex(x => x.id === l.id) <= stageIndex).flatMap(l => l.tasks).filter(t => t.state !== 'done' && t.taskId !== top.taskId)
-    : []
+  const legsUpTo = route.legs.filter(l => LEGS.findIndex(x => x.id === l.id) <= stageIndex)
+  const open = (l: RouteView['legs'][number]) => l.tasks.filter(t => t.state !== 'done' && t.taskId !== top?.taskId)
+  const rest = top ? legsUpTo.flatMap(open) : []
+  // The title counts the stage's own tasks; the carried ones are named by their stage
+  const earlier = legsUpTo.filter(l => l.id !== stageId)
+  const carried = earlier.map(l => ({ stage: legName(l.id, before), count: open(l).length })).filter(c => c.count > 0)
+  const carriedFrom = Object.fromEntries(earlier.flatMap(l => open(l).map(t => [t.taskId, legName(l.id, before)])))
 
   const unlocked = top ? unlocksOf(route, top.taskId) : []
   return {
@@ -60,7 +64,9 @@ export function buildItinerary(route: RouteView, arrivalDate: string, now: Date)
       rest.length
         ? {
             name: legName(stageId, before),
-            count: rest.length,
+            count: rest.length - carried.reduce((n, c) => n + c.count, 0),
+            carried,
+            carriedFrom,
             when: legWhen(stageId, arrivalDate),
             daysLeft: daysLeftIn(stageIndex, day),
             rows: rest.slice(0, ROWS).map(task => ({ task, meta: metaOf(task) })),

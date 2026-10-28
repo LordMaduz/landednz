@@ -33,11 +33,6 @@ export function homeSubline(route: RouteView, arrivalDate: string, now: Date, sh
   return `${route.doneCount} of ${route.total} done · day ${day} since you landed${short ? '' : ` on ${weekdayDay(arrivalDate)}`}`
 }
 
-// The name Home greets: the first word of Google's full name, else the email's local part
-export function firstName(user: { email?: string; user_metadata?: { full_name?: string } }): string {
-  return user.user_metadata?.full_name?.trim().split(/\s+/)[0] || (user.email ?? '').split('@')[0]
-}
-
 const and = new Intl.ListFormat('en-NZ', { type: 'conjunction' })
 
 const WEEK_CAP = 3
@@ -45,7 +40,7 @@ const RECENT_CAP = 4
 // The short name the greeting uses
 const CITY_NAME: Record<City, string> = { AUCKLAND: 'Auckland', WELLINGTON: 'Wellington', CHRISTCHURCH: 'Christchurch', OTHER: 'New Zealand' }
 
-export function buildHomeView(route: RouteView, profile: GetProfileResponse, user: { firstName: string }, now: Date): HomeView {
+export function buildHomeView(route: RouteView, profile: GetProfileResponse, now: Date): HomeView {
   const city = CITY_NAME[profile.city]
   const day = journeyDay(profile.arrivalDate, now)
 
@@ -72,7 +67,7 @@ export function buildHomeView(route: RouteView, profile: GetProfileResponse, use
   const stageOf = (taskId: string) => route.legs.find(l => l.tasks.some(t => t.taskId === taskId))!.name
 
   return {
-    greeting: day < 1 ? `Welcome, ${user.firstName}` : `Welcome to ${city}, ${user.firstName}`,
+    greeting: day < 1 ? 'Welcome' : `Welcome to ${city}`,
     subline: homeSubline(route, profile.arrivalDate, now, false),
     sublineShort: homeSubline(route, profile.arrivalDate, now, true),
     top,

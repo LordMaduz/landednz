@@ -140,10 +140,13 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
             <span className={cn(DOT, "self-start pt-1.5")}><Waypoint state="leg-now" /></span>
             <div className={cn(BODY, "itin-wide")}>
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-body font-semibold max-narrow:text-section">{current.name} · {plural(current.count, "task")}</h2>
+                <h2 className="text-body font-semibold max-narrow:text-section">
+                  {current.name} · {plural(current.count, "task")}
+                  {current.carried.map((c, i) => <span key={c.stage} className="font-normal text-muted">{i ? ", " : ", "}{c.count} still open from {c.stage}</span>)}
+                </h2>
                 <span className="hidden text-small text-muted max-narrow:inline">{current.when}</span>
               </div>
-              <TaskList label={`${current.name} tasks`} tasks={shown} meta={t => current.rows.find(r => r.task === t)?.meta ?? (t.state === "blocked" ? waitsOn(t) : t.time)} />
+              <TaskList label={`${current.name} tasks`} tasks={shown} meta={t => [current.carriedFrom[t.taskId], t.state === "blocked" ? waitsOn(t) : t.time].filter(Boolean).join(" · ")} />
               {stageTasks.length > shown.length || moreOpen ? (
                 <Show open={moreOpen} onClick={() => setMoreOpen(o => !o)} label={`${stageTasks.length - (phone ? PHONE_ROWS : DESKTOP_ROWS)} more`} hidden="" className="-ml-3 -mr-0" />
               ) : null}

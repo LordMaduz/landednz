@@ -82,7 +82,7 @@ describe('TaskSheet', () => {
     expect(page.getByRole('heading', { level: 1 })).toHaveTextContent('Apply for your IRD number')
     expect(page.getByText('Your employer needs it before your first payday.')).toBeInTheDocument()
     const steps = within(await page.findByRole('region', { name: 'Steps' })).getAllByRole('listitem')
-    expect(steps.map(s => s.textContent)).toEqual(['Have your passport ready.', 'Apply online at ird.govt.nz.'])
+    expect(steps.map(s => s.textContent)).toEqual(['1Have your passport ready.', '2Apply online at ird.govt.nz.'])
     const action = page.getByRole('link', { name: 'Open the IRD application (opens in a new tab)' })
     expect(action).toHaveAttribute('href', 'https://www.ird.govt.nz/managing-my-tax/ird-numbers')
     expect(action).toHaveAttribute('target', '_blank')
@@ -99,7 +99,7 @@ describe('TaskSheet', () => {
     sheet('T08')
     const bar = desk().getByRole('navigation', { name: 'Tasks' })
     expect(within(bar).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '/app/roadmap')
-    expect(within(bar).getByText('Week 1, task 1 of 3')).toBeInTheDocument()
+    expect(within(bar).getByText('Week 1 · task 1 of 3')).toBeInTheDocument()
     expect(within(bar).getByRole('link', { name: 'Previous task: Open a bank account' })).toHaveAttribute(
       'href',
       '/app/roadmap?task=T07',
@@ -108,6 +108,7 @@ describe('TaskSheet', () => {
       'href',
       '/app/roadmap?task=T09',
     )
+    expect(within(bar).getByText('Next task')).toBeInTheDocument()
   })
 
   it('first and last task: no previous, no next', () => {

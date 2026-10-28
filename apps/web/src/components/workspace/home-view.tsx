@@ -71,7 +71,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
               </h2>
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-section">{top.title}</h3>
-                {top.why && <p className="max-w-lede text-muted">{top.why}</p>}
+                {top.why && <p className="max-w-lede text-body text-muted">{top.why}</p>}
                 {home.unlocks.length > 0 && (
                   <p className="text-small text-muted max-narrow:hidden">Unlocks: {home.unlocks.join(" · ")}</p>
                 )}
@@ -183,7 +183,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
 type Loaded = { home: Home; route: RouteView; arrivalDate: string; now: Date }
 
 // Fetches profile and roadmap with the browser session, like the Roadmap page
-export function HomeScreen({ user, firstName }: { user: { name: string; initials: string }; firstName: string }) {
+export function HomeScreen({ user }: { user: { name: string; initials: string } }) {
   const router = useRouter()
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
 
@@ -196,12 +196,12 @@ export function HomeScreen({ user, firstName }: { user: { name: string; initials
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
       const now = new Date()
       const route = buildRouteView(roadmap, profile.arrivalDate, now)
-      setState({ route, home: buildHomeView(route, profile, { firstName }, now), arrivalDate: profile.arrivalDate, now })
+      setState({ route, home: buildHomeView(route, profile, now), arrivalDate: profile.arrivalDate, now })
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
       setState("down")
     }
-  }, [router, firstName])
+  }, [router])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch on mount; load sets state after awaiting

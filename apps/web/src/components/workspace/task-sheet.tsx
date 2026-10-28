@@ -124,15 +124,18 @@ export function TaskSheet({
   )
   const ref = (s: Source | undefined) =>
     s && (
-      <a
-        href={s.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
-        className="-mx-1.5 -my-2 inline-flex min-h-6 min-w-6 items-center justify-center align-middle text-citation font-medium"
-      >
-        {cited.findIndex(c => c.url === s.url) + 1}
-      </a>
+      <>
+        {"\u00a0"}
+        <a
+          href={s.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
+          className="-mx-2 px-2.5 py-1.5 align-super text-citation leading-none font-medium text-teal-text"
+        >
+          {cited.findIndex(c => c.url === s.url) + 1}
+        </a>
+      </>
     )
   const list = (id: string, title: string, items: Line[]) =>
     items.length > 0 && (
@@ -188,20 +191,25 @@ export function TaskSheet({
         <h2 id={id} className={headClass}>
           Steps
         </h2>
-        <ol className="flex list-decimal flex-col gap-2.5 pl-6 tabular-nums">
-          {stepLines.map(l => {
+        <ol role="list" className="m-0 flex list-none flex-col gap-2.5 p-0 tabular-nums">
+          {stepLines.map((l, n) => {
             const { lead, items } = stepParts(l.text)
             return (
-              <li key={l.text}>
-                {phones(lead)}
-                {ref(l.source)}
-                {items.length > 0 && (
-                  <ul className="mt-1 flex list-disc flex-col gap-1 pl-6">
-                    {items.map(i => (
-                      <li key={i}>{phones(i)}</li>
-                    ))}
-                  </ul>
-                )}
+              <li key={l.text} className="flex gap-3">
+                <span aria-hidden="true" className="w-6 flex-none font-semibold text-teal-text">
+                  {n + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  {phones(lead)}
+                  {ref(l.source)}
+                  {items.length > 0 && (
+                    <ul className="mt-1 flex list-disc flex-col gap-1 pl-6">
+                      {items.map(i => (
+                        <li key={i}>{phones(i)}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </li>
             )
           })}
@@ -265,15 +273,18 @@ export function TaskSheet({
             <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
             Roadmap
           </Link>
+          <span aria-hidden="true" className="text-small text-muted">
+            /
+          </span>
           <span className="text-small text-muted">
-            {leg.name}, task {leg.tasks.indexOf(task) + 1} of {leg.tasks.length}
+            {leg.name} · task {leg.tasks.indexOf(task) + 1} of {leg.tasks.length}
           </span>
           <div className="ml-auto flex gap-2">
             {previous && (
               <Link
                 href={taskHref(previous.taskId)}
                 aria-label={`Previous task: ${previous.title}`}
-                className={buttonVariants({ variant: "quiet", size: "sm" })}
+                className={buttonVariants({ variant: "quiet" })}
               >
                 <ChevronLeft aria-hidden="true" size={14} strokeWidth={1.5} />
                 Previous
@@ -283,9 +294,9 @@ export function TaskSheet({
               <Link
                 href={taskHref(next.taskId)}
                 aria-label={`Next task: ${next.title}`}
-                className={buttonVariants({ variant: "quiet", size: "sm" })}
+                className={buttonVariants({ variant: "quiet" })}
               >
-                Next
+                Next task
                 <ChevronRight aria-hidden="true" size={14} strokeWidth={1.5} />
               </Link>
             )}
@@ -351,7 +362,7 @@ export function TaskSheet({
         </div>
       </div>
 
-      <div data-testid="task-phone" className="hidden flex-col gap-4 max-narrow:flex">
+      <div data-testid="task-phone" className="mt-4 hidden flex-col gap-4 max-narrow:flex">
         <Card as="div" className="gap-2">
           <div className="flex items-start gap-4">
             <div className="flex flex-1 flex-col gap-1">

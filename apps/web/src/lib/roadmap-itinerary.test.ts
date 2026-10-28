@@ -50,7 +50,9 @@ describe('buildItinerary — board data, day 5', () => {
 describe('buildItinerary — ahead of the calendar', () => {
   it('open tasks of earlier stages fold into the current stage', () => {
     const it = itin(nz('2026-11-15', '10:00:00'))
-    expect(it.current).toMatchObject({ name: 'Month 1', count: 11 })
+    expect(it.current).toMatchObject({ name: 'Month 1', count: 4, carried: [{ stage: 'Week 1', count: 7 }] })
+    expect(it.current!.carriedFrom.T11).toBe('Week 1')
+    expect(it.current!.carriedFrom.T18).toBeUndefined()
     const ids = [...it.current!.rows.map(r => r.task), ...it.current!.more].map(t => t.taskId)
     expect(ids).toContain('T11') // Week 1, still open
     expect(ids).toContain('T18') // Month 1

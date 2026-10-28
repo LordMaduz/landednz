@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { ANSWERS, TEST_USER, resetTestUser, signIn } from './test-user'
+import { ANSWERS, resetTestUser, signIn } from './test-user'
 
 test.beforeAll(resetTestUser)
 
@@ -25,7 +25,7 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await expect(page).toHaveURL(/\/signin\?redirect=/)
   await signIn(page)
   await expect(page).toHaveURL('/app')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(TEST_USER.email.split('@')[0])
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Auckland')
 
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Roadmap' }).click()
   await expect(page).toHaveURL('/app/roadmap')

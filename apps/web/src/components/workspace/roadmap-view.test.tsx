@@ -116,6 +116,12 @@ describe('RoadmapView', () => {
     expect(within(stage).getAllByRole('listitem')).toHaveLength(7)
   })
 
+  it('carried tasks: the title counts the stage and names where the rest are from; rows start with their stage', () => {
+    renderView({ view: buildRouteView(board(), '2026-11-02', new Date('2026-11-15T10:00:00+13:00')), arrivalDate: '2026-11-02', now: new Date('2026-11-15T10:00:00+13:00') })
+    expect(within(itinerary()).getByRole('heading', { name: /^Month 1 · 4 tasks, \d+ still open from Week 1/ })).toBeInTheDocument()
+    expect(within(itinerary()).getAllByText(/^Week 1 · /).length).toBeGreaterThan(0)
+  })
+
   it('every Show is a toggle button; later stages expand in place', () => {
     renderBoard()
     const shows = within(itinerary()).getAllByRole('button', { name: /^Show/ })

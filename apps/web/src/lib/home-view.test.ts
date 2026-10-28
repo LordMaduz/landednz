@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { GetProfileResponse } from './api'
-import { buildHomeView, firstName } from './home-view'
+import { buildHomeView } from './home-view'
 import { buildRouteView } from './route-view'
 import { apiTask, priya, roadmap } from '@/test/roadmap-fixtures'
 
@@ -13,17 +13,16 @@ const profile: GetProfileResponse = {
   occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: ARRIVAL,
 }
-const user = { firstName: 'Priya' }
 // 15:00 NZ (NZDT, UTC+13) on 23 Oct = day 3
 const nz = (date: string, time: string) => new Date(`${date}T${time}+13:00`)
 const home = (now = nz('2026-10-23', '15:00:00'), r = priya(), p = profile) =>
-  buildHomeView(buildRouteView(r, p.arrivalDate, now), p, user, now)
+  buildHomeView(buildRouteView(r, p.arrivalDate, now), p, now)
 
 describe('buildHomeView — Priya, day 3', () => {
   const view = home()
 
   it('greets and says where the journey is', () => {
-    expect(view.greeting).toBe('Welcome to Auckland, Priya')
+    expect(view.greeting).toBe('Welcome to Auckland')
     expect(view.subline).toBe('7 of 20 done · day 3 since you landed on Wed 21 Oct')
   })
 
@@ -55,17 +54,17 @@ const board = (counts: number[], done: number) => {
   )
 }
 const aleks = (now: Date, r = board([10, 4, 5, 5, 1], 14)) =>
-  buildHomeView(buildRouteView(r, ARRIVING, now), aleksandra, { firstName: 'Aleksandra' }, now)
+  buildHomeView(buildRouteView(r, ARRIVING, now), aleksandra, now)
 
 describe('buildHomeView — before arrival and later', () => {
   const before = aleks(nz('2026-10-28', '12:00:00'), board([10, 4, 5, 5, 1], 0))
   const later = aleks(nz('2027-03-03', '12:00:00'))
 
   it('greeting and subline', () => {
-    expect(before.greeting).toBe('Welcome, Aleksandra')
+    expect(before.greeting).toBe('Welcome')
     expect(before.subline).toBe('124 days until you land on 1 March 2027.')
     expect(before.sublineShort).toBe(before.subline)
-    expect(later.greeting).toBe('Welcome to Christchurch, Aleksandra')
+    expect(later.greeting).toBe('Welcome to Christchurch')
     expect(later.subline).toBe('14 of 25 done · day 3 since you landed on Mon 1 Mar')
   })
 
@@ -76,8 +75,8 @@ describe('buildHomeView — before arrival and later', () => {
   })
 
   it('a city outside the list reads New Zealand', () => {
-    const view = buildHomeView(buildRouteView(board([10, 4, 5, 5, 1], 0), ARRIVING, nz('2026-10-28', '12:00:00')), { ...aleksandra, city: 'OTHER' }, { firstName: 'A' }, nz('2027-03-03', '12:00:00'))
-    expect(view.greeting).toBe('Welcome to New Zealand, A')
+    const view = buildHomeView(buildRouteView(board([10, 4, 5, 5, 1], 0), ARRIVING, nz('2026-10-28', '12:00:00')), { ...aleksandra, city: 'OTHER' }, nz('2027-03-03', '12:00:00'))
+    expect(view.greeting).toBe('Welcome to New Zealand')
   })
 
   it('only the current task left this week: nothing else, and when the next leg starts', () => {
@@ -124,7 +123,7 @@ const boardRoute = (over: (id: string) => object = () => ({})) => {
 }
 const NOV_6 = nz('2026-11-06', '12:00:00')
 const boardHome = (r = boardRoute(), now = NOV_6) =>
-  buildHomeView(buildRouteView(r, BOARD_ARRIVAL, now), { ...profile, arrivalDate: BOARD_ARRIVAL }, user, now)
+  buildHomeView(buildRouteView(r, BOARD_ARRIVAL, now), { ...profile, arrivalDate: BOARD_ARRIVAL }, now)
 
 describe('buildHomeView — Home C', () => {
   const view = boardHome()
@@ -181,13 +180,5 @@ describe('buildHomeView — end of the route', () => {
     expect(view.week).toEqual([])
     expect(view.nextLine).toBeNull()
     expect(view.weekEmpty).toBeNull()
-  })
-})
-
-describe('firstName', () => {
-  it('first word of the Google full name, else the email local part', () => {
-    expect(firstName({ email: 'p@x.nz', user_metadata: { full_name: 'Priya Sharma' } })).toBe('Priya')
-    expect(firstName({ email: 'priya.s@example.com', user_metadata: {} })).toBe('priya.s')
-    expect(firstName({ email: 'priya.s@example.com' })).toBe('priya.s')
   })
 })

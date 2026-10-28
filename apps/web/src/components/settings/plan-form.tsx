@@ -130,7 +130,7 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
             {KEYS.map(k => (
               <li key={k} className="flex min-h-14 items-center gap-3 border-t border-white/15 py-3 max-narrow:py-1">
                 <span className="flex flex-1 flex-col leading-snug">
-                  <span className={cn("text-small font-medium", k === editing ? "text-toast-action" : "text-rail-label")}>
+                  <span className={cn("text-small font-medium", k !== editing ? "text-rail-label" : param ? "text-toast-action" : "text-toast-action max-narrow:text-rail-label")}>
                     {COPY[k].label}{k === editing && <span className="max-narrow:hidden"> · changing</span>}
                   </span>
                   <span>{display(k, saved[k])}</span>
