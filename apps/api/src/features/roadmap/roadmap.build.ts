@@ -75,3 +75,12 @@ export async function reconcileRoadmap(
 
   return { added: fresh.length, removed: stale.length, updated: kept.length, applicable: built.length };
 }
+
+// The date a task's earliest day window closes (arrival is day 1), as YYYY-MM-DD; null without a window or arrival date
+export function bestByDate(urgency: ResolvedTask['urgency'], arrivalDate: Date | null): string | null {
+  const toDays = urgency.flatMap(r => ('toDay' in r ? [r.toDay] : []));
+  if (!arrivalDate || toDays.length === 0) return null;
+  const d = new Date(arrivalDate);
+  d.setUTCDate(d.getUTCDate() + Math.min(...toDays) - 1);
+  return d.toISOString().slice(0, 10);
+}
