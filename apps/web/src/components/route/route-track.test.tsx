@@ -18,7 +18,9 @@ describe('RouteTrack', () => {
   it('exposes the progress as text, not the drawing', () => {
     const { container } = render(<RouteTrack route={route} arrivalDate="2026-10-21" now={NOW} height={96} />)
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
-    expect(screen.getByText('Week 1')).toBeInTheDocument()
-    expect(screen.getByText(routeProgress(route, '2026-10-21', NOW).summary)).toBeInTheDocument()
+    const sum = routeProgress(route, '2026-10-21', NOW).summary
+    const p = container.querySelector('.track-sum')!
+    expect(p).toHaveTextContent(sum)
+    expect(p.querySelector('b')).toHaveTextContent('Week 1')
   })
 })

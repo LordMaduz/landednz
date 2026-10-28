@@ -17,6 +17,11 @@ export function longDay(date: string): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 }
 
+// "9 March" for a calendar date
+export function dayMonth(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', timeZone: 'UTC' })
+}
+
 // "21 Oct" for an instant (ISO timestamp), on the NZ calendar
 export function shortDayNZ(instant: string | Date): string {
   return new Date(instant).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' })

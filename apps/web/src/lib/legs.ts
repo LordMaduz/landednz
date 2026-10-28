@@ -43,3 +43,9 @@ export function legWhen(leg: LegId, arrivalDate: string): string {
       return `from ${new Date(`${addDays(arrivalDate, 31)}T00:00:00Z`).toLocaleDateString('en-NZ', { month: 'long', timeZone: 'UTC' })}`
   }
 }
+
+// The calendar date each leg starts: arrival is days 1–2, week 1 from day 3, month 1 from day 9, later from day 32
+export function legStart(leg: LegId, arrivalDate: string): string {
+  const offset = { before: 0, arrival: 0, week1: 2, month1: 8, later: 31 }[leg]
+  return addDays(arrivalDate, offset)
+}

@@ -14,7 +14,7 @@ export function Card({ as: Tag = "section", className, ...props }: { as?: "secti
 export function CardHead({ title, titleId, aside }: { title: ReactNode; titleId: string; aside?: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <h2 id={titleId} className="text-section">{title}</h2>
+      <h2 id={titleId} className="shrink-0 text-section">{title}</h2>
       {aside}
     </div>
   )

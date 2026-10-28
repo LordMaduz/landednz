@@ -14,6 +14,7 @@ export function RouteTrack({ route, arrivalDate, now, height }: { route: RouteVi
   const line = "M" + profile.map(([x, y]) => pt(x, y)).join(" L")
   const walked = "M" + [...profile.filter(([x]) => x <= dx), [dx, terrainY(dx)] as const].map(([x, y]) => pt(x, y)).join(" L")
   const contour = (off: number) => "M" + profile.map(([x, y]) => pt(x, y + off)).join(" L")
+  const [stage, ...more] = summary.split(' · ') // the board bolds the stage name
   const edge = dx > 900 ? "end" : dx < 100 ? "start" : undefined
 
   return (
@@ -51,7 +52,7 @@ export function RouteTrack({ route, arrivalDate, now, height }: { route: RouteVi
           </li>
         ))}
       </ol>
-      <p className="track-sum">{summary}</p>
+      <p className="track-sum"><b className="font-semibold">{stage}</b> <span className="text-muted">· {more.join(" · ")}</span></p>
     </div>
   )
 }
