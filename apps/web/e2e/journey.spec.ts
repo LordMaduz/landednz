@@ -51,9 +51,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await page.getByRole('button', { name: 'Undo' }).click()
   await expect(page.getByRole('img', { name: /^Done / })).toHaveCount(0)
 
-  // The bottom card goes to the next task in route order
-  const nextCard = page.getByRole('navigation', { name: 'Previous and next task' }).getByRole('link', { name: /^Next task/ })
-  const nextTitle = (await nextCard.locator('span').last().textContent())!
-  await nextCard.click()
+  // The Next link in the task header goes to the next task in route order
+  const nextLink = page.getByRole('navigation', { name: 'Tasks' }).getByRole('link', { name: /^Next task: / })
+  const nextTitle = (await nextLink.getAttribute('aria-label'))!.replace(/^Next task: /, '')
+  await nextLink.click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(nextTitle)
 })

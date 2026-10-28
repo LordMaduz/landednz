@@ -21,6 +21,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
 
     await holdAnswers(page)
     await expectNoViolations(page, '/onboarding/preview')
+    await expectNoViolations(page, '/onboarding?step=5')
+    await expectNoViolations(page, '/signin') // with held answers: "Save your roadmap"
 
     await page.goto('/signin')
     await signIn(page)

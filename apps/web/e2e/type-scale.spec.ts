@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
-import { holdAnswers, resetTestUser } from './test-user'
+import { holdAnswers, resetTestUser, signIn } from './test-user'
 
 // text-hero 48, title 24, 22 (title/hero on phones), section 18, body 15, small 13, citation 12
 export const TYPE_SET = ['48px', '24px', '22px', '18px', '15px', '13px', '12px']
@@ -38,7 +38,20 @@ for (const [width, height] of SIZES) {
 
     // With held answers /signin is the "Save your roadmap" screen
     await holdAnswers(page)
+    await page.goto('/signin')
+    await expect(page.getByRole('heading', { level: 1, name: 'Save your roadmap' })).toBeVisible()
     await expectTypeScale(page, '/signin')
     await expectTypeScale(page, '/onboarding/preview')
+    await expectTypeScale(page, '/onboarding?step=5')
+  })
+
+  test(`signed-in pages use the type scale at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height })
+    await page.goto('/signin')
+    await signIn(page)
+    await expect(page).toHaveURL('/app')
+    for (const path of ['/app', '/app/roadmap', '/app/roadmap?task=T08', '/settings', '/settings?edit=arrivalDate']) {
+      await expectTypeScale(page, path)
+    }
   })
 }
