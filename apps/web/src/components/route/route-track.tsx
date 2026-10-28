@@ -14,11 +14,11 @@ const HEIGHT = { compact: 112, tall: 104 }
 export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteView; arrivalDate: string; now: Date; variant: 'compact' | 'tall' }) {
   const gid = `track-walk-${useId().replace(/:/g, '')}`
   const h = HEIGHT[variant]
-  const { x: dx, todayX, label, summary, passed } = routeProgress(route, arrivalDate, now)
+  const { x: dx, walked, todayX, label, summary, passed } = routeProgress(route, arrivalDate, now)
   const phone = phoneStages(route, arrivalDate, now)
   const profile = XS.map(x => [x, terrainY(x)] as const)
   const line = "M" + profile.map(([x, y]) => pt(x, y)).join(" L")
-  const walked = "M" + [...profile.filter(([x]) => x <= dx), [dx, terrainY(dx)] as const].map(([x, y]) => pt(x, y)).join(" L")
+  const walkedPath = "M" + [...profile.filter(([x]) => x <= walked), [walked, terrainY(walked)] as const].map(([x, y]) => pt(x, y)).join(" L")
   const contour = (off: number) => "M" + profile.map(([x, y]) => pt(x, y + off)).join(" L")
   const [stage, ...more] = summary.split(' · ') // the board bolds the stage name
   const edge = dx > 900 ? "end" : dx < 100 ? "start" : undefined
@@ -45,9 +45,9 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
             </linearGradient>
           </defs>
           {[12, 24].map(off => <path key={off} d={contour(off)} className="track-contour" />)}
-          <path d={`${walked} L${dx},${h} L0,${h} Z`} fill={`url(#${gid})`} />
+          <path d={`${walkedPath} L${walked},${h} L0,${h} Z`} fill={`url(#${gid})`} />
           <path d={line} className="track-ahead" />
-          <path d={walked} className="track-walked" />
+          <path d={walkedPath} className="track-walked" />
           {todayX !== null && <path d={`M${todayX} 0 V${h}`} className="track-today" />}
           {arcs.map(d => <path key={d} d={d} className="track-arc" />)}
         </svg>

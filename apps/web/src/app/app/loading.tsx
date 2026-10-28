@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function Loading() {
   return (
     <>
-      <main aria-busy="true" className="container-page flex flex-col gap-4 py-6">
+      <main aria-busy="true" className="container-page container-app flex flex-col gap-4 py-6">
         <span className="sr-only">Loading</span>
         <Skeleton className="h-8 w-48" />
         <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1">

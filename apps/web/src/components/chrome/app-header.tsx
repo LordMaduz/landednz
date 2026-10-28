@@ -53,7 +53,7 @@ export function AppHeader({
   return (
     <>
     <header className="border-b border-hairline">
-      <div className="container-page flex h-16 items-center gap-8 max-compact:gap-2 max-narrow:h-14">
+      <div className="container-page container-app flex h-16 items-center gap-8 max-compact:gap-2 max-narrow:h-14">
         {back && (
           <Link href={back.href} className="hidden min-h-11 items-center gap-1 font-medium text-ink no-underline hover:no-underline max-narrow:flex">
             <span aria-hidden="true">‹</span> {back.label}

@@ -59,6 +59,7 @@
   --shadow-rail-ring: 0 0 0 5px rgba(63, 201, 183, 0.18);
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
+  --container-app: 1248px; /* signed-in shell: 1200 content, edge at 120 px at 1440 */
   --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
   --container-hero-title: 560px;
   --container-hero-lede: 520px;
@@ -112,12 +113,17 @@
 /* Page container: 1120 px content, 24 px side padding (16 px on phones) */
 @utility container-page {
   width: 100%;
-  max-width: var(--container-page);
+  max-width: var(--page-w, var(--container-page));
   margin-inline: auto;
   padding-inline: 24px;
   @media (width < 561px) {
     padding-inline: 16px;
   }
+}
+
+/* Signed-in shell: the wider container */
+@utility container-app {
+  --page-w: var(--container-app);
 }
 
 /* Route waypoints (12 px; current 16 px; Home beads 8 px on phones) and the rail (ui_parts.ROUTE_CSS) */

@@ -71,7 +71,7 @@ describe('routeProgress', () => {
 
   it("on day 5 the pin reads You're here", () => {
     const p = routeProgress(week1Open(), ARRIVAL, DAY_5)
-    expect(p).toMatchObject({ x: 270, todayX: 400, label: "You're here", passed: [true, true, false, false, false] })
+    expect(p).toMatchObject({ x: 270, todayX: 400, label: "You're here", passed: [true, false, false, false, false] })
     expect(p.summary).toBe('Arrival · 3 of 4')
   })
 

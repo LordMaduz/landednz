@@ -91,7 +91,7 @@ export function routeProgress(route: RouteView, arrivalDate: string, now: Date) 
   const tail = day < 1 ? `by ${shortDay(arrivalDate)}` : left ? `${plural(left, 'day')} left` : ''
   const summary = [name, `${cur?.done ?? 0} of ${cur?.total ?? 0}`, tail].filter(Boolean).join(' · ')
 
-  return { x, todayX: todayX(arrivalDate, now), label, summary, passed: TRACK_FLAGS.map(fx => fx <= x) }
+  return { x, todayX: todayX(arrivalDate, now), label, summary, walked: youX(route), passed: TRACK_FLAGS.map(fx => fx <= youX(route)) }
 }
 
 // The phone row: the stage behind, the stage now with its days left, the stage ahead

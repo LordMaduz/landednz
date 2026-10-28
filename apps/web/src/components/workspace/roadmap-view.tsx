@@ -264,7 +264,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
         <Loading />
       ) : (
         <>
-          <main className={cn("container-page", selectedTaskId ? "pb-24 max-narrow:pb-40" : "py-6")}>
+          <main className={cn("container-page container-app", selectedTaskId ? "pb-24 max-narrow:pb-40" : "py-6")}>
             {state === "down" ? (
               <ApiDown onRetry={() => load()} />
             ) : selectedTaskId ? (

@@ -3,7 +3,7 @@ export function PublicFooter({ app }: { app?: boolean }) {
   const phone = app ? "max-narrow:mb-14 max-narrow:min-h-9 max-narrow:py-0" : ""
   return (
     <footer className="border-t border-hairline">
-      <div className={`container-page flex min-h-16 flex-wrap max-narrow:flex-nowrap items-center justify-between gap-x-6 gap-y-2 py-4 ${phone}`}>
+      <div className={`container-page ${app ? "container-app" : ""} flex min-h-16 flex-wrap max-narrow:flex-nowrap items-center justify-between gap-x-6 gap-y-2 py-4 ${phone}`}>
         <span className="text-small text-muted">
           {app ? (
             <>

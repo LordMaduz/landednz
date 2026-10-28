@@ -218,7 +218,7 @@ export function HomeScreen({ user }: { user: { name: string; initials: string } 
         <Loading />
       ) : (
         <>
-          <main className="container-page py-6">
+          <main className="container-page container-app py-6">
             {state === "down" ? <ApiDown onRetry={load} /> : <HomeView {...state} />}
           </main>
           <PublicFooter app />

@@ -40,7 +40,7 @@ export function SettingsScreen({ user }: { user: User }) {
   return (
     <>
       <AppHeader active="settings" back={editing ? { href: "/settings", label: "Settings" } : undefined} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
-      <main className="container-page py-6 max-narrow:py-4">
+      <main className="container-page container-app py-6 max-narrow:py-4">
         <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-2.5">
           {profile === "loading" || profile === "down" ? (
             <div className="flex flex-col gap-4">
