@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roadmap page, polished</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui{container-type:inline-size;font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5;color:#0F2A3A;background:#FFFFFF;-webkit-font-smoothing:antialiased;min-height:100%;font-feature-settings:"ss01"}
+.ui h1,.ui h2,.ui h3,.ui p,.ui dl,.ui dd,.ui ol,.ui ul{margin:0}
+.ui ol,.ui ul{padding:0;list-style:none}
+.ui a{color:#0A6463;text-decoration:none;transition:color .15s}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.ui ::selection{background:#CFE7E5}
+.t-page{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-0.015em;text-wrap:balance}
+.t-task{font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-0.01em;text-wrap:balance}
+.t-card{font-size:15px;line-height:1.4;font-weight:600}
+.t-small{font-size:13px;line-height:1.45}
+.muted{color:#4B6170}
+.tnum{font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:500;min-height:40px;padding:0 16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;box-sizing:border-box;transition:background-color .15s,border-color .15s,color .15s}
+.btn-sm{min-height:32px;padding:0 12px;font-size:13px}
+.ui a.btn{text-decoration:none}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.ui a.btn-primary{color:#FFFFFF}.btn-primary:hover{background:#24465A}.btn-primary:active{background:#071C28}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8;border-color:#7A8F99}.btn-quiet:active{background:#E3E8EA}
+.hdr{background:#FFFFFF;border-bottom:1px solid #E4E9EB}
+.ftr{border-top:1px solid #E4E9EB;margin-top:8px}
+.wrap{max-width:1120px;margin:0 auto;box-sizing:border-box;padding:0 24px}
+.nav{display:flex;gap:24px;align-self:stretch}
+.nav a{display:flex;align-items:center;color:#4B6170;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ui .nav a:hover{color:#0F2A3A;text-decoration:none}
+.nav a[aria-current="page"]{color:#0F2A3A;border-bottom-color:#0F2A3A}
+.avatar{width:32px;height:32px;border-radius:50%;background:#E8F2F1;color:#0A6463;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.card{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;box-shadow:0 1px 2px rgba(15,42,58,0.04), 0 16px 48px rgba(15,42,58,0.08);padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;box-sizing:border-box}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.card-foot{margin-top:auto}
+.card-head a,a.card-foot,.ftr a{display:inline-flex;align-items:center;min-height:24px}
+.btn-primary:disabled{background:#E3E8EA;border-color:#E3E8EA;color:#4B6170;cursor:not-allowed}
+.rows > li{margin:0 -20px;border-top:1px solid #E3E8EA}
+.row{display:flex;align-items:center;gap:12px;min-height:40px;padding:8px 20px;box-sizing:border-box;transition:background-color .15s}
+.ui a.row{color:#0F2A3A;text-decoration:none}.ui a.row:hover{background:rgba(15,42,58,.035)}.ui a.row:active{background:rgba(15,42,58,.07)}
+.ellip{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wp{flex:none;box-sizing:border-box;width:10px;height:10px;border-radius:50%;background:#FFFFFF;border:1.5px solid #7A8F99}
+.wp-now{width:14px;height:14px;border:2px solid #0F2A3A}
+.wp-done{background:#0E7C7B;border-color:#0E7C7B}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px}
+.legs{display:flex;gap:20px}
+.leg{display:flex;flex-direction:column;gap:10px;min-width:max-content}
+.track{height:14px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#E3E8EA,#E3E8EA) center/100% 2px no-repeat}
+.leg-label{display:flex;flex-direction:column;white-space:nowrap}
+.hero-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero-btns{display:flex;gap:8px}
+.plan{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px 12px;align-items:baseline}
+.plan dt{font-size:13px;color:#4B6170}.plan dd{font-weight:500}
+.tick{flex:none;width:16px;height:16px;border-radius:50%;background:#E8F2F1;display:flex;align-items:center;justify-content:center}
+.label{font-size:13px;font-weight:500}
+.field{font:inherit;font-size:15px;height:40px;padding:8px 12px;border-radius:8px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.form > div{display:flex;flex-direction:column;gap:6px;min-width:0}
+@container (max-width: 860px){.grid{grid-template-columns:minmax(0,1fr)}.span2{grid-row:auto!important}}
+@container (max-width: 560px){
+.wrap{padding:0 16px}.t-page{font-size:22px}
+.btn{min-height:44px}.btn-sm{min-height:44px}.field{height:44px;font-size:16px}
+.card{padding:16px}.rows > li{margin:0 -16px}.row{padding:8px 16px;min-height:44px}
+.legs{gap:8px}.leg{min-width:0}.leg-off .leg-label{display:none}.wp{width:8px;height:8px}.wp-now{width:12px;height:12px}
+.hero-btns{width:100%;flex-direction:column-reverse}.hero-btns .btn{width:100%}
+.form{grid-template-columns:minmax(0,1fr)}.ellip{white-space:normal}
+.wordmark,.kbd,.hide-sm{display:none}.nav{gap:16px}
+}
+
+.rv{position:relative}
+.rv > svg{position:absolute;inset:0;width:100%;overflow:visible}
+.pin{position:absolute;transform:translate(-50%,-50%)}
+.stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+.you{display:flex;flex-direction:column;align-items:center;gap:4px}
+.you-tag{font-size:13px;font-weight:600;color:#FFFFFF;background:#0F2A3A;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.you-dot{width:14px;height:14px;border-radius:50%;background:#FFFFFF;border:3px solid #0F2A3A;box-sizing:border-box;box-shadow:0 0 0 6px rgba(15,42,58,.08)}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.tile{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E3E8EA;border-radius:10px;min-width:0}
+.tile-now{border-color:#0F2A3A;box-shadow:inset 0 0 0 1px #0F2A3A}
+.tile-off{background:#FAFBFB}
+.stage-sum{display:none;font-size:13px}
+@container (max-width: 560px){
+.stages{display:none}.stage-sum{display:block}
+.tiles{gap:6px}.tile{padding:8px 0;justify-content:center}.tile-text{display:none!important}
+}
+
+.sk{display:block;border-radius:6px;background:#EEF2F3}
+.err{color:#A3292B}
+.field-err{border-color:#A3292B;box-shadow:0 0 0 1px #A3292B}
+.toast{display:flex;align-items:center;gap:12px;align-self:flex-start;background:#0F2A3A;color:#FFFFFF;border-radius:10px;padding:10px 10px 10px 14px;box-shadow:0 8px 24px rgba(15,42,58,.18)}
+.toast-btn{font:inherit;font-weight:600;background:transparent;border:0;color:#7FE0D3;cursor:pointer;min-height:32px;padding:0 8px;border-radius:6px}
+.dots{display:inline-flex;gap:3px}.dots i{width:5px;height:5px;border-radius:50%;background:#0E7C7B;opacity:.4}
+.dialog{background:#FFFFFF;border:1px solid #E3E8EA;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(15,42,58,.06),0 24px 64px rgba(15,42,58,.18)}
+.btn-danger{background:#A3292B;color:#FFFFFF;border:1px solid #A3292B}
+.card-now{border-color:#0F2A3A}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</helmet>
+<div class="ui">
+  <header class="hdr">
+    <div class="wrap" style="height: 56px; display: flex; align-items: center; gap: 32px">
+      <a href="#" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"></rect><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"></path><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"></circle></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <nav class="nav" aria-label="Main"><a href="#">Home</a><a href="#" aria-current="page">Roadmap</a></nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 4px">
+        <button class="btn btn-quiet btn-sm">Ask<span class="kbd muted" aria-hidden="true" style="border: 1px solid #E4E9EB; border-radius: 4px; padding: 0 5px; font-size: 13px; line-height: 16px">/</span></button>
+        <button aria-haspopup="menu" aria-label="Account, Aleksandra Wiśniewska-Kowalczyk" style="font: inherit; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer"><span class="avatar" aria-hidden="true">AW</span></button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap" style="padding-top: 24px; padding-bottom: 24px; display: flex; flex-direction: column; gap: 16px">
+    <section style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px">
+      <h1 class="t-page">Your roadmap</h1>
+      <p class="muted tnum">14 of 25 done · landed 1 March 2027</p>
+    </section>
+    <section class="card" aria-label="Where you are">
+      <div class="rv" style="height: 120px; margin-top: 18px" aria-hidden="true">
+        <svg viewBox="0 0 1000 120" preserveAspectRatio="none" height="120">
+          <defs><linearGradient id="walk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E7C7B" stop-opacity=".22"/><stop offset="1" stop-color="#0E7C7B" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,60.1 L20,53.6 L40,47.9 L60,43.4 L80,40.7 L100,39.8 L120,40.6 L140,42.9 L160,46.2 L180,50.1 L200,53.9 L220,57.1 L240,59.6 L260,61.0 L280,61.5 L300,61.4 L320,61.0 L340,60.8 L360,61.3 L380,62.7 L400,65.3 L420,69.0 L440,73.8 L460,79.0 L480,84.3 L500,89.0 L520,92.6 L540,94.6 L560,94.7 L580,92.9 L600,89.4 L620,84.5 L640,78.8 L660,72.9 L680,67.3 L700,62.6 L720,59.1 L740,56.9 L760,56.0 L780,56.0 L800,56.7 L820,57.4 L840,57.8 L860,57.4 L880,56.2 L900,54.2 L920,51.4 L940,48.3 L960,45.5 L980,43.3 L1000,42.4" stroke="#E3E8EA" stroke-width="1" fill="none" vector-effect="non-scaling-stroke"/><path d="M0,72.1 L20,65.6 L40,59.9 L60,55.4 L80,52.7 L100,51.8 L120,52.6 L140,54.9 L160,58.2 L180,62.1 L200,65.9 L220,69.1 L240,71.6 L260,73.0 L280,73.5 L300,73.4 L320,73.0 L340,72.8 L360,73.3 L380,74.7 L400,77.3 L420,81.0 L440,85.8 L460,91.0 L480,96.3 L500,101.0 L520,104.6 L540,106.6 L560,106.7 L580,104.9 L600,101.4 L620,96.5 L640,90.8 L660,84.9 L680,79.3 L700,74.6 L720,71.1 L740,68.9 L760,68.0 L780,68.0 L800,68.7 L820,69.4 L840,69.8 L860,69.4 L880,68.2 L900,66.2 L920,63.4 L940,60.3 L960,57.5 L980,55.3 L1000,54.4" stroke="#E3E8EA" stroke-width="1" fill="none" vector-effect="non-scaling-stroke"/>
+          <path d="M0,48.1 L20,41.6 L40,35.9 L60,31.4 L80,28.7 L100,27.8 L120,28.6 L140,30.9 L160,34.2 L180,38.1 L200,41.9 L220,45.1 L240,47.6 L260,49.0 L280,49.5 L300,49.4 L320,49.0 L340,48.8 L360,49.3 L380,50.7 L400,53.3 L420,57.0 L430,59.3 L430,120 L0,120 Z" fill="url(#walk)"/>
+          <path d="M0,48.1 L20,41.6 L40,35.9 L60,31.4 L80,28.7 L100,27.8 L120,28.6 L140,30.9 L160,34.2 L180,38.1 L200,41.9 L220,45.1 L240,47.6 L260,49.0 L280,49.5 L300,49.4 L320,49.0 L340,48.8 L360,49.3 L380,50.7 L400,53.3 L420,57.0 L440,61.8 L460,67.0 L480,72.3 L500,77.0 L520,80.6 L540,82.6 L560,82.7 L580,80.9 L600,77.4 L620,72.5 L640,66.8 L660,60.9 L680,55.3 L700,50.6 L720,47.1 L740,44.9 L760,44.0 L780,44.0 L800,44.7 L820,45.4 L840,45.8 L860,45.4 L880,44.2 L900,42.2 L920,39.4 L940,36.3 L960,33.5 L980,31.3 L1000,30.4" stroke="#C9D3D7" stroke-width="2" fill="none" stroke-dasharray="4 5" vector-effect="non-scaling-stroke"/>
+          <path d="M0,48.1 L20,41.6 L40,35.9 L60,31.4 L80,28.7 L100,27.8 L120,28.6 L140,30.9 L160,34.2 L180,38.1 L200,41.9 L220,45.1 L240,47.6 L260,49.0 L280,49.5 L300,49.4 L320,49.0 L340,48.8 L360,49.3 L380,50.7 L400,53.3 L420,57.0 L430,59.3" stroke="#0E7C7B" stroke-width="2.5" fill="none" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <div class="pin" style="left: 20.0%; top: 32px"><svg aria-hidden="true" width="10" height="20" viewBox="0 0 10 20"><path d="M1 20V1l8 4-8 4" fill="#0E7C7B" stroke="#0E7C7B" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="pin" style="left: 40.0%; top: 43px"><svg aria-hidden="true" width="10" height="20" viewBox="0 0 10 20"><path d="M1 20V1l8 4-8 4" fill="#0E7C7B" stroke="#0E7C7B" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="pin" style="left: 60.0%; top: 67px"><svg aria-hidden="true" width="10" height="20" viewBox="0 0 10 20"><path d="M1 20V1l8 4-8 4" fill="#FFFFFF" stroke="#7A8F99" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="pin" style="left: 80.0%; top: 35px"><svg aria-hidden="true" width="10" height="20" viewBox="0 0 10 20"><path d="M1 20V1l8 4-8 4" fill="#FFFFFF" stroke="#7A8F99" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="pin" style="left: 100.0%; top: 20px"><svg aria-hidden="true" width="10" height="20" viewBox="0 0 10 20"><path d="M1 20V1l8 4-8 4" fill="#FFFFFF" stroke="#7A8F99" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div class="pin you" style="left: 43.0%; top: 59.30212496576884px; transform: translate(-50%, calc(-100% + 7px))"><span class="you-tag">You · day 3</span><span class="you-dot"></span></div>
+      </div>
+      <ol class="stages"><li class="stage t-small tnum stage-off edge"><span style="font-weight: 500; color: #4B6170">Before you fly</span><span class="muted">done ✓</span></li><li class="stage t-small tnum stage-off"><span style="font-weight: 500; color: #4B6170">Arrival</span><span class="muted">done ✓</span></li><li class="stage t-small tnum"><span style="font-weight: 600; color: #0F2A3A">Week 1</span><span class="muted">0 of 5 · to 8 Mar</span></li><li class="stage t-small tnum stage-off"><span style="font-weight: 500; color: #4B6170">Month 1</span><span class="muted">0 of 5 · to 31 Mar</span></li><li class="stage t-small tnum stage-off edge"><span style="font-weight: 500; color: #4B6170">Later</span><span class="muted">0 of 1 · from April</span></li></ol><p class="stage-sum tnum"><b style="font-weight: 600">Week 1</b> <span class="muted">· 0 of 5 · 6 days left</span></p>
+    </section>
+    <div class="grid">
+      <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+        <section class="card card-now"><div class="card-head"><h2 class="t-card" style="display: flex; align-items: center; gap: 10px">Week 1</h2><span class="t-small muted tnum">0 of 5 · to 8 Mar · 6 days left</span></div><ol class="rows"><li><a href="#" class="row"><span class="wp wp-now" aria-hidden="true"></span><span class="ellip" style="font-weight: 600">Apply for your IRD number</span><span class='t-small tnum' style='font-weight: 500; color: #0A6463'>Up next</span><span class="t-small muted tnum hide-sm">30 minutes</span></a></li><li><a href="#" class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Register with a GP for the whole family</span><span class="t-small muted tnum hide-sm">1 hour</span></a></li><li><a href="#" class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Enrol your children at a local school</span><span class="t-small muted tnum hide-sm">2–3 hours</span></a></li><li><a href="#" class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Check your visa conditions in your eVisa record</span><span class="t-small muted tnum hide-sm">20 minutes</span></a></li><li><a href="#" class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Find settlement support and English classes</span><span class="t-small muted tnum hide-sm">1 hour</span></a></li></ol></section>
+        <section class="card" aria-labelledby="os">
+          <h2 id="os" class="t-card">Other stages</h2>
+          <ol class="rows"><li><div class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Month 1</span><span class="t-small muted tnum hide-sm">5 tasks · to 31 Mar</span><button class="btn btn-quiet btn-sm" aria-expanded="false">Show<span class="vh"> Month 1 tasks</span></button></div></li><li><div class="row"><span class="wp" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Later</span><span class="t-small muted tnum hide-sm">1 task · from April</span><button class="btn btn-quiet btn-sm" aria-expanded="false">Show<span class="vh"> Later tasks</span></button></div></li><li><div class="row"><span class="wp wp-done" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Before you fly</span><span class="t-small muted tnum hide-sm">10 of 10 done</span><button class="btn btn-quiet btn-sm" aria-expanded="false">Show<span class="vh"> Before you fly tasks</span></button></div></li><li><div class="row"><span class="wp wp-done" aria-hidden="true"></span><span class="ellip" style="font-weight: 500">Arrival</span><span class="t-small muted tnum hide-sm">4 of 4 done</span><button class="btn btn-quiet btn-sm" aria-expanded="false">Show<span class="vh"> Arrival tasks</span></button></div></li></ol>
+        </section>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+        <section class="card" aria-labelledby="rn">
+          <div class="card-head"><h2 id="rn" class="t-card">Up next</h2><span class="t-small muted tnum">About 30 minutes</span></div>
+          <h3 class="t-task">Apply for your IRD number</h3>
+          <p class="muted">You need it before you start work, so your employer can take the right amount of tax.</p>
+          <a href="#" class="btn btn-primary" style="align-self: flex-start">Start task</a>
+        </section>
+        <section class="card" aria-labelledby="kd">
+          <h2 id="kd" class="t-card">Key dates</h2>
+          <dl class="plan" style="grid-template-columns: 96px minmax(0,1fr)">
+            <dt class="tnum">1 Mar</dt><dd>You landed</dd>
+            <dt class="tnum">8 Mar</dt><dd>Week 1 ends</dd>
+            <dt class="tnum">31 Mar</dt><dd>Month 1 ends</dd>
+          </dl>
+          <a href="#" class="t-small card-foot" style="font-weight: 500">Change your arrival date</a>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="ftr"><div class="wrap t-small muted" style="height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px"><span>General information, not legal or tax advice.</span><span style="display: flex; gap: 20px"><a href="#">Privacy</a><a href="#">Terms</a></span></div></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1036}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
