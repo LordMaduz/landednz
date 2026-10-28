@@ -47,6 +47,17 @@ describe('buildItinerary — board data, day 5', () => {
   })
 })
 
+describe('buildItinerary — ahead of the calendar', () => {
+  it('open tasks of earlier stages fold into the current stage', () => {
+    const it = itin(nz('2026-11-15', '10:00:00'))
+    expect(it.current).toMatchObject({ name: 'Month 1', count: 11 })
+    const ids = [...it.current!.rows.map(r => r.task), ...it.current!.more].map(t => t.taskId)
+    expect(ids).toContain('T11') // Week 1, still open
+    expect(ids).toContain('T18') // Month 1
+    expect(it.later.map(l => l.name)).toEqual(['Later'])
+  })
+})
+
 describe('buildItinerary — edges', () => {
   it('nothing done: no Done so far', () => {
     expect(itin(DAY5, board(0)).done).toBeNull()

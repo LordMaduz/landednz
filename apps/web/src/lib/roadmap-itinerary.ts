@@ -1,6 +1,6 @@
 // The Roadmap's itinerary: Done so far, Today, the current stage and the stages after it (spec §5.2).
 import { journeyDay } from './journey-day'
-import { LEGS } from './legs'
+import { LEGS, legName, legWhen } from './legs'
 import { nzCalendarDate, weekdayDay } from './nz-date'
 import { daysLeftIn, stageIndexOn } from './route-progress'
 import { unlocksOf, waitsOn, type RouteTask, type RouteView } from './route-view'
@@ -30,8 +30,11 @@ export function buildItinerary(route: RouteView, arrivalDate: string, now: Date)
   const topLeg = route.legs.find(l => l.state === 'current')
   const topIndex = topLeg ? LEGS.findIndex(l => l.id === topLeg.id) : 0
   const stageIndex = before ? topIndex : Math.max(topIndex, stageIndexOn(day))
-  const stageLeg = top ? route.legs.find(l => l.id === LEGS[stageIndex].id) : undefined
-  const rest = stageLeg ? stageLeg.tasks.filter(t => t.state !== 'done' && t.taskId !== top!.taskId) : []
+  const stageId = LEGS[stageIndex].id
+  // Open tasks of earlier stages fold in, so the Roadmap lists every open task
+  const rest = top
+    ? route.legs.filter(l => LEGS.findIndex(x => x.id === l.id) <= stageIndex).flatMap(l => l.tasks).filter(t => t.state !== 'done' && t.taskId !== top.taskId)
+    : []
 
   const unlocked = top ? unlocksOf(route, top.taskId) : []
   return {
@@ -54,11 +57,11 @@ export function buildItinerary(route: RouteView, arrivalDate: string, now: Date)
         }
       : null,
     current:
-      stageLeg && rest.length
+      rest.length
         ? {
-            name: stageLeg.name,
+            name: legName(stageId, before),
             count: rest.length,
-            when: stageLeg.when,
+            when: legWhen(stageId, arrivalDate),
             daysLeft: daysLeftIn(stageIndex, day),
             rows: rest.slice(0, ROWS).map(task => ({ task, meta: metaOf(task) })),
             more: rest.slice(ROWS),

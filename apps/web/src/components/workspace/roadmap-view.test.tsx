@@ -86,7 +86,7 @@ describe('RoadmapView', () => {
     renderBoard()
     const rows = [...itinerary().querySelectorAll(':scope > ol > li')].map(li => li.textContent ?? '')
     expect(rows).toHaveLength(5)
-    expect(rows[0]).toMatch(/^by 2 Nov · 2–3 Nov.*Done so far.*Before you flew 6 of 6 · Arrival 3 of 4.*SIM cards, bank accounts, your visa conditions/)
+    expect(rows[0]).toMatch(/^by 2 Nov2–3 Nov.*Done so far.*Before you flew 6 of 6 · Arrival 3 of 4.*SIM cards, bank accounts, your visa conditions/)
     expect(rows[1]).toMatch(/^TodayFri 6 Nov.*day 5.*You're here · up next · 1 hour.*Apply for your IRD number/)
     expect(rows[2]).toMatch(/^to 9 Nov3 days left.*Week 1 · 7 tasks/)
     expect(rows[3]).toMatch(/Month 1.*4 tasks, 2 wait on your IRD number/)
@@ -178,8 +178,8 @@ describe('RoadmapScreen', () => {
 
   it('a task row links to its task page', async () => {
     render(<RoadmapScreen user={user} />)
-    const link = await screen.findByRole('link', { name: /^Enrol with a GP/ })
-    expect(link).toHaveAttribute('href', '/app/roadmap?task=T12')
+    const link = await screen.findByRole('link', { name: /^Sign a rental/ })
+    expect(link).toHaveAttribute('href', '/app/roadmap?task=T11')
   })
 
   it('?task=: the task page in place of the route', async () => {

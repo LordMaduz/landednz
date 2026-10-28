@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
@@ -19,6 +19,8 @@ import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { TaskSheet } from "./task-sheet"
 
+const PHONE_ROWS = 2
+const DESKTOP_ROWS = 3
 const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`
 
@@ -30,6 +32,24 @@ const DOT = "flex items-center max-narrow:hidden"
 const BODY = "min-w-0"
 const Wide = ({ children }: { children: ReactNode }) => <span className="max-narrow:hidden">{children}</span>
 const Phone = ({ children }: { children: ReactNode }) => <span className="hidden max-narrow:inline">{children}</span>
+
+// Each window on its own line, so "25–26 Oct" never breaks mid-window
+const WhenParts = ({ when }: { when: string }) => (
+  <p className={WHEN}>{when.split(" · ").map(w => <span key={w} className="block whitespace-nowrap">{w}</span>)}</p>
+)
+
+// Phone width, read once the page is loaded (this view only renders client side)
+function usePhone() {
+  return useSyncExternalStore(
+    cb => {
+      const mq = window.matchMedia?.("(width < 561px)")
+      mq?.addEventListener("change", cb)
+      return () => mq?.removeEventListener("change", cb)
+    },
+    () => window.matchMedia?.("(width < 561px)").matches ?? false,
+    () => false,
+  )
+}
 
 function Show({ open, onClick, label, hidden, className }: { open: boolean; onClick(): void; label: ReactNode; hidden: string; className?: string }) {
   return (
@@ -58,12 +78,15 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
   const [moreOpen, setMoreOpen] = useState(false)
   const [laterOpen, setLaterOpen] = useState<string | null>(null)
   const { done, today, current, later } = it
+  const phone = usePhone()
+  const stageTasks = current ? [...current.rows.map(r => r.task), ...current.more] : []
+  const shown = moreOpen ? stageTasks : stageTasks.slice(0, phone ? PHONE_ROWS : DESKTOP_ROWS)
   return (
     <Card aria-label="Itinerary" className="gap-0 max-narrow:contents">
       <ol className="m-0 flex list-none flex-col p-0 max-narrow:gap-2.5">
         {done && (
           <li className={cn(ROW, "pt-0 max-narrow:pt-4")}>
-            <span className={WHEN}>{done.when}</span>
+            <WhenParts when={done.when} />
             <span className={DOT}><Waypoint state="done" /></span>
             <div className={cn(BODY, "text-muted")}>
               <h2 className="inline text-body font-semibold text-ink">Done so far</h2> ·{" "}
@@ -120,16 +143,16 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <h2 className="text-body font-semibold max-narrow:text-section">{current.name} · {plural(current.count, "task")}</h2>
                 <span className="hidden text-small text-muted max-narrow:inline">{current.when}</span>
               </div>
-              <TaskList label={`${current.name} tasks`} tasks={moreOpen ? [...current.rows.map(r => r.task), ...current.more] : current.rows.map(r => r.task)} meta={t => current.rows.find(r => r.task === t)?.meta ?? (t.state === "blocked" ? waitsOn(t) : t.time)} />
-              {current.more.length > 0 && (
-                <Show open={moreOpen} onClick={() => setMoreOpen(o => !o)} label={`${current.more.length} more`} hidden="" className="-ml-3 -mr-0" />
-              )}
+              <TaskList label={`${current.name} tasks`} tasks={shown} meta={t => current.rows.find(r => r.task === t)?.meta ?? (t.state === "blocked" ? waitsOn(t) : t.time)} />
+              {stageTasks.length > shown.length || moreOpen ? (
+                <Show open={moreOpen} onClick={() => setMoreOpen(o => !o)} label={`${stageTasks.length - (phone ? PHONE_ROWS : DESKTOP_ROWS)} more`} hidden="" className="-ml-3 -mr-0" />
+              ) : null}
             </div>
           </li>
         )}
 
         {later.map(l => (
-          <li key={l.name} className={cn(ROW, RULED)}>
+          <li key={l.name} className={cn(ROW, RULED, "max-narrow:hidden")}>
             <span className={WHEN}>{l.when}</span>
             <span className={DOT}><Waypoint state="available" /></span>
             <div className={cn(BODY, "text-muted")}>
