@@ -164,7 +164,7 @@ export function TaskSheet({
     }
     setOverride({ taskId, doneOn: shortDayNZ(new Date()) })
     onChanged()
-    toast("Marked as done", { action: { label: "Undo", onClick: () => reopen(taskId) } })
+    toast.success("Marked as done", { action: { label: "Undo", onClick: () => reopen(taskId) } })
   }
 
   return (

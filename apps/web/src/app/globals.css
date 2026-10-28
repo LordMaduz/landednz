@@ -18,6 +18,8 @@
   --color-mark: #3FC9B7;
   --color-white: #FFFFFF;
   --color-track: #C9D3D7;
+  --color-danger: #A3292B;
+  --color-toast-action: #7FE0D3;
 
   --text-hero: 48px;
   --text-hero--line-height: 1.05;
@@ -45,6 +47,7 @@
   --shadow-lift: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
   /* chosen option row: inset teal hairline beside the teal border (a 2 px edge, not elevation) */
   --shadow-pin-halo: 0 0 0 6px rgba(15, 42, 58, 0.08);
+  --shadow-field-error: 0 0 0 1px #A3292B;
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
   --container-page: 1120px;
@@ -179,6 +182,12 @@
     background: #FFFFFF;
   }
 
+  /* Loading blocks: invisible for 300 ms so quick loads never flash; pulse only when motion is welcome */
+  .skeleton { opacity: 0; animation: skeleton-in 0s linear 300ms forwards, skeleton-pulse 1.6s ease-in-out 300ms infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton { animation: skeleton-in 0s linear 300ms forwards; }
+  }
+
   /* Landing preview rows (board .p-row): dot, name, meta on the rail line; meta under the name on phones */
   .preview-row {
     --line: var(--color-hairline);
@@ -289,6 +298,9 @@
     .track-sum { display: block; }
   }
 }
+
+@keyframes skeleton-in { to { opacity: 1; } }
+@keyframes skeleton-pulse { 50% { background-color: var(--color-hairline); } }
 
 @keyframes stamp-in {
   from { transform: scale(1.2) rotate(0deg); opacity: 0; }

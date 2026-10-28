@@ -5,7 +5,7 @@ import { fieldClass } from "./field"
 export function Select({ className, children, ...props }: React.ComponentProps<"select">) {
   return (
     <div className="relative">
-      <select data-slot="select" className={cn(fieldClass, "cursor-pointer appearance-none pr-12", className)} {...props}>
+      <select data-slot="select" className={cn(fieldClass, "cursor-pointer appearance-none truncate pr-12", className)} {...props}>
         {children}
       </select>
       <svg

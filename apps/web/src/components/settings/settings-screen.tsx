@@ -10,7 +10,8 @@ import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
 import { DeleteAccount } from "./delete-account"
 import { PlanForm } from "./plan-form"
-import { SettingsSection } from "./settings-section"
+import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type User = { name: string; initials: string; email: string; google: boolean }
 
@@ -40,19 +41,20 @@ export function SettingsScreen({ user }: { user: User }) {
   return (
     <>
       <AppHeader active={null} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
-      <main className="container-page flex flex-col gap-8 pt-12 pb-24">
+      <main className="container-page flex flex-col gap-4 py-6">
         <h1 className="text-title">Settings</h1>
-        <div>
+        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1">
           {profile === "loading" ? (
-            <SettingsSection title="Your plan" lede="Your roadmap is built from these answers.">
-              <div aria-busy="true" className="h-48 rounded-surface bg-wash">
-                <span className="sr-only">Loading</span>
-              </div>
-            </SettingsSection>
+            <Card aria-busy="true" aria-label="Your plan" className="row-span-2 gap-5 max-split:row-auto">
+              <span className="sr-only">Loading</span>
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-3 w-3/5" />
+              <Skeleton className="h-40 w-full" />
+            </Card>
           ) : profile === "down" ? (
-            <SettingsSection title="Your plan" lede="Your roadmap is built from these answers.">
+            <div className="row-span-2 max-split:row-auto">
               <ApiDown heading="h2" onRetry={load} />
-            </SettingsSection>
+            </div>
           ) : (
             <PlanForm profile={profile} />
           )}

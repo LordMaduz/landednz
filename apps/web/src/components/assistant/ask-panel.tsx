@@ -12,7 +12,7 @@ import { AiReply } from "./ai-reply"
 type Message = { id: number; q: string; text: string; status: "streaming" | "done" | "stopped" | "failed" }
 
 const CAP_MESSAGE = "You've reached today's question limit. You can ask again after midnight."
-const FAILED_MESSAGE = "Couldn't get an answer. Check your connection, then ask again."
+const FAILED_MESSAGE = "That didn't work. Your question is still here, so you can send it again."
 
 function traceOf(m: Message): string {
   if (m.status === "streaming") return "Checking sources"
@@ -77,6 +77,13 @@ export function AskPanel({
     }
   }
 
+  function retry() {
+    const lastFailed = messages.findLast(m => m.status === "failed")
+    if (!lastFailed) return
+    setMessages(ms => ms.filter(m => m.id !== lastFailed.id))
+    ask(lastFailed.q)
+  }
+
   function stop() {
     if (!running.current) return
     running.current.abort.abort()
@@ -91,15 +98,32 @@ export function AskPanel({
       {messages.map(m => (
         <div key={m.id} className="contents">
           <p className="ask-q">{m.q}</p>
-          {(m.status !== "failed" || m.text) && (
+          {m.status === "streaming" && !m.text && (
+            <p role="status" className="flex items-center gap-2 text-small text-muted">
+              <span aria-hidden="true" className="flex gap-0.5 motion-safe:animate-pulse">
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+              </span>
+              Checking official sources…
+            </p>
+          )}
+          {(m.status !== "failed" || m.text) && (m.status !== "streaming" || m.text) && (
             <AiReply text={m.text} trace={traceOf(m)} streaming={m.status === "streaming"} />
           )}
         </div>
       ))}
       {(capped || failed) && (
-        <p role="alert" className="text-small">
-          {capped ? CAP_MESSAGE : FAILED_MESSAGE}
-        </p>
+        <div className="flex flex-col items-start gap-3">
+          <p role="alert" className="text-muted">
+            {capped ? CAP_MESSAGE : FAILED_MESSAGE}
+          </p>
+          {failed && !capped && (
+            <Button variant="quiet" onClick={retry}>
+              Try again
+            </Button>
+          )}
+        </div>
       )}
       {suggestions.length > 0 && !capped && (
         <div className="flex flex-wrap gap-2">
