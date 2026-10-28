@@ -844,3 +844,28 @@ www-ird-govt-nz-working-for-families-types:
   title: "Types of payment"
   agency: Inland Revenue
   tier: government
+getready-govt-nz-prepared-household-supplies:
+  url: https://getready.govt.nz/prepared/household/supplies
+  title: "Work out what supplies you need"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-household-impacts:
+  url: https://getready.govt.nz/prepared/household/impacts
+  title: "Talk about the impacts"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-ema:
+  url: https://getready.govt.nz/prepared/ema
+  title: "Emergency Mobile Alert"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-stay-informed:
+  url: https://getready.govt.nz/prepared/stay-informed
+  title: "Stay informed"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-emergency-tsunami:
+  url: https://getready.govt.nz/emergency/tsunami
+  title: "Tsunami"
+  agency: National Emergency Management Agency
+  tier: government

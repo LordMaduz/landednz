@@ -11,17 +11,87 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T36.why.1
-    text: "A household emergency plan helps everyone in your home know what to do in an emergency."
+  - id: T36.why.plan
+    text: "The National Emergency Management Agency says a household emergency plan lets everyone in your household know what to do in an emergency and how to get ready, and that having one makes real emergencies less stressful."
     source: getready-govt-nz-prepared-household-make-a-plan
-    checked: 2026-10-25
-    verified: false
+    checked: 2026-10-28
+    verified: true
+  - id: T36.why.stuck
+    text: "The National Emergency Management Agency says that in an emergency you may be stuck at home for {{emergency.stuck-days}}, so it asks you to work out in advance what you would need to get through."
+    source: getready-govt-nz-prepared-household-supplies
+    checked: 2026-10-28
+    verified: true
 steps:
-  - id: T36.steps.1
-    text: "Make a household emergency plan using the Get Ready guidance."
+  - id: T36.steps.make-plan
+    text: "Make your plan on the National Emergency Management Agency's Get Ready site. Fill in the online form, then print it or save it as a PDF to share. A paper PDF template is also available, in English, te reo Māori and other languages."
     source: getready-govt-nz-prepared-household-make-a-plan
-    checked: 2026-10-25
-    verified: false
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.talk-impacts
+    text: "Talk with everyone in your home about what you would do if you were stuck at home, could not get home, had to evacuate, or lost power, water, phone or internet. Get Ready lists these situations as prompts."
+    source: getready-govt-nz-prepared-household-impacts
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.meeting-place
+    text: "Agree where you would meet. Get Ready says that in most emergencies it is best to stay at home, so make your home the meeting place and pick an alternative in case you cannot get there."
+    source: getready-govt-nz-prepared-household-impacts
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.supplies
+    text: "Gather supplies for home: Get Ready says {{emergency.water-litres}} of water for every person, long-lasting food that needs no cooking (including for babies and animals), toilet paper and buckets for an emergency toilet, work gloves and a fitted P2 or N95 mask."
+    source: getready-govt-nz-prepared-household-supplies
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.grab-bag
+    text: "Pack a grab bag for each person. Get Ready lists walking shoes, warm clothes, a raincoat and hat, water and snacks, hand sanitiser, a portable phone charger, cash in coins and small notes, and copies of important documents and photo ID."
+    source: getready-govt-nz-prepared-household-supplies
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.alerts-local
+    text: "Find your local emergency management group through the link on the Get Ready alerts page. It can tell you about other alerting systems in your area."
+    source: getready-govt-nz-prepared-ema
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.local-updates
+    text: "Know where local updates appear. Get Ready says to check your council's website and social media, and your Civil Defence Emergency Management Group's website, for local updates."
+    source: getready-govt-nz-prepared-stay-informed
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.tsunami-zone
+    text: "If you live, work or study near the coast or a large lake, check whether your address is in a tsunami evacuation zone. Get Ready says your local emergency management group has evacuation zone maps and advice."
+    source: getready-govt-nz-emergency-tsunami
+    checked: 2026-10-28
+    verified: true
+  - id: T36.steps.work-school
+    text: "Line your home plan up with your workplace and your children's school or early childhood centre plans. Get Ready suggests finding out the school's safe pick-up location and giving it a list of {{emergency.school-pickup-contacts}} who can collect your children."
+    source: getready-govt-nz-prepared-household-make-a-plan
+    checked: 2026-10-28
+    verified: true
 documents: []
-mistakes: []
-watchOuts: []
+mistakes:
+  - id: T36.mistakes.wait-alert
+    text: "Waiting for an alert before you act. The National Emergency Management Agency says Emergency Mobile Alert does not replace other warnings, you should not wait for one, and if your life is in danger you should act immediately."
+    source: getready-govt-nz-prepared-ema
+    checked: 2026-10-28
+    verified: true
+  - id: T36.mistakes.wait-warning
+    text: "For a tsunami, waiting for an official warning. Get Ready says if an earthquake is long or strong you should move to high ground or inland straight away and not wait for a warning."
+    source: getready-govt-nz-emergency-tsunami
+    checked: 2026-10-28
+    verified: true
+watchOuts:
+  - id: T36.watchOuts.alert-gaps
+    text: "Get Ready says you may not get an Emergency Mobile Alert if you are out of mobile coverage, towers are damaged or there is a power outage. It also says you cannot opt out, and most phones bought in New Zealand after 2017 can receive them."
+    source: getready-govt-nz-prepared-ema
+    checked: 2026-10-28
+    verified: true
+  - id: T36.watchOuts.govt-app
+    text: "The Govt.nz app can send Emergency Mobile Alerts and MetService severe weather warnings for locations you choose, including over Wi-Fi, according to the National Emergency Management Agency."
+    source: getready-govt-nz-prepared-ema
+    checked: 2026-10-28
+    verified: true
+  - id: T36.watchOuts.tsunami-after
+    text: "After any tsunami or tsunami warning, Get Ready says to stay away from coastal water, estuaries, rivers and streams for at least {{emergency.tsunami-stay-away}}, and not to return until Civil Defence gives an official all-clear."
+    source: getready-govt-nz-emergency-tsunami
+    checked: 2026-10-28
+    verified: true

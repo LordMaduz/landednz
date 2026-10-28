@@ -1,0 +1,24 @@
+emergency.stuck-days:
+  value: "three days or more"
+  numberType: B
+  source: getready-govt-nz-prepared-household-supplies
+  checked: 2026-10-28
+  verified: true
+emergency.water-litres:
+  value: "at least nine litres"
+  numberType: B
+  source: getready-govt-nz-prepared-household-supplies
+  checked: 2026-10-28
+  verified: true
+emergency.school-pickup-contacts:
+  value: "three people"
+  numberType: B
+  source: getready-govt-nz-prepared-household-make-a-plan
+  checked: 2026-10-28
+  verified: true
+emergency.tsunami-stay-away:
+  value: "24 hours"
+  numberType: B
+  source: getready-govt-nz-emergency-tsunami
+  checked: 2026-10-28
+  verified: true
