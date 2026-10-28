@@ -28,7 +28,7 @@ and picked final boards. This spec makes the built app match those boards.
 ### Non-goals
 
 - No new tokens, fonts or colours, and no dark mode.
-- No new layout for Landing, Sign in or Save beyond the type scale. No redesign of the Ask answer panel.
+- No redesign of the Ask answer panel. (Amended 2026-10-29: Landing, Sign in and Save now match their boards, see §4.1.)
 - No content changes.
 - `bestBy` for month-based urgency rules (T16) is out of scope; it stays `null`.
 - No new dependencies.
@@ -116,9 +116,13 @@ and picked final boards. This spec makes the built app match those boards.
 
 ## 4. Before sign-in and Build my roadmap
 
-### 4.1 Landing, Sign in, Save (R7)
+### 4.1 Landing, Sign in, Save (R7, amended 2026-10-29)
 
-- Same layout, copy and flow. Only the hard-coded sizes move to §3.3.
+The owner asked for these pages to match their boards (PsLanding, PsSignIn, PsSave and the phone boards). Behaviour stays the same: the Google and password handlers, the `NEXT_PUBLIC_AUTH_PASSWORD_ENABLED` switch, `safeRedirect`, `/auth/complete`, the answers cookie and `getRoadmapPreview`.
+
+- **Sign in:** one centred card, 460 px, padding 32 (24/20 on phones), gap 20. Title and the line "Sign in to tick tasks off, pick up where you left off on any device, and ask about any task. New here? Continue with Google to create your account." Then the Google button, the "or use email" divider, Email and Password, a full-width primary **Sign in** (48 px), and the Google consent line centred at the bottom. With the password switch off, the divider and the email form are not shown.
+- **Save your roadmap:** the same card. Above the title: the back link "Your roadmap preview" and the teal summary chip "Saving your roadmap · n tasks" with a short answers line (visa · city · who · lands d Mon). The button reads **Save and sign in**. The side panel "What you're saving" goes.
+- **Landing:** the preview figure's rows match the board: a hairline between rows, a filled teal tick for done, the ringed dot for next, a dashed dot for blocked, a hollow dot for later, all rows at body size with the next row in medium. **Build my roadmap** gets the chevron.
 
 ### 4.2 Build my roadmap A (`components/onboarding/question-step.tsx`)
 
