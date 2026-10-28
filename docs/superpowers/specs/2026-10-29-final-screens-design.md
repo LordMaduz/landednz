@@ -46,7 +46,9 @@ and picked final boards. This spec makes the built app match those boards.
 3. **Every section sits in a card.**
 4. **The type scale in code is the source of truth** (§3.3). The boards were brought into line with it.
 5. **"Best done by" is real data (option A).** The API adds `bestBy`, computed from the task's urgency window and the arrival date.
-6. **"Your plan" leaves Home.** Plan changes live in Settings, and the avatar menu links there.
+6. **"Your plan" leaves Home.** Plan changes live in Settings, which joins Home and Roadmap in the header nav (and stays in the avatar menu).
+7. **Task names and short names come from the app, not the boards.** Titles stay `taskTitle()`; short names ("Waits on …",
+   "unlocked by …", phone Unlocks) use `TASK_COPY[id].topic`. Board wording such as "Waits on IRD" or "Get your IRD number" is illustration.
 
 ## 3. Shared parts
 
@@ -58,7 +60,7 @@ and picked final boards. This spec makes the built app match those boards.
 - the teal gradient on the walked part, and the solid teal walked line;
 - the dashed `track` line for the road ahead;
 - outline flags that fill teal once passed;
-- the stage row under the road;
+- the stage row under the road (its text changes, see the table);
 - the SVG stays `aria-hidden`, and progress is also written out as text.
 
 **What changes:**
@@ -69,11 +71,15 @@ and picked final boards. This spec makes the built app match those boards.
 | **You** (ring + ink "You're here" pill) | Placed by tasks done: `x = start_i + (end_i − start_i) × done_i / total_i` for the current stage `i`. When everything is done, it sits at 1000. Before arrival the pill keeps today's "You · n days to go" text. |
 | **Today** (dashed vertical line, "Today · Fri 6 Nov" label) | Placed by date, using `STAGE_DAYS`: in stage `i`, `x = start_i + (end_i − start_i) × (day − startDay_i + 1) / (endDay_i − startDay_i + 1)`, kept between 0 and 1000. It is hidden before arrival (day < 1). |
 | Task dots | One per task, spread evenly inside its stage. Done = filled teal. Waiting (`isBlocked`) = hollow, with a `control` stroke. Anything else = a small `track`-coloured dot. |
-| Arcs (Roadmap only) | Dotted curves from You to the dot of each task the next task unlocks (tasks whose `blockingTaskIds` include it). Below them, the small muted note "Dotted lines: unlocked by your {task name}". There are no arcs when the next task unlocks nothing. |
+| Arcs (Roadmap desktop only) | Dotted curves from You to the dot of each task the next task unlocks (tasks whose `blockingTaskIds` include it). Below them, the small muted note "Dotted lines: unlocked by {topic}" (e.g. "unlocked by your IRD number"). There are no arcs when the next task unlocks nothing. |
+| Stage row | Each stage: its name (current one adds "· now", teal), then "{d} of {t} done · {when}", or "{t} tasks · {when}" when none are done (e.g. "Before you flew / 6 of 6 done · by 2 Nov", "Week 1 · now / 7 tasks · to 9 Nov"). `{when}` is today's `legWhen`. |
 | Sizes | `variant="compact"` (Home) and `variant="tall"` (Roadmap, with arcs) replace `height: 96 | 120`. |
 
 - **The boards' You and Today positions are only illustrations.** The formulas above decide where the markers go.
-- **On phones,** the road becomes a 3-stage strip: the previous stage, the current one with "· now" or "n days left", and the next one. Each stage name is a link to the Roadmap.
+- **On phones,** the same curvy road (flags, dots, Today line, You ring; no arcs) is drawn at card width, 56 px tall on Home and 64 px on Roadmap.
+  Under it, one row of three labels:
+  - Home: the previous stage with its state ("Arrival 3 of 4", or "Arrival ✓" when done), the current stage "Week 1 · now" (teal), and a **Roadmap** link;
+  - Roadmap: the previous stage with its state, the current stage "Week 1 · n days left" (teal), and the next stage's name.
 
 ### 3.2 Cards (`components/ui/card.tsx`, unchanged)
 
@@ -96,13 +102,15 @@ and picked final boards. This spec makes the built app match those boards.
 
 ### 3.4 Phone tab bar (`components/chrome/app-header.tsx`)
 
+- **Desktop header nav:** Home, Roadmap, **Settings** (new link; Settings also stays in the avatar menu).
 - **Under 561 px:**
-  - The header's Home and Roadmap links are hidden.
+  - The header's nav links are hidden.
   - A bottom bar appears: `nav aria-label="Main"`, with **Home, Roadmap, Settings**, each an icon plus a 12 px label.
   - The current tab is teal with `aria-current="page"`.
-  - The phone header keeps the logo, Ask and the avatar menu.
+  - The phone header keeps the logo, Ask (no kbd hint) and the avatar menu. On the Task page the logo is replaced by a "‹ Roadmap" back link.
+  - The footer shortens to one 36 px line above the tab bar: "Not legal or tax advice", Privacy, Terms.
 - **Same source as the desktop nav:** the bar uses the same `active` prop and links. `AppHeader` gains `"settings"` as a value of `active`.
-- **Content is never covered:** app pages get bottom padding so the bar never hides anything. On the Task page, the action bar sits above the tab bar.
+- **Content is never covered:** app pages get bottom padding so the bar never hides anything. On the Task page, the action bar sits above the tab bar and the footer is not shown.
 - **No tab bar** on the pages before sign-in or on Build my roadmap.
 
 ## 4. Before sign-in and Build my roadmap
@@ -126,7 +134,9 @@ and picked final boards. This spec makes the built app match those boards.
   - **Back** (quiet) and **Continue**, or **See my roadmap** on the last step.
 - **What goes:** the thin `StepBar` and the "Step n of 5" header. The rail replaces both.
 
-**Phone:** an ink band at the top. It shows the logo, "n of 5" and 5 dots joined by a line (done = teal, current = ring, still to come = hollow). The question follows below it.
+**Phone:** an ink band at the top. It shows the logo, "n of 5", 5 dots joined by a line (done = teal, current = ring,
+still to come = hollow), and a last line with the previous answer and **Change** ("Visa: Working holiday visa · Change"; hidden on question 1).
+The question follows below it, with a full-width **Continue** (or **See my roadmap**) at the bottom; going back is the band's **Change** or the browser's Back.
 
 **What stays:**
 - `?step=` in the URL;
@@ -139,7 +149,7 @@ and picked final boards. This spec makes the built app match those boards.
 
 **Look:**
 - A month grid, with previous and next month buttons.
-- Today is outlined, the chosen day is filled teal, and days from the next or previous month are dimmed.
+- Weeks start on Monday. Today has a thin grey outline, the chosen day is filled ink with white text, a hovered day gets the wash background, and days from the next or previous month are dimmed.
 - Under the grid, the row "You land on **Friday 30 October 2026**", with a chip such as "Tomorrow", "Today", "In n days" or "n days ago".
 
 **Accessibility (WAI-ARIA date grid pattern):**
@@ -182,7 +192,7 @@ and picked final boards. This spec makes the built app match those boards.
      - The empty state stays as today.
    - **Then this week** (renamed from "Also this week"):
      - the aside "{stage} · n days left";
-     - up to 3 rows, each with its meta ("Waits on IRD", a duration);
+     - up to 3 rows, each with its meta ("Waits on {topic}" for a blocked task, replacing today's "Needs {topic} first"; otherwise its duration);
      - the footer "n more in {stage}", a link to the Roadmap.
 4. **Recently done:** full width.
    - The aside "n tasks done · Show all". **Show all** opens `/app/roadmap?done=1`, where Done so far is already expanded.
@@ -191,11 +201,12 @@ and picked final boards. This spec makes the built app match those boards.
 5. **Removed:** the "Your plan" card.
 
 **Phone:**
-- the strip road;
-- next move with the short why line, **Start task** and **Ask**;
-- Then this week with 2 rows;
-- Recently done with 2 rows and "Show all n";
-- the tab bar.
+- the subline without the date ("9 of 22 done · day 5 since you landed");
+- the phone road (§3.1);
+- next move: meta "Your next move · {duration}", the name, the why line, **Start task** (wide) and **Ask**; no Unlocks;
+- Then this week: an "n tasks" link to the Roadmap in the header, 2 rows without meta;
+- Recently done: "Show all n" in the header, 2 rows ending with the short weekday ("Wed");
+- the short footer and the tab bar.
 
 ### 5.2 Roadmap D fitted (`components/workspace/roadmap-view.tsx`)
 
@@ -214,21 +225,21 @@ and picked final boards. This spec makes the built app match those boards.
       - The content:
         - "You're here · up next · {duration}";
         - the task name as an h2 (`text-section`), then the why line;
-        - "**Unlocks n tasks:** {name} ({stage}) · …";
+        - "**Unlocks n tasks:** {name} ({stage}) · …", shown only when it unlocks any;
         - **Start task** (ink) and **Ask about this**.
    3. **The current stage**, e.g. "Week 1 · n tasks":
       - The date column shows "to {date} / n days left".
-      - Up to 3 rows with meta, then **Show n more**.
-   4. **Each later stage:** "{stage} · n tasks", plus ", n wait on your {task}" when some are blocked by the next task. The date column shows its window ("to 2 Dec", "from Dec"). **Show** lists its tasks.
+      - Up to 3 rows with meta ("Waits on {topic}" or the duration), then **Show n more**.
+   4. **Each later stage:** "{stage} · n tasks", plus ", n wait on {topic}" (the next task's topic) when some are blocked by it. The date column shows its window ("to 2 Dec", "from Dec"). **Show** lists its tasks.
 
 - **Every Show** is a `button` with `aria-expanded`, expanding in place.
 - **Unchanged:** Mark and undo stay on the task page. `?task=` and `?ask=1` keep working as today.
 - **Phone:**
-  - the strip road;
+  - the subline without the date, then the phone road (§3.1);
   - a Done so far card with "n tasks" and **Show**;
-  - the Today wash card;
-  - a card for the current stage with 2 rows;
-  - the tab bar.
+  - the Today wash card: "Today · up next · {duration}", the name, "Unlocks n tasks: {topic}, {topic}, …" (topics, no stages), **Start task** and **Ask about this**; no why line;
+  - a card for the current stage ("Week 1 · n tasks", "to {date}") with 2 rows;
+  - the short footer and the tab bar.
 
 ## 6. Task details and Settings
 
@@ -285,7 +296,7 @@ and picked final boards. This spec makes the built app match those boards.
 - **What stays:** saving uses `updateProfileAndRegenerateRoadmap`, with the same error and `ApiDown` states. `?ask=1` from the header still opens Ask on the Roadmap.
 
 **Phone:**
-- The answers card and the account card.
+- The answers card (subline shortened to "Your answers build your roadmap.") and the account card (the email, **Sign out**, **Delete account…**).
 - **Change** opens the editor full-screen at `/settings?edit={key}`, so the browser's Back button works. Cancel or Save goes back to `/settings`.
 
 ## 7. Build order
@@ -346,4 +357,5 @@ Two tasks per session. Each task leaves the app working and its tests passing.
 ## 9. Approvals
 
 - Design sections 1–5 approved by the owner in chat, 2026-10-29.
+- Written spec re-checked against the latest canvas (version `1793219900-a569`; its 18 boards are byte-identical to Version 4), 2026-10-29.
 - Written spec: awaiting owner review.
