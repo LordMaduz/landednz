@@ -413,4 +413,32 @@ describe('TaskSheet, Task details C', () => {
     expect(within(bar).getByRole('button', { name: 'Mark as done' })).toBeInTheDocument()
     expect(within(bar).getByRole('button', { name: 'Ask' })).toBeInTheDocument()
   })
+
+  it('phone Steps panel: its heading is screen-reader only; the desktop one is visible', async () => {
+    rendered(null)
+    const h = await phone().findByRole('heading', { level: 2, name: 'Steps' })
+    expect(h.className).toContain('sr-only')
+    expect(desk().getByRole('heading', { level: 2, name: 'Steps' }).className).not.toContain('sr-only')
+  })
+
+  it('no sources: no Sources tab on phone', () => {
+    getTaskDetail.mockResolvedValue(detail({ governmentSourceUrl: '', steps: [] }))
+    rendered(null)
+    expect(phone().getAllByRole('tab').map(t => t.textContent)).toEqual(['Steps', 'Good to know'])
+  })
+
+  it('phone Ask focuses the Ask input on every press', () => {
+    const spy = vi.spyOn(HTMLElement.prototype, 'offsetParent', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.closest('[data-testid=task-phone]') ? document.body : null
+    })
+    rendered(null)
+    const ask = within(phone().getByRole('group', { name: 'Task actions' })).getByRole('button', { name: 'Ask' })
+    fireEvent.click(ask)
+    const input = phone().getByRole('textbox', { name: /^Ask about/ })
+    expect(input).toHaveFocus()
+    input.blur()
+    fireEvent.click(ask)
+    expect(input).toHaveFocus()
+    spy.mockRestore()
+  })
 })

@@ -68,7 +68,7 @@ export function TaskSheet({
   const phoneTitleRef = useRef<HTMLHeadingElement>(null)
   const askRef = useRef<HTMLInputElement>(null)
   const phoneAskRef = useRef<HTMLInputElement>(null)
-  const [askOpen, setAskOpen] = useState(false)
+  const [askPress, setAskPress] = useState(0) // each press of the phone Ask button
   const [allSources, setAllSources] = useState(false)
   const [shown, setShown] = useState(taskId)
   const [detail, setDetail] = useState<TaskDetailApiResponse | null>(null)
@@ -94,10 +94,10 @@ export function TaskSheet({
   }, [taskId])
 
   // On a phone the Ask card is hidden until Ask is pressed
-  const askShown = askOpen || !!askFocus
+  const askShown = askPress > 0 || !!askFocus
   useEffect(() => {
-    if (askFocus || askOpen) visible(askRef.current, phoneAskRef.current)?.focus()
-  }, [askFocus, askOpen])
+    if (askFocus || askPress) visible(askRef.current, phoneAskRef.current)?.focus()
+  }, [askFocus, askPress])
 
   const tasks = route.legs.flatMap(l => l.tasks)
   const at = tasks.findIndex(t => t.taskId === taskId)
@@ -379,9 +379,11 @@ export function TaskSheet({
               <Tabs.Tab value="know" className={tabClass}>
                 Good to know
               </Tabs.Tab>
-              <Tabs.Tab value="sources" className={tabClass}>
-                Sources{sources.length > 0 && ` ${sources.length}`}
-              </Tabs.Tab>
+              {sources.length > 0 && (
+                <Tabs.Tab value="sources" className={tabClass}>
+                  Sources {sources.length}
+                </Tabs.Tab>
+              )}
             </Tabs.List>
             <Tabs.Panel value="steps" className="flex flex-col gap-6 pt-3">
               {stepsSection(`${titleId}-p-steps`, "sr-only")}
@@ -391,10 +393,12 @@ export function TaskSheet({
             <Tabs.Panel value="know" className="flex flex-col gap-6 pt-3">
               {list(`${titleId}-p-know`, "Good to know", know) || <p className="text-muted">Nothing extra to know for this task.</p>}
             </Tabs.Panel>
-            <Tabs.Panel value="sources" className="flex flex-col gap-3 pt-3">
-              <p className="text-small text-muted">{checkedLabel}</p>
-              {sourcesList}
-            </Tabs.Panel>
+            {sources.length > 0 && (
+              <Tabs.Panel value="sources" className="flex flex-col gap-3 pt-3">
+                <p className="text-small text-muted">{checkedLabel}</p>
+                {sourcesList}
+              </Tabs.Panel>
+            )}
           </Tabs.Root>
         </Card>
         {askShown && (
@@ -411,7 +415,7 @@ export function TaskSheet({
             {errorNote}
             {doneControls}
           </div>
-          <Button variant="quiet" onClick={() => setAskOpen(true)}>
+          <Button variant="quiet" onClick={() => setAskPress(n => n + 1)}>
             Ask
           </Button>
         </div>
