@@ -363,5 +363,5 @@
 
 /* Unlayered so it beats the text-title utility: page titles are 22 px under 561 px */
 @media (width < 561px) {
-  .text-title { font-size: 22px; }
+  .text-title, .max-compact\:text-title { font-size: 22px; }
 }
