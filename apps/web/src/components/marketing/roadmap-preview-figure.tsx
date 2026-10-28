@@ -7,7 +7,7 @@ import type { WaypointState } from "@/lib/route-view"
 const ROWS: { state: WaypointState; name: string; meta: string }[] = [
   { state: "done", name: "Open a bank account", meta: "Done 22 Oct" },
   { state: "current", name: "Apply for your IRD number", meta: "Next" },
-  { state: "blocked", name: "Give your employer a tax code", meta: "Needs your IRD number" },
+  { state: "locked", name: "Give your employer a tax code", meta: "Needs your IRD number" },
   { state: "available", name: "Enrol with a GP", meta: "Month 1" },
 ]
 
@@ -26,9 +26,9 @@ export function RoadmapPreviewFigure() {
         </div>
         <div>
           {ROWS.map(row => (
-            <div key={row.name} className={cn("preview-row", row.state === "done" && "is-done")}>
+            <div key={row.name} className={"preview-row"}>
               <Waypoint state={row.state} />
-              <span className={cn(row.state === "current" ? "font-medium" : "text-small", row.state === "done" && "text-muted")}>{row.name}</span>
+              <span className={cn("text-body", row.state === "current" && "font-medium", row.state === "done" && "text-muted")}>{row.name}</span>
               <span className="text-small text-muted">{row.meta}</span>
             </div>
           ))}
@@ -36,7 +36,7 @@ export function RoadmapPreviewFigure() {
         <div className="ai">
           <div className="flex flex-col gap-2 p-4">
             <span className="text-small text-muted">Read your roadmap, checked ird.govt.nz</span>
-            <p className="text-small">Your passport, your visa details and your NZ bank account number. Yours is open, so you have everything.</p>
+            <p className="text-body">Your passport, your visa details and your NZ bank account number. Yours is open, so you have everything.</p>
           </div>
         </div>
       </div>
