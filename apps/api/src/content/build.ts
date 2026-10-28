@@ -19,7 +19,7 @@ export type ResolvedTask = Omit<TaskDef, ItemKeys> & {
   watchOuts: ResolvedItem[];
   cost?: ResolvedItem;
   advice?: ResolvedItem & { required: boolean };
-  checkedAt: string; // oldest `checked` across its items and their facts
+  checkedAt?: string; // undefined for retired stubs; oldest `checked` across its items and their facts
 };
 export type Bundle = {
   version: string;
@@ -84,7 +84,7 @@ function resolveTask(task: TaskDef, facts: Record<string, Fact>): ResolvedTask {
     cost: task.cost && resolve(task.cost),
     advice: task.advice && resolve(task.advice),
   };
-  return { ...resolved, checkedAt: dates.sort()[0]! };
+  return { ...resolved, checkedAt: dates.sort()[0] };
 }
 
 // JSON with object keys sorted, so the hash ignores key order

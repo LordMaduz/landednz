@@ -1,15 +1,3 @@
-www-rbi-org-in-scripts-bs-femanotifications-aspx:
-  url: https://www.rbi.org.in/Scripts/BS_FemaNotifications.aspx
-  title: www.rbi.org.in
-  agency: www.rbi.org.in
-  tier: provider
-  reason: legacy, unverified
-www-aainsurance-co-nz-home-contents-insurance:
-  url: https://www.aainsurance.co.nz/home-contents-insurance
-  title: www.aainsurance.co.nz
-  agency: www.aainsurance.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-ird-govt-nz-roles-nz-tax-residents-exemption:
   url: https://www.ird.govt.nz/roles/nz-tax-residents/exemption
   title: Temporary tax exemption
@@ -30,34 +18,16 @@ www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html:
   title: www.legislation.govt.nz
   agency: www.legislation.govt.nz
   tier: government
-wise-com-nz:
-  url: https://wise.com/nz
-  title: wise.com
-  agency: wise.com
-  tier: provider
-  reason: legacy, unverified
 www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders:
   url: https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders
   title: www.nzta.govt.nz
   agency: www.nzta.govt.nz
   tier: government
-www-privacy-org-nz-privacy-act-2020-codes-of-practice-credit-reporting-privacy-code-2020:
-  url: https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020
-  title: www.privacy.org.nz
-  agency: www.privacy.org.nz
-  tier: provider
-  reason: legacy, unverified
 www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider:
   url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider
   title: www.ird.govt.nz
   agency: www.ird.govt.nz
   tier: government
-www-anz-co-nz-personal-bank-accounts-everyday-banking-everyday-account:
-  url: https://www.anz.co.nz/personal/bank-accounts/everyday-banking/everyday-account
-  title: www.anz.co.nz
-  agency: www.anz.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care:
   url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/getting-health-care-and-finding-a-doctor/who-can-get-public-health-care/
   title: "Who can get public health care"

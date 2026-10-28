@@ -331,7 +331,7 @@ export async function getTaskDetail(
     estimatedDuration: task.duration,
     processingTime: task.processingTime ?? null,
     governmentSourceUrl: primary ? source(primary.source).url : '',
-    lastVerified: task.checkedAt,
+    lastVerified: task.checkedAt ?? null,
     taskType: 'FREE',
     consequenceLine: items.why?.text ?? '',
     steps: texts(items.steps),

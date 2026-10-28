@@ -23,7 +23,7 @@ const resolvedTask = taskSchema.extend({
   watchOuts: z.array(resolvedItem),
   cost: resolvedItem.optional(),
   advice: resolvedItem.extend({ required: z.boolean() }).optional(),
-  checkedAt: z.string(),
+  checkedAt: z.string().optional(), // retired stubs have no items
 });
 const bundleSchema = z.object({
   version: z.string(),

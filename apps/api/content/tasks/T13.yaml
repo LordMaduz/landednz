@@ -13,68 +13,8 @@ appliesTo:
     - FAMILY_WITH_CHILDREN
 dependsOn: []
 retired: true
-why:
-  - id: T13.why.1
-    text: You are covered by ACC for accidents from day one — no action needed.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-steps:
-  - id: T13.steps.1
-    text: "**This is an awareness task — no enrolment or registration required.** Step 1 — Confirm you understand what ACC covers vs. does not cover (see WHAT_AND_WHY above). Step 2 — Note that your ACC earner levy will appear on your payslips automatically — this is normal and expected. Step 3 — If you are injured in an accident: - Seek treatment immediately (GP, urgent care clinic, or hospital ED) - Tell your treating provider you want to make an ACC claim - Your provider registers the claim - ACC will contact you about your claim status Step 4 — Consider private health insurance to cover what ACC does not: illness, elective procedures, specialists, and dental. ACC gap is significant for migrants who do not have a GP relationship yet and may face high casual health costs for illness. Step 5 — If you own a vehicle in NZ, your motor vehicle ACC levy is included in your annual vehicle registration — no separate action needed."
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
+why: []
+steps: []
 documents: []
-mistakes:
-  - id: T13.mistakes.1
-    text: "Failing to understand: ACC is not a substitute for health insurance. Illness, cancer, heart disease, and elective procedures are not covered by ACC — and NZ public hospital wait times for elective procedures can be very long. Private health insurance fills this gap."
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.mistakes.2
-    text: "Failing to understand: If you have a pre-existing condition that worsens due to an accident, ACC covers the accident-related component only — not the underlying pre-existing condition. Claims can be complex in these cases."
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.mistakes.3
-    text: Do not try to claim ACC for illness or gradual onset conditions — the claim will be declined and delays your treatment. Use your GP for illness.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.mistakes.4
-    text: "Failing to understand: ACC claims lodged by your healthcare provider are generally straightforward for clear accident injuries. If your claim is declined, you have the right to appeal — contact ACC for the dispute resolution process."
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.mistakes.5
-    text: "Failing to understand: Some migrants from systems with comprehensive government health insurance (e.g. Singapore's MediShield Life, India's CGHS) are surprised by the gap in NZ. NZ's public health system is strong for serious conditions and hospital care, but primary care and specialist access requires planning and cost management."
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-watchOuts:
-  - id: T13.watchOuts.1
-    text: ACC is not a substitute for health insurance. Illness, cancer, heart disease, and elective procedures are not covered by ACC — and NZ public hospital wait times for elective procedures can be very long. Private health insurance fills this gap.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.watchOuts.2
-    text: If you have a pre-existing condition that worsens due to an accident, ACC covers the accident-related component only — not the underlying pre-existing condition. Claims can be complex in these cases.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.watchOuts.3
-    text: Do not try to claim ACC for illness or gradual onset conditions — the claim will be declined and delays your treatment. Use your GP for illness.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.watchOuts.4
-    text: ACC claims lodged by your healthcare provider are generally straightforward for clear accident injuries. If your claim is declined, you have the right to appeal — contact ACC for the dispute resolution process.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
-  - id: T13.watchOuts.5
-    text: Some migrants from systems with comprehensive government health insurance (e.g. Singapore's MediShield Life, India's CGHS) are surprised by the gap in NZ. NZ's public health system is strong for serious conditions and hospital care, but primary care and specialist access requires planning and cost management.
-    source: www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html
-    checked: 2026-03-03
-    verified: false
+mistakes: []
+watchOuts: []
