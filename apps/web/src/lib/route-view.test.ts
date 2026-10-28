@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildRouteView } from './route-view'
+import { buildRouteView, unlocksOf } from './route-view'
 import { apiTask, firstUse, priya, roadmap } from '@/test/roadmap-fixtures'
 
 const ARRIVAL = '2026-10-21'
@@ -97,5 +97,28 @@ describe('buildRouteView — edges', () => {
     const view = buildRouteView(all, ARRIVAL, NOW)
     expect(view.current).toBeNull()
     expect(view.legs.map(l => l.state)).toEqual(['done', 'done', 'done'])
+  })
+})
+
+describe('unlocksOf', () => {
+  const blocked = (ids: string[]) => ({ isBlocked: true, blockingTaskIds: ids })
+  const view = buildRouteView(
+    roadmap([
+      apiTask('T07'), apiTask('T08'),
+      apiTask('T09', blocked(['T08'])),
+      apiTask('T10', blocked(['T07', 'T08'])),
+      apiTask('T11', { bestBy: '2026-11-15' }),
+    ]),
+    ARRIVAL,
+    NOW,
+  )
+  const ids = (id: string) => unlocksOf(view, id).map(t => t.taskId)
+
+  it('lists dependants in leg then route order', () => expect(ids('T08')).toEqual(['T09', 'T10']))
+  it('a task with two blockers appears under both', () => expect(ids('T07')).toEqual(['T10']))
+  it('nothing depends on it gives []', () => expect(ids('T11')).toEqual([]))
+  it('passes blockedBy and bestBy through', () => {
+    expect(task(view, 'T10').blockedBy).toEqual(['T07', 'T08'])
+    expect(task(view, 'T11').bestBy).toBe('2026-11-15')
   })
 })

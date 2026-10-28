@@ -55,7 +55,7 @@ describe('HomeView', () => {
     expect(screen.getByText('Day 3 in Auckland · 7 of 20 tasks done.')).toBeInTheDocument()
     const roadmap = screen.getByRole('region', { name: 'Your roadmap' })
     expect(within(roadmap).getByRole('link', { name: '7 of 20 done · Open roadmap' })).toHaveAttribute('href', '/app/roadmap')
-    expect(within(roadmap).getByText('You · day 3')).toBeInTheDocument()
+    expect(within(roadmap).getByText("You're here")).toBeInTheDocument()
     const next = screen.getByRole('region', { name: 'Up next' })
     expect(within(next).getByText('Week 1 · task 1 of 3')).toBeInTheDocument()
     const start = within(next).getByRole('link', { name: 'Start task: Apply for your IRD number' })

@@ -272,13 +272,24 @@
 
   /* Home track (docs/design/r0-polish/build.py ROUTE_CSS). The container query hides the labels and shows the summary under 561 px. */
   .track { container-type: inline-size; padding-inline: 6px; }
-  .track-rv { position: relative; }
-  .track-rv > svg { position: absolute; inset: 0; width: 100%; overflow: visible; }
+  .track-rv { position: relative; margin-top: 18px; }
+  .track[data-variant="compact"] .track-rv { height: 112px; }
+  .track[data-variant="tall"] .track-rv { height: 104px; }
+  .track-rv > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .track-rv path { vector-effect: non-scaling-stroke; }
   .track-pin { position: absolute; transform: translate(-50%, -50%); }
   .track-contour { stroke: var(--color-hairline); stroke-width: 1; fill: none; }
   .track-ahead { stroke: var(--color-track); stroke-width: 2; fill: none; stroke-dasharray: 4 5; }
   .track-walked { stroke: var(--color-teal); stroke-width: 2.5; fill: none; }
+  .track-today { stroke: var(--color-teal); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+  .track-today-label { position: absolute; top: 0; margin-left: 8px; font-size: var(--text-small); font-weight: 600; color: var(--color-teal-text); white-space: nowrap; }
+  .track-today-label[data-edge="end"] { transform: translateX(calc(-100% - 16px)); }
+  .track-arc { stroke: var(--color-ink); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
+  .track-note { position: absolute; right: 0; bottom: 0; font-size: var(--text-small); color: var(--color-muted); }
+  .track-dot { position: absolute; width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; transform: translate(-50%, -50%); }
+  .track-dot[data-state="done"] { background: var(--color-teal); }
+  .track-dot[data-state="blocked"] { background: var(--color-white); border: 1.5px dashed var(--color-control); }
+  .track-dot[data-state="open"] { width: 6px; height: 6px; background: var(--color-track); }
   .track-grad { stop-color: var(--color-teal); }
   .track-flag { fill: var(--color-white); stroke: var(--color-control); stroke-width: 1.5; stroke-linejoin: round; }
   .track-flag-on { fill: var(--color-teal); stroke: var(--color-teal); }
@@ -292,10 +303,12 @@
   .track-stage { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .track-stage-name { font-weight: 600; color: var(--color-ink); }
   .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-muted); }
-  .track-sum { display: none; margin: 0; font-size: var(--text-small); }
+  .track-phone { display: none; justify-content: space-between; gap: 8px; font-size: var(--text-small); line-height: var(--text-small--line-height); }
   @container (max-width: 560px) {
-    .track-stages { display: none; }
-    .track-sum { display: block; }
+    .track-stages, .track-arc, .track-note, .track-today-label { display: none; }
+    .track-phone { display: flex; }
+    .track[data-variant="compact"] .track-rv { height: 56px; }
+    .track[data-variant="tall"] .track-rv { height: 64px; }
   }
 }
 

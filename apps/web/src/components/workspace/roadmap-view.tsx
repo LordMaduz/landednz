@@ -49,7 +49,7 @@ export function RoadmapView({
         {firstUse && <p className="basis-full text-muted">Done some already? Open a task and mark it done.</p>}
       </section>
       <Card aria-label="Where you are">
-        <RouteTrack route={view} arrivalDate={arrivalDate} now={now} height={120} />
+        <RouteTrack route={view} arrivalDate={arrivalDate} now={now} variant="tall" />
       </Card>
       <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">
         <div className="flex min-w-0 flex-col gap-4">

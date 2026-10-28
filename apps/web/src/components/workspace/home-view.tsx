@@ -53,7 +53,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
           titleId="route"
           aside={<Link href="/app/roadmap" className={LINK}>{route.doneCount} of {route.total} done · Open roadmap</Link>}
         />
-        <RouteTrack route={route} arrivalDate={arrivalDate} now={now} height={96} />
+        <RouteTrack route={route} arrivalDate={arrivalDate} now={now} variant="compact" />
       </Card>
 
       <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">

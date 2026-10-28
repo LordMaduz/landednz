@@ -18,6 +18,7 @@ export function apiTask(taskId: string, over: Partial<RoadmapApiTask> = {}): Roa
     estimatedDuration: DURATIONS[taskId] ?? '1 hour',
     taskType: 'FREE',
     consequenceLine: '',
+    bestBy: null,
     priorityScore: 50,
     ...over,
   }

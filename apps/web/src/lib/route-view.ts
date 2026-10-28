@@ -17,6 +17,8 @@ export interface RouteTask {
   why: string // the consequence line: what happens if it waits
   completedAt: string | null
   blocker: string | null // the lowest-id task it waits on
+  blockedBy: string[] // every task it waits on
+  bestBy: string | null // YYYY-MM-DD, when the task's day window closes
 }
 
 export interface RouteLeg {
@@ -105,6 +107,8 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
           why: t.consequenceLine,
           completedAt: t.completedAt,
           blocker: blockerOf(t),
+          blockedBy: t.blockingTaskIds,
+          bestBy: t.bestBy,
         }
       }),
     }
@@ -113,3 +117,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
   const current = routeLegs.flatMap(l => l.tasks).find(t => t.state === 'current') ?? null
   return { total: tasks.length, doneCount: tasks.filter(isDone).length, current, legs: routeLegs }
 }
+
+// Tasks that wait on taskId, in leg order then route order
+export const unlocksOf = (route: RouteView, taskId: string): RouteTask[] =>
+  route.legs.flatMap(l => l.tasks).filter(t => t.blockedBy.includes(taskId))
