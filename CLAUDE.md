@@ -16,7 +16,7 @@ Use `make` targets (run `make` to list): `make setup`, `make dev`, `make check`,
 
 ## Workflow
 
-superpowers: spec → design board approved (minimalism validator) → plan → execute with TDD → review. A UI change needs its approved board first (CW02′).
+superpowers: spec → design board approved (impeccable critique, no P0/P1) → plan → execute with TDD → review. A UI change needs its approved board first (CW02′).
 
 Rules: `.claude/constitution.md` (C01–C16, CW01–CW08) is non-negotiable. Domain skills in `.claude/skills/`.
 

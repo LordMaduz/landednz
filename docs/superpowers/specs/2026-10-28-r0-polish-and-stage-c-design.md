@@ -36,7 +36,8 @@ new font, no payments.
 
 1. **The minimalism validator is retired.** Constitution rule CW07 is deleted and the `minimalism-validator`
    skill removed. Designs are judged by the impeccable skill (`critique`, `audit`, `polish`) plus
-   `web-design-guidelines` and `accessibility`. CLAUDE.md files and the R0 spec's §7.1, §7.3 and §9 references are updated to match.
+   `web-design-guidelines` and `accessibility`. CLAUDE.md files, CW02′ and the R0 spec's §3, §7.1, §7.3, §9 and §12 references
+   were updated to match with this spec (2026-10-28). Impeccable is a third-party skill: read its source before running it.
 2. **Surfaces are the landing card.** Page `#FFFFFF`; cards `#FFFFFF`, 1 px `#E3E8EA` border, radius 12,
    shadow-lift (`0 1px 2px rgba(15,42,58,.04), 0 16px 48px rgba(15,42,58,.08)`). Cream and wash backgrounds are not used for cards.
 3. **Layout:** a main column that grows plus a 360 px side column on every signed-in page. Cards in the same row share a height. Home has no empty band at the bottom.
@@ -54,15 +55,15 @@ new font, no payments.
 
 | Token | Now | New |
 |---|---|---|
-| Page title (`--text-title`) | 32 | **24** (22 under 561 px), 600, -0.015em |
-| Section title (`--text-section`) | 20 | **18**, 600, -0.01em |
+| Page title (`--text-title`) | 32 | **24** (22 under 561 px), 600, -0.015em, line height 1.25 |
+| Section title (`--text-section`) | 20 | **18**, 600, -0.01em, line height 1.35 |
 | Body / card title | 15 | 15 (card title 600) |
 | Meta (`--text-small`) | 13 | 13; only citation numbers go smaller (12 px with a 24 px tap area) |
 | Landing hero (`--text-hero`) | 48 | 48 (landing only, unchanged) |
 | Control radius | 6 | **8** |
 | Surface radius | 10 | **12** |
-| Controls | 40 / 44 mixed | 40 desktop. **Under 561 px every button, chip and field is 44** |
-| Small button | 32 | 32 desktop headers and task nav only; 44 on phones |
+| Controls | 44 everywhere today | 40 desktop. **Under 561 px every button, chip and field is 44** (`Button`, `Field`, `Select`) |
+| Small button | none today | new `Button size="sm"`: 32 for desktop header Ask, task nav and "Show" only; 44 on phones |
 | Text links | — | at least a 24 px tap area |
 | Card padding | mixed | 20 (16 under 561 px); 16 between cards and page sections |
 | Home grid | `1fr 320px` | `1fr 360px` |
@@ -75,12 +76,13 @@ The values live only in `globals.css` `@theme` (CW01). The board's `build.py` is
 
 - **Card**: one `Card` component (`components/ui/card.tsx`) with `CardHead` (title left, meta or link right, baseline-aligned)
   and an optional footer pushed to the bottom (`mt-auto`), so cards in one row line up.
-- **Footer**: `PublicFooter` renders on every page, signed-in pages included: "General information, not legal or tax advice." with Privacy and Terms.
+- **Footer**: `PublicFooter` renders on every page (landing, legal, onboarding steps and preview, sign-in, Home, Roadmap, task page,
+  Settings, and their loading and API-down branches): "General information, not legal or tax advice." with Privacy and Terms.
 - **States** (`States.dc.html`): loading placeholders in the cards' shape (pulse off with reduced motion, shown after 300 ms);
   the API-down card; a field error under the field on save; a toast for saved with Undo (6 s, kept while hovered or focused);
   task done shown in place with Undo for 6 s; busy buttons say "Saving…" at the same width; Ask "Checking official sources…" and an error that keeps the
-  question; a delete dialog with focus on "Keep my account"; empty cards that say what happens next; a teal focus ring; disabled
-  buttons with the reason beside them.
+  question; a delete dialog with focus on "Keep my account"; empty cards that say what happens next; a teal focus ring (the existing
+  global `:focus-visible` rule, checked on every control in P7); disabled buttons with the reason beside them.
 
 ### 3.3 Home (`Main`, `HomeLater`, `HomePhone`)
 
@@ -88,15 +90,24 @@ From top to bottom: the greeting and subline; the **Your roadmap** card (the tra
 Up next (main) next to Your plan (side), and Also this week (main) next to Recently done (side). Lists cap at 3 rows.
 Recently done when empty says "Nothing yet. Tasks you finish show up here, newest first." and links "Already done some? Tick them off".
 
+**Also this week** lists the open tasks after Up next in the current stage, at most 3. The header count is "{n} more tasks", n being
+all of them. From arrival the foot links "{n - 3} more this week · Open roadmap" when more than 3 remain. Before arrival the foot is
+the "After you land: …" line (Arrival's task briefs). With none left the card says "Nothing else this week. {Next stage} starts on
+{d Month}." (the States board's "Next week" wording is placeholder: stages are not weeks).
+
 **The track (`components/route/route-track.tsx`)**: an inline SVG, `aria-hidden`. A visible summary (stage labels, or on phones one
 line "Week 1 · 0 of 5 · 6 days left") carries the same information as text. Geometry is from `build.py` `route_track`:
 
 - The x axis runs 0–1000 with five stages of 200 each, and a flag at each stage end. A flag is filled teal when the traveller has passed it.
-- The pin sits at `stage × 200 + 200 × f`. Before arrival `f = max(0.2, done/total)` of the current stage. From arrival
-  `f` is the share of that stage's days reached, today included (Arrival days 1–2, Week 1 days 3–8, Month 1 days 9–31, Later days 32–61; capped at 1). So day 3 of the journey (the first day of Week 1) is x 433, which matches the board.
+- The pin sits at `stage × 200 + 200 × f`, where `stage` is the current stage's index among all five `LEGS` (a stage with no
+  tasks still has its flag). Before arrival `f = max(0.2, done/total)` of the current stage. From arrival `f` is the share of that
+  stage's days reached, today included (Arrival days 1–2, Week 1 days 3–8, Month 1 days 9–31, Later days 32–61), clamped to
+  0.2–1, so a traveller ahead of schedule never sits behind the previous flag. Day 3 (the first day of Week 1) is x 433; the board
+  draws 430.
 - The pin label: before arrival "You · {n} days to go"; after "You · day {n}".
 - Terrain is a fixed profile (`terrain_y`), not data. Under 561 px the stage labels hide and the summary line shows.
 - Stage names and dates come from `lib/legs.ts` (`LEGS`, `legWhen`). The first stage reads "Before you fly" until the arrival date and "Before you flew" from then on.
+  `buildRouteView` sets the name, so every consumer (track, summary, Up next meta, Roadmap, task page nav) gets it.
 
 `lib/route-progress.ts` holds the x and label maths with unit tests. The SVG component only draws.
 
@@ -104,8 +115,9 @@ line "Week 1 · 0 of 5 · 6 days left") carries the same information as text. Ge
 
 The title "Your roadmap" and "N of M done · landed {date}" (before arrival: "arriving {date}"); the track card at full width (120 px tall);
 then the grid. Main: the **current stage** card (outlined in ink, every task row with its time, the current task tagged
-"Up next"), then an **Other stages** card with one row per remaining stage (dot, name, count and dates, a "Show" button that expands
-its tasks in place). Side: **Up next** (title, why, Start task) and **Key dates** (landed or arriving, end of Week 1, end of Month 1,
+"Up next"), then an **Other stages** card with one row per other stage, remaining stages first, then done ones (dot, name, count and
+dates or "{n} of {n} done", a "Show" button that expands its tasks in place). Side: **Up next** (title, why, Start task) and **Key dates**
+("You landed" or "Arriving", end of Week 1, end of Month 1,
 a "Change your arrival date" link to Settings). It replaces the vertical `RouteRail` and the progress bar.
 
 ### 3.5 Task page (`TaskPage`, `TaskPhone`)
@@ -140,13 +152,15 @@ exact values to copy back. The agent never creates accounts or handles payment. 
 | `trustProxy` behind one proxy hop (env `TRUST_PROXY`, default off locally) | `apps/api/src/server.ts`, `shared/config.ts` |
 | Sentry: API (`@sentry/node`, init before Fastify, release = commit SHA) and web (`@sentry/nextjs`) | `apps/api/src/instrument.ts`, `apps/web/sentry.*.config.ts`, `instrumentation.ts` |
 | PostHog web (page views, no autocapture of inputs); off when the key is unset | `apps/web/src/lib/analytics.ts`, root layout |
-| Render staging service (Docker, pre-deploy `prisma migrate deploy`, health `/health`) | `render.yaml` |
+| Render staging service (Docker, health `/health`; free has no pre-deploy, so the start command runs `prisma migrate deploy` first) | `render.yaml` |
 | Railway production (Dockerfile, pre-deploy migrate, health check) | `railway.json` |
 | Vercel project config (`syd1`, root `apps/web`) | `apps/web/vercel.json` |
 | Health job every 6 h for staging and production; opens an issue on failure | `.github/workflows/health.yml` |
 | Staging smoke + axe after merge to `main` | `.github/workflows/staging.yml` |
 | Release script: fast-forward `production`, tag, smoke production | `scripts/release.sh`, runbook |
 | Env examples for staging and production (names only, no values) | `docs/setup/env-staging.md` |
+| Playwright runs against a deployed site: `baseURL` from `BASE_URL`, local `webServer` only when it is unset; the journey's trace assertion accepts a live "Checked …" line | `apps/web/playwright.config.ts`, `e2e/journey.spec.ts` |
+| Branch wiring: Vercel production branch `production`, `main` → staging domain with Preview env = staging values; Railway deploys `production` only (watch `apps/api/**`, `packages/types/**`); Render deploys `main` | platform settings (verified from the CLIs), `render.yaml` `branch: main` |
 
 ### 4.3 Order
 
@@ -181,8 +195,18 @@ exact values to copy back. The agent never creates accounts or handles payment. 
 Board placeholder copy: "Partner work visa", "Greater Christchurch" vs "Christchurch", the Week 1 task names and times.
 The build uses the KB's real task names and durations, so the boards' placeholder text does not ship.
 
+Board copy that **does** ship (it replaces today's wording):
+
+- Home subline: "{n} days until you land on {d Month yyyy}." before arrival; "Day {n} in {city} · {done} of {total} tasks done." after.
+- Your plan gains an "Arriving" row ({d Month yyyy}).
+- Stage dates (`legWhen`): "by 1 Mar", "1–2 Mar", "to 8 Mar", "to 31 Mar", "from April" (the month of arrival + 31 days).
+- The Sources header date is short: "27 Oct 2026".
+- Before arrival the Also this week card shows up to 3 rows (the board's 2 rows are placeholder).
+
 ## 7. Approvals
 
 | Board | Version id | Approved on |
 |---|---|---|
-| Polish: Home (first visit, day 3, phone), Your roadmap card B, Roadmap page, task page, Settings, States, sizing rules | 1793169870-b87a | pending owner review of this spec |
+| Polish: Home (first visit, day 3, phone), Your roadmap card B, Roadmap page, task page, Settings, States, sizing rules | 1793169870-b87a | 2026-10-28 |
+
+The built app is signed off separately in Task P7 (owner reviews the running app against this canvas version).

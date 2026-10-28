@@ -88,8 +88,8 @@ Exception: `tailwind.config.ts` itself defines the raw token values.
 VIOLATION: `className="bg-[#1B6B6D]"` or `style={{ color: '#1B6B6D' }}` anywhere in `apps/web/src/`.
 
 **[CW02′] UI Matches Its Approved Artifact**
-Every UI change matches its approved design artifact (spec §7.4) and passes the
-minimalism validator.
+Every UI change matches its approved design artifact (spec §7.4) and has no P0/P1
+findings from the impeccable skill (`critique`, `audit`).
 VIOLATION: A page or component built before its board is approved, or differing from it.
 
 **[CW03] Reduced Motion Respected**
@@ -123,9 +123,6 @@ URL state managed by `nuqs` (shareable, bookmarkable).
 first-use hint dismissal, sidebar collapse preference, theme preference.
 VIOLATION: Storing auth tokens, user profile, roadmap data, chat history, or
 subscription status in localStorage. These belong in server state or Zustand.
-
-**[CW07] Minimalism**
-Every UI change passes the minimalism-validator skill.
 
 **[CW08] Light Theme Only**
 Light theme only; no dark mode or theme switching.

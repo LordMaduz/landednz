@@ -28,13 +28,15 @@ The agent verifies every ticked item from the CLIs before it builds on it.
   **Send back:** per project the session pooler `DATABASE_URL`, project URL, publishable key and secret key.
 - [ ] **Render** account (free web service for the staging API, Singapore). Connect the GitHub repo. **Send back:** nothing; the agent adds `render.yaml`.
 - [ ] **Railway** Hobby plan (~US$5/mo) for the production API. **Send back:** nothing; run `railway login` (below).
-- [ ] **Vercel** account; import the repo with root `apps/web`. **Send back:** the project name.
+- [ ] **Vercel** account; import the repo with root `apps/web`; set Settings → Git → Production Branch to `production` (the default `main` would put every merge live). **Send back:** the project name.
 - [ ] **Google OAuth client** ([google-oauth.md](google-oauth.md)) with both callbacks: `https://<staging-ref>.supabase.co/auth/v1/callback` and `https://<prod-ref>.supabase.co/auth/v1/callback`; Google provider enabled in both Supabase projects.
 - [ ] **Anthropic** workspaces `landednz-staging` and `landednz-prod`, one key each, a monthly spend limit on each (suggest US$20 staging, US$50 production). **Send back:** both keys.
 - [ ] **OpenAI** key with a monthly spend limit (suggest US$10). **Send back:** the key.
 - [ ] **Sentry**: projects `landednz-web` (Next.js) and `landednz-api` (Node). **Send back:** both DSNs and an auth token with `project:releases`.
 - [ ] **PostHog** project (US or EU cloud). **Send back:** the project key and host.
-- [ ] **GitHub** repo secrets: the agent lists the exact names in the plan's Task C2. Add them when asked.
+- [ ] **GitHub** (Settings → Secrets and variables → Actions), values from the staging Supabase project and the platform URLs:
+  secret `STAGING_SUPABASE_SECRET_KEY`; variables `STAGING_WEB_URL`, `STAGING_API_URL`, `PROD_API_URL`, `STAGING_SUPABASE_URL`,
+  `STAGING_SUPABASE_ANON_KEY` (the publishable key). The URLs can be added once Task C3 creates the services.
 - [ ] **CLI logins** redone on the Mac: `! railway login`, `! supabase login`, `! vercel login`, `! gh auth status`.
 
 ### Code already needed (agent)
