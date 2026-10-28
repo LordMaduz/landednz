@@ -3,18 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import type { OnboardingPreviewResponse } from "@landednz/types";
-import { PREVIEW_META, previewTitle } from "@/components/onboarding/preview-route";
-import { Waypoint } from "@/components/route/waypoint";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { getRoadmapPreview } from "@/lib/api";
-import { answersSummary, type Answers } from "@/lib/answers";
+import { answersShort, type Answers } from "@/lib/answers";
 import { createClient } from "@/lib/supabase/client";
 import { safeRedirect } from "@/lib/safe-redirect";
-import { cn } from "@/lib/utils";
 
-function SignInForm() {
+function SignInForm({ title }: { title: string }) {
   const searchParams = useSearchParams();
   const redirectTo = safeRedirect(searchParams.get("redirect"));
   const [error, setError] = useState(searchParams.get("error"));
@@ -56,112 +53,80 @@ function SignInForm() {
 
   return (
     <>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-title">{title}</h1>
+        <p className="text-muted">Sign in to tick tasks off, pick up where you left off on any device, and ask about any task. New here? Continue with Google to create your account.</p>
+      </div>
       {error && <p role="alert" className="rounded-surface border border-ink p-4">{error}</p>}
       {/* Google's branding rules, not Precise tokens: see .gsi in globals.css */}
-      <button type="button" className="gsi" onClick={signInWithGoogle}>
+      <button type="button" className="gsi w-full" onClick={signInWithGoogle}>
         Continue with Google
       </button>
-      <p className="text-small text-muted">
+      {passwordEnabled && (
+        <>
+          <div className="or-rule text-small text-muted">or use email</div>
+          <form action={signInWithPassword} className="flex flex-col gap-5 max-narrow:gap-4">
+            <label className="flex flex-col gap-1.5 font-medium">
+              Email
+              <Field name="email" type="email" autoComplete="email" spellCheck={false} required className="min-h-11 font-normal" />
+            </label>
+            <label className="flex flex-col gap-1.5 font-medium">
+              Password
+              <Field name="password" type="password" autoComplete="current-password" required className="min-h-11 font-normal" />
+            </label>
+            <Button type="submit" size="lg" disabled={pending} className="w-full">
+              {title === "Sign in" ? "Sign in" : "Save and sign in"}
+            </Button>
+          </form>
+        </>
+      )}
+      <p className="text-center text-small text-muted">
         <span translate="no">LandedNZ</span> gets your name and email from Google, nothing else. By continuing you agree to the{" "}
         {/* Underlined: inside muted text, colour alone does not mark a link (axe link-in-text-block) */}
         <Link href="/terms" className="underline">terms</Link> and <Link href="/privacy" className="underline">privacy policy</Link>.
       </p>
-      {passwordEnabled && (
-        <form action={signInWithPassword} className="flex flex-col gap-4 border-t border-hairline pt-6">
-          <label className="flex flex-col gap-2">
-            Email
-            <Field name="email" type="email" autoComplete="email" spellCheck={false} required />
-          </label>
-          <label className="flex flex-col gap-2">
-            Password
-            <Field name="password" type="password" autoComplete="current-password" required />
-          </label>
-          <Button type="submit" variant="quiet" disabled={pending} className="self-start">
-            Sign in
-          </Button>
-        </form>
-      )}
     </>
   );
 }
 
-type Tasks = OnboardingPreviewResponse["tasks"];
-
-// The roadmap the answers cookie will save: its first two tasks and how many follow
-function Saving({ answers }: { answers: Answers }) {
-  const [tasks, setTasks] = useState<Tasks | null>(null);
+// What the answers cookie will save: the task count and the answers in one line
+function SaveChip({ answers }: { answers: Answers }) {
+  const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
-    // On failure the summary alone says what is being saved
-    getRoadmapPreview(answers).then(r => setTasks(r.tasks), () => {});
+    // On failure the chip just says what is being saved
+    getRoadmapPreview(answers).then(r => setCount(r.tasks.length), () => {});
   }, [answers]);
 
-  const rest = tasks ? tasks.length - 2 : 0;
   return (
-    <aside aria-labelledby="saving" className="flex flex-col gap-4 self-start rounded-surface bg-wash p-8">
-      <div className="flex flex-col gap-1">
-        <h2 id="saving" className="text-section">What you&apos;re saving</h2>
-        <p className="text-small text-muted">{answersSummary(answers)}</p>
+    <div className="flex items-center gap-3 rounded-control border border-tint-border bg-tint px-3.5 py-3">
+      <span aria-hidden="true" className="size-4 flex-none rounded-full border-4 border-teal bg-white" />
+      <div className="flex min-w-0 flex-col">
+        <span className="text-small font-semibold">Saving your roadmap{count !== null && ` · ${count} tasks`}</span>
+        <span className="text-small text-muted">{answersShort(answers)}</span>
       </div>
-      {tasks && (
-        <ol className="route-legs on-wash m-0 list-none p-0 pt-2 [&>li]:pb-0">
-          {tasks.slice(0, 2).map((t, i) => (
-            <li key={t.taskId}>
-              <div className="route-step">
-                <span className="route-dot" aria-hidden="true">
-                  <Waypoint state={i === 0 ? "current" : "available"} />
-                </span>
-                <div className="flex min-h-11 flex-wrap items-center gap-x-4">
-                  <span className={cn(i === 0 && "font-medium")}>{previewTitle(t.taskId, t.name)}</span>
-                  {i === 0 && PREVIEW_META[t.taskId] && <span className="text-small text-muted">{PREVIEW_META[t.taskId]}</span>}
-                </div>
-              </div>
-            </li>
-          ))}
-          {rest > 0 && (
-            <li className="is-folded">
-              <div className="route-step">
-                <span className="route-dot" aria-hidden="true">
-                  <Waypoint state="locked" />
-                </span>
-                <div className="flex min-h-11 items-center">
-                  <span className="text-muted">{rest} more {rest === 1 ? "task" : "tasks"}, in the order they unlock</span>
-                </div>
-              </div>
-            </li>
-          )}
-        </ol>
-      )}
-    </aside>
+    </div>
   );
 }
 
 // With onboarding answers the page saves them; without, it is a plain sign-in
 export function SignIn({ answers }: { answers: Answers | null }) {
   return (
-    // Plain sign-in has no side panel, so the lone form is centred instead of hugging the left edge
-    <main
-      className={cn(
-        "container-page grid gap-16 pt-16 pb-24 max-split:grid-cols-1 max-split:gap-12 max-split:pt-8",
-        answers ? "grid-cols-signin justify-between" : "grid-cols-signin-solo justify-center",
-      )}
-    >
-      <div className="flex flex-col gap-6">
+    <main className="container-page flex justify-center py-12 max-narrow:px-4 max-narrow:pt-6 max-narrow:pb-8">
+      <Card as="div" className="w-full max-w-auth gap-5 p-8 max-narrow:gap-4.5 max-narrow:px-5 max-narrow:py-6">
         {answers && (
-          <Link href="/onboarding/preview" className={cn(buttonVariants({ variant: "ghost" }), "-ml-4 self-start")}>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Your roadmap preview
-          </Link>
+          <>
+            <Link href="/onboarding/preview" className="-mb-1 inline-flex h-8 items-center gap-1.5 self-start font-medium text-muted no-underline hover:text-ink">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Your roadmap preview
+            </Link>
+            <SaveChip answers={answers} />
+          </>
         )}
-        <div className="flex flex-col gap-2">
-          <h1 className="text-title">{answers ? "Save your roadmap" : "Sign in"}</h1>
-          <p className="text-muted">Sign in to tick tasks off, pick up where you left off on any device, and ask about any task.</p>
-        </div>
-        <SignInForm />
-      </div>
-      {answers && <Saving answers={answers} />}
+        <SignInForm title={answers ? "Save your roadmap" : "Sign in"} />
+      </Card>
     </main>
   );
 }
