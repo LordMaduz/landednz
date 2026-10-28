@@ -200,7 +200,7 @@ describe('RoadmapScreen', () => {
     completeTask.mockResolvedValue(undefined)
     reopenTask.mockResolvedValue(undefined)
     render(<><RoadmapScreen user={user} /><Toaster /></>)
-    fireEvent.click(await screen.findByRole('button', { name: 'Mark as done' }))
+    fireEvent.click((await screen.findAllByRole('button', { name: 'Mark as done' }))[0]) // desktop copy first; the phone layout repeats it
     await waitFor(() => expect(getRoadmap).toHaveBeenCalledTimes(2))
     fireEvent.click(await screen.findByRole('button', { name: 'Undo' }))
     await waitFor(() => expect(getRoadmap).toHaveBeenCalledTimes(3))
@@ -232,7 +232,7 @@ describe('RoadmapScreen', () => {
   it('?task=T08&ask=1 (Ask from Home): the ask input is focused', async () => {
     params = new URLSearchParams('task=T08&ask=1')
     render(<RoadmapScreen user={user} />)
-    const box = await screen.findByRole('textbox', { name: 'Ask about your IRD number' })
+    const box = (await screen.findAllByRole('textbox', { name: 'Ask about your IRD number' }))[0]
     await vi.waitFor(() => expect(box).toHaveFocus())
   })
 })

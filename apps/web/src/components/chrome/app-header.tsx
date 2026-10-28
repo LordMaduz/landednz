@@ -60,7 +60,7 @@ export function AppHeader({
           </Link>
         )}
         <span className={back ? "max-narrow:hidden" : undefined}>
-          <Brand href="/app" compact />
+          <Brand href="/app" />
         </span>
         <nav aria-label="Main" className="flex gap-1 max-narrow:hidden">
           {TABS.map(t => (

@@ -256,12 +256,12 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
 
   return (
     <>
-      <AppHeader active="roadmap" user={user} onAsk={askTaskId ? ask : undefined} askDisabled={state === "down"} />
+      <AppHeader active="roadmap" back={selectedTaskId ? { href: "/app/roadmap", label: "Roadmap" } : undefined} user={user} onAsk={askTaskId ? ask : undefined} askDisabled={state === "down"} />
       {state === "loading" ? (
         <Loading />
       ) : (
         <>
-          <main className={cn("container-page", selectedTaskId ? "pb-24" : "py-6")}>
+          <main className={cn("container-page", selectedTaskId ? "pb-24 max-narrow:pb-40" : "py-6")}>
             {state === "down" ? (
               <ApiDown onRetry={() => load()} />
             ) : selectedTaskId ? (
@@ -275,7 +275,9 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
               <RoadmapView {...state} />
             )}
           </main>
-          <PublicFooter app />
+          <div className={selectedTaskId ? "max-narrow:hidden" : undefined}>
+            <PublicFooter app />
+          </div>
         </>
       )}
     </>

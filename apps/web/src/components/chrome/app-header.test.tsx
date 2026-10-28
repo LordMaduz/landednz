@@ -31,6 +31,17 @@ describe('AppHeader', () => {
     expect(links.some(l => l.className.includes('max-narrow:flex'))).toBe(true)
   })
 
+  it('the phone header keeps the wordmark; with back, the brand is hidden on phones instead', () => {
+    const { unmount } = render(<AppHeader active="home" user={user} />)
+    const word = screen.getByText('LandedNZ')
+    expect(word.className).not.toMatch(/hidden/)
+    expect(word.parentElement!.parentElement!.className).not.toMatch(/hidden/)
+    unmount()
+    render(<AppHeader active={null} user={user} back={{ href: '/app/roadmap', label: 'Roadmap' }} />)
+    expect(screen.getByText('LandedNZ').closest('span[class*="max-narrow:hidden"]')).not.toBeNull()
+    expect(screen.getByText('LandedNZ').className).not.toMatch(/hidden/)
+  })
+
   it('"/" on the page opens Ask; not while typing in a field', () => {
     const onAsk = vi.fn()
     render(

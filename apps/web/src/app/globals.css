@@ -63,7 +63,7 @@
   --grid-template-columns-signin-solo: minmax(0, 400px);
   --grid-template-columns-home: minmax(0, 1fr) 440px;
   --grid-template-columns-settings: minmax(0, 1fr) 360px;
-  --grid-template-columns-task: minmax(0, 1fr) 360px;
+  --grid-template-columns-task: minmax(0, 1fr) 380px;
   --grid-template-columns-plan: 72px minmax(0, 1fr);
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header */

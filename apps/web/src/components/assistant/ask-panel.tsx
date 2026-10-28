@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useId, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { createChatSession, streamChat, type TaskDetailApiResponse } from "@/lib/api"
@@ -35,6 +35,7 @@ export function AskPanel({
   const [draft, setDraft] = useState("")
   const [capped, setCapped] = useState(false)
   const [failed, setFailed] = useState(false)
+  const uid = useId() // two panels (desktop and phone layouts) can be on the page
   const session = useRef<string | null>(null)
   const running = useRef<{ id: number; abort: AbortController } | null>(null)
   const nextId = useRef(0)
@@ -91,8 +92,8 @@ export function AskPanel({
   }
 
   return (
-    <section aria-labelledby="ask-title" className="flex flex-col gap-4">
-      <h2 id="ask-title" className="text-body font-semibold">
+    <section aria-labelledby={`${uid}-title`} className="flex flex-col gap-4">
+      <h2 id={`${uid}-title`} className="text-body font-semibold">
         Ask about {topic}
       </h2>
       {messages.map(m => (
@@ -141,11 +142,11 @@ export function AskPanel({
           ask(draft)
         }}
       >
-        <label htmlFor="sheet-ask" className="sr-only">
+        <label htmlFor={`${uid}-input`} className="sr-only">
           Ask about {topic}
         </label>
         <Field
-          id="sheet-ask"
+          id={`${uid}-input`}
           ref={inputRef}
           className="min-w-0 flex-1"
           placeholder="Ask a question"

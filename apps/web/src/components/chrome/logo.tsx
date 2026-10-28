@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 // The LandedNZ mark: two contour lines and a waypoint
 export function Logo({ size = 24 }: { size?: number }) {
@@ -13,12 +12,11 @@ export function Logo({ size = 24 }: { size?: number }) {
   )
 }
 
-// The app header drops the wordmark on compact screens; the public header keeps it
-export function Brand({ href, compact = false }: { href: string; compact?: boolean }) {
+export function Brand({ href }: { href: string }) {
   return (
     <Link href={href} aria-label="LandedNZ home" className="flex min-h-11 items-center gap-2 text-ink no-underline hover:text-ink hover:no-underline">
       <Logo />
-      <span translate="no" className={cn("font-semibold tracking-brand", compact && "max-compact:hidden")}>LandedNZ</span>
+      <span translate="no" className="font-semibold tracking-brand">LandedNZ</span>
     </Link>
   )
 }
