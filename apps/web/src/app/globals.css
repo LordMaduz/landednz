@@ -304,6 +304,13 @@
   .track-stage-name { font-weight: 600; color: var(--color-ink); }
   .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-muted); }
   .track-phone { display: none; justify-content: space-between; gap: 8px; font-size: var(--text-small); line-height: var(--text-small--line-height); }
+  /* Roadmap itinerary row: date, dot, content, action. On phones the date and dot go. */
+  .itin { display: grid; grid-template-columns: 128px 24px minmax(0, 1fr) auto; align-items: baseline; }
+  .itin-wide { grid-column: 3 / -1; }
+  @media (width < 561px) {
+    .itin { grid-template-columns: minmax(0, 1fr) auto; }
+    .itin-wide { grid-column: 1 / -1; }
+  }
   @container (max-width: 560px) {
     .track-stages, .track-arc, .track-note, .track-today-label { display: none; }
     .track-phone { display: flex; }

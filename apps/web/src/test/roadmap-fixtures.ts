@@ -56,3 +56,29 @@ export function priya(): RoadmapApiResponse {
 export function firstUse(): RoadmapApiResponse {
   return roadmap(ids(1, 20).map(id => apiTask(id)))
 }
+
+// Board data: 22 tasks (6 before, 4 arrival, 7 week 1, 4 month 1, 1 later), 9 done by default; T09, T10, T20 wait on T08
+const PHASES: [number, string[]][] = [
+  [1, ['T01', 'T02', 'T03', 'T04', 'T05', 'T15']],
+  [2, ['T06', 'T07', 'T28', 'T08']],
+  [3, ['T09', 'T11', 'T12', 'T13', 'T14', 'T16', 'T17']],
+  [4, ['T10', 'T18', 'T19', 'T20']],
+  [5, ['T21']],
+]
+const BLOCKED: Record<string, string[]> = { T09: ['T08'], T10: ['T08'], T20: ['T08'] }
+export const board = (done = 9) => {
+  let n = 0
+  return roadmap(
+    PHASES.flatMap(([phase, ids]) =>
+      ids.map(id => {
+        n += 1
+        const blocked = BLOCKED[id]
+        return apiTask(id, {
+          phase,
+          ...(n <= done ? { status: 'COMPLETE' as const, completedAt: `2026-10-${String(10 + n).padStart(2, '0')}T01:00:00.000Z` } : {}),
+          ...(blocked ? { isBlocked: true, blockingTaskIds: blocked } : {}),
+        })
+      }),
+    ),
+  )
+}

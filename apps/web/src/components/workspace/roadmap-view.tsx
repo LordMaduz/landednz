@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
@@ -8,86 +8,173 @@ import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
 import { RouteTrack } from "@/components/route/route-track"
-import { StageList } from "@/components/route/stage-list"
-import { buttonVariants } from "@/components/ui/button"
-import { Card, CardHead } from "@/components/ui/card"
+import { Waypoint } from "@/components/route/waypoint"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
-import { journeyDay } from "@/lib/journey-day"
-import { addDays, longDay, shortDay } from "@/lib/nz-date"
-import { buildRouteView, type RouteView } from "@/lib/route-view"
+import { homeSubline } from "@/lib/home-view"
+import { buildItinerary, type Itinerary as ItineraryData } from "@/lib/roadmap-itinerary"
+import { buildRouteView, waitsOn, type RouteTask, type RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { TaskSheet } from "./task-sheet"
+
+const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`
+
+// Desktop: one itinerary card, rows ruled. Phone: each row is its own card (the board's stack).
+const ROW = "itin py-2.5 max-narrow:rounded-surface max-narrow:border max-narrow:border-hairline max-narrow:bg-white max-narrow:p-4 max-narrow:shadow-lift"
+const RULED = "border-t border-hairline max-narrow:border-t-0"
+const WHEN = "m-0 text-small text-muted max-narrow:hidden"
+const DOT = "flex items-center max-narrow:hidden"
+const BODY = "min-w-0"
+const Wide = ({ children }: { children: ReactNode }) => <span className="max-narrow:hidden">{children}</span>
+const Phone = ({ children }: { children: ReactNode }) => <span className="hidden max-narrow:inline">{children}</span>
+
+function Show({ open, onClick, label, hidden, className }: { open: boolean; onClick(): void; label: ReactNode; hidden: string; className?: string }) {
+  return (
+    <Button variant="ghost" size="sm" className={cn("-mr-3 font-semibold text-teal-text", className)} aria-expanded={open} onClick={onClick}>
+      {open ? "Hide" : "Show"} {label}
+      <span className="sr-only"> {hidden}</span>
+    </Button>
+  )
+}
+
+function TaskList({ label, tasks, meta }: { label: string; tasks: RouteTask[]; meta(t: RouteTask): string }) {
+  return (
+    <ul aria-label={label} className="m-0 list-none p-0">
+      {tasks.map(t => (
+        <li key={t.taskId} className="flex min-h-9 items-baseline gap-3 border-t border-hairline py-1.5 max-narrow:min-h-11 max-narrow:items-center">
+          <Link href={taskHref(t.taskId)} className="min-w-0 flex-1 text-ink hover:text-ink">{t.title}</Link>
+          <span className="flex-none text-small text-muted">{meta(t)}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean }) {
+  const [doneOpen, setDoneOpen] = useState(startOpen)
+  const [moreOpen, setMoreOpen] = useState(false)
+  const [laterOpen, setLaterOpen] = useState<string | null>(null)
+  const { done, today, current, later } = it
+  return (
+    <Card aria-label="Itinerary" className="gap-0 max-narrow:contents">
+      <ol className="m-0 flex list-none flex-col p-0 max-narrow:gap-2.5">
+        {done && (
+          <li className={cn(ROW, "pt-0 max-narrow:pt-4")}>
+            <span className={WHEN}>{done.when}</span>
+            <span className={DOT}><Waypoint state="done" /></span>
+            <div className={cn(BODY, "text-muted")}>
+              <h2 className="inline text-body font-semibold text-ink">Done so far</h2> ·{" "}
+              <Wide>{done.summary}{done.topics && `: ${done.topics}`}</Wide>
+              <Phone>{plural(done.count, "task")}</Phone>
+            </div>
+            <Show open={doneOpen} onClick={() => setDoneOpen(o => !o)} label="" hidden="done tasks" />
+            {doneOpen && <div className="itin-wide"><TaskList label="Done tasks" tasks={done.tasks} meta={t => t.meta} /></div>}
+          </li>
+        )}
+
+        {today && (
+          <li className="itin -mx-4 rounded-surface border border-avatar bg-wash px-4 py-4 max-narrow:mx-0 max-narrow:gap-y-1.5">
+            <p className="m-0 text-small font-semibold text-teal-text max-narrow:hidden">
+              Today<br />{today.date}
+              {today.day !== null && <><br /><span className="font-normal text-muted">day {today.day}</span></>}
+            </p>
+            <span className={cn(DOT, "self-start pt-1")}><Waypoint state="current" /></span>
+            <div className="itin-wide flex min-w-0 flex-col gap-1">
+              <p className="m-0 text-small font-semibold text-teal-text">
+                <Wide>{today.meta}</Wide>
+                <Phone>Today · {today.meta.replace("You're here · ", "").replace(/^Up next/, "up next")}</Phone>
+              </p>
+              <h2 className="text-section">{today.task.title}</h2>
+              {today.task.why && <p className="max-w-lede text-muted max-narrow:hidden">{today.task.why}</p>}
+              {today.unlocks.length > 0 && (
+                <p className="text-small text-muted">
+                  <b className="font-semibold">Unlocks {plural(today.unlocks.length, "task")}:</b>{" "}
+                  <Wide>{today.unlocks.map(u => `${u.title} (${u.stage})`).join(" · ")}</Wide>
+                  <Phone>{today.unlocks.map(u => u.topic).join(", ")}</Phone>
+                </p>
+              )}
+              <div className="flex gap-2 pt-2 max-narrow:flex-col">
+                <Link href={taskHref(today.task.taskId)} className={buttonVariants({ className: "max-narrow:w-full" })}>
+                  Start task<span className="sr-only">: {today.task.title}</span>
+                </Link>
+                <Link href={`${taskHref(today.task.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet", className: "max-narrow:w-full" })}>
+                  Ask about this
+                </Link>
+              </div>
+            </div>
+          </li>
+        )}
+
+        {current && (
+          <li className={cn(ROW, "pt-4 max-narrow:pt-4")}>
+            <p className={WHEN}>
+              {current.when}
+              {current.daysLeft !== null && <><br />{plural(current.daysLeft, "day")} left</>}
+            </p>
+            <span className={cn(DOT, "self-start pt-1.5")}><Waypoint state="leg-now" /></span>
+            <div className={cn(BODY, "itin-wide")}>
+              <div className="flex items-baseline justify-between gap-3">
+                <h2 className="text-body font-semibold max-narrow:text-section">{current.name} · {plural(current.count, "task")}</h2>
+                <span className="hidden text-small text-muted max-narrow:inline">{current.when}</span>
+              </div>
+              <TaskList label={`${current.name} tasks`} tasks={moreOpen ? [...current.rows.map(r => r.task), ...current.more] : current.rows.map(r => r.task)} meta={t => current.rows.find(r => r.task === t)?.meta ?? (t.state === "blocked" ? waitsOn(t) : t.time)} />
+              {current.more.length > 0 && (
+                <Show open={moreOpen} onClick={() => setMoreOpen(o => !o)} label={`${current.more.length} more`} hidden="" className="-ml-3 -mr-0" />
+              )}
+            </div>
+          </li>
+        )}
+
+        {later.map(l => (
+          <li key={l.name} className={cn(ROW, RULED)}>
+            <span className={WHEN}>{l.when}</span>
+            <span className={DOT}><Waypoint state="available" /></span>
+            <div className={cn(BODY, "text-muted")}>
+              <h2 className="inline text-body font-semibold text-ink">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
+            </div>
+            <Show open={laterOpen === l.name} onClick={() => setLaterOpen(o => (o === l.name ? null : l.name))} label="" hidden={`${l.name} tasks`} />
+            {laterOpen === l.name && (
+              <div className="itin-wide">
+                <TaskList label={`${l.name} tasks`} tasks={l.tasks} meta={t => (t.state === "blocked" ? waitsOn(t) : t.time)} />
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
+    </Card>
+  )
+}
 
 export function RoadmapView({
   view,
   arrivalDate,
   now,
   firstUse,
-  onOpen,
 }: {
   view: RouteView
   arrivalDate: string
   now: Date
   firstUse: boolean
-  onOpen(taskId: string): void
 }) {
-  const { current } = view
-  const landed = journeyDay(arrivalDate, now) >= 1
-  const dates = [
-    { date: arrivalDate, what: landed ? "You landed" : "Arriving" },
-    { date: addDays(arrivalDate, 7), what: "Week 1 ends" },
-    { date: addDays(arrivalDate, 30), what: "Month 1 ends" },
-  ]
+  const startOpen = !!useSearchParams().get("done")
+  const it = buildItinerary(view, arrivalDate, now)
   return (
     <div className="flex min-w-0 flex-col gap-4">
       <section aria-labelledby="rm-title" className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h1 id="rm-title" className="text-title">Your roadmap</h1>
-        <p className="text-muted">
-          {view.doneCount} of {view.total} done · {landed ? "landed" : "arriving"} {longDay(arrivalDate)}
+        <p className="text-muted max-narrow:w-full max-narrow:text-small">
+          <Phone>{homeSubline(view, arrivalDate, now, true)}</Phone>
+          <Wide>{homeSubline(view, arrivalDate, now, false)}</Wide>
         </p>
         {firstUse && <p className="basis-full text-muted">Done some already? Open a task and mark it done.</p>}
       </section>
-      <Card aria-label="Where you are">
+      <Card aria-label="Where you are" className="max-narrow:gap-1.5">
         <RouteTrack route={view} arrivalDate={arrivalDate} now={now} variant="tall" />
       </Card>
-      <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">
-        <div className="flex min-w-0 flex-col gap-4">
-          <StageList legs={view.legs} onOpen={onOpen} />
-        </div>
-        <div className="flex min-w-0 flex-col gap-4">
-          <Card aria-labelledby="rm-next">
-            <CardHead title="Up next" titleId="rm-next" aside={current && <span className="text-small text-muted">About {current.time}</span>} />
-            {current ? (
-              <>
-                <div className="flex flex-col gap-1.5">
-                  <h3 className="text-section">{current.title}</h3>
-                  {current.why && <p className="max-w-lede text-muted">{current.why}</p>}
-                </div>
-                <Link href={`/app/roadmap?task=${current.taskId}`} className={buttonVariants({ className: "self-start" })}>
-                  Start task<span className="sr-only">: {current.title}</span>
-                </Link>
-              </>
-            ) : (
-              <p className="text-muted">You have finished every task on your roadmap.</p>
-            )}
-          </Card>
-          <Card aria-labelledby="rm-dates">
-            <CardHead title="Key dates" titleId="rm-dates" />
-            <dl className="m-0 grid grid-cols-plan items-baseline gap-x-3 gap-y-2">
-              {dates.map(d => (
-                <Fragment key={d.what}>
-                  <dt className="text-small text-muted">{shortDay(d.date)}</dt>
-                  <dd className="m-0 font-medium">{d.what}</dd>
-                </Fragment>
-              ))}
-            </dl>
-            <Link href="/settings" className="mt-auto inline-flex min-h-6 items-center self-start text-small font-medium">
-              Change your arrival date
-            </Link>
-          </Card>
-        </div>
-      </div>
+      <Itinerary it={it} startOpen={startOpen} />
     </div>
   )
 }
@@ -162,7 +249,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
                 askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
               />
             ) : (
-              <RoadmapView {...state} onOpen={open} />
+              <RoadmapView {...state} />
             )}
           </main>
           <PublicFooter app />
