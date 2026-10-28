@@ -13,7 +13,7 @@ export const terrainY = (x: number) =>
 
 // Journey days each stage covers, from arrival (day 1)
 const STAGE_DAYS = [
-  { start: 0, end: 0 }, // from arrival the before stage is over, so it caps at f = 1,
+  { start: 0, end: 0 }, // from arrival the before stage is over, so it caps at f = 1
   { start: 1, end: 2 },
   { start: 3, end: 8 },
   { start: 9, end: 31 },
