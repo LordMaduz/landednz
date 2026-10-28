@@ -142,7 +142,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="text-body font-semibold max-narrow:text-section">
                   {current.name} · {plural(current.count, "task")}
-                  {current.carried.map((c, i) => <span key={c.stage} className="font-normal text-muted">{i ? ", " : ", "}{c.count} still open from {c.stage}</span>)}
+                  {current.carried.map(c => <span key={c.stage} className="text-small font-normal text-muted">, {c.count} still open from {c.stage}</span>)}
                 </h2>
                 <span className="hidden text-small text-muted max-narrow:inline">{current.when}</span>
               </div>
