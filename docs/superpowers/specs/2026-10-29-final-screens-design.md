@@ -302,19 +302,20 @@ The question follows below it, with a full-width **Continue** (or **See my roadm
 
 ## 7. Build order
 
-Two tasks per session. Each task leaves the app working and its tests passing.
+Two sessions, run subagent-driven (each task in a fresh subagent with its own review). Each task leaves the app working and its tests passing.
 
 | Session | Task | Scope |
 |---|---|---|
 | 1 | R1. Road and `bestBy` | §3.1, §6.1 |
 | 1 | R2. Home C and the tab bar | §5.1, §3.4 |
-| 2 | R3. Roadmap D | §5.2 |
-| 2 | R4. Task C | §6.2 |
-| 3 | R5. Build my roadmap A | §4.2, §4.3, §4.4 |
-| 3 | R6. Settings C | §6.3 |
-| 4 | R7. Type scale before sign-in | §4.1 |
-| 4 | P7. Whole-app design gate and owner sign-off | §8 |
+| 1 | R3. Roadmap D | §5.2 |
+| 1 | R4. Task C | §6.2 |
+| 2 | R5. Build my roadmap A | §4.2, §4.3, §4.4 |
+| 2 | R6. Settings C | §6.3 |
+| 2 | R7. Type scale before sign-in | §4.1 |
+| 2 | P7. Whole-app design gate and owner sign-off | §8 |
 
+- **A stop after R4** lets the owner see the signed-in app before session 2. P7 needs the owner present.
 - **Track C** (C1–C4) follows P7, unchanged.
 - **The 2026-10-28 plan** gets a note saying that R1–R7 replace the look from P2–P6.
 

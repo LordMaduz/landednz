@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- **Two plan tasks per session**, then stop and print the resume prompt from "Sessions".
+- **Sessions as in the "Sessions" table** (subagent-driven: up to 4 tasks per session, each in a fresh subagent with its own review). At the end of a session, stop and print the resume prompt from "Sessions".
 - **Board first (CW02′):** every UI task opens its boards in `docs/design/r1-final/` (Step 0) and matches them at 1440×900 and 390×844. Board task names and short names are illustration; the app uses `taskTitle()` and `TASK_COPY[id].topic` (spec §2.7).
 - **Type set:** every rendered font size is in {48, 24, 22, 18, 15, 13, 12}, only through `text-hero`, `text-title`, `text-section`, `text-body`, `text-small`, `text-citation`. The Google button keeps Roboto 15.
 - **Tokens only (CW01):** raw values only in `globals.css` `@theme`; the road geometry and terrain stay in `route-progress.ts`.
@@ -45,14 +45,14 @@
 
 | Session | Tasks |
 |---|---|
-| 1 | R1, R2 |
-| 2 | R3, R4 |
-| 3 | R5, R6 |
-| 4 | R7, P7 |
+| 1 | Step 0, R1, R2, R3, R4 (the signed-in app; R2–R4 build on R1) |
+| 2 | R5, R6, R7, P7 (P7 needs the owner for sign-off) |
+
+After R4, stop so the owner can look at Home, Roadmap and Task in the browser before session 2.
 
 Track C (C1–C4 in the 2026-10-28 plan) follows P7, unchanged.
 
-Resume prompt: `Continue docs/superpowers/plans/2026-10-29-final-screens.md from Task <X> (session <N>) in worktree /Users/ruchira/Development/NZ_Project/landednz-r0p, branch feat/r0-polish. Use superpowers:subagent-driven-development; two tasks this session.`
+Resume prompt: `Continue docs/superpowers/plans/2026-10-29-final-screens.md from Task <X> (session <N>) in worktree /Users/ruchira/Development/NZ_Project/landednz-r0p, branch feat/r0-polish. Use superpowers:subagent-driven-development; run every task in that session's row of the Sessions table, then stop.`
 
 Test commands used below: web unit/component `npm test -w apps/web -- <pattern>`; API `npm test -w apps/api -- <pattern>` (local Supabase running, `AI_MODE=mock`); all checks `make check`; e2e `npm run test:e2e -w apps/web` (ports 3100/3101).
 
