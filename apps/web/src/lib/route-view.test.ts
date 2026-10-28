@@ -70,6 +70,8 @@ describe('buildRouteView — edges', () => {
       ARRIVAL,
     )
     expect(task(view, 'T20').meta).toBe('Needs your IRD number first')
+    expect(task(view, 'T20').blocker).toBe('T08')
+    expect(task(view, 'T10').blocker).toBeNull()
   })
 
   it('first use: T01 current, later legs locked', () => {

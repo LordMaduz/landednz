@@ -56,8 +56,9 @@
   --grid-template-columns-signin-solo: minmax(0, 400px);
   --grid-template-columns-home: minmax(0, 1fr) 320px;
   --grid-template-columns-settings: minmax(0, 280px) minmax(0, 560px);
+  --grid-template-columns-task: minmax(0, 680px) minmax(280px, 1fr);
 
-  /* Board container queries: ≤560 phone strip, ≤760 compact header, ≥1100 docked sheet */
+  /* Board container queries: ≤560 phone strip, ≤760 compact header */
   --breakpoint-narrow: 561px;
   --breakpoint-compact: 761px;
   --breakpoint-wide: 1100px;
@@ -255,39 +256,33 @@
   .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
   .ph { background: var(--color-wash); border-radius: 4px; padding: 0 4px; }
 
-  /* Task sheet: docked 480 px beside the route at ≥ 1100 px; below, a full page under a 48 px wash band */
-  .sheet-layout {
+  /* Task page (TaskPage board): steps beside a sticky column of actions and Ask. Under 861 px one column:
+     actions after the title, Ask after the content (the side column dissolves into the grid) */
+  .task-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 48px;
+    grid-template-columns: var(--grid-template-columns-task);
+    column-gap: 64px;
+    row-gap: 32px;
     align-items: start;
+    padding-top: 48px;
   }
-  .sheet {
+  .task-head, .task-body { grid-column: 1; }
+  .task-side {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: 24px;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 24px;
-    background: white;
   }
-  @media (width >= 1100px) {
-    .sheet-layout.has-sheet { grid-template-columns: minmax(0, 1fr) 480px; }
-    .sheet {
-      position: sticky;
-      top: 24px;
-      border: 1px solid var(--color-hairline);
-      border-radius: var(--radius-surface);
-      max-height: calc(100vh - 48px);
-      overflow: auto;
-      overscroll-behavior: contain;
-    }
-  }
-  @media (width < 1100px) {
-    .sheet-layout.has-sheet { margin: -48px -24px 0; }
-    .sheet-wrap { background: var(--color-wash); padding-top: 48px; }
-    .sheet {
-      border-radius: var(--radius-surface) var(--radius-surface) 0 0;
-      border-top: 1px solid var(--color-hairline);
-    }
+  @media (width < 861px) {
+    .task-layout { grid-template-columns: minmax(0, 1fr); padding-top: 24px; }
+    .task-side { display: contents; }
+    .task-head { order: 1; }
+    .task-acts { order: 2; }
+    .task-body { order: 3; }
+    .task-ask { order: 4; }
   }
 }
 

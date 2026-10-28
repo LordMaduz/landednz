@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Task page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ui *{box-sizing:border-box}
+.ui h1,.ui h2,.ui h3,.ui p,.ui ol,.ui ul{margin:0}
+.t-title{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.025em}
+.t-section{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.01em}
+.t-small{font-size:13px;line-height:1.45}
+.muted{color:#4B6170}
+.ui a{color:#0A6463;text-decoration:none}.ui a:hover{color:#074B4A;text-decoration:underline}
+.ui :focus-visible{outline:2px solid #0E7C7B;outline-offset:2px}
+.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap}
+.ui a.btn{text-decoration:none}
+.btn-primary{background:#0F2A3A;color:#FFFFFF;border:1px solid #0F2A3A}.btn-primary:hover{background:#24465A}
+.btn-quiet{background:#FFFFFF;color:#0F2A3A;border:1px solid #D5DFE2}.ui a.btn-quiet{color:#0F2A3A}.btn-quiet:hover{background:#F6F8F8}
+.btn-ghost{background:transparent;color:#0F2A3A;border:1px solid transparent}.ui a.btn-ghost{color:#0F2A3A}.btn-ghost:hover{background:#F6F8F8}
+.field{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid #7A8F99;background:#FFFFFF;color:#0F2A3A}
+.field::placeholder{color:#4B6170}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #E3E8EA;border-radius:4px;padding:0 4px;line-height:20px}
+.nav a{color:#4B6170;font-weight:500;padding:8px 16px;border-radius:6px}
+.ui .nav a:hover{color:#0F2A3A;background:#F6F8F8;text-decoration:none}
+.ui .nav a[aria-current="page"]{color:#0F2A3A;background:#F6F8F8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px}
+.list{padding-left:24px;display:flex;flex-direction:column;gap:8px}
+.list li::marker{color:#4B6170}
+.ui a.ref{font-size:13px;vertical-align:super;line-height:0;margin-left:4px}
+.ai{padding:1px;border-radius:10px;background:linear-gradient(90deg,#3FC79A,#5AAED6,#8B78F0,#5AAED6,#3FC79A)}
+.ai > div{border-radius:9px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;gap:8px}
+.ask-q{align-self:flex-end;max-width:85%;padding:8px 16px;border-radius:10px;background:#F6F8F8}
+.stamp{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #0E7C7B;transform:rotate(-10deg);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0A6463;font-size:13px;font-weight:600;line-height:1.1}
+.layout{display:grid;grid-template-columns:680px minmax(0,1fr);gap:64px;padding-top:48px;padding-bottom:64px;align-items:start}
+.side{position:sticky;top:24px;display:flex;flex-direction:column;gap:24px}
+.acts{display:flex;flex-direction:column;gap:8px}
+.acts-sm{display:none}
+@container (max-width: 760px){
+.hide-sm{display:none !important}
+.hdr{gap:8px !important}.hdr .wordmark{display:none}.nav a{padding:8px}
+.layout{grid-template-columns:minmax(0,1fr);gap:48px;padding-top:24px}
+.side{position:static}
+.side .acts{display:none}
+.acts-sm{display:flex;flex-direction:column;gap:8px}
+.icon-sm{width:44px;padding:0}
+}
+</style>
+</helmet>
+<div class="ui" style="container-type: inline-size; width: 100%; background: #FFFFFF; color: #0F2A3A; font-family: 'Geist', system-ui, sans-serif; font-size: 15px; line-height: 1.5">
+  <header style="border-bottom: 1px solid #E3E8EA">
+    <div class="container hdr" style="height: 64px; display: flex; align-items: center; gap: 32px">
+      <a href="#" aria-label="LandedNZ home" style="display: flex; align-items: center; gap: 8px; color: #0F2A3A; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#0F2A3A"></rect><path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"></path><circle cx="16.5" cy="7.5" r="2" fill="#3FC9B7"></circle></svg><span class="wordmark" style="font-weight: 600; letter-spacing: -0.01em">LandedNZ</span></a>
+      <nav class="nav" aria-label="Main" style="display: flex; gap: 4px">
+        <a href="#">Home</a>
+        <a href="#" aria-current="page">Roadmap</a>
+      </nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px">
+        <button type="button" class="btn btn-quiet" aria-keyshortcuts="/">Ask<span class="kbd hide-sm" aria-hidden="true">/</span></button>
+        <button type="button" aria-haspopup="menu" aria-label="Account" style="font: inherit; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 50%; background: #E8F2F1; color: #0A6463; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center">JK</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav aria-label="Tasks" style="display: flex; align-items: center; gap: 8px; min-height: 56px; border-bottom: 1px solid #E3E8EA">
+      <a class="btn btn-ghost" href="#" style="margin-left: -16px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Roadmap</a>
+      <span class="t-small muted">Arrival, task 3 of 3</span>
+      <span style="flex: 1"></span>
+      <a class="btn btn-ghost icon-sm" href="#" aria-label="Previous task: Open an NZ bank account"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg><span class="hide-sm" aria-hidden="true">Open an NZ bank account</span></a>
+      <a class="btn btn-ghost icon-sm" href="#" aria-label="Next task: Give your employer a tax code" style="margin-right: -16px"><span class="hide-sm" aria-hidden="true">Give your employer a tax code</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></a>
+    </nav>
+
+    <div class="layout">
+      <main style="display: flex; flex-direction: column; gap: 32px; min-width: 0">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; align-items: flex-start; gap: 16px">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+              <span class="t-small muted">20–30 minutes, online</span>
+              <h1 class="t-title" tabindex="-1">Apply for your IRD number</h1>
+            </div>
+            <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div class="stamp" role="img" aria-label="Done 26 Oct"><span>Done</span><span style="font-weight: 500">26 Oct</span></div></sc-if>
+          </div>
+          <p style="max-width: 600px">Without your IRD number and a tax code declaration, your employer deducts tax at 45% plus the earners' levy.<a class="ref" href="#src" aria-label="Source 1">1</a></p>
+        </div>
+
+        <div class="acts-sm">
+          <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+            <button type="button" class="btn btn-primary">Mark as done</button>
+            <a class="btn btn-quiet" href="#" target="_blank" rel="noopener">Open the IRD application<span class="sr"> (opens in a new tab)</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><button type="button" class="btn btn-quiet">Mark as not done</button></sc-if>
+        </div>
+
+        <section aria-labelledby="need" style="display: flex; flex-direction: column; gap: 16px">
+          <h2 id="need" class="t-section">What you'll need</h2>
+          <ul class="list">
+            <li>Your passport details</li>
+            <li>Your Immigration New Zealand application number</li>
+            <li>Your most recent overseas tax number, if you have one</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="steps" style="display: flex; flex-direction: column; gap: 16px">
+          <h2 id="steps" class="t-section">Steps</h2>
+          <ol class="list">
+            <li>Register for myIR, Inland Revenue's online service. You don't need an IRD number to register.<a class="ref" href="#src" aria-label="Source 2">2</a></li>
+            <li>In myIR, apply as a new arrival. Inland Revenue checks your identity with Immigration New Zealand.<a class="ref" href="#src" aria-label="Source 3">3</a></li>
+            <li>Apply by your visa's final arrival date, the date you must arrive in New Zealand by. After that date you apply as living in New Zealand instead.<a class="ref" href="#src" aria-label="Source 3">3</a></li>
+            <li>On a work or student visa you also need a New Zealand bank account or a customer due diligence form (IR997). Have one of them ready.<a class="ref" href="#src" aria-label="Source 4">4</a></li>
+            <li>If your application is approved, your IRD number comes by text or email in 2 days.<a class="ref" href="#src" aria-label="Source 3">3</a></li>
+            <li>Give your employer your IRD number with a completed tax code declaration (IR330).<a class="ref" href="#src" aria-label="Source 1">1</a></li>
+            <li>Give your bank your IRD number too. Without it, tax on interest is deducted at 45%.<a class="ref" href="#src" aria-label="Source 5">5</a></li>
+          </ol>
+        </section>
+
+        <section aria-labelledby="know" style="display: flex; flex-direction: column; gap: 16px">
+          <h2 id="know" class="t-section">Good to know</h2>
+          <ul class="list">
+            <li>Had an IRD number before? You keep it for life, so find your old one instead of applying again.</li>
+            <li>Applying is free.</li>
+            <li>Inland Revenue's personal line is 0800 227 774, or +64 4 832 5223 from overseas.</li>
+          </ul>
+        </section>
+
+        <section id="src" aria-label="Sources" class="t-small muted" style="border-top: 1px solid #E3E8EA; padding-top: 16px">
+          <ol class="list" style="gap: 4px">
+            <li><a href="#">Tax code declaration (IR330)</a>, checked 25 Oct 2026</li>
+            <li><a href="#">Register for a myIR account</a>, checked 25 Oct 2026</li>
+            <li><a href="#">New arrival to New Zealand: IRD number application</a>, checked 25 Oct 2026</li>
+            <li><a href="#">Work or study in New Zealand</a>, checked 25 Oct 2026</li>
+            <li><a href="#">Using the right RWT tax rate</a>, checked 25 Oct 2026</li>
+          </ol>
+        </section>
+      </main>
+
+      <aside class="side" aria-label="Actions and questions">
+        <div class="acts">
+          <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+            <button type="button" class="btn btn-primary">Mark as done</button>
+            <a class="btn btn-quiet" href="#" target="_blank" rel="noopener">Open the IRD application<span class="sr"> (opens in a new tab)</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+          </sc-if>
+          <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><button type="button" class="btn btn-quiet">Mark as not done</button></sc-if>
+        </div>
+
+        <section aria-labelledby="ask" style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #E3E8EA">
+          <h2 id="ask" style="font-size: 15px; font-weight: 600">Ask about your IRD number</h2>
+          <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+            <p class="ask-q">What if my final arrival date has passed?</p>
+            <div class="ai"><div aria-live="polite"><span class="t-small muted">Checked ird.govt.nz</span><p>Then you apply as living in New Zealand. After applying online, you take your identity documents to an AA Driver Licensing Agent within 20 days.</p></div></div>
+          </sc-if>
+          <div style="display: flex; gap: 8px">
+            <label for="ask-in" class="sr">Ask about your IRD number</label>
+            <input id="ask-in" class="field" placeholder="Ask a question" autocomplete="off" style="flex: 1; min-width: 0">
+            <button type="button" class="btn btn-quiet">Ask</button>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["default","done"],"default":"default"},"$preview":{"width":1280,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const done = this.props.state === 'done';
+    return { done: done, open: !done };
+  }
+}
+</script>
+</body>
+</html>

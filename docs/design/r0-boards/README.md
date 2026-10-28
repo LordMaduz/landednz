@@ -6,7 +6,7 @@ Source of the approved page boards on the design canvas
 - `ui_parts.py`: shared tokens and parts (CSS, header, footer, route rail). The single source for exact values.
 - `build_*.py`: generate the `.dc.html` boards (`python3 build_home.py` etc.).
 - `*.dc.html`: the generated boards. Interactive ones take a `scenario` prop:
-  `JourneyHome` (the Roadmap) = default | open | streaming | first | error; `Onboarding` = questions | preview; `Home` takes `firstUse`.
+  `JourneyHome` (the Roadmap) = default | first | error (its open and streaming scenarios are superseded by TaskPage); `Onboarding` = questions | preview; `Home` takes `firstUse`.
 - Phone boards (`*Phone.dc.html`) are the same page rendered at 390 px.
 
-Board names vs routes: Home → `/app`, JourneyHome → `/app/roadmap`, Landing → `/`, Onboarding → `/onboarding`, OnboardingPreview → `/onboarding/preview`, SignIn → `/signin`, Settings → `/settings`, Legal → `/privacy` and `/terms`.
+Board names vs routes: Home → `/app`, JourneyHome → `/app/roadmap`, TaskPage → `/app/roadmap?task=<id>` (`state` = default | done; design canvas https://claude.ai/artifact/W3y3m5zmfdGzRU76xGVewG), Landing → `/`, Onboarding → `/onboarding`, OnboardingPreview → `/onboarding/preview`, SignIn → `/signin`, Settings → `/settings`, Legal → `/privacy` and `/terms`.

@@ -8,8 +8,6 @@ import { apiTask, priya, roadmap } from '@/test/roadmap-fixtures'
 const getTaskDetail = vi.fn()
 const completeTask = vi.fn()
 const reopenTask = vi.fn()
-const back = vi.fn()
-const router = { back } // stable, like Next's
 vi.mock('@/lib/api', () => ({
   getTaskDetail: (id: string, token: string) => getTaskDetail(id, token),
   completeTask: (id: string, token: string) => completeTask(id, token),
@@ -18,7 +16,6 @@ vi.mock('@/lib/api', () => ({
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } }),
 }))
-vi.mock('next/navigation', () => ({ useRouter: () => router }))
 
 const { TaskSheet } = await import('./task-sheet')
 
@@ -54,16 +51,15 @@ function withWhy() {
 }
 const route = () => buildRouteView(withWhy(), '2026-10-21')
 
-function sheet(taskId: string, props: Partial<{ onClose(): void; onChanged(): void }> = {}) {
-  const onClose = props.onClose ?? vi.fn()
+function sheet(taskId: string, props: Partial<{ onChanged(): void }> = {}) {
   const onChanged = props.onChanged ?? vi.fn()
   const r = render(
     <>
-      <TaskSheet taskId={taskId} route={route()} onClose={onClose} onChanged={onChanged} />
+      <TaskSheet taskId={taskId} route={route()} onChanged={onChanged} />
       <Toaster />
     </>,
   )
-  return { ...r, onClose, onChanged }
+  return { ...r, onChanged }
 }
 
 beforeEach(() => {
@@ -77,28 +73,68 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('TaskSheet', () => {
-  it('leg and duration, title, consequence, steps, action link and source line', async () => {
+  it('a page: duration, title, consequence, steps, action link and source line', async () => {
     sheet('T08')
-    const aside = screen.getByRole('complementary', { name: 'Apply for your IRD number' })
-    expect(within(aside).getByText('Week 1, 1 hour')).toBeInTheDocument()
-    expect(within(aside).getByRole('heading', { level: 2 })).toHaveTextContent('Apply for your IRD number')
-    expect(within(aside).getByText('Your employer needs it before your first payday.')).toBeInTheDocument()
-    const steps = await within(aside).findAllByRole('listitem')
+    const page = screen.getByRole('article', { name: 'Apply for your IRD number' })
+    expect(within(page).getByText('1 hour')).toBeInTheDocument()
+    expect(within(page).getByRole('heading', { level: 1 })).toHaveTextContent('Apply for your IRD number')
+    expect(within(page).getByText('Your employer needs it before your first payday.')).toBeInTheDocument()
+    const steps = within(await within(page).findByRole('region', { name: 'Steps' })).getAllByRole('listitem')
     expect(steps.map(s => s.textContent)).toEqual(['Have your passport ready.', 'Apply online at ird.govt.nz.'])
-    const action = within(aside).getByRole('link', { name: 'Open the IRD application (opens in a new tab)' })
+    const action = within(page).getByRole('link', { name: 'Open the IRD application (opens in a new tab)' })
     expect(action).toHaveAttribute('href', 'https://www.ird.govt.nz/managing-my-tax/ird-numbers')
     expect(action).toHaveAttribute('target', '_blank')
-    expect(within(aside).getByText(/^Source:/)).toHaveTextContent('Source: ird.govt.nz, checked 3 March 2026')
+    expect(within(page).getByText(/^Source:/)).toHaveTextContent('Source: ird.govt.nz, checked 3 March 2026')
     expect(getTaskDetail).toHaveBeenCalledWith('T08', 'tok')
+  })
+
+  it('task bar: back to the roadmap, place in the leg, previous and next task in route order', () => {
+    sheet('T08')
+    const bar = screen.getByRole('navigation', { name: 'Tasks' })
+    expect(within(bar).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '/app/roadmap')
+    expect(within(bar).getByText('Week 1, task 1 of 3')).toBeInTheDocument()
+    expect(within(bar).getByRole('link', { name: 'Previous task: Open a bank account' })).toHaveAttribute(
+      'href',
+      '/app/roadmap?task=T07',
+    )
+    expect(within(bar).getByRole('link', { name: 'Next task: Give your employer a tax code (IR330)' })).toHaveAttribute(
+      'href',
+      '/app/roadmap?task=T09',
+    )
+  })
+
+  it('first and last task: no previous, no next', () => {
+    const { unmount } = sheet('T01')
+    expect(screen.queryByRole('link', { name: /^Previous task/ })).toBeNull()
+    expect(screen.getByRole('link', { name: /^Next task/ })).toBeInTheDocument()
+    unmount()
+    sheet('T20')
+    expect(screen.queryByRole('link', { name: /^Next task/ })).toBeNull()
+  })
+
+  it("what you'll need and good to know (mistakes, then watch-outs); none when the KB has none", async () => {
+    getTaskDetail.mockResolvedValueOnce(
+      detail({ documentsRequired: ['Your passport details'], commonMistakes: ['Applying twice.'], watchOuts: ['Applying is free.'] }),
+    )
+    const { unmount } = sheet('T08')
+    const need = await screen.findByRole('region', { name: "What you'll need" })
+    expect(within(need).getAllByRole('listitem').map(i => i.textContent)).toEqual(['Your passport details'])
+    const know = screen.getByRole('region', { name: 'Good to know' })
+    expect(within(know).getAllByRole('listitem').map(i => i.textContent)).toEqual(['Applying twice.', 'Applying is free.'])
+    unmount()
+
+    sheet('T08')
+    await screen.findByRole('region', { name: 'Steps' })
+    expect(screen.queryByRole('region', { name: "What you'll need" })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Good to know' })).toBeNull()
   })
 
   it('an empty detail (retired task) renders without a source line or an empty link', async () => {
     getTaskDetail.mockResolvedValue(detail({ steps: [], governmentSourceUrl: '', lastVerified: null }))
     sheet('T08')
-    const aside = screen.getByRole('complementary', { name: 'Apply for your IRD number' })
     await waitFor(() => expect(getTaskDetail).toHaveBeenCalled())
-    expect(within(aside).queryByRole('link')).toBeNull()
-    expect(within(aside).queryByText(/Source:/)).toBeNull()
+    expect(screen.queryByRole('link', { name: /opens in a new tab/ })).toBeNull()
+    expect(screen.queryByText(/Source:/)).toBeNull()
   })
 
   it('a step with inline items: lead line and a nested list, no markdown markers', async () => {
@@ -144,10 +180,12 @@ describe('TaskSheet', () => {
     expect(onChanged).toHaveBeenCalledTimes(1)
   })
 
-  it('a blocked task: no Mark button, the sub says what it needs', () => {
+  it('a blocked task: no Mark button; the meta says what it needs and links to it', () => {
     sheet('T09')
-    expect(screen.getByText('Week 1, Needs your IRD number first')).toBeInTheDocument()
+    expect(screen.getByText('Needs your IRD number first')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /^Mark as/ })).toBeNull()
+    const first = screen.getByText(/^Do this first:/)
+    expect(within(first).getByRole('link', { name: 'Apply for your IRD number' })).toHaveAttribute('href', '/app/roadmap?task=T08')
   })
 
   it('a failed save says so and leaves the task as it was', async () => {
@@ -159,28 +197,9 @@ describe('TaskSheet', () => {
     expect(onChanged).not.toHaveBeenCalled()
   })
 
-  it('Esc and Close call onClose', () => {
-    const { onClose } = sheet('T08')
-    fireEvent.keyDown(document, { key: 'Escape' })
-    fireEvent.click(screen.getByRole('button', { name: 'Close task' }))
-    expect(onClose).toHaveBeenCalledTimes(2)
-  })
-
-  it('opened from another task: Back is named after it and pops history', () => {
-    const props = { route: route(), onClose: vi.fn(), onChanged: vi.fn() }
-    const { rerender } = render(<TaskSheet taskId="T08" {...props} />)
-    expect(screen.queryByRole('button', { name: /Apply for your IRD number/ })).toBeNull()
-    rerender(<TaskSheet taskId="T10" {...props} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Back to Apply for your IRD number' }))
-    expect(back).toHaveBeenCalledTimes(1)
-    // the browser pops to ?task=T08: no Back left
-    rerender(<TaskSheet taskId="T08" {...props} />)
-    expect(screen.queryByRole('button', { name: /^Back to/ })).toBeNull()
-  })
-
   it('unknown task id: nothing rendered', () => {
     const { container } = render(
-      <TaskSheet taskId="T99" route={buildRouteView(roadmap([apiTask('T01')]), '2026-10-21')} onClose={vi.fn()} onChanged={vi.fn()} />,
+      <TaskSheet taskId="T99" route={buildRouteView(roadmap([apiTask('T01')]), '2026-10-21')} onChanged={vi.fn()} />,
     )
     expect(container).toBeEmptyDOMElement()
   })
@@ -237,6 +256,23 @@ describe('TaskSheet', () => {
       expect(title).toHaveAttribute('rel', 'noopener noreferrer')
       expect(screen.queryByText(/^Source:/)).toBeNull()
       expect(within(list).queryByText(WORK.title)).toBeNull()
+    })
+
+    it('numbers run down the page: why, what you need, steps, good to know', async () => {
+      getTaskDetail.mockResolvedValueOnce(
+        detail({
+          steps: ['Apply as a new arrival.'],
+          documentsRequired: ['Your passport details'],
+          watchOuts: ['Applying is free.'],
+          sources: { why: [CODES], documents: [WORK], steps: [NEW], watchOuts: [CODES] },
+        }),
+      )
+      sheet('T08')
+      const num = (t: string) => within(screen.getByText(t, { exact: false }).closest('li')!).getByRole('link').textContent
+      await waitFor(() => expect(num('Your passport details')).toBe('2'))
+      expect(num('Apply as a new arrival.')).toBe('3')
+      expect(num('Applying is free.')).toBe('1')
+      expect(within(screen.getByRole('region', { name: 'Sources' })).getAllByRole('listitem')).toHaveLength(3)
     })
 
     it('fewer sources than steps and no why source: every step renders, unmatched lines have no number', async () => {

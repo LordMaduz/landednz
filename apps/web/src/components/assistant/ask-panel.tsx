@@ -19,7 +19,7 @@ function traceOf(m: Message): string {
   return m.status === "stopped" ? `${traceFor(m.text)}, stopped` : traceFor(m.text)
 }
 
-// "Ask about <topic>" in the task sheet: one chat session per open task, created on the first question
+// "Ask about <topic>" on the task page: one chat session per open task, created on the first question
 export function AskPanel({
   taskId,
   topic,
@@ -85,9 +85,9 @@ export function AskPanel({
 
   return (
     <section aria-labelledby="ask-title" className="flex flex-col gap-4 border-t border-hairline pt-6">
-      <h3 id="ask-title" className="text-body font-semibold">
+      <h2 id="ask-title" className="text-body font-semibold">
         Ask about {topic}
-      </h3>
+      </h2>
       {messages.map(m => (
         <div key={m.id} className="contents">
           <p className="ask-q">{m.q}</p>

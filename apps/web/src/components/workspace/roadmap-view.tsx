@@ -16,17 +16,14 @@ import { TaskSheet } from "./task-sheet"
 export function RoadmapView({
   view,
   firstUse,
-  selectedTaskId,
   onOpen,
 }: {
   view: RouteView
   firstUse: boolean
-  selectedTaskId?: string
   onOpen(taskId: string): void
 }) {
   return (
-    // Below 1100 px the open task takes the page; the route comes back when it closes
-    <div className={cn("flex min-w-0 flex-col gap-8", selectedTaskId && "max-wide:hidden")}>
+    <div className="flex min-w-0 flex-col gap-8">
       <section aria-labelledby="rm-title" className="flex flex-col gap-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h1 id="rm-title" className="text-title">Your roadmap</h1>
@@ -46,20 +43,14 @@ export function RoadmapView({
         </div>
         {firstUse && <p className="text-muted">Done some already? Open a task and mark it done.</p>}
       </section>
-      <RouteRail
-        legs={view.legs}
-        selectedTaskId={selectedTaskId}
-        onOpen={onOpen}
-        // An open task takes the focus, so the card folds back into its row
-        renderCurrent={selectedTaskId ? undefined : task => <NextTaskCard task={task} onOpen={onOpen} />}
-      />
+      <RouteRail legs={view.legs} onOpen={onOpen} renderCurrent={task => <NextTaskCard task={task} onOpen={onOpen} />} />
     </div>
   )
 }
 
 type Loaded = { view: RouteView; firstUse: boolean }
 
-// Fetches the roadmap with the browser session; ?task=<id> is the open task, shown in the sheet
+// Fetches the roadmap with the browser session; ?task=<id> is the open task, shown as a page in place of the route
 export function RoadmapScreen({ user }: { user: { name: string; initials: string } }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -99,11 +90,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
     load()
   }, [load])
 
-  const open = (taskId: string) => router.push(`/app/roadmap?task=${taskId}`, { scroll: false })
-  const close = useCallback(() => {
-    setAskFor(null)
-    router.push("/app/roadmap", { scroll: false })
-  }, [router])
+  const open = (taskId: string) => router.push(`/app/roadmap?task=${taskId}`)
   const askTaskId = typeof state === "object" ? (selectedTaskId ?? state.view.current?.taskId) : undefined
   const ask = () => {
     if (!askTaskId) return
@@ -118,22 +105,18 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       {state === "loading" ? (
         <Loading />
       ) : (
-        <main className="container-page pt-12 pb-24">
+        <main className={cn("container-page pb-24", !selectedTaskId && "pt-12")}>
           {state === "down" ? (
             <ApiDown onRetry={() => load()} />
+          ) : selectedTaskId ? (
+            <TaskSheet
+              taskId={selectedTaskId}
+              route={state.view}
+              onChanged={refetch}
+              askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
+            />
           ) : (
-            <div className={cn("sheet-layout", selectedTaskId && "has-sheet")}>
-              <RoadmapView view={state.view} firstUse={state.firstUse} selectedTaskId={selectedTaskId} onOpen={open} />
-              {selectedTaskId && (
-                <TaskSheet
-                  taskId={selectedTaskId}
-                  route={state.view}
-                  onClose={close}
-                  onChanged={refetch}
-                  askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
-                />
-              )}
-            </div>
+            <RoadmapView view={state.view} firstUse={state.firstUse} onOpen={open} />
           )}
         </main>
       )}

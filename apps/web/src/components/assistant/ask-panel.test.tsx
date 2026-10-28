@@ -59,17 +59,17 @@ beforeEach(() => {
 describe('AskPanel', () => {
   it('heading and suggestions', () => {
     panel()
-    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Ask about your IRD number')
-    expect(screen.getByRole('button', { name: 'What documents do I need?' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'How long does it take?' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Ask about your IRD number')
+    // the page lists documents and mistakes, so only processing time is suggested
+    expect(screen.getAllByRole('button', { name: /\?$/ }).map(b => b.textContent)).toEqual(['How long does it take?'])
   })
 
   it('a suggestion streams into an aurora reply; done gives the trace and removes the suggestion', async () => {
     const { container } = panel()
-    fireEvent.click(screen.getByRole('button', { name: 'What documents do I need?' }))
+    fireEvent.click(screen.getByRole('button', { name: 'How long does it take?' }))
     await waitFor(() => expect(streams).toHaveLength(1))
     expect(createChatSession).toHaveBeenCalledWith('TASK_CARD', 'tok', 'T08')
-    expect(last().content).toBe('What documents do I need?')
+    expect(last().content).toBe('How long does it take?')
     act(() => last().onChunk('Your passport and '))
     act(() => last().onChunk('your **visa** details, see ird.govt.nz.'))
 
@@ -78,7 +78,7 @@ describe('AskPanel', () => {
     expect(within(reply as HTMLElement).getByText('Checking sources')).toBeInTheDocument()
     expect(input()).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Stop' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'What documents do I need?' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'How long does it take?' })).toBeNull()
 
     act(() => last().onDone())
     expect(container.querySelector('.ai-streaming')).toBeNull()
@@ -87,7 +87,7 @@ describe('AskPanel', () => {
     expect(within(done).getByText('visa').tagName).toBe('STRONG')
     expect(input()).toBeEnabled()
     expect(screen.queryByRole('button', { name: 'Stop' })).toBeNull()
-    expect(screen.getByText('What documents do I need?')).toHaveClass('ask-q')
+    expect(screen.getByText('How long does it take?')).toHaveClass('ask-q')
   })
 
   it('Stop aborts; the trace ends ", stopped" and the partial answer stays', async () => {
@@ -118,7 +118,8 @@ describe('AskPanel', () => {
 
   it('daily cap: the limit message, input stays disabled, earlier replies stay (Review Focus 4)', async () => {
     panel()
-    fireEvent.click(screen.getByRole('button', { name: 'What documents do I need?' }))
+    fireEvent.change(input(), { target: { value: 'What documents do I need?' } })
+    fireEvent.submit(input().closest('form')!)
     await waitFor(() => expect(streams).toHaveLength(1))
     act(() => last().onChunk('Your passport.'))
     act(() => last().onDone())
@@ -136,7 +137,7 @@ describe('AskPanel', () => {
 
   it('any other failure: says so and lets them ask again', async () => {
     panel()
-    fireEvent.click(screen.getByRole('button', { name: 'What documents do I need?' }))
+    fireEvent.click(screen.getByRole('button', { name: 'How long does it take?' }))
     await waitFor(() => expect(streams).toHaveLength(1))
     act(() => last().onError({ message: 'AI service unavailable' }))
     expect(screen.getByRole('alert')).toHaveTextContent("Couldn't get an answer. Check your connection, then ask again.")
