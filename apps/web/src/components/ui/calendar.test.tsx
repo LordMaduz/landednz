@@ -50,4 +50,13 @@ describe('Calendar', () => {
     expect(screen.queryByText(/You land on/)).toBeNull()
     expect(cells().find(c => c.tabIndex === 0)).toHaveTextContent('29')
   })
+
+  it('clicking an out-of-month day moves the month and focus to that day', () => {
+    setup()
+    fireEvent.click(cells()[0]) // 28 Sep
+    expect(screen.getByText('September 2026')).toBeInTheDocument()
+    const cell = cells().find(c => c.getAttribute('data-date') === '2026-09-28')!
+    expect(cell).toHaveFocus()
+    expect(cell).toHaveAttribute('tabindex', '0')
+  })
 })

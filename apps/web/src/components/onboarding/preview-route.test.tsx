@@ -31,7 +31,7 @@ describe('PreviewRoute', () => {
     expect(within(start).getByText('The next task waits on this one.')).toBeInTheDocument()
 
     // 3 next tasks, then the rest behind Show n more
-    const more = screen.getByRole('button', { name: /^Show 1 more/ })
+    const more = screen.getByRole('button', { name: /^Show 1 more Before you fly tasks$/ })
     expect(more).toHaveAttribute('aria-expanded', 'false')
     expect(screen.queryByText('Sort your home-country tax')).toBeNull()
     fireEvent.click(more)
@@ -40,10 +40,15 @@ describe('PreviewRoute', () => {
     for (const [name, n] of [['Arrival', 2], ['Week 1', 3], ['Month 1 and later', 10]] as const) {
       const h = screen.getByRole('heading', { level: 2, name: new RegExp(`^${name}`) })
       expect(h).toHaveTextContent(`${name} · ${n} tasks`)
-      const show = within(h.closest('li')!).getByRole('button', { name: /^Show/ })
+      const show = within(h.closest('li')!).getByRole('button', { name: `Show ${name}` })
       expect(show).toHaveAttribute('aria-expanded', 'false')
+      const panel = document.getElementById(show.getAttribute('aria-controls')!)!
+      expect(panel).toHaveAttribute('hidden')
       fireEvent.click(show)
       expect(show).toHaveAttribute('aria-expanded', 'true')
+      expect(show).toHaveAccessibleName(`Hide ${name}`)
+      expect(panel).not.toHaveAttribute('hidden')
+      expect(panel.querySelectorAll('li').length).toBe(n)
     }
     expect(screen.getByRole('link', { name: 'Save my roadmap' })).toHaveAttribute('href', '/auth/complete?redirect=%2Fapp')
     expect(screen.getByText('Sign in with Google or email on the next screen.')).toBeInTheDocument()

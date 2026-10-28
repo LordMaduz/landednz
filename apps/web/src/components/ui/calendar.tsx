@@ -67,7 +67,7 @@ export function Calendar({ value, onChange, today, labelledBy }: { value: string
                   aria-selected={d === value}
                   aria-label={fullDay(d)}
                   tabIndex={d === focus ? 0 : -1}
-                  onClick={() => { setFocus(d); onChange(d) }}
+                  onClick={() => { refocus.current = true; setFocus(d); onChange(d) }}
                   className={cn(
                     "grid h-11 cursor-pointer place-items-center rounded-control hover:bg-wash data-outside:text-control data-today:font-semibold data-today:shadow-today",
                     d === value && "bg-ink font-semibold text-white shadow-none hover:bg-ink-hover",

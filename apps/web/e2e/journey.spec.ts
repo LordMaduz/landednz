@@ -17,9 +17,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
 
   await expect(page).toHaveURL('/onboarding/preview')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your roadmap is ready')
-  // 19 in total: 15 listed in the first legs (phases 1 to 3), 4 folded into "Month 1 and later"
-  await expect(page.getByText(/^4 tasks: /)).toBeVisible()
-  await expect(page.locator('main li.route-step')).toHaveCount(15)
+  await expect(page.getByRole('heading', { level: 2, name: /^Before you fly · \d+ tasks?$/ })).toBeVisible()
+  await expect(page.getByText(/^Start here/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Show Month 1 and later' })).toHaveAttribute('aria-expanded', 'false')
 
   await page.getByRole('link', { name: 'Save my roadmap' }).click()
   await expect(page).toHaveURL(/\/signin\?redirect=/)
@@ -29,9 +29,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
 
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Roadmap' }).click()
   await expect(page).toHaveURL('/app/roadmap')
-  // The IRD number is an Arrival task (phase 2); Arrival is folded under Other stages until opened
-  await page.getByRole('button', { name: 'Show Arrival tasks' }).click()
-  await page.getByRole('button', { name: /^Apply for your IRD number/ }).click()
+  // The IRD number (T08) sits behind Arrival's "Show n more"; open it from its link
+  await page.goto('/app/roadmap?task=T08')
+  await expect(page.getByRole('heading', { level: 1, name: 'Apply for your IRD number' })).toBeVisible()
 
   // Sources sit beside the steps; each opens in a new tab
   const source = page.getByRole('complementary').getByRole('region', { name: 'Sources' }).getByRole('link').first()

@@ -43,8 +43,8 @@ type Task = Tasks[number]
 
 const NEXT_SHOWN = 3
 const ROW = "grid grid-cols-itin items-baseline gap-3 border-t border-hairline py-2.5"
-const ShowBtn = ({ open, label, onClick }: { open: boolean; label: string; onClick(): void }) => (
-  <Button variant="ghost" size="sm" className="-mr-3 font-semibold text-teal-text" aria-expanded={open} onClick={onClick}>
+const ShowBtn = ({ open, label, name, controls, onClick }: { open: boolean; label: string; name: string; controls: string; onClick(): void }) => (
+  <Button variant="ghost" size="sm" className="-mr-3 font-semibold text-teal-text" aria-expanded={open} aria-controls={controls} aria-label={`${open ? "Hide" : "Show"} ${name}`} onClick={onClick}>
     {open ? "Hide" : "Show"}{label && ` ${label}`}
   </Button>
 )
@@ -92,11 +92,11 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
             </div>
           </section>
         </li>
-        <TaskRows tasks={shown} />
+        <li><ul id="next-tasks" className="m-0 list-none p-0"><TaskRows tasks={shown} /></ul></li>
         {others.length > NEXT_SHOWN && (
           <li className="grid grid-cols-itin gap-3 border-t border-hairline">
             <span />
-            <span className="-ml-3"><ShowBtn open={moreOpen} label={moreOpen ? "" : `${others.length - NEXT_SHOWN} more`} onClick={() => setMoreOpen(o => !o)} /></span>
+            <span className="-ml-3"><ShowBtn open={moreOpen} label={moreOpen ? "" : `${others.length - NEXT_SHOWN} more`} name={`${others.length - NEXT_SHOWN} more ${lead.name} tasks`} controls="next-tasks" onClick={() => setMoreOpen(o => !o)} /></span>
           </li>
         )}
         {folds.map(f => {
@@ -110,9 +110,9 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
                   <h2 className="text-body"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-muted">· {count(f.tasks.length)}</span></h2>
                   <p className="m-0 text-small text-muted">{topics.slice(0, 3).join(", ")}{topics.length > 3 && " and more"}</p>
                 </div>
-                <ShowBtn open={isOpen} label="" onClick={() => toggle(f.name)} />
+                <ShowBtn open={isOpen} label="" name={f.name} controls={`fold-${f.id}`} onClick={() => toggle(f.name)} />
               </div>
-              {isOpen && <ul className="m-0 list-none p-0 pb-1"><TaskRows tasks={f.tasks} /></ul>}
+              <ul id={`fold-${f.id}`} hidden={!isOpen} className="m-0 list-none p-0 pb-1">{isOpen && <TaskRows tasks={f.tasks} />}</ul>
             </li>
           )
         })}
