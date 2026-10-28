@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
 import { phaseOf } from '@/test/roadmap-fixtures'
@@ -16,34 +16,66 @@ const { PreviewRoute } = await import('./preview-route')
 const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2027-01-14' }
 
 describe('PreviewRoute', () => {
-  it('shows three legs and folds Month 1 and Later into one row with the count', async () => {
+  it('rail of answers, itinerary with Start here, folded stages, Save card', async () => {
     render(<PreviewRoute answers={priya} saveFailed={false} />)
-    const route = await screen.findByRole('list', { name: 'Your roadmap' })
-    const legs = within(route).getAllByRole('heading', { level: 2 }).map(h => h.textContent)
-    expect(legs).toEqual(['Before you fly', 'Arrival', 'Week 1', 'Month 1 and later'])
-    expect(screen.getByText(/^10 tasks: [^,]+, [^,]+, [^,]+, and more$/)).toBeInTheDocument()
-    expect(screen.getByText('Choose where to live')).toBeInTheDocument()
-    expect(screen.getByText('Open a bank account')).toBeInTheDocument()
-    expect(screen.getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027.', { exact: false })).toBeInTheDocument()
+    const rail = screen.getByRole('list', { name: 'Your answers' })
+    expect(within(rail).getAllByRole('link', { name: /Change/ })).toHaveLength(5)
+    expect(screen.getByText('All five answered. Change any of them and the roadmap updates.')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Your roadmap is ready' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Change my answers' })).toHaveAttribute('href', '/onboarding?step=1')
+
+    expect(await screen.findByRole('heading', { level: 2, name: /^Before you fly/ })).toHaveTextContent('Before you fly · 5 tasks')
+    const start = screen.getByText(/^Start here/).closest('section')!
+    expect(within(start).getByText('Choose where to live')).toBeInTheDocument()
+    expect(within(start).getByText('First, 4 to 6 weeks before you leave', { exact: false })).toBeInTheDocument()
+    expect(within(start).getByText('The next task waits on this one.')).toBeInTheDocument()
+
+    // 3 next tasks, then the rest behind Show n more
+    const more = screen.getByRole('button', { name: /^Show 1 more/ })
+    expect(more).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByText('Sort your home-country tax')).toBeNull()
+    fireEvent.click(more)
+    expect(more).toHaveAttribute('aria-expanded', 'true')
+
+    for (const [name, n] of [['Arrival', 2], ['Week 1', 3], ['Month 1 and later', 10]] as const) {
+      const h = screen.getByRole('heading', { level: 2, name: new RegExp(`^${name}`) })
+      expect(h).toHaveTextContent(`${name} · ${n} tasks`)
+      const show = within(h.closest('li')!).getByRole('button', { name: /^Show/ })
+      expect(show).toHaveAttribute('aria-expanded', 'false')
+      fireEvent.click(show)
+      expect(show).toHaveAttribute('aria-expanded', 'true')
+    }
     expect(screen.getByRole('link', { name: 'Save my roadmap' })).toHaveAttribute('href', '/auth/complete?redirect=%2Fapp')
+    expect(screen.getByText('Sign in with Google or email on the next screen.')).toBeInTheDocument()
+    expect(document.querySelector('.sticky')).toBeNull()
     expect(screen.queryByRole('alert')).toBeNull()
   })
 
-  it('marks the first task of the earliest phase, not the lowest id', async () => {
+  it('Start here is the first task of the earliest phase, not the lowest id', async () => {
     getRoadmapPreview.mockResolvedValueOnce({
       tasks: [
         { taskId: 'T02', name: 'KB T02', estimatedDuration: '1 day', phase: 2 },
         { taskId: 'T08', name: 'KB T08', estimatedDuration: '1 day', phase: 1 },
+        { taskId: 'T09', name: 'KB T09', estimatedDuration: '1 day', phase: 1 },
       ],
     })
     render(<PreviewRoute answers={priya} saveFailed={false} />)
-    expect(await screen.findByText('Apply for your IRD number')).toHaveClass('font-semibold')
-    expect(document.querySelectorAll('.font-semibold.grow')).toHaveLength(1)
+    const start = (await screen.findByText(/^Start here/)).closest('section')!
+    expect(within(start).getByText('Apply for your IRD number')).toBeInTheDocument()
+    expect(within(start).getByText('The next task waits on this one.')).toBeInTheDocument()
   })
 
-  it('API down: a retryable alert under the page h1', async () => {
+  it('no "waits on this one" line when nothing depends on the first task', async () => {
+    getRoadmapPreview.mockResolvedValueOnce({ tasks: [{ taskId: 'T06', name: 'KB T06', estimatedDuration: '1 day', phase: 1 }] })
+    render(<PreviewRoute answers={priya} saveFailed={false} />)
+    await screen.findByText(/^Start here/)
+    expect(screen.queryByText('The next task waits on this one.')).toBeNull()
+  })
+
+  it('loading line, then API down: a retryable alert under the page h1', async () => {
     getRoadmapPreview.mockRejectedValueOnce(new Error('down'))
     render(<PreviewRoute answers={priya} saveFailed={false} />)
+    expect(screen.getByText('Building your roadmap…')).toBeInTheDocument()
     expect(await screen.findByRole('heading', { level: 2, name: "Can't reach LandedNZ" })).toBeInTheDocument()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
   })

@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { PublicFooter } from "@/components/chrome/public-footer"
 import { QuestionStep } from "@/components/onboarding/question-step"
 
 export const metadata: Metadata = {
@@ -10,11 +9,8 @@ export const metadata: Metadata = {
 
 export default function OnboardingPage() {
   return (
-    <>
-      <Suspense>
-        <QuestionStep />
-      </Suspense>
-      <PublicFooter />
-    </>
+    <Suspense>
+      <QuestionStep />
+    </Suspense>
   )
 }

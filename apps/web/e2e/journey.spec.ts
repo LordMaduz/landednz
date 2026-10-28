@@ -12,7 +12,7 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
     await page.getByLabel(label).check()
     await page.getByRole('button', { name: 'Continue' }).click()
   }
-  await page.getByLabel('Arrival date').fill(ANSWERS.arrivalDate)
+  await page.locator('[role=gridcell][data-today]').click() // ANSWERS.arrivalDate is today
   await page.getByRole('button', { name: 'See my roadmap' }).click()
 
   await expect(page).toHaveURL('/onboarding/preview')

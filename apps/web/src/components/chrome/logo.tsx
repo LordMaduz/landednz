@@ -1,10 +1,10 @@
 import Link from "next/link"
 
 // The LandedNZ mark: two contour lines and a waypoint
-export function Logo({ size = 24 }: { size?: number }) {
+export function Logo({ size = 24, onInk = false }: { size?: number; onInk?: boolean }) {
   return (
     <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" className="shrink-0">
-      <rect width="24" height="24" rx="6" className="fill-ink" />
+      <rect width="24" height="24" rx="6" className={onInk ? "fill-ink-hover" : "fill-ink"} />
       <path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" className="stroke-white" strokeWidth="1.5" strokeLinecap="round" />
       <path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" className="stroke-white/55" strokeWidth="1.5" strokeLinecap="round" />
       <circle cx="16.5" cy="7.5" r="2" className="fill-mark" />
