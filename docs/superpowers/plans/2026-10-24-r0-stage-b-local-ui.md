@@ -21,7 +21,7 @@
 - Motion: CSS only — aurora flow while streaming (3 s linear), stamp in (200 ms), sheet open/close; all off under `prefers-reduced-motion`.
 - Dates shown in `en-NZ` with `timeZone: 'Pacific/Auckland'` (e.g. "22 Oct", "21 October 2026"); "day N" counts NZ calendar days with arrival day = day 1.
 - Copy: sentence case, no middle-dot separators, no "→" appended to links, errors say what happened and what is safe.
-- Commits: Conventional Commits with scope, each ending `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+- Commits: Conventional Commits with scope.
 - Every UI task ends with the minimalism validator (`.claude/skills/minimalism-validator`) and `web-design-guidelines` on the built page at 1440 and 390, findings fixed; result line in the ledger.
 
 ## Review Focus
