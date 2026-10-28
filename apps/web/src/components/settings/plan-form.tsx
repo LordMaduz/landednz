@@ -1,23 +1,49 @@
 "use client"
 
-import { useId, useRef, useState } from "react"
+import { useId, useRef, useState, type ReactNode } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { Card, CardHead } from "@/components/ui/card"
-import { Field } from "@/components/ui/field"
-import { Select } from "@/components/ui/select"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { OptionRow } from "@/components/ui/option-row"
 import { updateOnboardingProfile, type GetProfileResponse } from "@/lib/api"
-import { DATE_QUESTION, QUESTIONS, type Answers } from "@/lib/answers"
-import { nzCalendarDate } from "@/lib/nz-date"
+import { answerLabel, QUESTIONS, type Answers } from "@/lib/answers"
+import { nzCalendarDate, weekdayDay } from "@/lib/nz-date"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
-// Settings labels for the onboarding questions (the board's short forms)
-const LABELS = { visaType: "Visa", city: "City", familySituation: "Who's moving with you", occupation: "Work" } as const
-const KEYS = [...QUESTIONS.map(q => q.key), DATE_QUESTION.key] as (keyof Answers)[]
-const label = "text-small font-medium"
+type Key = keyof Answers
+// label: the answers list; ask: the editor's h2; noun: "Your roadmap is rebuilt for the new {noun}."
+const COPY: Record<Key, { label: string; ask: string; noun: string }> = {
+  visaType: { label: "Visa", ask: "What visa are you on?", noun: "visa" },
+  city: { label: "City", ask: "Where do you live?", noun: "city" },
+  familySituation: { label: "Who's moving", ask: "Who's moving with you?", noun: "household" },
+  occupation: { label: "Work", ask: "What work do you do?", noun: "work" },
+  arrivalDate: { label: "Arrival date", ask: "When do you land?", noun: "arrival date" },
+}
+const KEYS = Object.keys(COPY) as Key[]
 
-export function PlanForm({ profile }: { profile: GetProfileResponse }) {
+// The navy answers card; the account block joins it on desktop (children), stacks apart on phones
+export function AnswersCard({ children, joined }: { children: ReactNode; joined?: boolean }) {
+  return (
+    <Card className={cn("flex-1 gap-0 border-ink bg-ink p-8 text-white max-narrow:p-4 max-narrow:pb-1", joined && "rounded-b-none max-narrow:rounded-b-surface")}>
+      <h1 className="text-title">Settings</h1>
+      <p className="mt-1 text-rail-text max-narrow:text-small">
+        Your answers build your roadmap.<span className="max-narrow:hidden"> Change one and it&apos;s rebuilt; done tasks stay done.</span>
+      </p>
+      {children}
+    </Card>
+  )
+}
+
+const display = (key: Key, v: string) => (key === "arrivalDate" ? `${weekdayDay(v)} ${v.slice(0, 4)}` : answerLabel(key, v))
+const isPhone = () => typeof window.matchMedia === "function" && window.matchMedia("(max-width: 560px)").matches
+
+export function PlanForm({ profile, account }: { profile: GetProfileResponse; account: ReactNode }) {
+  const router = useRouter()
+  const param = useSearchParams().get("edit")
+  const editing: Key = KEYS.find(k => k === param) ?? "visaType"
   const [saved, setSaved] = useState<Answers>({
     visaType: profile.visaType,
     city: profile.city,
@@ -25,16 +51,30 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
     occupation: profile.occupation,
     arrivalDate: profile.arrivalDate,
   })
-  const [answers, setAnswers] = useState<Answers>(saved)
+  const [draft, setDraft] = useState<string>(saved[editing])
+  const [session, setSession] = useState(0) // new Calendar mount per edit session, so it reopens on the right month
   const [error, setError] = useState<string | null>(null)
   const [dateError, setDateError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [today] = useState(() => nzCalendarDate(new Date()))
   const titleId = useId()
-  const dateErrorId = useId()
   const undoToast = useRef<string | number | undefined>(undefined)
 
-  // Dirty is "different from the saved values", so changing a value back clears it
-  const dirty = KEYS.some(k => answers[k] !== saved[k])
+  // Another answer picked (or the saved one changed): start from its saved value
+  const [seen, setSeen] = useState(`${editing}:${saved[editing]}`)
+  if (seen !== `${editing}:${saved[editing]}`) {
+    setSeen(`${editing}:${saved[editing]}`)
+    setDraft(saved[editing])
+    setError(null)
+    setDateError(null)
+    setSession(n => n + 1)
+  }
+
+  const dirty = draft !== saved[editing]
+  const copy = COPY[editing]
+  const editQuestion = editing === "arrivalDate" ? null : QUESTIONS.find(q => q.key === editing)!
+  // The phone editor is its own page (?edit=); desktop keeps the list beside it
+  const leave = () => isPhone() && router.push("/settings")
 
   async function persist(next: Answers): Promise<boolean> {
     setError(null)
@@ -54,7 +94,6 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
 
   async function undo(previous: Answers) {
     if (saving) return
-    setAnswers(previous)
     if (await persist(previous)) setSaved(previous)
   }
 
@@ -62,76 +101,90 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
     e.preventDefault()
     if (saving || !dirty) return
     setDateError(null)
-    if (!answers.arrivalDate) return setDateError("Enter the day you land.")
     // An already-passed saved date stays valid; only a newly picked past date is refused
-    if (answers.arrivalDate !== saved.arrivalDate && answers.arrivalDate < nzCalendarDate(new Date())) {
-      return setDateError("Pick a date from today onwards.")
-    }
+    if (editing === "arrivalDate" && draft < nzCalendarDate(new Date())) return setDateError("Pick a date from today onwards.")
     const previous = saved
-    // An older Undo would overwrite this newer save
-    toast.dismiss(undoToast.current)
-    if (await persist(answers)) {
-      setSaved(answers)
+    const next = { ...saved, [editing]: draft } as Answers
+    toast.dismiss(undoToast.current) // an older Undo would overwrite this newer save
+    if (await persist(next)) {
+      setSaved(next)
       undoToast.current = toast.success("Plan saved. Your roadmap was rebuilt.", { action: { label: "Undo", onClick: () => undo(previous) } })
+      leave()
     }
   }
 
+  function cancel() {
+    setDraft(saved[editing])
+    setError(null)
+    setDateError(null)
+    setSession(n => n + 1)
+    leave()
+  }
+
   return (
-    <Card aria-labelledby={titleId} className="row-span-2 gap-5 max-split:row-auto">
-      <div className="flex flex-col gap-1">
-        <CardHead title="Your plan" titleId={titleId} />
-        <p className="max-w-lede text-small text-muted">
-          Your roadmap is built from these answers. Change one and it&apos;s rebuilt; tasks you&apos;ve done stay done.
-        </p>
+    <>
+      <div className={cn("flex flex-col max-narrow:gap-2.5", param && "max-narrow:hidden")}>
+        <AnswersCard joined>
+          <ol aria-label="Your answers" className="m-0 mt-5 list-none p-0 max-narrow:mt-2.5">
+            {KEYS.map(k => (
+              <li key={k} className="flex min-h-14 items-center gap-3 border-t border-white/15 py-3 max-narrow:py-1">
+                <span className="flex flex-1 flex-col leading-snug">
+                  <span className={cn("text-small font-medium", k === editing ? "text-toast-action" : "text-rail-label")}>
+                    {COPY[k].label}{k === editing && <span className="max-narrow:hidden"> · changing</span>}
+                  </span>
+                  <span>{display(k, saved[k])}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => router.push(`/settings?edit=${k}`)}
+                  className={cn("flex min-h-11 cursor-pointer items-center border-0 bg-transparent p-0 text-small font-medium text-toast-action hover:text-white", k === editing && "narrow:hidden")}
+                >
+                  Change{" "}<span className="sr-only">{COPY[k].label}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </AnswersCard>
+        {account}
       </div>
-      <form onSubmit={save} className="flex flex-1 flex-col gap-5" noValidate>
-        <div className="grid grid-cols-2 gap-x-5 gap-y-4 max-narrow:grid-cols-1">
-          {QUESTIONS.map(q => (
-            <div key={q.key} className="flex min-w-0 flex-col gap-1.5">
-              <label htmlFor={`plan-${q.key}`} className={label}>{LABELS[q.key]}</label>
-              <Select
-                id={`plan-${q.key}`}
-                name={q.key}
-                value={answers[q.key]}
-                onChange={e => setAnswers(a => ({ ...a, [q.key]: e.target.value }))}
-              >
-                {q.options.map(([value, text]) => (
-                  <option key={value} value={value}>{text}</option>
-                ))}
-              </Select>
-            </div>
-          ))}
-          <div className="flex min-w-0 flex-col gap-1.5">
-            <label htmlFor="plan-arrival" className={label}>Arrival date</label>
-            <Field
-              id="plan-arrival"
-              name={DATE_QUESTION.key}
-              type="date"
-              className={cn(dateError && "border-danger shadow-field-error")}
-              value={answers.arrivalDate}
-              aria-invalid={dateError ? true : undefined}
-              aria-describedby={dateError ? dateErrorId : undefined}
-              onChange={e => {
-                setDateError(null)
-                setAnswers(a => ({ ...a, arrivalDate: e.target.value }))
-              }}
-            />
-            {dateError && <p id={dateErrorId} className="text-small text-danger">{dateError}</p>}
+
+      <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-14 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
+        <form onSubmit={save} noValidate className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-small text-muted">{copy.label}</span>
+            <h2 id={titleId} className="text-section">{copy.ask}</h2>
+            <p className="m-0 text-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
           </div>
-        </div>
-        {error && <p role="alert" className="text-ink">{error}</p>}
-        <div className="-mx-5 mt-auto -mb-1 flex items-center justify-end gap-3 border-t border-hairline px-5 pt-4 max-narrow:-mx-4 max-narrow:px-4">
-          {!dirty && <span className="text-small text-muted">No unsaved changes</span>}
-          <Button
-            type="submit"
-            disabled={!dirty}
-            aria-busy={saving}
-            className={cn("min-w-36", saving && "bg-ink-hover")}
-          >
-            {saving ? "Saving…" : "Save changes"}
-          </Button>
-        </div>
-      </form>
-    </Card>
+          {editQuestion ? (
+            <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-2.5">
+              {editQuestion.options.map(([value, label]) => (
+                <OptionRow
+                  key={`${editing}-${value}`}
+                  name={editing}
+                  value={value}
+                  label={label}
+                  checked={draft === value}
+                  className="min-h-15"
+                  onChange={() => setDraft(value)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Calendar key={session} value={draft} onChange={v => { setDateError(null); setDraft(v) }} today={today} labelledBy={titleId} />
+              {dateError && <p role="alert" className="text-small text-danger">{dateError}</p>}
+            </div>
+          )}
+          {error && <p role="alert" className="text-ink">{error}</p>}
+          <div className="flex gap-3 max-narrow:[&>*]:flex-1">
+            <Button type="button" variant="quiet" onClick={cancel}>Cancel</Button>
+            <Button type="submit" disabled={!dirty} aria-busy={saving} className={cn(saving && "bg-ink-hover")}>
+              {saving ? "Saving…" : "Save and rebuild"}
+            </Button>
+          </div>
+        </form>
+      </Card>
+    </>
   )
 }
+

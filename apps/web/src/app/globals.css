@@ -23,6 +23,7 @@
   /* text on the ink rail */
   --color-rail-text: #A9BDC7;
   --color-rail-label: #93AAB5;
+  --color-danger-on-ink: #F2B8B5;
 
   --text-hero: 48px;
   --text-hero--line-height: 1.05;
@@ -69,7 +70,7 @@
   --grid-template-columns-rail: 440px minmax(0, 1fr);
   --grid-template-columns-itin: 32px minmax(0, 1fr) auto;
   --grid-template-columns-home: minmax(0, 1fr) 440px;
-  --grid-template-columns-settings: minmax(0, 1fr) 360px;
+  --grid-template-columns-settings: 440px minmax(0, 1fr);
   --grid-template-columns-task: minmax(0, 1fr) 380px;
   --grid-template-columns-plan: 72px minmax(0, 1fr);
 

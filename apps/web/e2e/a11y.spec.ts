@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test'
 import { holdAnswers, resetTestUser, signIn } from './test-user'
 
 const PUBLIC = ['/', '/onboarding?step=1', '/signin', '/privacy', '/terms']
-const SIGNED_IN = ['/app', '/app/roadmap', '/app/roadmap?task=T08', '/settings']
+const SIGNED_IN = ['/app', '/app/roadmap', '/app/roadmap?task=T08', '/settings', '/settings?edit=arrivalDate', '/settings?edit=city']
 
 async function expectNoViolations(page: Page, path: string) {
   await page.goto(path)
