@@ -281,8 +281,8 @@ describe('TaskSheet', () => {
       expect(within(list).getByText('checked 25 Oct 2026')).toBeInTheDocument()
       const items = within(list).getAllByRole('listitem')
       expect(items.map(i => i.textContent)).toEqual([
-        'Tax codes for individuals (opens in a new tab)ird.govt.nz',
-        `${NEW.title} (opens in a new tab)ird.govt.nz`,
+        '1Tax codes for individuals (opens in a new tab)ird.govt.nz',
+        `2${NEW.title} (opens in a new tab)ird.govt.nz`,
       ])
       const title = within(items[0]).getByRole('link')
       expect(title).toHaveAttribute('href', CODES.url)

@@ -15,7 +15,7 @@ export function OptionRow({
         className,
       )}
     >
-      <input type="radio" checked={checked} className="m-0 size-4 shrink-0 accent-teal" {...props} />
+      <input type="radio" checked={checked} className="radio" {...props} />
       {label}
     </label>
   )

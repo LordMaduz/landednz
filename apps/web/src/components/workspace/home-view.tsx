@@ -77,10 +77,10 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 )}
               </div>
               <CardFoot className="flex gap-2 pt-1">
-                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "max-narrow:flex-1" })}>
+                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "min-h-11 max-narrow:flex-1" })}>
                   Start task<span className="sr-only">: {top.title}</span>
                 </Link>
-                <Link href={`${taskHref(top.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet" })}>
+                <Link href={`${taskHref(top.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet", className: "min-h-11" })}>
                   <Wide>Ask about this</Wide>
                   <Phone>Ask</Phone>
                 </Link>
@@ -114,7 +114,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
               {home.week.map(({ task: t, meta }, i) => (
                 <li key={t.taskId} className={cn(i > 1 && "max-narrow:hidden")}>
                   <Link href={taskHref(t.taskId)} className={ROW}>
-                    <Waypoint state={t.state === "blocked" ? "blocked" : "available"} />
+                    <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
                     <span title={t.title} className="min-w-0 flex-1 truncate font-medium max-narrow:whitespace-normal">{t.title}</span>
                     <span className="flex-none text-small text-muted max-narrow:hidden">{meta}</span>
                   </Link>

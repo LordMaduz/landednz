@@ -77,7 +77,7 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
       <ol className="track-stages" style={{ gridTemplateColumns: TRACK_FLAGS.map((fx, i) => `minmax(0, ${fx - (i ? TRACK_FLAGS[i - 1] : 0)}fr)`).join(" ") }}>
         {stageLabels(route, arrivalDate, now).map(s => (
           <li key={s.id} className={`track-stage${s.now ? "" : " track-stage-off"}`}>
-            <span className="track-stage-name">{s.name}{s.now ? " · now" : ""}</span>
+            <span className="track-stage-name">{s.name}{s.now ? " · now" : s.open ? " · still open" : ""}</span>
             <span className="text-muted">
               {s.state.split(" · ").map((part, i, all) => <span key={part} className="whitespace-nowrap">{part}{i < all.length - 1 && " · "} </span>)}
             </span>

@@ -31,12 +31,21 @@ function current(route: RouteView) {
   return { cur, i: cur ? LEGS.findIndex(l => l.id === cur.id) : 4 }
 }
 
-// You: inside the current stage by the share of its tasks done, at the end when everything is
-export function youX(route: RouteView): number {
-  const { cur, i } = current(route)
+// Where the marker is shown: the calendar stage once today has passed the current stage (which then reads "still open")
+function markerStage(route: RouteView, day: number) {
+  const { i } = current(route)
+  return day < 1 ? i : Math.max(i, stageIndexOn(day))
+}
+
+// You: inside the marker stage by the share of its tasks done, at the end when everything is.
+// `day` moves the marker to the calendar stage; without it the marker sits on the current stage.
+export function youX(route: RouteView, day = 0): number {
+  const { cur } = current(route)
   if (!cur) return route.total > 0 ? 1000 : 0
-  const [start, end] = stageSpan(i)
-  return cur.total ? start + ((end - start) * cur.done) / cur.total : start
+  const m = markerStage(route, day)
+  const leg = route.legs.find(l => l.id === LEGS[m].id)
+  const [start, end] = stageSpan(m)
+  return leg?.total ? start + ((end - start) * leg.done) / leg.total : start
 }
 
 // Today: inside the stage whose days hold today, null before arrival, at the end past day 61
@@ -74,7 +83,7 @@ export const daysLeftIn = (i: number, day: number) => (day < 1 ? null : STAGE_DA
 export function routeProgress(route: RouteView, arrivalDate: string, now: Date) {
   const day = journeyDay(arrivalDate, now)
   const { cur, i } = current(route)
-  const x = youX(route)
+  const x = youX(route, day)
 
   const label = day < 1 ? `You · ${plural(1 - day, 'day')} to go` : "You're here"
   const name = cur?.name ?? legName(LEGS[i].id, day < 1)
@@ -89,7 +98,7 @@ export function routeProgress(route: RouteView, arrivalDate: string, now: Date) 
 export function phoneStages(route: RouteView, arrivalDate: string, now: Date) {
   const day = journeyDay(arrivalDate, now)
   const before = day < 1
-  const { i } = current(route)
+  const i = markerStage(route, day)
   const prevLeg = i > 0 ? route.legs.find(l => l.id === LEGS[i - 1].id) : undefined
   return {
     prev: i > 0 ? { name: legName(LEGS[i - 1].id, before), state: !prevLeg || prevLeg.done === prevLeg.total ? '✓' : `${prevLeg.done} of ${prevLeg.total}` } : null,
@@ -100,8 +109,9 @@ export function phoneStages(route: RouteView, arrivalDate: string, now: Date) {
 
 // The five stage labels under the road
 export function stageLabels(route: RouteView, arrivalDate: string, now: Date) {
-  const before = journeyDay(arrivalDate, now) < 1
-  const { i: curIndex } = current(route)
+  const day = journeyDay(arrivalDate, now)
+  const before = day < 1
+  const curIndex = markerStage(route, day)
   return LEGS.map((l, i) => {
     const leg = route.legs.find(r => r.id === l.id)
     const done = leg?.done ?? 0
@@ -111,6 +121,7 @@ export function stageLabels(route: RouteView, arrivalDate: string, now: Date) {
       name: legName(l.id, before),
       state: `${done ? `${done} of ${total} done` : plural(total, 'task')} · ${legWhen(l.id, arrivalDate)}`,
       now: i === curIndex,
+      open: i < curIndex && done < total,
     }
   })
 }

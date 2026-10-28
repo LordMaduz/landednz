@@ -218,9 +218,10 @@ export function TaskSheet({
     )
   const sourcesList = (
     <>
-      <ol className="flex list-decimal flex-col gap-2.5 pl-5 text-small tabular-nums marker:text-muted">
-        {sourcesShown.map(s => (
-          <li key={s.url} className="pl-1">
+      <ol role="list" className="m-0 flex list-none flex-col p-0 text-small tabular-nums">
+        {sourcesShown.map((s, n) => (
+          <li key={s.url} className="flex gap-2.5 border-t border-hairline py-2 first:border-t-0 first:pt-0">
+            <span aria-hidden="true" className="w-3.5 flex-none py-0.5 text-muted max-narrow:py-3">{n + 1}</span>
             <span className="flex flex-col">
               <a href={s.url} target="_blank" rel="noopener noreferrer" className="py-0.5 font-medium max-narrow:py-3">
                 {s.title} <span className="sr-only">(opens in a new tab)</span>
@@ -232,7 +233,7 @@ export function TaskSheet({
         ))}
       </ol>
       {moreCount > 0 && (
-        <Button variant="ghost" size="sm" aria-expanded={allSources} onClick={() => setAllSources(v => !v)} className="self-start">
+        <Button variant="ghost" size="sm" aria-expanded={allSources} onClick={() => setAllSources(v => !v)} className="self-start px-0 font-semibold text-teal-text">
           {allSources ? "Show fewer sources" : `${moreCount} more sources`}
         </Button>
       )}
@@ -350,7 +351,7 @@ export function TaskSheet({
             {steps && sources.length > 0 && (
               <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
                 <div className="flex items-baseline justify-between gap-3">
-                  <h2 id={`${titleId}-sources`} className="text-body font-semibold">
+                  <h2 id={`${titleId}-sources`} className="text-section">
                     Sources
                   </h2>
                   <p className="text-small text-muted">{checkedLabel}</p>

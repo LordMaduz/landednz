@@ -59,7 +59,7 @@
   --shadow-rail-ring: 0 0 0 5px rgba(63, 201, 183, 0.18);
   --shadow-chosen: inset 0 0 0 1px #0E7C7B;
 
-  --container-page: 1120px;
+  --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
   --container-hero-title: 560px;
   --container-hero-lede: 520px;
   --container-auth: 460px;
@@ -109,12 +109,15 @@
   to { background-position: 200% 50%; }
 }
 
-/* Page container: 1120 px with 24 px side padding */
+/* Page container: 1120 px content, 24 px side padding (16 px on phones) */
 @utility container-page {
   width: 100%;
   max-width: var(--container-page);
   margin-inline: auto;
   padding-inline: 24px;
+  @media (width < 561px) {
+    padding-inline: 16px;
+  }
 }
 
 /* Route waypoints (12 px; current 16 px; Home beads 8 px on phones) and the rail (ui_parts.ROUTE_CSS) */
@@ -130,6 +133,23 @@
     align-items: center;
     justify-content: center;
   }
+  /* Option radio: 20 px, 1.5 px border; chosen = teal fill with an 8 px white centre */
+  .radio {
+    flex: none;
+    box-sizing: border-box;
+    appearance: none;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--color-control);
+  }
+  .radio::after { content: ""; width: 8px; height: 8px; border-radius: 9999px; }
+  .radio:checked { background: var(--color-teal); border-color: var(--color-teal); }
+  .radio:checked::after { background: var(--color-white); }
+  .wp-mark { width: 20px; height: 20px; }
   .wp-done { background: var(--color-teal); }
   .wp-current { width: 16px; height: 16px; border: 2px solid var(--color-ink); }
   .wp-leg-now { border: 2px solid var(--color-ink); }

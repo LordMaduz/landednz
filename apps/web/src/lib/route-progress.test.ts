@@ -71,8 +71,24 @@ describe('routeProgress', () => {
 
   it("on day 5 the pin reads You're here", () => {
     const p = routeProgress(week1Open(), ARRIVAL, DAY_5)
-    expect(p).toMatchObject({ x: 240, todayX: 400, label: "You're here", passed: [true, false, false, false, false] })
+    expect(p).toMatchObject({ x: 270, todayX: 400, label: "You're here", passed: [true, true, false, false, false] })
     expect(p.summary).toBe('Arrival · 3 of 4')
+  })
+
+  it('day 1 with Before you flew tasks open: the pin sits on Arrival, the stage behind reads still open', () => {
+    const v = view([4, 0, 0, 0, 0])
+    expect(routeProgress(v, ARRIVAL, DAY_1).x).toBe(150)
+    const labels = stageLabels(v, ARRIVAL, DAY_1)
+    expect(labels.map(l => l.now)).toEqual([false, true, false, false, false])
+    expect(labels.map(l => l.open)).toEqual([true, false, false, false, false])
+  })
+
+  it('before arrival the pin and now stay on Before you flew', () => {
+    const v = view([4, 0, 0, 0, 0])
+    expect(routeProgress(v, ARRIVAL, DAY_0).x).toBe(100)
+    const labels = stageLabels(v, ARRIVAL, DAY_0)
+    expect(labels.map(l => l.now)).toEqual([true, false, false, false, false])
+    expect(labels.some(l => l.open)).toBe(false)
   })
 
   it('names the stage and days left', () => {
@@ -98,7 +114,7 @@ describe('stageLabels', () => {
     expect(labels.map(l => l.state)).toEqual([
       '6 of 6 done · by 2 Nov', '3 of 4 done · 2–3 Nov', '7 tasks · to 9 Nov', '4 tasks · to 2 Dec', '1 task · from December',
     ])
-    expect(labels.map(l => l.now)).toEqual([false, true, false, false, false])
+    expect(labels.map(l => l.now)).toEqual([false, false, true, false, false])
   })
 })
 
