@@ -20,7 +20,7 @@
 - Auth is never mocked in API integration tests; use real local Supabase users.
 - `AI_MODE` is required (`live` | `mock`), no default. Tests and CI use `mock`.
 - Light theme only; minimalism validator applies to every design board and UI change.
-- Commit format: Conventional Commits with scope (`feat(shared):`, `chore(deps):`, `chore(repo):` …), each ending with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Never commit `.env.local`.
+- Commit format: Conventional Commits with scope (`feat(shared):`, `chore(deps):`, `chore(repo):` …). Never commit `.env.local`.
 - Work on branch `chore/r0-stage-a` cut from `docs/r0-foundation-spec`. Do not push without the owner's go-ahead.
 
 ## Review Focus

@@ -24,7 +24,7 @@
 - Phases: 1 pre-arrival · 2 arrival · 3 week 1 · 4 month 1 · 5 month 2–6.
 - Pure core code (`src/core/`, `src/content/matches.ts`) has zero framework imports (constitution C02); `$queryRaw` results use the BigInt replacer (C10); cosine `<=>` only (C12); persona/condition filtering happens in SQL before semantic search (C07).
 - Auth is never mocked in integration tests; tests run against the real local Supabase.
-- Commits: Conventional Commits with scope, ending `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Never commit `.env.local`.
+- Commits: Conventional Commits with scope. Never commit `.env.local`.
 - **Spec extension (owner approved 2026-10-24):** scoring's hard-coded time-urgency rules (T06/T07/T08/T09/T16) move into each task's YAML as `urgency`, beside `boosts`, because research may renumber tasks.
 - **Deploys (owner approved 2026-10-24):** after Task 8, staging and production are not updated until Plan 2's verified content exists; they keep running their current release.
 

@@ -8,7 +8,7 @@ for f in apps/api/.env.local apps/web/.env.local; do
 done
 # Without it Google rejects the code exchange (invalid_client) and sign-in silently lands on /.
 grep -qs '^SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=.' supabase/.env ||
-  echo "Warning: SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET not set in supabase/.env, Google sign-in will fail (docs/setup/google-oauth.md)" >&2
+  { echo "SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET not set in supabase/.env, Google sign-in would fail (docs/setup/google-oauth.md)" >&2; exit 1; }
 
 # A leftover dev server (often a Ctrl-Z'd `make dev`) holds the port and would answer nothing.
 for port in 3000 3001; do

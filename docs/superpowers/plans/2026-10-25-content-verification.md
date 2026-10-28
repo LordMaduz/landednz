@@ -21,7 +21,7 @@
 - Owner gates (Tasks 1, 2, every content task, every board) stop the session until the owner answers; record the answer and date in the ledger.
 - Deploys stay blocked until Task 15 passes (Plan 1, owner approved 2026-10-24).
 - Prisma: `schema.prisma` declares `embedding` and its ivfflat index since PR #3, so `prisma migrate dev --create-only` no longer proposes dropping them; still read every generated SQL file before applying.
-- Commits: Conventional Commits with scope (`feat(content):`, `docs(content):`; a verified task is `docs(content): verify T08 <name>`), ending `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+- Commits: Conventional Commits with scope (`feat(content):`, `docs(content):`; a verified task is `docs(content): verify T08 <name>`).
 
 ## Content procedure (stages 2–4, one task at a time)
 
