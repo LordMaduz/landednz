@@ -76,6 +76,7 @@ and picked final boards. This spec makes the built app match those boards.
 | Sizes | `variant="compact"` (Home) and `variant="tall"` (Roadmap, with arcs) replace `height: 96 | 120`. |
 
 - **The boards' You and Today positions are only illustrations.** The formulas above decide where the markers go.
+- **"n days left"** everywhere (Home aside, Roadmap, phone road) = the stage's last `STAGE_DAYS` day − today, not counting today (day 5 in Week 1 → 3, as the boards show). It is hidden when 0 or before arrival.
 - **On phones,** the same curvy road (flags, dots, Today line, You ring; no arcs) is drawn at card width, 56 px tall on Home and 64 px on Roadmap.
   Under it, one row of three labels:
   - Home: the previous stage with its state ("Arrival 3 of 4", or "Arrival ✓" when done), the current stage "Week 1 · now" (teal), and a **Roadmap** link;

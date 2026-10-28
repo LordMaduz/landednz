@@ -1,5 +1,7 @@
 # R0 Polish and Stage C (Cloud) Implementation Plan
 
+> **2026-10-29:** the look built in P2–P6 is replaced by R1–R7 in `2026-10-29-final-screens.md` (spec `2026-10-29-final-screens-design.md`). P7 runs from that plan; Track C here is unchanged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Give the signed-in app the approved premium polish (white cards, locked sizing, the track roadmap card, a new Roadmap page, the task page with sources in the side column, Settings, shared states). Then put R0 on staging and production and tag `r0`.
