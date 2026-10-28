@@ -38,7 +38,7 @@ const phones = (text: string) =>
     typeof p === "string" ? (
       p
     ) : (
-      <a key={i} href={`tel:${p.tel}`} className="whitespace-nowrap">
+      <a key={i} href={`tel:${p.tel}`} className="whitespace-nowrap underline">
         {p.text}
       </a>
     ),

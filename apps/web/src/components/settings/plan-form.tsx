@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useId, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardHead } from "@/components/ui/card"
@@ -31,6 +31,7 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
   const [saving, setSaving] = useState(false)
   const titleId = useId()
   const dateErrorId = useId()
+  const undoToast = useRef<string | number | undefined>(undefined)
 
   // Dirty is "different from the saved values", so changing a value back clears it
   const dirty = KEYS.some(k => answers[k] !== saved[k])
@@ -52,6 +53,7 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
   }
 
   async function undo(previous: Answers) {
+    if (saving) return
     setAnswers(previous)
     if (await persist(previous)) setSaved(previous)
   }
@@ -66,9 +68,11 @@ export function PlanForm({ profile }: { profile: GetProfileResponse }) {
       return setDateError("Pick a date from today onwards.")
     }
     const previous = saved
+    // An older Undo would overwrite this newer save
+    toast.dismiss(undoToast.current)
     if (await persist(answers)) {
       setSaved(answers)
-      toast.success("Plan saved. Your roadmap was rebuilt.", { action: { label: "Undo", onClick: () => undo(previous) } })
+      undoToast.current = toast.success("Plan saved. Your roadmap was rebuilt.", { action: { label: "Undo", onClick: () => undo(previous) } })
     }
   }
 

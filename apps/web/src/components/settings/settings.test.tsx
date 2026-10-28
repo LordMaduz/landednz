@@ -108,11 +108,32 @@ describe('PlanForm', () => {
   })
 
   it('a saved date that has already passed does not block changing another answer', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2030-01-01T00:00:00Z'))
+    try {
+      updateOnboardingProfile.mockResolvedValue({ success: true })
+      render(<PlanForm profile={profile} />)
+      fireEvent.change(screen.getByLabelText('City'), { target: { value: 'WELLINGTON' } })
+      fireEvent.click(save())
+      await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalled())
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('a second save removes the first toast, so its Undo cannot overwrite newer answers', async () => {
     updateOnboardingProfile.mockResolvedValue({ success: true })
-    render(<PlanForm profile={profile} />)
+    render(<><PlanForm profile={profile} /><Toaster /></>)
     fireEvent.change(screen.getByLabelText('City'), { target: { value: 'WELLINGTON' } })
     fireEvent.click(save())
-    await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalled())
+    await screen.findByRole('button', { name: 'Undo' })
+    fireEvent.change(screen.getByLabelText('City'), { target: { value: 'CHRISTCHURCH' } })
+    fireEvent.click(save())
+    await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Undo' })).toHaveLength(1))
+    fireEvent.click(screen.getByRole('button', { name: 'Undo' }))
+    await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalledTimes(3))
+    expect(updateOnboardingProfile.mock.calls[2][0].city).toBe('WELLINGTON')
   })
 
   it('while saving: "Saving…", aria-busy, same width class, no spinner', async () => {
