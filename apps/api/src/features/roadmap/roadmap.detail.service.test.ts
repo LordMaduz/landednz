@@ -101,6 +101,16 @@ describe('getTaskDetail()', () => {
     expect(result.governmentSourceUrl).toBe(source(t08.steps[0]!.source).url);
   });
 
+  test('a retired stub (T13) returns no source url and no verified date', async () => {
+    await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
+    await db.userRoadmapEntry.create({ data: { userId: TEST_USER_ID, taskId: 'T13', priorityScore: 0 } });
+
+    const result = await getTaskDetail(TEST_USER_ID, 'T13');
+
+    expect(result.governmentSourceUrl).toBe('');
+    expect(result.lastVerified).toBeNull();
+  });
+
   test('advice item sets professionalAdviceRequired and its note', async () => {
     await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
     const advice = task('T11')!.advice!;
