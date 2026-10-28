@@ -73,7 +73,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       const token = data.session?.access_token
       if (!token) return router.replace("/signin?redirect=%2Fapp%2Froadmap")
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
-      const view = buildRouteView(roadmap, profile.arrivalDate)
+      const view = buildRouteView(roadmap, profile.arrivalDate, new Date())
       setState({ view, firstUse: view.doneCount === 0 })
       if (askOnLoad.current && view.current) {
         askOnLoad.current = false

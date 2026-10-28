@@ -17,7 +17,7 @@ const user = { firstName: 'Priya' }
 // 15:00 NZ (NZDT, UTC+13) on 23 Oct = day 3
 const nz = (date: string, time: string) => new Date(`${date}T${time}+13:00`)
 const home = (now = nz('2026-10-23', '15:00:00'), r = priya(), p = profile) =>
-  buildHomeView(buildRouteView(r, p.arrivalDate), p, user, now)
+  buildHomeView(buildRouteView(r, p.arrivalDate, now), p, user, now)
 
 describe('buildHomeView — Priya, day 3', () => {
   const view = home()

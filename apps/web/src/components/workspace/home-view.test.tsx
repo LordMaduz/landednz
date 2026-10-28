@@ -37,7 +37,7 @@ function priyaWithWhy() {
   return r
 }
 const homeFor = (r = priyaWithWhy()) => {
-  const route = buildRouteView(r, profile.arrivalDate)
+  const route = buildRouteView(r, profile.arrivalDate, DAY_3)
   return { route, home: buildHomeView(route, profile, { firstName: 'Priya' }, DAY_3) }
 }
 

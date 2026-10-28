@@ -49,7 +49,7 @@ function withWhy() {
     'Your employer needs it before your first payday.'
   return r
 }
-const route = () => buildRouteView(withWhy(), '2026-10-21')
+const route = () => buildRouteView(withWhy(), '2026-10-21', new Date('2026-10-23T10:00:00+13:00'))
 
 function sheet(taskId: string, props: Partial<{ onChanged(): void }> = {}) {
   const onChanged = props.onChanged ?? vi.fn()
@@ -199,7 +199,7 @@ describe('TaskSheet', () => {
 
   it('unknown task id: nothing rendered', () => {
     const { container } = render(
-      <TaskSheet taskId="T99" route={buildRouteView(roadmap([apiTask('T01')]), '2026-10-21')} onChanged={vi.fn()} />,
+      <TaskSheet taskId="T99" route={buildRouteView(roadmap([apiTask('T01')]), '2026-10-21', new Date('2026-10-23T10:00:00+13:00'))} onChanged={vi.fn()} />,
     )
     expect(container).toBeEmptyDOMElement()
   })

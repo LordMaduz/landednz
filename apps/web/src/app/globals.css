@@ -285,6 +285,34 @@
     .task-body { order: 3; }
     .task-ask { order: 4; }
   }
+
+  /* Home track (docs/design/r0-polish/build.py ROUTE_CSS). The container query hides the labels and shows the summary under 561 px. */
+  .track { container-type: inline-size; padding-inline: 6px; }
+  .track-rv { position: relative; }
+  .track-rv > svg { position: absolute; inset: 0; width: 100%; overflow: visible; }
+  .track-rv path { vector-effect: non-scaling-stroke; }
+  .track-pin { position: absolute; transform: translate(-50%, -50%); }
+  .track-contour { stroke: var(--color-hairline); stroke-width: 1; fill: none; }
+  .track-ahead { stroke: #C9D3D7; stroke-width: 2; fill: none; stroke-dasharray: 4 5; }
+  .track-walked { stroke: var(--color-teal); stroke-width: 2.5; fill: none; }
+  .track-grad { stop-color: var(--color-teal); }
+  .track-flag { fill: #FFFFFF; stroke: var(--color-control); stroke-width: 1.5; stroke-linejoin: round; }
+  .track-flag-on { fill: var(--color-teal); stroke: var(--color-teal); }
+  .track-you { display: flex; flex-direction: column; align-items: center; gap: 4px; transform: translate(-50%, calc(-100% + 7px)); }
+  /* Near either end the tag stays inside the track and the dot stays on its x */
+  .track-you[data-edge="end"] { align-items: flex-end; transform: translate(calc(-100% + 7px), calc(-100% + 7px)); }
+  .track-you[data-edge="start"] { align-items: flex-start; transform: translate(-7px, calc(-100% + 7px)); }
+  .track-you-tag { font-size: 13px; font-weight: 600; color: #FFFFFF; background: var(--color-ink); border-radius: 9999px; padding: 2px 10px; white-space: nowrap; }
+  .track-you-dot { width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; border: 3px solid var(--color-ink); box-sizing: border-box; box-shadow: 0 0 0 6px rgba(15, 42, 58, 0.08); }
+  .track-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.45; }
+  .track-stage { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .track-stage-name { font-weight: 600; color: var(--color-ink); }
+  .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-muted); }
+  .track-sum { display: none; margin: 0; font-size: 13px; }
+  @container (max-width: 560px) {
+    .track-stages { display: none; }
+    .track-sum { display: block; }
+  }
 }
 
 @keyframes stamp-in {

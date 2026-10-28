@@ -5,7 +5,7 @@ import { priya } from '@/test/roadmap-fixtures'
 import { RouteRail } from './route-rail'
 import { RouteStrip } from './route-strip'
 
-const view = buildRouteView(priya(), '2026-10-21')
+const view = buildRouteView(priya(), '2026-10-21', new Date('2026-10-23T10:00:00+13:00'))
 
 describe('RouteRail', () => {
   it('folds done and locked legs behind a Show button named after the leg', () => {

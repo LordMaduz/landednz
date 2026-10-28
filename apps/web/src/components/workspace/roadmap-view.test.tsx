@@ -44,7 +44,7 @@ function priyaWithWhy() {
   t08.consequenceLine = 'Your employer needs it before your first payday.'
   return r
 }
-const view = () => buildRouteView(priyaWithWhy(), '2026-10-21')
+const view = () => buildRouteView(priyaWithWhy(), '2026-10-21', new Date('2026-10-23T10:00:00+13:00'))
 const user = { name: 'Priya Sharma', initials: 'PS' }
 
 beforeEach(() => {

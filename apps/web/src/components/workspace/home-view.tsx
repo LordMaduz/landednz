@@ -128,8 +128,9 @@ export function HomeScreen({ user, firstName }: { user: { name: string; initials
       const token = data.session?.access_token
       if (!token) return router.replace("/signin?redirect=%2Fapp")
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
-      const route = buildRouteView(roadmap, profile.arrivalDate)
-      setState({ route, home: buildHomeView(route, profile, { firstName }, new Date()) })
+      const now = new Date()
+      const route = buildRouteView(roadmap, profile.arrivalDate, now)
+      setState({ route, home: buildHomeView(route, profile, { firstName }, now) })
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
       setState("down")

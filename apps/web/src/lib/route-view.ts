@@ -1,6 +1,7 @@
 // The route the Roadmap rail and Home strip draw: legs of waypoints from GET /roadmap.
 import type { RoadmapApiResponse, RoadmapApiTask } from './api'
-import { LEGS, legForPhase, legWhen, type LegId } from './legs'
+import { LEGS, legForPhase, legName, legWhen, type LegId } from './legs'
+import { journeyDay } from './journey-day'
 import { shortDayNZ } from './nz-date'
 import { TASK_COPY, taskTitle } from './task-copy'
 
@@ -43,7 +44,8 @@ function blockedMeta(t: RoadmapApiTask): string {
   return topic ? `Needs ${topic} first` : 'Needs another task first'
 }
 
-export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string): RouteView {
+export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string, now: Date): RouteView {
+  const beforeArrival = journeyDay(arrivalDate, now) < 1
   const tasks = roadmap.phases.flatMap(p => p.tasks).sort((a, b) => a.phase - b.phase || a.taskId.localeCompare(b.taskId))
   const isDone = (t: RoadmapApiTask) => t.status === 'COMPLETE'
   const currentId = tasks.find(t => !isDone(t) && !t.isBlocked)?.taskId ?? null
@@ -69,7 +71,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string)
 
     return {
       id: leg.id,
-      name: leg.name,
+      name: legName(leg.id, beforeArrival),
       when: legWhen(leg.id, arrivalDate),
       done,
       total: legTasks.length,
