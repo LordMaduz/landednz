@@ -3,10 +3,10 @@ import { Suspense } from "react"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { connection } from "next/server"
+import { PublicFooter } from "@/components/chrome/public-footer"
 import { PublicHeader } from "@/components/chrome/public-header"
 import { PreviewRoute } from "@/components/onboarding/preview-route"
 import { ANSWERS_COOKIE, decodeAnswers } from "@/lib/answers"
-import { PublicFooter } from "@/components/chrome/public-footer"
 
 export const metadata: Metadata = {
   title: "Your roadmap is ready",

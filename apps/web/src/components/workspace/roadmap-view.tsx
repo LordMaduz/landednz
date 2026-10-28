@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
+import { PublicFooter } from "@/components/chrome/public-footer"
 import { RouteRail } from "@/components/route/route-rail"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildRouteView, type RouteView } from "@/lib/route-view"
@@ -12,7 +13,6 @@ import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { NextTaskCard } from "./next-task-card"
 import { TaskSheet } from "./task-sheet"
-import { PublicFooter } from "@/components/chrome/public-footer"
 
 export function RoadmapView({
   view,

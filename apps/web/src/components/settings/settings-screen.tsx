@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
+import { PublicFooter } from "@/components/chrome/public-footer"
 import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api"
 import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
 import { DeleteAccount } from "./delete-account"
 import { PlanForm } from "./plan-form"
 import { SettingsSection } from "./settings-section"
-import { PublicFooter } from "@/components/chrome/public-footer"
 
 type User = { name: string; initials: string; email: string; google: boolean }
 

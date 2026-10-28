@@ -3,10 +3,10 @@ import { Roboto } from "next/font/google";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
+import { PublicFooter } from "@/components/chrome/public-footer";
 import { PublicHeader } from "@/components/chrome/public-header";
 import { ANSWERS_COOKIE, decodeAnswers } from "@/lib/answers";
 import { SignIn } from "./sign-in-form";
-import { PublicFooter } from "@/components/chrome/public-footer";
 
 // Google's sign-in button must be Roboto 500
 const roboto = Roboto({ subsets: ["latin"], weight: "500", variable: "--font-roboto" });

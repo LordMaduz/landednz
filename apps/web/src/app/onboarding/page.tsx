@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { QuestionStep } from "@/components/onboarding/question-step"
 import { PublicFooter } from "@/components/chrome/public-footer"
+import { QuestionStep } from "@/components/onboarding/question-step"
 
 export const metadata: Metadata = {
   title: "Build your roadmap",

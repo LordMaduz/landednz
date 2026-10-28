@@ -306,9 +306,6 @@
   h1, h2 {
     text-wrap: balance;
   }
-  @media (width < 561px) {
-    .text-title { font-size: 22px; }
-  }
   a {
     @apply text-teal-text;
   }
@@ -319,4 +316,9 @@
     outline: 2px solid var(--color-teal);
     outline-offset: 2px;
   }
+}
+
+/* Unlayered so it beats the text-title utility: page titles are 22 px under 561 px */
+@media (width < 561px) {
+  .text-title { font-size: 22px; }
 }

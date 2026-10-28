@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
+import { PublicFooter } from "@/components/chrome/public-footer"
 import { RouteStrip } from "@/components/route/route-strip"
 import { Waypoint } from "@/components/route/waypoint"
 import { buttonVariants } from "@/components/ui/button"
@@ -13,7 +14,6 @@ import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildHomeView, type HomeView as Home } from "@/lib/home-view"
 import { buildRouteView, type RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
-import { PublicFooter } from "@/components/chrome/public-footer"
 
 const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 

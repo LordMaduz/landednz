@@ -32,7 +32,7 @@ Every visual value is a token in `apps/web/src/app/globals.css` `@theme`. Code u
 | `avatar` | Avatar circle |
 | `.ai` / `.ai-streaming` | Aurora hairline: AI-generated replies only, never decoration |
 
-Rows are divided by `hairline`, never `border`. No filled cards: a surface is a hairline box on white.
+Rows are divided by `hairline`, never `border`. No wash or cream cards: every card is white with a hairline and `shadow-lift`.
 
 ## Type: six roles, Geist 400/500/600
 
