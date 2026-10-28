@@ -139,7 +139,7 @@ and picked final boards. This spec makes the built app match those boards.
 
 **Look:**
 - A month grid, with previous and next month buttons.
-- Today is outlined, the chosen day is filled teal, and days you can't pick are dimmed with `aria-disabled`.
+- Today is outlined, the chosen day is filled teal, and days from the next or previous month are dimmed.
 - Under the grid, the row "You land on **Friday 30 October 2026**", with a chip such as "Tomorrow", "Today", "In n days" or "n days ago".
 
 **Accessibility (WAI-ARIA date grid pattern):**
@@ -150,7 +150,7 @@ and picked final boards. This spec makes the built app match those boards.
 
 **Data:**
 - Value in and out: an ISO `YYYY-MM-DD` string, the same `arrivalDate` as today.
-- The selectable range is the same rule the current date field and API validation use. No new limits.
+- No date limits: neither date field has a min or max today, and the calendar adds none.
 - It is used on question 5 and in the Settings editor.
 
 ### 4.4 Your roadmap is ready (`components/onboarding/preview-route.tsx`)
@@ -315,7 +315,7 @@ Two tasks per session. Each task leaves the app working and its tests passing.
 | `route-progress` | flag positions; You and Today x before arrival, on day 1, mid-stage and with everything done; dot states |
 | Unlocks | which tasks, and their order |
 | `bestBy` (API) | a day window, several rules, no rule, a month rule, no arrival date |
-| Calendar | keyboard moves, selection, the ISO value, disabled days |
+| Calendar | keyboard moves, selection, the ISO value, month change |
 
 **Component tests:**
 - The tests for home-view, roadmap-view, task-sheet, settings, question-step and preview-route are rewritten to the new structure.
