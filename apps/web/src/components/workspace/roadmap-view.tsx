@@ -65,7 +65,7 @@ function TaskList({ label, tasks, meta }: { label: string; tasks: RouteTask[]; m
     <ul aria-label={label} className="m-0 list-none p-0">
       {tasks.map(t => (
         <li key={t.taskId} className="flex min-h-9 items-baseline gap-3 border-t border-hairline py-1.5 max-narrow:min-h-11 max-narrow:items-center">
-          <Link href={taskHref(t.taskId)} className="min-w-0 flex-1 text-ink hover:text-ink">{t.title}</Link>
+          <Link href={taskHref(t.taskId)} className="min-h-6 min-w-0 flex-1 text-ink hover:text-ink">{t.title}</Link>
           <span className="flex-none text-small text-muted">{meta(t)}</span>
         </li>
       ))}

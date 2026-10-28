@@ -88,7 +88,7 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
           {phone.cur.name} · {variant === 'compact' || !phone.cur.daysLeft ? 'now' : `${phone.cur.daysLeft} ${phone.cur.daysLeft === 1 ? 'day' : 'days'} left`}
         </span>
         {variant === 'compact'
-          ? <Link href="/app/roadmap" className="font-semibold">Roadmap</Link>
+          ? <Link href="/app/roadmap" className="inline-flex min-h-6 items-center font-semibold">Roadmap</Link>
           : <span className="text-muted">{phone.next}</span>}
       </div>
       <p className="track-sum sr-only"><b className="font-semibold">{stage}</b> <span>· {more.join(" · ")}</span></p>
