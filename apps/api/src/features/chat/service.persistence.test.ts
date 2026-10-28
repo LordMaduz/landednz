@@ -211,3 +211,20 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
     expect(flags).toEqual([]);
   }, 10000);
 });
+
+describe('SSE stream CORS', () => {
+  test('echoes a configured origin and omits a foreign one', async () => {
+    const send = (origin: string) =>
+      app.inject({
+        method: 'POST',
+        url: `/chat/sessions/${TEST_SESSION_ID}/messages`,
+        headers: { Authorization: `Bearer ${TEST_JWT_TOKEN}`, origin },
+        payload: { content: 'CORS check' },
+      });
+    const allowed = await send('http://localhost:3000');
+    expect(allowed.headers['access-control-allow-origin']).toBe('http://localhost:3000');
+    expect(allowed.headers['vary']).toBe('Origin');
+    const denied = await send('http://evil.example');
+    expect(denied.headers['access-control-allow-origin']).toBeUndefined();
+  }, 10000);
+});
