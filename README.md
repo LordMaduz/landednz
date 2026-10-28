@@ -37,6 +37,8 @@ Run `make` to list every target.
 | `make db-reset-live` | Same, with real OpenAI embeddings (needs `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`) |
 | `make stop` | Stop local Supabase (data is kept) |
 
+After each content deploy, call `POST /admin/recalculate` to reconcile existing roadmaps with the new content; production must set `ADMIN_API_KEY` for this.
+
 For real Claude replies, set `AI_MODE=live`, `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`.
 
 ## Repository
