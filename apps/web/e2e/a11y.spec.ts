@@ -33,6 +33,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     await expect(page.getByRole('heading', { level: 1, name: 'When do you land?' })).toBeVisible() // /onboarding?step=5 with answers
     await page.locator('[role=gridcell][data-today]').click()
     await expectAxe(page, '/onboarding?step=5')
+    await page.goto('/signin')
+    await expect(page.getByRole('heading', { level: 1, name: 'Save your roadmap' })).toBeVisible()
     await expectNoViolations(page, '/signin') // with held answers: "Save your roadmap"
 
     await page.goto('/signin')

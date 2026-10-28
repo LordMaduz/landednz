@@ -13,6 +13,7 @@ import { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
 import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
+import { config } from '../../shared/config.js';
 
 const TS = Date.now();
 let TEST_EMAIL: string;
@@ -213,18 +214,26 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
 });
 
 describe('SSE stream CORS', () => {
-  test('echoes a configured origin and omits a foreign one', async () => {
-    const send = (origin: string) =>
-      app.inject({
-        method: 'POST',
-        url: `/chat/sessions/${TEST_SESSION_ID}/messages`,
-        headers: { Authorization: `Bearer ${TEST_JWT_TOKEN}`, origin },
-        payload: { content: 'CORS check' },
-      });
-    const allowed = await send('http://localhost:3000');
-    expect(allowed.headers['access-control-allow-origin']).toBe('http://localhost:3000');
-    expect(allowed.headers['vary']).toBe('Origin');
-    const denied = await send('http://evil.example');
-    expect(denied.headers['access-control-allow-origin']).toBeUndefined();
+  const send = (origin?: string) =>
+    app.inject({
+      method: 'POST',
+      url: `/chat/sessions/${TEST_SESSION_ID}/messages`,
+      headers: { Authorization: `Bearer ${TEST_JWT_TOKEN}`, ...(origin && { origin }) },
+      payload: { content: 'CORS check' },
+    });
+
+  test('echoes a configured origin with credentials and Vary', async () => {
+    const allowedOrigin = config.corsOrigin[0];
+    const res = await send(allowedOrigin);
+    expect(res.headers['access-control-allow-origin']).toBe(allowedOrigin);
+    expect(res.headers['access-control-allow-credentials']).toBe('true');
+    expect(res.headers['vary']).toBe('Origin');
+  }, 10000);
+
+  test.each([['a foreign origin', 'http://evil.example'], ['no origin', undefined]])('omits CORS headers for %s', async (_name, origin) => {
+    const res = await send(origin);
+    expect(res.headers['access-control-allow-origin']).toBeUndefined();
+    expect(res.headers['access-control-allow-credentials']).toBeUndefined();
+    expect(res.headers['vary']).toBe('Origin');
   }, 10000);
 });
