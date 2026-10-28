@@ -44,7 +44,7 @@ describe('createProfile()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'SOLO',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       });
 
@@ -56,43 +56,43 @@ describe('createProfile()', () => {
       expect(profile!.visaType).toBe('AEWV');
       expect(profile!.city).toBe('AUCKLAND');
       expect(profile!.familySituation).toBe('SOLO');
-      expect(profile!.occupation).toBe('TECHNOLOGY');
+      expect(profile!.occupation).toBe('OTHER_PROFESSIONAL');
       expect(profile!.arrivalDate).toEqual(new Date(ARRIVAL_DATE));
     });
   });
 
   describe('RoadmapEntry generation — task applicability', () => {
-    test('SOLO profile → the 20 solo tasks (couples/family-only T21 excluded)', async () => {
+    test('SOLO profile → the 19 solo tasks (family-only T30 excluded)', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'SOLO',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       });
 
       const entries = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
 
       const entryTaskIds = entries.map(e => e.taskId);
-      expect(entryTaskIds).toHaveLength(20);
+      expect(entryTaskIds).toHaveLength(19);
       expect(entryTaskIds).toContain('T07');
-      expect(entryTaskIds).not.toContain('T21');
+      expect(entryTaskIds).not.toContain('T30');
     });
 
-    test('FAMILY_WITH_CHILDREN profile → all 21 tasks, T21 included', async () => {
+    test('FAMILY_WITH_CHILDREN profile → 23 tasks, T30 included', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'FAMILY_WITH_CHILDREN',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       });
 
       const entries = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
 
       const entryTaskIds = entries.map(e => e.taskId);
-      expect(entryTaskIds).toHaveLength(21);
-      expect(entryTaskIds).toContain('T21');
+      expect(entryTaskIds).toHaveLength(23);
+      expect(entryTaskIds).toContain('T30');
     });
 
     test('entries created with correct initial status', async () => {
@@ -100,7 +100,7 @@ describe('createProfile()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'SOLO',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       });
 
@@ -124,7 +124,7 @@ describe('createProfile()', () => {
           visaType: 'AEWV',
           city: 'AUCKLAND',
           familySituation: 'SOLO',
-          occupation: 'TECHNOLOGY',
+          occupation: 'OTHER_PROFESSIONAL',
           arrivalDate: FUTURE_ARRIVAL_DATE,
         },
         currentDate,
@@ -146,7 +146,7 @@ describe('createProfile()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'SOLO',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       });
 
@@ -155,7 +155,7 @@ describe('createProfile()', () => {
           visaType: 'AEWV',
           city: 'AUCKLAND',
           familySituation: 'SOLO',
-          occupation: 'TECHNOLOGY',
+          occupation: 'OTHER_PROFESSIONAL',
           arrivalDate: ARRIVAL_DATE,
         }),
       ).rejects.toMatchObject({
@@ -170,7 +170,7 @@ describe('createProfile()', () => {
           visaType: 'AEWV',
           city: 'AUCKLAND',
           familySituation: 'SOLO',
-          occupation: 'TECHNOLOGY',
+          occupation: 'OTHER_PROFESSIONAL',
           arrivalDate: 'not-a-date',
         }),
       ).rejects.toMatchObject({
@@ -185,7 +185,7 @@ describe('createProfile()', () => {
           visaType: 'AEWV',
           city: 'AUCKLAND',
           familySituation: 'SOLO',
-          occupation: 'TECHNOLOGY',
+          occupation: 'OTHER_PROFESSIONAL',
           arrivalDate: '',
         }),
       ).rejects.toMatchObject({
@@ -198,7 +198,7 @@ describe('createProfile()', () => {
 
 describe('updateProfileAndRegenerateRoadmap()', () => {
   test('a done task stays done, with its completedAt, after the plan changes', async () => {
-    const answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: ARRIVAL_DATE } as const;
+    const answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: ARRIVAL_DATE } as const;
     await createProfile(TEST_USER_ID, answers);
     const completedAt = new Date('2026-02-13T01:00:00.000Z');
     await db.userRoadmapEntry.update({
@@ -215,24 +215,24 @@ describe('updateProfileAndRegenerateRoadmap()', () => {
 
 describe('updateProfileAndRegenerateRoadmap() — Review Focus 2', () => {
   test('family change keeps completions, adds family-only tasks, removes no-longer-applicable ones', async () => {
-    const solo = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: ARRIVAL_DATE } as const;
+    const solo = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: ARRIVAL_DATE } as const;
     await createProfile(TEST_USER_ID, solo);
     await db.userRoadmapEntry.update({
-      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T07' } },
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T11' } },
       data: { status: 'COMPLETE', completedAt: new Date() },
     });
 
     const res = await updateProfileAndRegenerateRoadmap(TEST_USER_ID, { ...solo, familySituation: 'FAMILY_WITH_CHILDREN' });
-    expect(res.entriesCreated).toBe(21);
+    expect(res.entriesCreated).toBe(23);
     const family = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
     const byId = new Map(family.map(e => [e.taskId, e]));
-    expect(byId.get('T07')!.status).toBe('COMPLETE');
-    expect(byId.get('T21')).toMatchObject({ status: 'NOT_STARTED', isBlocked: false }); // HARD dep T07 is done
+    expect(byId.get('T11')!.status).toBe('COMPLETE');
+    expect(byId.get('T30')).toMatchObject({ status: 'NOT_STARTED', isBlocked: false }); // HARD dep T11 is done
     expect(family.every(e => e.contentVersion === contentVersion())).toBe(true);
 
     await updateProfileAndRegenerateRoadmap(TEST_USER_ID, solo);
     const back = await db.userRoadmapEntry.findMany({ where: { userId: TEST_USER_ID } });
-    expect(back.map(e => e.taskId)).not.toContain('T21');
-    expect(back.find(e => e.taskId === 'T07')!.status).toBe('COMPLETE');
+    expect(back.map(e => e.taskId)).not.toContain('T30');
+    expect(back.find(e => e.taskId === 'T11')!.status).toBe('COMPLETE');
   });
 });

@@ -1,0 +1,205 @@
+# Inland Revenue figures. research/T08.md holds the evidence for each.
+ird.non-declaration-rate:
+  value: "45%"
+  numberType: A
+  source: ird-ir330
+  checked: 2026-10-25
+  verified: true
+ird.new-arrival-delivery:
+  value: "2 days"
+  numberType: B
+  source: ird-new-arrival
+  checked: 2026-10-25
+  verified: true
+ird.living-in-nz-id-window:
+  value: "20 days"
+  numberType: B
+  source: ird-living-in-nz
+  checked: 2026-10-25
+  verified: true
+ird.rwt-no-number-rate:
+  value: "45%"
+  numberType: A
+  source: ird-rwt-rate
+  checked: 2026-10-25
+  verified: true
+ird.rwt-default-rate:
+  value: "33%"
+  numberType: A
+  source: ird-rwt-rate
+  checked: 2026-10-27
+  verified: true
+ird.earners-levy-rate:
+  value: "$1.75 for each $100"
+  numberType: A
+  source: ird-tax-codes
+  checked: 2026-10-27
+  verified: true
+ird.earners-levy-max:
+  value: "$156,641"
+  numberType: A
+  source: ird-tax-codes
+  checked: 2026-10-27
+  verified: true
+ird.residency-days-present:
+  value: "183 days"
+  numberType: A
+  source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+  checked: 2026-10-27
+  verified: true
+ird.nonresident-days-absent:
+  value: "325 days"
+  numberType: A
+  source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+  checked: 2026-10-27
+  verified: true
+ird.exemption-length:
+  value: "4 years"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
+ird.exemption-lookback:
+  value: "10 years"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
+ird.fif-threshold:
+  value: "$50,000"
+  numberType: A
+  source: ird-tax-residents-international
+  checked: 2026-10-27
+  verified: true
+ird.exemption-from-date:
+  value: "1 April 2006"
+  numberType: A
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-2028-date:
+  value: "1 April 2028"
+  numberType: A
+  source: ird-kiwisaver-changes
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-rates:
+  value: "3.5%, 4%, 6%, 8% or 10%"
+  numberType: A
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-default-rate:
+  value: "3.5%"
+  numberType: A
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-rate-change-gap:
+  value: "once every 3 months"
+  numberType: B
+  source: ird-kiwisaver-rates
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-employer-rate:
+  value: "3.5%"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-match:
+  value: "25 cents for every dollar"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-max:
+  value: "$260.72"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-full-contribution:
+  value: "$1042.86"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-govt-income-limit:
+  value: "$180,000"
+  numberType: A
+  source: ird-kiwisaver-benefits
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-default-rate-2028:
+  value: "4%"
+  numberType: A
+  source: ird-kiwisaver-changes
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-opt-out-window:
+  value: "on or after day 14 and on or before day 56"
+  numberType: B
+  source: ird-kiwisaver-opt-out
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-hold-period:
+  value: "2 months (62 days)"
+  numberType: B
+  source: ird-kiwisaver-joining
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-transfer-time:
+  value: "about 2 weeks"
+  numberType: B
+  source: www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-pir-rates:
+  value: "28%, 17.5% or 10.5%"
+  numberType: A
+  source: ird-kiwisaver-pir
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-auto-enrol-ages:
+  value: "18 to 65"
+  numberType: A
+  source: ird-kiwisaver-employee
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-contract-min:
+  value: "28 days"
+  numberType: A
+  source: ird-kiwisaver-employee
+  checked: 2026-10-27
+  verified: true
+ird.kiwisaver-pir-lookback:
+  value: "two years"
+  numberType: A
+  source: ird-kiwisaver-pir
+  checked: 2026-10-27
+  verified: true
+ird.wff-min-age:
+  value: "16 years"
+  numberType: A
+  source: www-ird-govt-nz-working-for-families-can-you-get-it
+  checked: 2026-10-28
+  verified: true
+ird.wff-residency-months:
+  value: "12 months in a row"
+  numberType: A
+  source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
+  checked: 2026-10-28
+  verified: true
+ird.wff-child-ird-weeks:
+  value: "8 weeks"
+  numberType: B
+  source: www-ird-govt-nz-working-for-families-apply-register
+  checked: 2026-10-28
+  verified: true
+ird.wff-notice-post:
+  value: "within 10 working days"
+  numberType: B
+  source: www-ird-govt-nz-working-for-families-apply-register
+  checked: 2026-10-28
+  verified: true

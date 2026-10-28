@@ -10,7 +10,7 @@ const ANSWERS = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2026-10-21',
 } as const;
 
@@ -26,17 +26,17 @@ afterAll(async () => {
 });
 
 describe('previewRoadmap()', () => {
-  it('solo mover → 20 tasks in id order, no T21', async () => {
+  it('solo mover → 19 tasks in id order, no family-only T30', async () => {
     const { tasks } = await previewRoadmap(ANSWERS);
-    expect(tasks).toHaveLength(20);
+    expect(tasks).toHaveLength(19);
     expect(tasks[0]).toMatchObject({ taskId: 'T01', name: expect.any(String), estimatedDuration: expect.any(String), phase: expect.any(Number) });
-    expect(tasks.map(t => t.taskId)).not.toContain('T21');
+    expect(tasks.map(t => t.taskId)).not.toContain('T30');
     expect(tasks.map(t => t.taskId)).toEqual([...tasks.map(t => t.taskId)].sort());
   });
 
-  it('family with children → 21 tasks', async () => {
+  it('family with children → 23 tasks', async () => {
     const { tasks } = await previewRoadmap({ ...ANSWERS, familySituation: 'FAMILY_WITH_CHILDREN' });
-    expect(tasks).toHaveLength(21);
+    expect(tasks).toHaveLength(23);
   });
 });
 
@@ -44,7 +44,7 @@ describe('POST /onboarding/preview', () => {
   it('no token, valid body → 200', async () => {
     const res = await app.inject({ method: 'POST', url: '/onboarding/preview', payload: ANSWERS });
     expect(res.statusCode).toBe(200);
-    expect(res.json().tasks).toHaveLength(20);
+    expect(res.json().tasks).toHaveLength(19);
   });
 
   it('unknown visa type → 400 VALIDATION_ERROR', async () => {

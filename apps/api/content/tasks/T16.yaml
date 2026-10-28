@@ -1,6 +1,6 @@
 id: T16
-name: NZ Driving Licence Conversion
-phase: 3
+name: Convert your overseas driver licence
+phase: 4
 priority: 65
 boosts:
   - when:
@@ -23,129 +23,158 @@ urgency:
   - fromDay: 275
     toDay: 336
     by: 30
-duration: 1–2 hours (NZTA office visit)
-processingTime: 5–10 working days
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+duration: 1–2 hours (visit to a specialist overseas conversion agent)
+appliesTo: all
 dependsOn: []
 retired: false
 why:
-  - id: T16.why.1
-    text: Convert within 3 months — book the AA appointment, spend 2–3 hours on practice tests beforehand, and complete the conversion in a single visit.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
+  - id: T16.why.time-limit
+    text: "NZ Transport Agency (NZTA) says the time you can drive on an overseas car licence in New Zealand is changing, so the date you last arrived decides how long you have."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.why.convert-or-stop
+    text: "NZTA says that when your overseas-licence driving period ends, you need to convert to a New Zealand licence or stop driving."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T16.steps.1
-    text: Ensure your Indian, Sri Lankan, or Singapore licence is not expired. If it expires within 6 months, renew it before conversion if possible — a valid overseas licence is required at the conversion appointment.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.steps.2
-    text: "The knowledge test covers NZ road rules, signs, and give-way rules. Study guide available free at nzta.govt.nz: https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders Key NZ-specific rules: give-way rules at intersections (recently updated), open road speed 100 km/h, urban speed 50 km/h (or lower where signed), cell phone prohibition while driving, seatbelt requirements for all passengers. Practice tests available at: https://www.aa.co.nz/vehicles/driving/learner-driver/practice-theory-tests"
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.steps.3
-    text: "Options: AA (Automobile Association), VTNZ, Licence Direct. Check availability at: https://www.nzta.govt.nz/driver-licences/testing-and-licensing-agents Bring: current overseas licence (original), passport, proof of NZ address (rental agreement, bank statement), IRD number, payment."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.steps.4
-    text: "A basic vision test is conducted at the licensing agent. Standard vision requirements: 6/12 corrected or uncorrected, adequate field of vision. Wear glasses or contact lenses if you use them for driving."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.steps.5
-    text: Multiple-choice test on a computer terminal. 35 questions — must pass with 32/35 correct (32 correct or more). Test takes approximately 30 minutes. If you fail, you can resit after a waiting period.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.steps.6
-    text: "Current conversion fee: approximately $52.10 [Type B — NZTA fee schedule, subject to revision]. Your NZ licence is mailed to your registered address within 5–10 working days [Type B — NZTA processing time]."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
+  - id: T16.steps.open-converting
+    text: "Open NZTA's page on converting a car licence. It says your overseas licence is valid for conversion if it is current or expired within the last {{nzta.licence-expired-window}}, and isn't suspended, disqualified or revoked in the country that issued it."
+    source: nzta-converting-car-licence
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.work-out-period
+    text: "Check your last date of arrival in New Zealand. NZTA says arrivals before {{nzta.licence-change-date}} can drive on an overseas car licence for {{nzta.licence-period-before-change}} from arrival, and arrivals on or after that date for {{nzta.licence-period-from-change}}."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.check-country
+    text: "Check whether your licence is from an exempt country on NZTA's list. NZTA says exempt countries have licensing systems and driving skill requirements similar to New Zealand's, and that the conversion process depends on which country your licence is from."
+    source: nzta-converting-car-licence
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.translation
+    text: "If your licence isn't in English, get an accurate English translation. NZTA says it must come from an NZTA authorised translation service, a diplomatic representative at a high commission, embassy or consulate, or the authority that issued your licence."
+    source: nzta-approved-translators
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.find-translator
+    text: "Use NZTA's approved translators page to find an authorised translation service. It lists them by region, with contact details."
+    source: nzta-approved-translators
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.agent
+    text: "Apply at a specialist overseas conversion driver licensing agent. NZTA says this is where you convert an overseas licence."
+    source: nzta-converting-index
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.allow-time
+    text: "Start early. NZTA says to allow plenty of time to convert, because it may take a while to get a test booking."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.exempt-test
+    text: "If your licence is from an exempt country, NZTA says you need a practical driving test only if you've held it for less than {{nzta.exempt-test-threshold}}. Your licence must clearly show an issue date at least that long ago; if it doesn't, get a document from your licensing authority that shows one, or sit the practical test. The agent books the test when you apply."
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.steps.non-exempt-tests
+    text: "If your licence is from a non-exempt country, NZTA says you need to pass a theory test and then a practical driving test. You can book the practical test once you've passed the theory test, online or at a driver licensing agent."
+    source: nzta-converting-car-non-exempt
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T16.documents.1
-    text: passport
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.documents.2
-    text: bank statement
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.documents.3
-    text: rental agreement
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.documents.4
-    text: ird number
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
+  - id: T16.documents.application-form
+    text: "A completed application form for conversion of an overseas driver licence (DL5)"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.identity
+    text: "Evidence of your identity"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.eyesight
+    text: "Proof that your eyesight meets the required standard"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.physical-licence
+    text: "Your physical overseas driver licence"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.translation
+    text: "An accurate English translation of your licence, if it isn't in English"
+    source: nzta-approved-translators
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.medical
+    text: "A medical certificate, if you need one"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.validity
+    text: "Evidence that your licence is valid, if it is from Afghanistan, India, Pakistan or Tonga"
+    source: nzta-converting-car-non-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.validity-mixed-id
+    text: "Evidence that your licence is valid, if it is from an exempt country but your identification is from a non-exempt country"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.documents.photocopies
+    text: "High-quality colour photocopies of every original document you present, including any translations"
+    source: nzta-converting-car-exempt
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T16.mistakes.1
-    text: "Failing to understand: The 12-month clock starts from your date of entry into NZ — not from when you start driving. If you arrived in June 2026, your overseas licence expires for driving purposes in June 2027."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.mistakes.2
-    text: Driving on an expired overseas licence (after 12 months) is an infringement offence. Do not let the deadline pass.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.mistakes.3
-    text: "Failing to understand: NZ road give-way rules were updated in 2012 and differ from older NZ driving knowledge — if you learned NZ rules from pre-2012 materials, review the current give-way rules carefully."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.mistakes.4
-    text: "Failing to understand: If your overseas licence is in a language other than English, you may need a certified translation or IDP. Indian and Sri Lankan licences are issued in English — no translation required. Confirm at nzta.govt.nz if uncertain."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.mistakes.5
-    text: "Failing to understand: Car rental companies may have their own age and licence requirements beyond NZTA minimums — check with the rental company before booking."
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
+  - id: T16.mistakes.idp-only
+    text: "Relying on an international driving permit to convert. NZTA says it isn't enough on its own, and you must present your physical overseas licence."
+    source: nzta-converting-car-licence
+    checked: 2026-10-27
+    verified: true
+  - id: T16.mistakes.assuming-exempt
+    text: "Assuming your country is exempt without checking. NZTA says a licence from any country not on its exempt list is from a non-exempt country, and the process depends on which it is."
+    source: nzta-converting-index
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T16.watchOuts.1
-    text: The 12-month clock starts from your date of entry into NZ — not from when you start driving. If you arrived in June 2026, your overseas licence expires for driving purposes in June 2027.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.watchOuts.2
-    text: Driving on an expired overseas licence (after 12 months) is an infringement offence. Do not let the deadline pass.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.watchOuts.3
-    text: NZ road give-way rules were updated in 2012 and differ from older NZ driving knowledge — if you learned NZ rules from pre-2012 materials, review the current give-way rules carefully.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.watchOuts.4
-    text: If your overseas licence is in a language other than English, you may need a certified translation or IDP. Indian and Sri Lankan licences are issued in English — no translation required. Confirm at nzta.govt.nz if uncertain.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
-  - id: T16.watchOuts.5
-    text: Car rental companies may have their own age and licence requirements beyond NZTA minimums — check with the rental company before booking.
-    source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-    checked: 2026-03-03
-    verified: false
+  - id: T16.watchOuts.keep-valid
+    text: "NZTA says to keep driving on your overseas licence it must be current and valid, you must not have got a New Zealand licence disqualification or suspension, and you must not have got a New Zealand licence since you last arrived."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.watchOuts.idp-translation
+    text: "If your licence isn't in English, NZTA says you can drive on it with an accurate English translation or an international driving permit. The permit can be current or expired up to {{nzta.idp-expired-window}}, and you must carry your current overseas licence with it."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.watchOuts.learner-override
+    text: "NZTA says a New Zealand learner licence, or a New Zealand licence with a supervisor condition, overrides your overseas licence, so you can't start driving on the overseas licence again."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T16.watchOuts.other-translation-docs
+    text: "NZTA's translators page says an international driving permit, or a translation document from a Notary Public Office in China, may also be acceptable as a translation."
+    source: nzta-approved-translators
+    checked: 2026-10-27
+    verified: true
+  - id: T16.watchOuts.supervisor
+    text: "NZTA says that if you still have a practical test to pass, your new New Zealand licence has a supervisor condition. Until you pass, you can only drive with a supervisor in the front seat who holds a current full New Zealand licence for that class without a supervisor condition, and has held a full New Zealand licence or an equivalent overseas licence for at least {{nzta.supervisor-held-years}}."
+    source: nzta-converting-car-non-exempt
+    checked: 2026-10-27
+    verified: true
+  - id: T16.watchOuts.audit
+    text: "NZTA audits overseas conversions. It says using a fraudulent overseas licence or giving false or misleading information is an offence, with a fine of up to {{nzta.conversion-fraud-fine}}, and NZTA could revoke your New Zealand licence."
+    source: nzta-converting-car-non-exempt
+    checked: 2026-10-27
+    verified: true
 cost:
-  id: T16.cost.1
-  text: $52
-  source: www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders
-  checked: 2026-03-03
-  verified: false
+  id: T16.cost.fees
+  text: "NZTA says you pay an application fee of {{nzta.conversion-application-fee}}, plus {{nzta.full-practical-test-fee}} for a full practical test and {{nzta.theory-test-fee}} for a theory test if you need them. Each retake, missed test or terminated test costs another test fee."
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true

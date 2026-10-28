@@ -1,0 +1,79 @@
+# Ministry for Primary Industries figures. research/T26.md holds the evidence for each.
+mpi.pet-standard-start:
+  value: "1 July 2026"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-transition:
+  value: "9-month"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-id-check-lead:
+  value: "6 months"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-residency:
+  value: "6 months"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-rabies-vaccine-lead:
+  value: "6 months"
+  numberType: B
+  source: mpi-cats-dogs-ihs-2026
+  checked: 2026-10-27
+  verified: true
+mpi.pet-titre-window:
+  value: "3 to 12 months"
+  numberType: B
+  source: mpi-cats-dogs-ihs-2026
+  checked: 2026-10-27
+  verified: true
+mpi.pet-permit-lead:
+  value: "30 working days"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-parasite-window:
+  value: "16 days"
+  numberType: B
+  source: mpi-cats-dogs-ihs-2026
+  checked: 2026-10-27
+  verified: true
+mpi.pet-vet-check-window:
+  value: "2 days"
+  numberType: B
+  source: mpi-cats-dogs-ihs-2026
+  checked: 2026-10-27
+  verified: true
+mpi.pet-australia-notice:
+  value: "5 working days"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-quarantine-min:
+  value: "10 days"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.pet-pregnancy-limit:
+  value: "42 days"
+  numberType: B
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true
+mpi.inspection-fee-one-item:
+  value: "$38.88"
+  numberType: A
+  source: mpi-clearance-fees
+  checked: 2026-10-27
+  verified: true

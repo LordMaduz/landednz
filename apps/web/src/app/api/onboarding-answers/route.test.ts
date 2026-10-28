@@ -7,7 +7,7 @@ const priya = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2027-01-14',
 }
 

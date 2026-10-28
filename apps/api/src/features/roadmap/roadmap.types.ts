@@ -56,6 +56,8 @@ export interface BulkOverrideResponse {
 export interface RecalculateResponse {
   usersProcessed: number;
   entriesUpdated: number;
+  entriesAdded: number;
+  entriesRemoved: number;
 }
 
 export interface TaskDetailResponse {

@@ -1,0 +1,67 @@
+# NZ Transport Agency figures. research/T24.md holds the evidence for each.
+nzta.licence-change-date:
+  value: "1 November 2026"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.licence-period-from-change:
+  value: "12 months"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.licence-period-before-change:
+  value: "18 months"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.licence-expired-window:
+  value: "12 months"
+  numberType: A
+  source: nzta-converting-car-licence
+  checked: 2026-10-27
+  verified: true
+nzta.idp-expired-window:
+  value: "6 months"
+  numberType: A
+  source: nzta-overseas-licence-time-limit
+  checked: 2026-10-27
+  verified: true
+nzta.exempt-test-threshold:
+  value: "2 years"
+  numberType: A
+  source: nzta-converting-car-exempt
+  checked: 2026-10-27
+  verified: true
+nzta.supervisor-held-years:
+  value: "2 years"
+  numberType: A
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true
+nzta.conversion-fraud-fine:
+  value: "$10,000"
+  numberType: A
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true
+nzta.conversion-application-fee:
+  value: "$52.10"
+  numberType: B
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true
+nzta.full-practical-test-fee:
+  value: "$59.90"
+  numberType: B
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true
+nzta.theory-test-fee:
+  value: "$45.70"
+  numberType: B
+  source: nzta-converting-car-non-exempt
+  checked: 2026-10-27
+  verified: true

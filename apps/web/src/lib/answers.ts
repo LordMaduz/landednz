@@ -101,9 +101,10 @@ const WHO: Record<FamilySituation, string> = {
   COUPLE_DUAL_WORK: 'you and your partner, both working',
   COUPLE_CONSTRAINED: 'you and your partner',
   FAMILY_WITH_CHILDREN: 'you, your partner and your children',
+  SOLE_PARENT: 'you and your children',
 }
 
-// "Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027"
+// "Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027"
 export function answersSummary(a: Answers): string {
   const parts = [
     answerLabel('visaType', a.visaType),

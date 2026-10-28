@@ -1,0 +1,106 @@
+id: T24
+name: "Gather and carry your key documents"
+phase: 1
+priority: 92
+boosts: []
+urgency: []
+duration: 2–4 hours (finding and copying documents)
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T24.why.register-services
+    text: "Immigration New Zealand lists documents that are useful to have when you arrive, because they make it easier to register for services."
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T24.steps.open-inz-list
+    text: "Open Immigration New Zealand's planning page and read its section on bringing your documents with you."
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.steps.originals
+    text: "For each document, try to have the original or a certified copy."
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.steps.licence-translation
+    text: "If your driver licence isn't in English, get an accurate English translation or an international driving permit, and carry it with your current overseas licence."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T24.steps.visa-translations
+    text: "If your visa application includes documents that aren't in English, check Immigration New Zealand's rules on certified translations."
+    source: inz-opsmanual-translations
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T24.documents.medical
+    text: "Medical and dental records and vaccination certificates"
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.certificates
+    text: "Birth and marriage certificates"
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.qualifications
+    text: "Your academic qualifications"
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.references
+    text: "References from previous employers and landlords, your CV and credit references"
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.licence
+    text: "Your driver licence or international driving permit"
+    source: inz-planning-your-move
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.child-proof-of-age
+    text: "For each child: a birth certificate or passport, which schools may ask for as proof of age"
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+  - id: T24.documents.child-immunisation
+    text: "For each child: their immunisation record, which is useful for school enrolment"
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: healthnz-immunisation-record
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T24.mistakes.permit-only
+    text: "Bringing only an international driving permit. You can't convert to a New Zealand licence with the permit alone; you need your physical overseas licence."
+    source: nzta-converting-car-licence
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T24.watchOuts.licence-time-limit
+    text: "NZ Transport Agency's rule: if your last arrival in New Zealand is on or after {{nzta.licence-change-date}}, you can drive on your overseas car licence for {{nzta.licence-period-from-change}} from that arrival; if it was before, {{nzta.licence-period-before-change}}. Leaving and coming back starts the period again."
+    source: nzta-overseas-licence-time-limit
+    checked: 2026-10-27
+    verified: true
+  - id: T24.watchOuts.translators
+    text: "A certified translation for Immigration New Zealand can't be done by you, your family or your immigration adviser."
+    source: inz-opsmanual-translations
+    checked: 2026-10-27
+    verified: true
+  - id: T24.watchOuts.home-country-tax
+    text: "Tax across two countries can be complex. Inland Revenue says you may want to talk to a tax professional if you're unsure about your situation."
+    source: ird-tax-residents-international
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T24.advice.adviser
+  text: "Immigration New Zealand says you can ask your employer or a registered immigration adviser for help with your visa application, and there may be a cost."
+  required: false
+  source: inz-planning-your-move
+  checked: 2026-10-27
+  verified: true

@@ -1,0 +1,82 @@
+id: T28
+name: "Read your visa conditions on Immigration NZ"
+phase: 2
+priority: 80
+boosts: []
+urgency: []
+duration: 15–30 minutes
+appliesTo: { not: { visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT] } }
+dependsOn: []
+retired: false
+why:
+  - id: T28.why.inz-check
+    text: "Immigration New Zealand's page for new arrivals says to check your visa's work conditions."
+    source: www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand
+    checked: 2026-10-27
+    verified: true
+  - id: T28.why.must-comply
+    text: "The Immigration Act 2009 says that if your visa has conditions, you must comply with them. For conditions set by law or in immigration instructions, this applies even if you don't know about them."
+    source: immigration-act-2009
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T28.steps.open-inz
+    text: "Before you change your job, employer, occupation or work location, open Immigration New Zealand's page on applying for a variation of conditions."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+  - id: T28.steps.check-first
+    text: "Immigration New Zealand says to check, before applying, whether you can change your work visa conditions or your job, and what you need."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+  - id: T28.steps.job-change
+    text: "If you hold an Accredited Employer Work Visa, Peak Seasonal Visa or Global Workforce Seasonal Visa: Immigration New Zealand says you use the form to apply for a Job Change."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+  - id: T28.steps.variation
+    text: "If you hold a different work visa: Immigration New Zealand says you use the same form to apply for a variation of conditions."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+  - id: T28.steps.visitor-student
+    text: "If you have a visitor or student visa: Immigration New Zealand says to use form INZ 1020 instead."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T28.documents.employer-supplementary
+    text: "If you hold a work visa other than an Accredited Employer Work Visa, Peak Seasonal Visa or Global Workforce Seasonal Visa and are applying to work for a different employer: Immigration New Zealand says your new employer completes an Employer Supplementary Form (INZ 1113), unless they are accredited under the AEWV or Talent (Accredited Employers) policies"
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T28.mistakes.not-knowing
+    text: "Assuming a condition doesn't apply because you haven't read it. The Immigration Act 2009 says conditions set by law or in immigration instructions apply whether or not you know about them."
+    source: immigration-act-2009
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T28.watchOuts.accredited-employer
+    text: "If you apply for a Job Change to work for a new employer, Immigration New Zealand says the employer must be accredited for the Accredited Employer Work Visa and have a valid job check for the same type of visa you hold."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+  - id: T28.watchOuts.deportation
+    text: "The Immigration Act 2009 lists a breach of your visa conditions as a reason a temporary visa holder can become liable for deportation."
+    source: immigration-act-2009
+    checked: 2026-10-27
+    verified: true
+  - id: T28.watchOuts.licence-number
+    text: "Immigration New Zealand says a licensed immigration adviser's licence number starts with 20, followed by 7 numbers."
+    source: inz-variation-of-conditions
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T28.advice.licensed-adviser
+  text: "For advice on your own visa, the Immigration Advisers Licensing Act 2007 says only a licensed immigration adviser, or a person the Act exempts such as a lawyer, may give immigration advice."
+  required: false
+  source: immigration-advisers-act-2007
+  checked: 2026-10-27
+  verified: true

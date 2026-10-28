@@ -2,36 +2,38 @@
 
 export const VISA_TYPES = [
   ["AEWV", "Accredited Employer Work Visa (AEWV)"],
-  ["GREEN_LIST_WORK", "Green List, work to residence"],
-  ["GREEN_LIST_RESIDENCE", "Green List, straight to residence"],
-  ["PARTNER_OF_STUDENT", "Partner of a student"],
-  ["OTHER", "Something else"],
+  ["STRAIGHT_TO_RESIDENCE", "Straight to Residence Visa (Green List Tier 1)"],
+  ["SKILLED_MIGRANT_RESIDENT", "Skilled Migrant Category Resident Visa"],
+  ["PARTNER_WORK", "Partner work visa (your partner is working or studying in NZ)"],
+  ["POST_STUDY_WORK", "Post-Study Work Visa"],
+  ["SPECIFIC_PURPOSE_WORK", "Specific Purpose Work Visa"],
+  ["WORKING_HOLIDAY", "Working holiday visa"],
+  ["OTHER", "Another visa"],
 ] as const;
 export type VisaType = (typeof VISA_TYPES)[number][0];
 
 export const CITIES = [
   ["AUCKLAND", "Auckland"],
-  ["WELLINGTON", "Wellington"],
-  ["CHRISTCHURCH", "Christchurch"],
-  ["OTHER", "Somewhere else"],
+  ["WELLINGTON", "Wellington region"],
+  ["CHRISTCHURCH", "Greater Christchurch (including Selwyn and Waimakariri)"],
+  ["OTHER", "Somewhere else in NZ"],
 ] as const;
 export type City = (typeof CITIES)[number][0];
 
 export const FAMILY_SITUATIONS = [
   ["SOLO", "Just me"],
-  ["COUPLE_DUAL_WORK", "My partner, and we both work"],
-  ["COUPLE_CONSTRAINED", "My partner, who can't work yet"],
-  ["FAMILY_WITH_CHILDREN", "My partner and our children"],
+  ["COUPLE_DUAL_WORK", "Me and my partner, who can already work in NZ"],
+  ["COUPLE_CONSTRAINED", "Me and my partner, who can't work in NZ yet"],
+  ["FAMILY_WITH_CHILDREN", "Me, my partner and our children"],
+  ["SOLE_PARENT", "Me and my children"],
 ] as const;
 export type FamilySituation = (typeof FAMILY_SITUATIONS)[number][0];
 
 export const OCCUPATIONS = [
-  ["TECHNOLOGY", "Technology"],
-  ["HEALTHCARE", "Healthcare"],
-  ["EDUCATION", "Education"],
-  ["FINANCE", "Finance"],
-  ["TRADES", "Trades"],
-  ["OTHER_PROFESSIONAL", "Another profession"],
+  ["HEALTHCARE", "Healthcare (doctor, nurse or another registered health profession)"],
+  ["EDUCATION", "Teaching"],
+  ["TRADES", "Electrical, plumbing, gas or drainlaying trade"],
+  ["OTHER_PROFESSIONAL", "Another job or profession"],
   ["SEEKING_WORK", "I'm still looking for work"],
 ] as const;
 export type Occupation = (typeof OCCUPATIONS)[number][0];

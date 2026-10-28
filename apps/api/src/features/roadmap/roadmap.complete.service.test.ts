@@ -2,9 +2,9 @@
 // Tests verify task completion, targeted recomputation, and HARD dep unblocking.
 //
 // AC-2-07: POST /roadmap/tasks/:taskId/complete marks COMPLETE, returns updated topThree
-// AC-2-08: Completing T06 causes T07 to appear in newTopThree (T06→T07 HARD dep resolved)
+// AC-2-08: Completing T08 causes T09 to appear in newTopThree (T08→T09 HARD dep resolved)
 //
-// Content tasks T06, T07, T08, T03 used — fileParallelism: false ensures sequential
+// Content tasks T02, T08, T09 used — fileParallelism: false ensures sequential
 // test file execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
@@ -51,7 +51,7 @@ beforeAll(async () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'SOLO',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: new Date(ARRIVAL_DATE),
     },
   });
@@ -88,71 +88,71 @@ async function withRetired(taskId: string, fn: () => Promise<void>) {
 describe('completeTask()', () => {
 
   describe('Successful completion', () => {
-    test('Complete T03 (no deps) — status COMPLETE, T03 absent from newTopThree, unlockedTasks=[]', async () => {
+    test('Complete T02 (no deps) — status COMPLETE, T02 absent from newTopThree, unlockedTasks=[]', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await completeTask(TEST_USER_ID, 'T03', CURRENT_DATE);
+      const result = await completeTask(TEST_USER_ID, 'T02', CURRENT_DATE);
 
-      expect(result.taskId).toBe('T03');
+      expect(result.taskId).toBe('T02');
       expect(result.status).toBe('COMPLETE');
       expect(result.unlockedTasks).toEqual([]);
-      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T03');
+      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T02');
 
       // Verify DB updated
       const entry = await db.userRoadmapEntry.findUnique({
-        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T02' } },
       });
       expect(entry!.status).toBe('COMPLETE');
       expect(entry!.completedAt).not.toBeNull();
       expect(entry!.completionMethod).toBe('USER_MARKED');
     });
 
-    test('AC-2-08: Complete T06 → T07 appears in newTopThree (HARD dep resolved)', async () => {
-      // Golden1: T07 is HARD blocked by T06 (score 75, not in topThree)
-      // After completing T06: T07 unblocked, score=125, appears in newTopThree
+    test('AC-2-08: Complete T08 → T09 appears in newTopThree (HARD dep resolved)', async () => {
+      // T09 is HARD blocked by T08, so it starts outside topThree
+      // After completing T08: T09 unblocked, appears in newTopThree
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+      const result = await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-      expect(result.taskId).toBe('T06');
+      expect(result.taskId).toBe('T08');
       expect(result.status).toBe('COMPLETE');
 
-      // T07 must be in newTopThree — it was HARD blocked, now unblocked (score 125)
+      // T09 must be in newTopThree — it was HARD blocked, now unblocked
       const newTopThreeIds = result.newTopThree.map(t => t.taskId);
-      expect(newTopThreeIds).toContain('T07');
+      expect(newTopThreeIds).toContain('T09');
 
-      // T07 must be marked as unblocked in newTopThree
-      const t07 = result.newTopThree.find(t => t.taskId === 'T07');
-      expect(t07!.isBlocked).toBe(false);
+      // T09 must be marked as unblocked in newTopThree
+      const t09 = result.newTopThree.find(t => t.taskId === 'T09');
+      expect(t09!.isBlocked).toBe(false);
 
-      // T07 must appear in unlockedTasks
-      expect(result.unlockedTasks).toContain('T07');
+      // T09 must appear in unlockedTasks
+      expect(result.unlockedTasks).toContain('T09');
     });
 
-    test('Complete T06 — T06 absent from newTopThree', async () => {
+    test('Complete T08 — T08 absent from newTopThree', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+      const result = await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T06');
+      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T08');
     });
   });
 
@@ -162,7 +162,7 @@ describe('completeTask()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
@@ -177,18 +177,18 @@ describe('completeTask()', () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: ARRIVAL_DATE,
     }, CURRENT_DATE);
 
-      await withRetired('T03', async () => {
-        await expect(completeTask(TEST_USER_ID, 'T03', CURRENT_DATE)).rejects.toMatchObject({
+      await withRetired('T02', async () => {
+        await expect(completeTask(TEST_USER_ID, 'T02', CURRENT_DATE)).rejects.toMatchObject({
           code: 'TASK_RETIRED',
           statusCode: 409,
         });
       });
       const entry = await db.userRoadmapEntry.findUnique({
-        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T02' } },
       });
       expect(entry!.status).toBe('NOT_STARTED');
       expect(entry!.completedAt).toBeNull();
@@ -199,15 +199,15 @@ describe('completeTask()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
       // First completion succeeds
-      await completeTask(TEST_USER_ID, 'T03', CURRENT_DATE);
+      await completeTask(TEST_USER_ID, 'T02', CURRENT_DATE);
 
       // Second completion throws 409
-      await expect(completeTask(TEST_USER_ID, 'T03', CURRENT_DATE)).rejects.toMatchObject({
+      await expect(completeTask(TEST_USER_ID, 'T02', CURRENT_DATE)).rejects.toMatchObject({
         code: 'TASK_ALREADY_COMPLETE',
         statusCode: 409,
       });

@@ -37,13 +37,15 @@ Run `make` to list every target.
 | `make db-reset-live` | Same, with real OpenAI embeddings (needs `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`) |
 | `make stop` | Stop local Supabase (data is kept) |
 
+After each content deploy, call `POST /admin/recalculate` to reconcile existing roadmaps with the new content; production must set `ADMIN_API_KEY` for this.
+
 For real Claude replies, set `AI_MODE=live`, `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` in `apps/api/.env.local`.
 
 ## Repository
 
 | Path | What |
 |---|---|
-| `apps/api` | Fastify 5 API, Prisma 7 on Postgres + pgvector, Claude chat over SSE, RAG over the knowledge base in `content/kb-master.md` |
+| `apps/api` | Fastify 5 API, Prisma 7 on Postgres + pgvector, Claude chat over SSE, RAG over the verified YAML knowledge base in `content/` |
 | `apps/web` | Next 16 app: Supabase sign-in, route guard (`src/proxy.ts`), shadcn/ui |
 | `packages/types` | Types shared by the API and web |
 | `supabase/` | Local stack config (Postgres, auth, Studio, email inbox) |

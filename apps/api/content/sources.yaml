@@ -1,52 +1,7 @@
-at-govt-nz-bus-train-ferry-journey-planner:
-  url: https://at.govt.nz/bus-train-ferry/journey-planner/
-  title: at.govt.nz
-  agency: at.govt.nz
-  tier: government
-www-auckland-ac-nz-en-on-campus-accommodation-html:
-  url: https://www.auckland.ac.nz/en/on-campus/accommodation.html
-  title: www.auckland.ac.nz
-  agency: www.auckland.ac.nz
-  tier: provider
-  reason: legacy, unverified
-www-rbi-org-in-scripts-bs-femanotifications-aspx:
-  url: https://www.rbi.org.in/Scripts/BS_FemaNotifications.aspx
-  title: www.rbi.org.in
-  agency: www.rbi.org.in
-  tier: provider
-  reason: legacy, unverified
-www-aainsurance-co-nz-home-contents-insurance:
-  url: https://www.aainsurance.co.nz/home-contents-insurance
-  title: www.aainsurance.co.nz
-  agency: www.aainsurance.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-ird-govt-nz-roles-nz-tax-residents-exemption:
   url: https://www.ird.govt.nz/roles/nz-tax-residents/exemption
-  title: www.ird.govt.nz
-  agency: www.ird.govt.nz
-  tier: government
-www-2degrees-nz-plans-prepay:
-  url: https://www.2degrees.nz/plans/prepay
-  title: www.2degrees.nz
-  agency: www.2degrees.nz
-  tier: provider
-  reason: legacy, unverified
-www-anz-co-nz-personal-bank-accounts-new-to-new-zealand:
-  url: https://www.anz.co.nz/personal/bank-accounts/new-to-new-zealand/
-  title: www.anz.co.nz
-  agency: www.anz.co.nz
-  tier: provider
-  reason: legacy, unverified
-www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals:
-  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals
-  title: www.ird.govt.nz
-  agency: www.ird.govt.nz
-  tier: government
-www-ird-govt-nz-forms-guides-number-forms-300-399-ir330-tax-code-declaration:
-  url: https://www.ird.govt.nz/forms-guides/number/forms-300-399/ir330-tax-code-declaration
-  title: www.ird.govt.nz
-  agency: www.ird.govt.nz
+  title: Temporary tax exemption
+  agency: Inland Revenue
   tier: government
 www-ird-govt-nz-kiwisaver:
   url: https://www.ird.govt.nz/kiwisaver
@@ -58,53 +13,829 @@ www-legislation-govt-nz-act-public-1986-0120-latest-dlm94278-html:
   title: www.legislation.govt.nz
   agency: www.legislation.govt.nz
   tier: government
-www-healthpoint-co-nz-general-practice:
-  url: https://www.healthpoint.co.nz/general-practice
-  title: www.healthpoint.co.nz
-  agency: www.healthpoint.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-legislation-govt-nz-act-public-2001-0049-latest-dlm99494-html:
   url: https://www.legislation.govt.nz/act/public/2001/0049/latest/DLM99494.html
   title: www.legislation.govt.nz
   agency: www.legislation.govt.nz
   tier: government
-wise-com-nz:
-  url: https://wise.com/nz
-  title: wise.com
-  agency: wise.com
-  tier: provider
-  reason: legacy, unverified
 www-nzta-govt-nz-driver-licences-getting-a-licence-new-to-new-zealand-overseas-licence-holders:
   url: https://www.nzta.govt.nz/driver-licences/getting-a-licence/new-to-new-zealand/overseas-licence-holders
   title: www.nzta.govt.nz
   agency: www.nzta.govt.nz
   tier: government
-www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications:
-  url: https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/international-qualifications
-  title: www.nzqa.govt.nz
-  agency: www.nzqa.govt.nz
-  tier: government
-www-privacy-org-nz-privacy-act-2020-codes-of-practice-credit-reporting-privacy-code-2020:
-  url: https://www.privacy.org.nz/privacy-act-2020/codes-of-practice/credit-reporting-privacy-code-2020
-  title: www.privacy.org.nz
-  agency: www.privacy.org.nz
-  tier: provider
-  reason: legacy, unverified
-www-seek-co-nz:
-  url: https://www.seek.co.nz
-  title: www.seek.co.nz
-  agency: www.seek.co.nz
-  tier: provider
-  reason: legacy, unverified
 www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider:
   url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/making-changes-to-my-kiwisaver/changing-to-another-provider
   title: www.ird.govt.nz
   agency: www.ird.govt.nz
   tier: government
-www-anz-co-nz-personal-bank-accounts-everyday-banking-everyday-account:
-  url: https://www.anz.co.nz/personal/bank-accounts/everyday-banking/everyday-account
-  title: www.anz.co.nz
-  agency: www.anz.co.nz
-  tier: provider
-  reason: legacy, unverified
+www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-getting-health-care-and-finding-a-doctor-who-can-get-public-health-care:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/getting-health-care-and-finding-a-doctor/who-can-get-public-health-care/
+  title: "Who can get public health care"
+  agency: Immigration New Zealand
+  tier: government
+www-immigration-govt-nz-work-requirements-for-work-visas-green-list-occupations-qualifications-and-skills-check-if-you-need-occupational-registration-for-your-job:
+  url: https://www.immigration.govt.nz/work/requirements-for-work-visas/green-list-occupations-qualifications-and-skills/check-if-you-need-occupational-registration-for-your-job/
+  title: "Check if you need occupational registration for your job"
+  agency: Immigration New Zealand
+  tier: government
+www-immigration-govt-nz-live-setting-up-your-life-in-new-zealand-when-you-arrive-in-new-zealand:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/when-you-arrive-in-new-zealand/
+  title: "When you arrive in New Zealand"
+  agency: Immigration New Zealand
+  tier: government
+www-employment-govt-nz-starting-employment-employment-agreements:
+  url: https://www.employment.govt.nz/starting-employment/employment-agreements
+  title: "Employment agreements"
+  agency: Employment New Zealand
+  tier: government
+www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility:
+  url: https://www.education.govt.nz/education-professionals/early-learning/funding-and-financials/ece-funding-handbook/chapter-4-20-hours-early-childhood-education/4-1-funding-eligibility
+  title: "ECE Funding Handbook 4-1: Funding eligibility"
+  agency: Ministry of Education
+  tier: government
+www-legislation-govt-nz-secondary-legislation-pco-drafted-2026-287-en-2026-09-21:
+  url: https://www.legislation.govt.nz/secondary-legislation/pco-drafted/2026/287/en/2026-09-21/
+  title: "Healthy Futures (Pae Ora) (Eligibility) Regulations 2026 (SL 2026/287)"
+  agency: Parliamentary Counsel Office
+  tier: legislation
+www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals:
+  url: https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals
+  title: "Tax residency status for individuals"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it-residency:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it/residency
+  title: "Residency requirements"
+  agency: Inland Revenue
+  tier: government
+getready-govt-nz-prepared-household-make-a-plan:
+  url: https://getready.govt.nz/prepared/household/make-a-plan
+  title: "Make a plan"
+  agency: National Emergency Management Agency
+  tier: government
+ird-new-arrival:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/new-arrival-to-new-zealand---ird-number-application
+  title: "New arrival to New Zealand: IRD number application"
+  agency: Inland Revenue
+  tier: government
+ird-work-or-study:
+  url: https://www.ird.govt.nz/situations/work-or-study-in-new-zealand
+  title: Work or study in New Zealand
+  agency: Inland Revenue
+  tier: government
+ird-myir-register:
+  url: https://www.ird.govt.nz/myir-help/register-account/personal
+  title: Register for a myIR account
+  agency: Inland Revenue
+  tier: government
+ird-living-in-nz:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/living-and-new-zealand-and-not-a-new-arrival---ird-number-application
+  title: "Living in New Zealand and not a new arrival: IRD number application"
+  agency: Inland Revenue
+  tier: government
+ird-cannot-apply-online:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/cannot-get-my-ird-number-online
+  title: I cannot get my IRD number online
+  agency: Inland Revenue
+  tier: government
+ird-find-number:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/find-my-ird-number
+  title: Find my IRD number
+  agency: Inland Revenue
+  tier: government
+ird-when-you-need-one:
+  url: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/when-you-need-one
+  title: When you need an IRD number
+  agency: Inland Revenue
+  tier: government
+ird-rwt-rate:
+  url: https://www.ird.govt.nz/income-tax/withholding-taxes/resident-withholding-tax-rwt/using-the-right-rwt-tax-rate
+  title: Using the right RWT tax rate
+  agency: Inland Revenue
+  tier: government
+ird-ir330:
+  url: https://www.ird.govt.nz/-/media/project/ir/home/documents/forms-and-guides/ir300---ir399/ir330/ir330.pdf?modified=20250324034423
+  title: Tax code declaration (IR330)
+  agency: Inland Revenue
+  tier: government
+ird-phone-numbers:
+  url: https://www.ird.govt.nz/contact-us/general/phone-numbers
+  title: Phone numbers
+  agency: Inland Revenue
+  tier: government
+mpi-pets-2026-guide:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/pets-travelling-to-nz/bringing-cats-and-dogs-to-nz/bringing-cats-and-dogs-to-nz-using-the-2026-import-health-standard/step-by-step-guide-to-bringing-cats-and-dogs-to-nz-2026
+  title: Step-by-step guide to bringing cats and dogs to NZ (2026)
+  agency: Ministry for Primary Industries
+  tier: government
+mpi-cats-dogs-ihs-2026:
+  url: https://www.mpi.govt.nz/dmsdocument/71909-Cats-and-Dogs-2026-Import-Health-Standard
+  title: "Import Health Standard: Cats and Dogs (2026)"
+  agency: Ministry for Primary Industries
+  tier: government
+dog-control-act-1996:
+  url: https://www.legislation.govt.nz/act/public/1996/0013/latest/whole.html
+  title: Dog Control Act 1996
+  agency: Parliamentary Counsel Office
+  tier: legislation
+nztd-home:
+  url: https://www.travellerdeclaration.govt.nz/
+  title: New Zealand Traveller Declaration
+  agency: New Zealand Customs Service
+  tier: government
+nztd-completing:
+  url: https://www.travellerdeclaration.govt.nz/completing-your-declaration/
+  title: Completing your declaration
+  agency: New Zealand Customs Service
+  tier: government
+customs-on-arrival:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/travelling-to-new-zealand/on-your-arrival
+  title: On your arrival
+  agency: New Zealand Customs Service
+  tier: government
+customs-medicines:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/medicines
+  title: Medicines
+  agency: New Zealand Customs Service
+  tier: government
+customs-nztd-official-site:
+  url: https://www.customs.govt.nz/about-us/news/important-notices/use-the-official-government-website-for-completing-the-new-zealand-traveller-declaration
+  title: Use the official government website for completing the New Zealand Traveller Declaration
+  agency: New Zealand Customs Service
+  tier: government
+mpi-how-to-declare:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/bringing-and-posting-items-to-nz/how-to-declare-items-when-arriving-in-nz
+  title: How to declare items when arriving in NZ
+  agency: Ministry for Primary Industries
+  tier: government
+mpi-fail-to-declare:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/bringing-and-posting-items-to-nz/what-happens-if-you-fail-to-declare
+  title: What happens if you fail to declare
+  agency: Ministry for Primary Industries
+  tier: government
+customs-household-effects:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/move-to-new-zealand-permanently/household-effects
+  title: Household effects
+  agency: New Zealand Customs Service
+  tier: government
+customs-vehicles:
+  url: https://www.customs.govt.nz/travel-to-and-from-new-zealand/move-to-new-zealand-permanently/vehicles-vessels-and-aircraft/
+  title: Vehicles, vessels and aircraft
+  agency: New Zealand Customs Service
+  tier: government
+mpi-household-goods:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/clearance-of-personal-goods-and-mail-to-nz/household-goods-and-personal-effects-importing-to-nz
+  title: Household goods and personal effects – importing to NZ
+  agency: Ministry for Primary Industries
+  tier: government
+mpi-clearance-fees:
+  url: https://www.mpi.govt.nz/bring-send-to-nz/clearance-of-personal-goods-and-mail-to-nz/fees-and-charges-for-clearance-of-goods
+  title: Fees and charges for clearance of goods
+  agency: Ministry for Primary Industries
+  tier: government
+inz-planning-your-move:
+  url: https://www.immigration.govt.nz/live/moving-to-new-zealand/planning-your-move-to-new-zealand/
+  title: Planning your move to New Zealand
+  agency: Immigration New Zealand
+  tier: government
+inz-opsmanual-translations:
+  url: https://www.immigration.govt.nz/opsmanual/46159.htm
+  title: "Operational Manual A13.5: Translations"
+  agency: Immigration New Zealand
+  tier: government
+nzta-overseas-licence-time-limit:
+  url: https://www.nzta.govt.nz/travelling-on-our-roads/visitors-and-new-residents/driving-on-nz-roads/time-limit-extended-for-driving-on-an-overseas-licence
+  title: Time limit for driving on an overseas licence
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-converting-car-licence:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence
+  title: Converting a car licence
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+govt-nz-enrol-school:
+  url: https://www.govt.nz/browse/education/school-and-college/how-to-enrol-your-child-at-school-in-nz/
+  title: How to enrol your child at school in NZ
+  agency: Department of Internal Affairs
+  tier: government
+healthnz-immunisation-record:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/get-a-copy-of-your-immunisation-record
+  title: Get a copy of your immunisation record
+  agency: Health New Zealand
+  tier: government
+ird-tax-residents-international:
+  url: https://www.ird.govt.nz/international-tax/individuals/tax-for-new-zealand-tax-residents
+  title: Tax for New Zealand tax residents
+  agency: Inland Revenue
+  tier: government
+healthnz-eligibility-guide:
+  url: https://www.healthnz.govt.nz/hospitals-services/eligibility-subsidies/publicly-funded-healthcare
+  title: Eligibility for publicly funded health and disability services
+  agency: Health New Zealand | Te Whatu Ora
+  tier: government
+inz-if-pregnant:
+  url: https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/if-you-are-pregnant/
+  title: If you are pregnant
+  agency: Immigration New Zealand
+  tier: government
+hpcaa-2003:
+  url: https://www.legislation.govt.nz/act/public/2003/48/en/latest/#DLM203312
+  title: Health Practitioners Competence Assurance Act 2003
+  agency: Parliamentary Counsel Office
+  tier: legislation
+nursing-council-iqn:
+  url: https://www.nursingcouncil.org.nz/IQN?WebsiteKey=fa279da8-a3b1-4dad-94af-2a67fe08c81b
+  title: Internationally qualified nurses
+  agency: Nursing Council of New Zealand
+  tier: government
+nursing-council-overseas-faqs:
+  url: https://www.nursingcouncil.org.nz/IQN/Overseas_Registrations_FAQs.aspx
+  title: Overseas registrations FAQs
+  agency: Nursing Council of New Zealand
+  tier: government
+nursing-council-rn-requirements:
+  url: https://www.nursingcouncil.org.nz/IQN/H5.aspx
+  title: Internationally qualified registered nurses
+  agency: Nursing Council of New Zealand
+  tier: government
+teaching-council-register-overseas:
+  url: https://teachingcouncil.nz/en/become-a-teacher/overseas-trained-teacher-coming-to-Aotearoa/register-to-teach-as-an-overseas-teacher
+  title: Register to teach as an overseas teacher
+  agency: Teaching Council of Aotearoa New Zealand
+  tier: government
+teaching-council-requirements:
+  url: https://teachingcouncil.nz/en/become-a-teacher/overseas-trained-teacher-coming-to-Aotearoa/requirements-to-teach-in-nz
+  title: Requirements to teach in New Zealand
+  agency: Teaching Council of Aotearoa New Zealand
+  tier: government
+teaching-council-police-clearance:
+  url: https://teachingcouncil.nz/en/become-a-teacher/third-party-checks/overseas-police-clearance
+  title: Overseas police clearance
+  agency: Teaching Council of Aotearoa New Zealand
+  tier: government
+ewrb-overseas-trained:
+  url: https://www.ewrb.govt.nz/licences/becoming-registered-for-overseas-trained-applicants/
+  title: Becoming registered for overseas-trained applicants
+  agency: Electrical Workers Registration Board
+  tier: government
+ewrb-electrician-pathway:
+  url: https://www.ewrb.govt.nz/registration/registration-overseas-trained-pathway/electrician/
+  title: "Overseas-trained pathway: electrician"
+  agency: Electrical Workers Registration Board
+  tier: government
+pgdb-overseas-qualifications:
+  url: https://www.pgdb.co.nz/apply_for_registration/register_with_overseas_qualifications/
+  title: Register with overseas qualifications
+  agency: Plumbers, Gasfitters and Drainlayers Board
+  tier: government
+pgdb-fees:
+  url: https://www.pgdb.co.nz/apply_for_registration/fees/
+  title: Fees
+  agency: Plumbers, Gasfitters and Drainlayers Board
+  tier: government
+inz-check-iqa:
+  url: https://www.immigration.govt.nz/work/requirements-for-work-visas/green-list-occupations-qualifications-and-skills/check-if-you-need-an-international-qualification-assessment/
+  title: Check if you need an international qualification assessment
+  agency: Immigration New Zealand
+  tier: government
+nzqa-iqa:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/iqa/
+  title: International Qualification Assessment (IQA)
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-apply-iqa:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/apply-iqa/
+  title: Apply for an IQA
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-iqa-fees:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/apply-iqa/fees/
+  title: IQA fees
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-iqa-documents:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/iqa/requirements-for-evidence-and-document/
+  title: Requirements for evidence and documents
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-iqa-verify:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/iqa/requirements-for-evidence-and-document/verify-documents-for-iqa/
+  title: Verify documents for an IQA
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-iqa-teachers:
+  url: https://www2.nzqa.govt.nz/international/recognise-overseas-qual/iqa/for-teachers/
+  title: IQA for teachers
+  agency: New Zealand Qualifications Authority
+  tier: government
+nzqa-iqa-employers:
+  url: https://www2.nzqa.govt.nz/about-us/news/understanding-international-qualification-assessments-iqa-for-new-zealand-employers/
+  title: Understanding international qualification assessments (IQA) for New Zealand employers
+  agency: New Zealand Qualifications Authority
+  tier: government
+tahatu-write-cv:
+  url: https://tahatu.govt.nz/work/applying-for-a-job/how-to-write-a-cv/
+  title: How to write a CV
+  agency: Tahatū Career Navigator
+  tier: government
+tahatu-cover-letter:
+  url: https://tahatu.govt.nz/work/applying-for-a-job/how-to-write-a-cover-letter/
+  title: How to write a cover letter
+  agency: Tahatū Career Navigator
+  tier: government
+tahatu-application-checklist:
+  url: https://tahatu.govt.nz/work/applying-for-a-job/job-application-checklist/
+  title: Job application checklist
+  agency: Tahatū Career Navigator
+  tier: government
+tahatu-cv-workbook:
+  url: https://tahatu.govt.nz/api/documents/serve/233/Applying_for_jobs_CVs_cover_letters_and_more_workbook.pdf
+  title: "Applying for jobs: CVs, cover letters and more (workbook)"
+  agency: Tahatū Career Navigator
+  tier: government
+tahatu-job-hunters-workbook:
+  url: https://tahatu.govt.nz/api/documents/serve/159/Job_Hunters_Workbook__Web_version.pdf
+  title: Job hunter's workbook
+  agency: Tahatū Career Navigator
+  tier: government
+inz-find-a-job:
+  url: https://www.immigration.govt.nz/work/finding-work-in-new-zealand/how-to-find-a-job-in-new-zealand/
+  title: How to find a job in New Zealand
+  agency: Immigration New Zealand
+  tier: government
+inz-offering-job-overseas:
+  url: https://www.immigration.govt.nz/work/for-employers/rules-and-laws-when-hiring-people-from-overseas/rules-for-offering-a-job-to-a-person-from-overseas/
+  title: Rules for offering a job to a person from overseas
+  agency: Immigration New Zealand
+  tier: government
+inz-scams:
+  url: https://www.immigration.govt.nz/work/protecting-yourself-from-immigration-scams/
+  title: Protecting yourself from immigration scams
+  agency: Immigration New Zealand
+  tier: government
+inz-visa-conditions:
+  url: https://www.immigration.govt.nz/work/check-or-change-your-work-visa-conditions/
+  title: Check or change your work visa conditions
+  agency: Immigration New Zealand
+  tier: government
+employment-nz-agreement:
+  url: https://www.employment.govt.nz/starting-employment/employment-agreements/creating-an-employment-agreement
+  title: Creating an employment agreement
+  agency: Employment New Zealand
+  tier: government
+employment-nz-discrimination:
+  url: https://www.employment.govt.nz/resolving-problems/bullying-harassment-and-discrimination/discrimination
+  title: Discrimination
+  agency: Employment New Zealand
+  tier: government
+own-your-online-job-scams:
+  url: https://www.ownyouronline.govt.nz/personal/get-protected/guides/protect-yourself-from-job-scams/
+  title: Protect yourself from job scams
+  agency: Own Your Online (CERT NZ)
+  tier: government
+inz-choosing-where-to-live:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/finding-somewhere-to-live/choosing-where-to-live-in-new-zealand/
+  title: Choosing where to live in New Zealand
+  agency: Immigration New Zealand
+  tier: government
+inz-cost-of-living:
+  url: https://www.immigration.govt.nz/live/moving-to-new-zealand/cost-of-living-in-new-zealand/
+  title: Cost of living in New Zealand
+  agency: Immigration New Zealand
+  tier: government
+inz-childcare-schools:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/childcare-schools-and-higher-education/
+  title: Childcare, schools and higher education
+  agency: Immigration New Zealand
+  tier: government
+tenancy-market-rent:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/market-rent/
+  title: Market rent
+  agency: Tenancy Services
+  tier: government
+tenancy-new-tenants:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/new-to-tenancy/information-for-new-tenants/
+  title: Information for new tenants
+  agency: Tenancy Services
+  tier: government
+tenancy-charging-rent:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/rent/charging-rent/
+  title: Charging rent
+  agency: Tenancy Services
+  tier: government
+moe-school-zones:
+  url: https://www.education.govt.nz/parents-and-caregivers/schools-year-0-13/starting-school/school-zones-and-enrolment-schemes
+  title: School zones and enrolment schemes
+  agency: Ministry of Education
+  tier: government
+moe-enrolment-scheme-faqs:
+  url: https://web-assets.education.govt.nz/s3fs-public/2024-08/Enrolment%20Scheme%20FAQs_0.pdf
+  title: Enrolment scheme FAQs
+  agency: Ministry of Education
+  tier: government
+at-transport-reform:
+  url: https://at.govt.nz/about-us/changing-transport-delivery-in-auckland-transport-reform
+  title: Changing transport delivery in Auckland
+  agency: Auckland Transport
+  tier: government
+gw-metlink:
+  url: https://www.gw.govt.nz/transport/metlink-bus-train-and-ferry/
+  title: Metlink bus, train and ferry
+  agency: Greater Wellington Regional Council
+  tier: government
+inz-temporary-places:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/finding-somewhere-to-live/hotels-motels-and-other-places-to-live-temporarily/
+  title: Hotels, motels and other places to live temporarily
+  agency: Immigration New Zealand
+  tier: government
+inz-renting:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/finding-somewhere-to-live/renting-a-place-to-live-in-new-zealand/
+  title: Renting a place to live in New Zealand
+  agency: Immigration New Zealand
+  tier: government
+tenancy-not-protected:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/who-is-protected/who-tenancy-law-does-not-protect/
+  title: Who tenancy law does not protect
+  agency: Tenancy Services
+  tier: government
+tenancy-short-fixed-term:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/types-of-tenancies/short-fixed-term-tenancy/
+  title: Short fixed-term tenancy
+  agency: Tenancy Services
+  tier: government
+tenancy-letting-fees:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/letting-fees-and-key-money/
+  title: Letting fees and key money
+  agency: Tenancy Services
+  tier: government
+tenancy-bond-problems:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/bond/preventing-problems-with-bonds/
+  title: Preventing problems with bonds
+  agency: Tenancy Services
+  tier: government
+consumer-protection-scams:
+  url: https://www.consumerprotection.govt.nz/news-and-media/scammers-defraud-kiwis-of-265-million
+  title: Scammers defraud Kiwis of $265 million
+  agency: Consumer Protection (MBIE)
+  tier: government
+inz-variation-of-conditions:
+  url: https://www.immigration.govt.nz/formshelp/application-for-a-variation-of-conditions
+  title: Application for a variation of conditions
+  agency: Immigration New Zealand
+  tier: government
+immigration-act-2009:
+  url: https://www.legislation.govt.nz/act/public/2009/51/en/latest/
+  title: Immigration Act 2009
+  agency: Parliamentary Counsel Office
+  tier: government
+immigration-advisers-act-2007:
+  url: https://www.legislation.govt.nz/act/public/2007/15/en/latest/
+  title: Immigration Advisers Licensing Act 2007
+  agency: Parliamentary Counsel Office
+  tier: government
+ird-rwt:
+  url: https://www.ird.govt.nz/income-tax/withholding-taxes/resident-withholding-tax-rwt
+  title: Resident withholding tax (RWT)
+  agency: Inland Revenue
+  tier: government
+aml-cft-act-2009:
+  url: https://www.legislation.govt.nz/act/public/2009/0035/latest/whole.html
+  title: Anti-Money Laundering and Countering Financing of Terrorism Act 2009
+  agency: Parliamentary Counsel Office
+  tier: government
+deposit-takers-act-2023:
+  url: https://www.legislation.govt.nz/act/public/2023/0035/latest/whole.html
+  title: Deposit Takers Act 2023
+  agency: Parliamentary Counsel Office
+  tier: government
+fma-disputes:
+  url: https://www.fma.govt.nz/consumer/everyday-finance/disputes-and-consumer-protection/
+  title: Disputes and consumer protection
+  agency: Financial Markets Authority
+  tier: government
+consumer-protection-scamwatch:
+  url: https://www.consumerprotection.govt.nz/general-help/scamwatch
+  title: Scamwatch
+  agency: Consumer Protection (MBIE)
+  tier: government
+sorted-credit-reports:
+  url: https://sorted.org.nz/guides/tackling-debt/credit-reports/
+  title: Credit reports
+  agency: Retirement Commission (Sorted)
+  tier: government
+police-call-111:
+  url: https://www.police.govt.nz/call-111
+  title: Call 111
+  agency: New Zealand Police
+  tier: government
+police-new-arrivals-communicating:
+  url: https://www.police.govt.nz/advice/personal-community/new-arrivals/english/communicating
+  title: "New arrivals: communicating"
+  agency: New Zealand Police
+  tier: government
+comcom-number-portability:
+  url: https://www.comcom.govt.nz/regulated-industries/telecommunications/regulated-services/copper-services/local-and-mobile-number-portability/
+  title: Local and mobile number portability
+  agency: Commerce Commission
+  tier: government
+consumer-protection-scam-types:
+  url: https://www.consumerprotection.govt.nz/general-help/scamwatch/types-of-scams
+  title: Types of scams
+  agency: Consumer Protection (MBIE)
+  tier: government
+dia-txt-spam:
+  url: https://www.dia.govt.nz/Spam-Report-TXT-Spam
+  title: Report TXT spam
+  agency: Department of Internal Affairs
+  tier: government
+govt-utility-complaints:
+  url: https://www.govt.nz/browse/consumer-rights-and-credit-record/how-to-complain/complain-about-your-utility-provider/
+  title: Complain about your utility provider
+  agency: govt.nz (DIA)
+  tier: government
+ird-tax-codes:
+  url: https://www.ird.govt.nz/income-tax/income-tax-for-individuals/tax-codes-and-tax-rates-for-individuals/tax-codes-for-individuals
+  title: About tax codes
+  agency: Inland Revenue
+  tier: government
+employment-nz-employee-rights:
+  url: https://www.employment.govt.nz/starting-employment/rights-and-responsibilities/employee-rights-and-responsibilities
+  title: Employee rights and responsibilities
+  agency: Employment New Zealand
+  tier: government
+employment-nz-minimum-wage-rates:
+  url: https://www.employment.govt.nz/pay-and-hours/pay-and-wages/minimum-wage/minimum-wage-rates-and-types
+  title: Minimum wage rates and types
+  agency: Employment New Zealand
+  tier: government
+employment-nz-payslips:
+  url: https://www.employment.govt.nz/pay-and-hours/pay-and-wages/payslips
+  title: Payslips
+  agency: Employment New Zealand
+  tier: government
+employment-nz-migrant-exploitation:
+  url: https://www.employment.govt.nz/resolving-problems/types-of-problems/migrant-exploitation
+  title: Migrant exploitation
+  agency: Employment New Zealand
+  tier: government
+moe-domestic-student-definition:
+  url: https://www.education.govt.nz/our-work/legislation/international-student-legislation/definition-domestic-student-new-zealand
+  title: Definition of a domestic student in New Zealand
+  agency: Ministry of Education
+  tier: government
+moe-eligibility-enrol:
+  url: https://www.education.govt.nz/education-professionals/schools-year-0-13/enrolment/eligibility-enrol-new-zealand-schools
+  title: Eligibility to enrol in New Zealand schools
+  agency: Ministry of Education
+  tier: government
+moe-enrolling-overseas:
+  url: https://www.education.govt.nz/education-professionals/schools-year-0-13/enrolment/enrolling-students-overseas
+  title: Enrolling students from overseas
+  agency: Ministry of Education
+  tier: government
+moe-cohort-entry:
+  url: https://www.education.govt.nz/parents-and-caregivers/schools-year-0-13/starting-school/cohort-or-group-entry-children-starting-school
+  title: Cohort or group entry for children starting school
+  agency: Ministry of Education
+  tier: government
+moe-enrolment-scheme-faqs-2025:
+  url: https://web-assets.education.govt.nz/s3fs-public/2025-08/FAQs%20about%20Enrolment%20Schemes_English%20(3).pdf?VersionId=njg2rBfQhkL2U44LPUdrt6KGSqyuCePB
+  title: FAQs about Enrolment Schemes
+  agency: Ministry of Education
+  tier: government
+moe-eligibility-appendix-a:
+  url: https://web-assets.education.govt.nz/s3fs-public/2026-04/Circular-2020-08-Appendix-1.pdf?VersionId=1DB95V2869wdpI5.NP3fzz_7Q_Enu4a4
+  title: "Appendix A: Eligibility to enrol in New Zealand Schools"
+  agency: Ministry of Education
+  tier: government
+tenancy-agreements:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/tenancy-agreements/
+  title: Tenancy agreements
+  agency: Tenancy Services
+  tier: government
+tenancy-required-statements:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/tenancy-agreements/required-statements-for-tenancy-agreements/
+  title: Required statements for tenancy agreements
+  agency: Tenancy Services
+  tier: government
+tenancy-initial-inspection:
+  url: https://www.tenancy.govt.nz/starting-a-tenancy/new-to-tenancy/initial-property-inspection/
+  title: Initial property inspection
+  agency: Tenancy Services
+  tier: government
+tenancy-lodging-bond:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/bond/about-lodging-a-bond/
+  title: About lodging a bond
+  agency: Tenancy Services
+  tier: government
+tenancy-disputes:
+  url: https://www.tenancy.govt.nz/disputes/
+  title: Disputes
+  agency: Tenancy Services
+  tier: government
+tenancy-contact-us:
+  url: https://www.tenancy.govt.nz/about-tenancy-services/contact-us/
+  title: Contact us
+  agency: Tenancy Services
+  tier: government
+tenancy-utilities:
+  url: https://www.tenancy.govt.nz/rent-bond-and-bills/utilities-and-other-payments/
+  title: Utilities and other payments
+  agency: Tenancy Services
+  tier: government
+# target: sources.yaml
+govt-nz-find-a-doctor:
+  url: https://www.govt.nz/browse/health/gps-and-prescriptions/find-a-doctor/
+  title: Find a doctor
+  agency: Govt.nz (Health New Zealand, Ministry of Health)
+  tier: government
+healthnz-general-practices:
+  url: https://www.healthnz.govt.nz/hospitals-services/services-support/general-practices
+  title: General practices
+  agency: Health New Zealand | Te Whatu Ora
+  tier: government
+govt-nz-while-pregnant:
+  url: https://www.govt.nz/browse/family-and-whanau/having-a-baby/while-youre-pregnant/
+  title: While you’re pregnant
+  agency: Govt.nz (Health New Zealand, Ministry of Health)
+  tier: government
+inz-learning-english:
+  url: https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/learning-english-in-new-zealand/
+  title: "Learning English in New Zealand"
+  agency: Immigration New Zealand
+  tier: government
+inz-learning-english-families:
+  url: https://www.immigration.govt.nz/process-to-apply/applying-for-a-visa/providing-evidence-and-documents-to-support-your-visa-application/english-language-requirements/learning-english-for-families-of-resident-visa-applicants/
+  title: "Learning English for families of resident visa applicants"
+  agency: Immigration New Zealand
+  tier: government
+healthnz-wellchild:
+  url: https://www.healthnz.govt.nz/health-topics/pregnancy-maternity/pregnancy-birth-and-children-services/well-child-tamariki-ora
+  title: Well Child Tamariki Ora
+  agency: Health New Zealand
+  tier: government
+healthnz-wellchild-providers:
+  url: https://www.healthnz.govt.nz/health-topics/pregnancy-maternity/pregnancy-birth-and-children-services/well-child-tamariki-ora-providers
+  title: Well Child Tamariki Ora providers
+  agency: Health New Zealand
+  tier: government
+healthnz-immunisation-schedule:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/national-immunisation-schedule
+  title: National Immunisation Schedule
+  agency: Health New Zealand
+  tier: government
+healthnz-immunisation-catchup:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/catching-up-on-missed-immunisations
+  title: Catching up on missed immunisations
+  agency: Health New Zealand
+  tier: government
+healthnz-book-vaccine:
+  url: https://www.healthnz.govt.nz/health-topics/immunisations/booking-a-vaccine
+  title: Book a vaccine
+  agency: Health New Zealand
+  tier: government
+healthnz-dentists:
+  url: https://www.healthnz.govt.nz/hospitals-services/services-support/dentists
+  title: Dentists
+  agency: Health New Zealand
+  tier: government
+ird-kiwisaver-joining:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver
+  title: Joining KiwiSaver
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-employee:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver/joining-kiwisaver-as-an-employee
+  title: Joining KiwiSaver as an employee
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-benefits:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/kiwisaver-benefits
+  title: KiwiSaver benefits
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-rates:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/employee-contributions
+  title: Employee contributions
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-choosing-fund:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/joining-kiwisaver/choosing-a-kiwisaver-provider
+  title: Choosing a KiwiSaver fund
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-opt-out:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/opting-out-of-kiwisaver
+  title: Opting out of KiwiSaver
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-changes:
+  url: https://www.ird.govt.nz/updates/news-folder/2025/kiwisaver-changes
+  title: KiwiSaver changes
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-pir:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/taxing-kiwisaver-income
+  title: How your KiwiSaver income is taxed
+  agency: Inland Revenue
+  tier: government
+ird-kiwisaver-early:
+  url: https://www.ird.govt.nz/kiwisaver/kiwisaver-individuals/getting-my-kiwisaver-funds-early
+  title: Getting my KiwiSaver savings early
+  agency: Inland Revenue
+  tier: government
+sorted-kiwisaver-which-fund:
+  url: https://sorted.org.nz/guides/kiwisaver/kiwisaver-which-fund-suits/
+  title: How to pick the right KiwiSaver fund for you
+  agency: Retirement Commission (Sorted)
+  tier: government
+moe-ece-20-hours:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/available-assistance/20-hours-funding-early-childhood-education
+  title: 20 hours funding for early childhood education
+  agency: Ministry of Education
+  tier: government
+moe-ece-enrolling:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/enrolling-and-starting-your-child-early-learning
+  title: Enrolling and starting your child in early learning
+  agency: Ministry of Education
+  tier: government
+moe-ece-types:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/types-early-learning
+  title: Types of early learning
+  agency: Ministry of Education
+  tier: government
+moe-ece-choosing:
+  url: https://www.education.govt.nz/parents-and-caregivers/early-learning/starting-early-learning/choosing-early-learning-service
+  title: Choosing an early learning service
+  agency: Ministry of Education
+  tier: government
+winz-childcare-subsidy:
+  url: https://www.workandincome.govt.nz/products/a-z-benefits/childcare-subsidy.html
+  title: Childcare Subsidy
+  agency: Ministry of Social Development (Work and Income)
+  tier: government
+nzta-converting-index:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/
+  title: Converting to a NZ driver licence
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-approved-translators:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/approved-translators
+  title: Approved translators
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-converting-car-exempt:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence/converting-a-car-licence-from-an-exempt-country
+  title: Converting a car licence from an exempt country
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+nzta-converting-car-non-exempt:
+  url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence/converting-a-car-licence-from-a-non-exempt-country
+  title: Converting a car licence from a non-exempt country
+  agency: NZ Transport Agency Waka Kotahi
+  tier: government
+www-ird-govt-nz-working-for-families-apply-register:
+  url: https://www.ird.govt.nz/working-for-families/apply/register
+  title: "Register for Working for Families"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it/new-or-returning-residents
+  title: "New or returning residents"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it
+  title: "Can you get Working for Families?"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-types:
+  url: https://www.ird.govt.nz/working-for-families/types
+  title: "Types of payment"
+  agency: Inland Revenue
+  tier: government
+getready-govt-nz-prepared-household-supplies:
+  url: https://getready.govt.nz/prepared/household/supplies
+  title: "Work out what supplies you need"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-household-impacts:
+  url: https://getready.govt.nz/prepared/household/impacts
+  title: "Talk about the impacts"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-ema:
+  url: https://getready.govt.nz/prepared/ema
+  title: "Emergency Mobile Alert"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-prepared-stay-informed:
+  url: https://getready.govt.nz/prepared/stay-informed
+  title: "Stay informed"
+  agency: National Emergency Management Agency
+  tier: government
+getready-govt-nz-emergency-tsunami:
+  url: https://getready.govt.nz/emergency/tsunami
+  title: "Tsunami"
+  agency: National Emergency Management Agency
+  tier: government

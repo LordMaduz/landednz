@@ -1,0 +1,107 @@
+id: T29
+name: "Know your employment rights"
+phase: 3
+priority: 80
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T29.why.minimum-rights
+    text: "Employment New Zealand says minimum employment rights are what your employer must give you by law, and you are entitled to them even if they aren't in your employment agreement or you have no written agreement."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.why.migrants
+    text: "Employment New Zealand says migrant workers have the same minimum employment rights as New Zealand workers, and these rights cannot be taken away even if you are working illegally."
+    source: employment-nz-migrant-exploitation
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T29.steps.agreement
+    text: "Employment New Zealand says every employee must have a written employment agreement, and your employer must give you one."
+    source: www-employment-govt-nz-starting-employment-employment-agreements
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.advice-before-signing
+    text: "Employment New Zealand says your employer must let you get advice or support from someone you trust before you sign your agreement."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.minimum-wage
+    text: "Check your pay rate. Employment New Zealand lists the adult minimum wage at {{employment.min-wage-adult}} and the starting-out and training rates at {{employment.min-wage-starting-out}}. Rates are reviewed every year."
+    source: employment-nz-minimum-wage-rates
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.records
+    text: "Employment New Zealand says an employer must keep your wages, time and leave records. If you don't get a payslip, ask to see or get a copy of these records."
+    source: employment-nz-payslips
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.leave
+    text: "Employment New Zealand lists {{employment.annual-holidays}} of annual holidays and {{employment.sick-leave}} of sick leave once you have worked long enough to qualify, plus paid rest breaks and public holiday rights."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.safety
+    text: "Employment New Zealand says your employer must provide a safe and healthy workplace with proper training, supervision and equipment, and you have the right to stop working if you believe it is unhealthy or unsafe."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.report
+    text: "If you or someone you know is being exploited at work, Employment New Zealand says you can report it online or on 0800 200 088, with interpreters available. In immediate physical danger, call 111 and ask for Police."
+    source: employment-nz-migrant-exploitation
+    checked: 2026-10-27
+    verified: true
+  - id: T29.steps.seeking-work
+    text: "If you're still looking for work: read these rights now, so you know what to expect when your job starts."
+    when:
+      occupation: [SEEKING_WORK]
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T29.documents.agreement
+    text: "Your written employment agreement"
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.documents.records
+    text: "Your own record of the days and hours you work and what you are paid, including any amount taken out. Employment New Zealand recommends keeping one."
+    source: employment-nz-migrant-exploitation
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T29.mistakes.passport
+    text: "Handing your passport to your employer. Employment New Zealand says your employer must not demand to keep it."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.mistakes.paying-for-job
+    text: "Paying a fee to get or keep a job. Employment New Zealand says an employer must not make you pay one."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T29.watchOuts.deductions
+    text: "Employment New Zealand says your employer can only take money out of your pay if it is lawful and reasonable and you agreed to it in writing, or the law requires it (for example tax and student loan payments)."
+    source: employment-nz-employee-rights
+    checked: 2026-10-27
+    verified: true
+  - id: T29.watchOuts.minimum-wage-line
+    text: "Employment New Zealand says anyone who thinks they are being paid less than the minimum wage can report it on 0800 20 90 20."
+    source: employment-nz-minimum-wage-rates
+    checked: 2026-10-27
+    verified: true
+  - id: T29.watchOuts.mepv
+    text: "Employment New Zealand describes a Migrant Exploitation Protection Work Visa, valid for {{employment.mepv-validity}} and not extendable. It says you start by reporting exploitation to Employment New Zealand, which assesses your report and may issue a Report of Exploitation Assessment Letter. You then apply to Immigration New Zealand within {{employment.mepv-apply-window}} of the date of that letter. Employment New Zealand says it does not provide immigration advice, so check Immigration New Zealand's page for the criteria."
+    source: employment-nz-migrant-exploitation
+    checked: 2026-10-27
+    verified: true
+  - id: T29.watchOuts.not-exploitation
+    text: "Employment New Zealand says a minor or one-off breach, such as unpaid final holiday pay, may not be migrant exploitation, and that it can still help with breaches like these."
+    source: employment-nz-migrant-exploitation
+    checked: 2026-10-27
+    verified: true

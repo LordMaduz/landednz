@@ -1,0 +1,111 @@
+id: T30
+name: "Enrol your child in school"
+phase: 3
+priority: 90
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T11
+    type: hard
+  - task: T01
+    type: soft
+retired: false
+why:
+  - id: T30.why.compulsory
+    text: "The government's Govt.nz guide says children aged {{education.compulsory-age-range}} in New Zealand must attend school or be educated at home, and most children start school when they turn {{education.school-start-age}}."
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T30.steps.guide
+    text: "Open the Govt.nz guide to enrolling your child at school. It covers choosing a school, contacting it and enrolling."
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.find-school
+    text: "Find schools near you on Education Counts. The Ministry of Education says it also shows zone information for schools that have one."
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.check-zone
+    text: "Check whether each school has an enrolment scheme with a home zone. The Ministry of Education says that if you live in the home zone, your child automatically qualifies to enrol, and anyone can enrol at a school with no scheme."
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.contact-school
+    text: "Contact the school and ask about its enrolment dates and deadlines, forms and process, and whether it uses cohort entry."
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.cohort
+    text: "If your child is turning 5 and the school uses cohort entry: the Ministry of Education says children start on set dates, can't start before they turn 5, and must start by the time they turn 6."
+    source: moe-cohort-entry
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.proof-of-address
+    text: "If the school has a home zone: the Ministry of Education says it may ask for proof of where you live, such as a tenancy agreement, certificate of title or a utility bill showing your address."
+    source: moe-enrolment-scheme-faqs-2025
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.visa-status
+    text: "If your child is not a New Zealand citizen or resident: the Ministry of Education says schools check whether a student can enrol as a domestic student, and a student who isn't one may be able to enrol as an international fee-paying student. Ask the school which applies, or contact the Ministry (see the advice below)."
+    source: moe-eligibility-enrol
+    checked: 2026-10-27
+    verified: true
+  - id: T30.steps.out-of-zone
+    text: "If you live outside a school's zone: the Ministry of Education says you can still apply, but your child isn't guaranteed a place. Schools must advertise any out-of-zone places, normally in September."
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T30.documents.proof-of-age
+    text: "A birth certificate or passport as proof of age, which a school may ask for"
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+  - id: T30.documents.medical-legal-contact
+    text: "Medical information, any legal documents and your contact information, which a school may ask for"
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+  - id: T30.documents.passport-residence-visa
+    text: "If your child is a New Zealand resident: the Ministry of Education says a passport with a residence visa, or other evidence, is the documentation a school checks"
+    source: moe-eligibility-appendix-a
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T30.mistakes.temporary-address
+    text: "Using a temporary address to get into a school zone. The Ministry of Education says you can't move into a zone temporarily to get your child into a school."
+    source: moe-school-zones
+    checked: 2026-10-27
+    verified: true
+  - id: T30.mistakes.false-information
+    text: "Giving a school false information about where you live. The Ministry of Education says the school may refuse to enrol your child or cancel the enrolment."
+    source: moe-enrolment-scheme-faqs-2025
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T30.watchOuts.free-enrolment
+    text: "The Ministry of Education says every domestic student aged {{education.free-enrolment-age-range}} is entitled to free enrolment at a state or state-integrated school, and international students must pay to enrol."
+    source: moe-eligibility-enrol
+    checked: 2026-10-27
+    verified: true
+  - id: T30.watchOuts.dependent-children
+    text: "The Ministry of Education says people not treated as international students include the dependent children of some students and work visa holders, as set out in the relevant Education Notice. Check the notice's wording or ask the Ministry about your own child."
+    source: moe-enrolling-overseas
+    checked: 2026-10-27
+    verified: true
+  - id: T30.watchOuts.refusal
+    text: "Govt.nz says a school must accept your enrolment if your child lives in its home zone or it has no enrolment scheme. If it still refuses, ask for the refusal in writing and contact your nearest Ministry of Education office."
+    source: govt-nz-enrol-school
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T30.advice.moe
+  text: "To ask about a child's eligibility to enrol as a domestic student, the Ministry of Education lists phone +64 4 463 8000."
+  required: false
+  source: moe-domestic-student-definition
+  checked: 2026-10-27
+  verified: true

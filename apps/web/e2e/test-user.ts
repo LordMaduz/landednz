@@ -6,12 +6,12 @@ export const TEST_USER = {
   password: 'TestPassword123!',
 }
 
-// What the journey answers: AEWV, Auckland, just me, technology, landing today
+// What the journey answers: AEWV, Auckland, just me, another job or profession, landing today
 export const ANSWERS = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: new Intl.DateTimeFormat('en-CA', { timeZone: 'Pacific/Auckland' }).format(new Date()),
 }
 

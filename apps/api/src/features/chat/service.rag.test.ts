@@ -21,14 +21,14 @@ beforeAll(async () => {
   const item = { ...t08.steps[0]!, id: 'T08.step.test-family', text: 'Apply for an IRD number for each child too.', when: { family: ['FAMILY_WITH_CHILDREN'] } };
   useContent({ ...bundle, tasks: bundle.tasks.map((t) => (t.id === 'T08' ? { ...t, steps: [...t.steps, item] } : t)) });
   await syncChunks();
-  familyChunk = buildChunks({ ...bundle, tasks: [{ ...t08, steps: [...t08.steps, item] }] }).find((c) => c.when)!;
+  familyChunk = buildChunks({ ...bundle, tasks: [{ ...t08, steps: [...t08.steps, item] }] }).find((c) => c.itemIds.includes(item.id))!;
 
   for (const [kind, familySituation] of [['family', 'FAMILY_WITH_CHILDREN'], ['solo', 'SOLO']] as const) {
     const { userId, jwt, email } = await createTestUser(`test-chat-rag-${kind}`);
     await db.user.create({ data: { id: userId, email } });
     await db.subscription.create({ data: { userId, isActive: true } });
     await db.userProfile.create({
-      data: { userId, visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'TECHNOLOGY', arrivalDate: new Date('2026-09-01') },
+      data: { userId, visaType: 'AEWV', city: 'AUCKLAND', familySituation, occupation: 'OTHER_PROFESSIONAL', arrivalDate: new Date('2026-09-01') },
     });
     const session = await db.chatSession.create({ data: { userId, entryPoint: 'NAVIGATION' } });
     users[kind] = { userId, jwt, sessionId: session.id };

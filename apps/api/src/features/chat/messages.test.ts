@@ -60,7 +60,7 @@ beforeAll(async () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: new Date('2026-02-01'), // ~45 days ago
     },
   });

@@ -8,7 +8,7 @@ const ROWS: { state: WaypointState; name: string; meta: string }[] = [
   { state: "done", name: "Open a bank account", meta: "Done 22 Oct" },
   { state: "current", name: "Apply for your IRD number", meta: "Next" },
   { state: "blocked", name: "Give your employer a tax code", meta: "Needs your IRD number" },
-  { state: "available", name: "Register with a GP", meta: "Month 1" },
+  { state: "available", name: "Enrol with a GP", meta: "Month 1" },
 ]
 
 export function RoadmapPreviewFigure() {

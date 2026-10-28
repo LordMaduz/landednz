@@ -13,11 +13,21 @@ export type Ctx = {
 };
 
 const SOURCES_FILE = 'sources.yaml';
-// Crown entities whose sites are not under govt.nz
-const CROWN_DOMAINS = ['acc.co.nz', 'sorted.org.nz'];
+// Crown entities whose sites are not under govt.nz (research/stage-0.md § Crown and statutory domain allowlist)
+const CROWN_DOMAINS = [
+  'acc.co.nz', 'sorted.org.nz', 'privacy.org.nz', 'hdc.org.nz', 'tikatangata.org.nz', 'hrc.co.nz', 'fireandemergency.nz',
+  'nzblood.co.nz', 'publictrust.co.nz', 'teachingcouncil.nz', 'nursingcouncil.org.nz', 'pgdb.co.nz',
+];
 export const FACT_RE = /\{\{\s*([\w.-]+)\s*\}\}/g;
-// $ amounts, percentages, and a number followed by a time unit (durations, deadlines)
-const FIGURE_RE = /\$\s?\d|\d\s?%|\b\d+(?:[.,]\d+)?\s*(?:business |working )?(?:minute|hour|day|week|month|year)s?\b/i;
+// $ amounts, percentages, a number or number word followed by a time unit (durations), and day-month dates
+const WORDS = 'a|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve';
+const MONTHS = 'January|February|March|April|May|June|July|August|September|October|November|December';
+const FIGURE_RE = new RegExp(
+  String.raw`\$\s?\d|\d\s?%|\d\s?per cent|\b(?:\d+(?:[.,]\d+)?\s*|(?:${WORDS})\s+)(?:business |working )?(?:(?:minute|hour|day|week|month|year)s?|hrs?|mins?|fortnights?)\b`,
+  'i',
+);
+// Case-sensitive so lowercase "may" is not a month
+const DATE_RE = new RegExp(String.raw`\b\d{1,2} (?:${MONTHS})\b`);
 // Names and phrases end at a plain word boundary (so `Priya's` is caught); bare `I` is not part of `I'm`/`I've`
 export const DENY_RE = /\b(?:priya|karthik|dbs|i['’]d|we recommend)\b|\bi(?!['’]?\w)/i;
 // A government source must be on govt.nz or a Crown entity's own domain
@@ -55,10 +65,23 @@ export function domain(ctx: Ctx): RuleError[] {
     .map(([id, s]) => ({ file: SOURCES_FILE, id, rule: 'domain', message: `${s.tier} source ${s.url} is not on govt.nz or the Crown allowlist` }));
 }
 
+// One error per provider source, however many things cite it; a source only exempt items cite is skipped
 export function providerReason(ctx: Ctx): RuleError[] {
-  return citers(ctx)
-    .filter(({ x }) => ctx.sources[x.source]?.tier === 'provider' && !ctx.sources[x.source]!.reason && !exempt(ctx, x))
-    .map(({ file, id, x }) => ({ file, id, rule: 'provider-reason', message: `provider source "${x.source}" has no reason` }));
+  const all = citers(ctx);
+  return Object.entries(ctx.sources)
+    .filter(([id, s]) => {
+      if (s.tier !== 'provider' || s.reason) return false;
+      const cited = all.filter(({ x }) => x.source === id);
+      return !(cited.length && cited.every(({ x }) => exempt(ctx, x)));
+    })
+    .map(([id]) => ({ file: SOURCES_FILE, id, rule: 'provider-reason', message: `provider source "${id}" has no reason` }));
+}
+
+// Providers sit only behind type C facts; an item cites the fact, never the provider directly
+export function providerItem(ctx: Ctx): RuleError[] {
+  return items(ctx)
+    .filter(({ item }) => ctx.sources[item.source]?.tier === 'provider' && !exempt(ctx, item))
+    .map(({ file, item }) => ({ file, id: item.id, rule: 'provider-item', message: `item cites provider source "${item.source}"; cite a type C fact instead` }));
 }
 
 export function providerType(ctx: Ctx): RuleError[] {
@@ -69,7 +92,7 @@ export function providerType(ctx: Ctx): RuleError[] {
 
 export function literalFigure(ctx: Ctx): RuleError[] {
   return items(ctx)
-    .filter(({ item }) => !exempt(ctx, item) && FIGURE_RE.test(item.text.replace(FACT_RE, '')))
+    .filter(({ item }) => !exempt(ctx, item) && [FIGURE_RE, DATE_RE].some((re) => re.test(item.text.replace(FACT_RE, ''))))
     .map(({ file, item }) => ({ file, id: item.id, rule: 'literal-figure', message: 'amounts, percentages and durations must come from a {{fact}}' }));
 }
 
@@ -93,14 +116,14 @@ const conditionLeaves = (ctx: Ctx) =>
 
 export function unknownDimension(ctx: Ctx): RuleError[] {
   return conditionLeaves(ctx)
-    .filter(({ key }) => !(key in ctx.dimensions))
+    .filter(({ key }) => !Object.hasOwn(ctx.dimensions, key))
     .map(({ file, id, key }) => ({ file, id, rule: 'unknown-dimension', message: `"${key}" is not a dimension in dimensions.yaml` }));
 }
 
 export function unknownValue(ctx: Ctx): RuleError[] {
   return conditionLeaves(ctx).flatMap(({ file, id, key, values }) => {
+    if (!Object.hasOwn(ctx.dimensions, key)) return [];
     const dim = ctx.dimensions[key as keyof Dimensions];
-    if (!dim) return [];
     return values
       .filter((v) => !dim.values.some(([known]) => known === v))
       .map((v) => ({ file, id, rule: 'unknown-value', message: `"${v}" is not a ${key} value in dimensions.yaml` }));
@@ -116,12 +139,18 @@ export function denylist(ctx: Ctx): RuleError[] {
   );
 }
 
+// Calendar date in Auckland, minus whole months clamped to the target month's last day (31 Aug - 6 = 28 Feb)
+function monthsAgo(now: Date, months: number): string {
+  const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: 'Pacific/Auckland' }).format(now).split('-').map(Number) as [number, number, number];
+  const lastDay = new Date(Date.UTC(y, m - 1 - months + 1, 0));
+  return new Date(Date.UTC(lastDay.getUTCFullYear(), lastDay.getUTCMonth(), Math.min(d, lastDay.getUTCDate()))).toISOString().slice(0, 10);
+}
+
 export function stale(ctx: Ctx): RuleError[] {
   return citers(ctx).flatMap(({ file, id, x }) => {
     if (exempt(ctx, x)) return [];
     const months = STALE_MONTHS[x.numberType ?? 'A'];
-    const n = ctx.now;
-    const cutoff = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() - months, n.getUTCDate())).toISOString().slice(0, 10);
+    const cutoff = monthsAgo(ctx.now, months);
     return x.checked < cutoff
       ? [{ file, id, rule: 'stale', message: `checked ${x.checked} is older than ${months} months` }]
       : [];
@@ -197,6 +226,6 @@ export function unverified(ctx: Ctx): RuleError[] {
 }
 
 export const RULES = [
-  missingSource, domain, providerReason, providerType, literalFigure, unknownDimension, unknownValue,
+  missingSource, domain, providerReason, providerItem, providerType, literalFigure, unknownDimension, unknownValue,
   denylist, stale, duplicateId, missingDependency, retiredDependency, cycle, unresolvedFact, unverified,
 ];

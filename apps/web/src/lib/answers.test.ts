@@ -5,7 +5,7 @@ const priya: Answers = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2027-01-14',
 }
 
@@ -67,13 +67,13 @@ describe('decodeAnswers (Review Focus 2)', () => {
 describe('answersSummary', () => {
   it('reads the answers back in one sentence', () => {
     expect(answersSummary(priya)).toBe(
-      'Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027',
+      'Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027',
     )
   })
 
   it('leaves out a city of "somewhere else"', () => {
     expect(answersSummary({ ...priya, city: 'OTHER', familySituation: 'FAMILY_WITH_CHILDREN' })).toBe(
-      'Accredited Employer Work Visa (AEWV), you, your partner and your children, technology, landing 14 January 2027',
+      'Accredited Employer Work Visa (AEWV), you, your partner and your children, another job or profession, landing 14 January 2027',
     )
   })
 })

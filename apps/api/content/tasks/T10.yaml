@@ -1,6 +1,6 @@
 id: T10
-name: KiwiSaver Election
-phase: 3
+name: Join KiwiSaver or review your fund
+phase: 4
 priority: 90
 boosts:
   - when:
@@ -21,118 +21,127 @@ boosts:
     by: 5
 urgency: []
 duration: 30–45 minutes (including provider research)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: { visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT, OTHER] }
 dependsOn:
   - task: T08
-    type: soft
+    type: hard
 retired: false
 why:
-  - id: T10.why.1
-    text: Join KiwiSaver — the employer 3% is free money you cannot access any other way.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
+  - id: T10.why.eligibility
+    text: "Inland Revenue says you can join KiwiSaver if you are a New Zealand citizen or entitled to live in New Zealand indefinitely, and you live or normally live here. It is open to residents of any age, whether or not you are working."
+    source: ird-kiwisaver-joining
+    checked: 2026-10-27
+    verified: true
+  - id: T10.why.employer
+    text: "Inland Revenue says that if you save through work your employer must contribute too: at least {{ird.kiwisaver-employer-rate}} of your before-tax pay. Your employer pays tax on that contribution, so you may get less than that paid into your account."
+    source: ird-kiwisaver-benefits
+    checked: 2026-10-27
+    verified: true
+  - id: T10.why.government
+    text: "Inland Revenue says that if you are 16 or over, live mainly in New Zealand, have a taxable income of {{ird.kiwisaver-govt-income-limit}} or under and contribute, the government adds {{ird.kiwisaver-govt-match}} you save, up to {{ird.kiwisaver-govt-max}} each KiwiSaver year (July to June). To get the full amount you must contribute at least {{ird.kiwisaver-govt-full-contribution}} in that year. You get less if you were a member for only part of the year. Your provider claims it for you."
+    source: ird-kiwisaver-benefits
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T10.steps.1
-    text: For most AEWV skilled migrants, joining KiwiSaver is financially advantageous due to the mandatory employer contribution (3% salary top-up) and government member tax credit (up to $521.43/year). The main reason not to join is if you are certain you will leave NZ within 1–2 years and the administrative friction of withdrawal outweighs the benefit — but even then, the employer 3% contribution is worth capturing.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.steps.2
-    text: "Major providers include: Simplicity (low fees, nonprofit, recommended for cost-conscious investors), Milford, Fisher Funds, ANZ KiwiSaver, ASB KiwiSaver, Booster, Generate, SuperLife, InvestNow. Comparison tool: sorted.org.nz/kiwisaver (government-operated, fee comparison). Key criteria when choosing: - Management fees (look for under 0.5% for passive/index funds, under 1.0% for actively managed) - Fund type (growth or aggressive for long-term investors aged 30–50) - Provider stability and track record If you do not choose, you will be assigned to your employer's default provider."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.steps.3
-    text: "Options: 3%, 4%, 6%, 8%, 10% of gross salary. 3% is the minimum; 3.5% is the default (increased from 3% effective April 1, 2026). Your employer's 3% is on top of whichever rate you choose."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.steps.4
-    text: "Download the KS2 form: https://www.ird.govt.nz/forms-guides/number/forms-100-199/ks2-kiwisaver-deduction-notice Fill in your IRD number, chosen contribution rate, and chosen provider. Submit to your employer's payroll team alongside your IR330 (T09)."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.steps.5
-    text: Most KiwiSaver providers allow you to register online before your employer enrolment is processed. Visit your chosen provider's website and open an account. You will need your IRD number, NZ bank account, and passport details.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.steps.6
-    text: After your first pay, check your payslip confirms KiwiSaver deductions at your selected rate. You can view your KiwiSaver balance and contributions via myIR (ird.govt.nz/myIR) once your IRD account is active.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
+  - id: T10.steps.open-joining
+    text: "Open Inland Revenue's Joining KiwiSaver page and check the rules. It says that depending on your situation you either enrol through your employer or directly with a scheme provider."
+    source: ird-kiwisaver-joining
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.auto-enrol
+    text: "If you're starting a new job: Inland Revenue says your employer will automatically enrol you if you are eligible, aged {{ird.kiwisaver-auto-enrol-ages}}, in a full-time or permanent part-time job or on a contract of more than {{ird.kiwisaver-contract-min}}, and not already a member. Your employer gives you a KiwiSaver information pack (KS3)."
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.already-employed
+    text: "If you already have your job and aren't a member: Inland Revenue says to ask your employer for the KS3 information pack and complete the KiwiSaver deduction form (KS2). Give it to your employer and deductions start from your next pay. You can also join directly with a provider."
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.provider
+    text: "Choose your own provider rather than waiting. Inland Revenue says that if you do not choose, it puts you in one of the default providers or your employer's chosen scheme, and that you do not have to stay with either."
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.fund-type
+    text: "Work out which fund type suits you. Sorted groups KiwiSaver funds into five types by how much they hold in riskier investments such as shares and property: defensive, conservative, balanced, growth and aggressive. Its KiwiSaver fund finder helps you pick."
+    source: sorted-kiwisaver-which-fund
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.compare
+    text: "Compare funds of your type. Sorted says to look at fees, the service and support that come with the fund, and whether past performance is below that of similar funds, and says paying more does not necessarily get you more."
+    source: sorted-kiwisaver-which-fund
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.rate
+    text: "Choose your contribution rate from {{ird.kiwisaver-rates}} of your pay. Inland Revenue says your employer deducts {{ird.kiwisaver-default-rate}} if you do not choose, and you can change the rate {{ird.kiwisaver-rate-change-gap}} unless your employer agrees to a shorter gap."
+    source: ird-kiwisaver-rates
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.review-fund
+    text: "If you're already a member and want to review your fund: Inland Revenue says that once you are in KiwiSaver you can change your chosen fund at any time."
+    source: ird-kiwisaver-choosing-fund
+    checked: 2026-10-27
+    verified: true
+  - id: T10.steps.switch-provider
+    text: "If you're switching provider: Inland Revenue says to apply directly to the provider you want to join, which arranges the transfer. It says this takes {{ird.kiwisaver-transfer-time}}, you can only belong to one provider at a time, and your old provider may charge a transfer fee, so check with them."
+    source: www-ird-govt-nz-kiwisaver-kiwisaver-individuals-making-changes-to-my-kiwisaver-changing-to-another-provider
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T10.documents.1
-    text: passport
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.documents.2
-    text: ird number
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
+  - id: T10.documents.ks3
+    text: "The KiwiSaver information pack (KS3), which Inland Revenue says your employer gives you"
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
+  - id: T10.documents.ks2
+    text: "The KiwiSaver deduction form (KS2), which Inland Revenue says you complete and give to your employer if you already work there"
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T10.mistakes.1
-    text: "Failing to understand: If you take no action, you will be auto-enrolled in your employer's default fund, which may be a conservative fund inappropriate for your age and investment horizon. Act proactively to choose your fund type."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.mistakes.2
-    text: "Failing to understand: The 56-day opt-out window is firm. If you decide KiwiSaver is not right for you (rare for AEWV workers), opt out within 56 days of starting employment via your myIR account or via IRD directly. After 56 days, opting out requires a contributions holiday application."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.mistakes.3
-    text: "Failing to understand: Employer contributions are subject to Employer Superannuation Contribution Tax (ESCT) — your employer deducts this tax from their contribution before it reaches your account. This is normal and does not affect your contribution rate."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.mistakes.4
-    text: KiwiSaver funds are not bank deposits — your balance can go down as well as up. This is normal for investment funds. Do not select a conservative/defensive fund solely out of fear of loss if your investment horizon is long.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.mistakes.5
-    text: "Failing to understand: Contributions are locked until age 65 or first home purchase (with conditions), except for permanent emigration withdrawal and financial hardship applications. Plan cash flow accordingly."
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
+  - id: T10.mistakes.default-fund
+    text: "Leaving your fund unchecked after automatic enrolment. Inland Revenue says that if you do not choose, you are allocated to a default provider or your employer's chosen scheme, and you do not have to stay there."
+    source: ird-kiwisaver-employee
+    checked: 2026-10-27
+    verified: true
+  - id: T10.mistakes.opt-out-late
+    text: "Missing the opt-out window if you were automatically enrolled and don't want to be a member. Inland Revenue says you can opt out {{ird.kiwisaver-opt-out-window}} of starting work, and that after that it accepts late opt-outs only in limited cases."
+    source: ird-kiwisaver-opt-out
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T10.watchOuts.1
-    text: If you take no action, you will be auto-enrolled in your employer's default fund, which may be a conservative fund inappropriate for your age and investment horizon. Act proactively to choose your fund type.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.watchOuts.2
-    text: The 56-day opt-out window is firm. If you decide KiwiSaver is not right for you (rare for AEWV workers), opt out within 56 days of starting employment via your myIR account or via IRD directly. After 56 days, opting out requires a contributions holiday application.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.watchOuts.3
-    text: Employer contributions are subject to Employer Superannuation Contribution Tax (ESCT) — your employer deducts this tax from their contribution before it reaches your account. This is normal and does not affect your contribution rate.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.watchOuts.4
-    text: KiwiSaver funds are not bank deposits — your balance can go down as well as up. This is normal for investment funds. Do not select a conservative/defensive fund solely out of fear of loss if your investment horizon is long.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.watchOuts.5
-    text: Contributions are locked until age 65 or first home purchase (with conditions), except for permanent emigration withdrawal and financial hardship applications. Plan cash flow accordingly.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
-  - id: T10.watchOuts.6
-    text: Do not confuse KiwiSaver with NZ Superannuation (NZ Super) — NZ Super is a government pension paid from age 65, separate from KiwiSaver, and available to long-term NZ residents regardless of KiwiSaver participation.
-    source: www-ird-govt-nz-kiwisaver
-    checked: 2026-03-03
-    verified: false
+  - id: T10.watchOuts.other-visa
+    text: "If your visa isn't a resident visa: Inland Revenue says you cannot join KiwiSaver if you have a temporary, visitor, work or student visa."
+    when:
+      visa: [OTHER]
+    source: ird-kiwisaver-joining
+    checked: 2026-10-27
+    verified: true
+  - id: T10.watchOuts.rate-change
+    text: "Inland Revenue says the default rate for you and your employer is now {{ird.kiwisaver-default-rate}} and will rise to {{ird.kiwisaver-default-rate-2028}} on {{ird.kiwisaver-2028-date}}."
+    source: ird-kiwisaver-changes
+    checked: 2026-10-27
+    verified: true
+  - id: T10.watchOuts.hold
+    text: "Inland Revenue says it holds your contributions for {{ird.kiwisaver-hold-period}} from the date it is told you are a new member, then passes them to your provider."
+    source: ird-kiwisaver-joining
+    checked: 2026-10-27
+    verified: true
+  - id: T10.watchOuts.pir
+    text: "Inland Revenue says that in a portfolio investment entity (PIE) scheme your investment earnings are taxed at your prescribed investor rate ({{ird.kiwisaver-pir-rates}}). You give your provider the rate that applies and check it if your income changes, because it is based on your income over the last {{ird.kiwisaver-pir-lookback}}."
+    source: ird-kiwisaver-pir
+    checked: 2026-10-27
+    verified: true
+  - id: T10.watchOuts.early
+    text: "Inland Revenue says you may be able to get some or all of your savings early if you are buying your first home, moving overseas permanently (to a country other than Australia), or have a serious illness, a life-shortening congenital condition or significant financial hardship."
+    source: ird-kiwisaver-early
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T10.advice.adviser
+  text: "Inland Revenue says it cannot give you financial advice and that KiwiSaver investments are not guaranteed by the Government. It points you to Sorted and says you can speak with an authorised financial adviser."
+  required: false
+  source: ird-kiwisaver-choosing-fund
+  checked: 2026-10-27
+  verified: true

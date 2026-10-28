@@ -4,7 +4,7 @@ import { ANSWERS } from './test-user'
 // "Change my answers" on the preview reopens step 1 with the saved answers, and Continue works
 test('change my answers keeps the answers editable', async ({ page }) => {
   await page.goto('/onboarding')
-  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Technology']) {
+  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Another job or profession']) {
     await page.getByLabel(label).check()
     await page.getByRole('button', { name: 'Continue' }).click()
   }
@@ -15,6 +15,6 @@ test('change my answers keeps the answers editable', async ({ page }) => {
   await page.getByRole('link', { name: 'Change my answers' }).click()
   await expect(page).toHaveURL('/onboarding?step=1')
   await expect(page.getByLabel('Accredited Employer Work Visa (AEWV)')).toBeChecked()
-  await page.getByLabel('Green List, work to residence').check()
+  await page.getByLabel('Straight to Residence Visa (Green List Tier 1)').check()
   await expect(page.getByRole('button', { name: 'Continue' })).toBeEnabled()
 })

@@ -10,7 +10,7 @@ const profile: GetProfileResponse = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: ARRIVAL,
 }
 const user = { firstName: 'Priya' }
@@ -50,7 +50,7 @@ describe('buildHomeView — Priya, day 3', () => {
       { label: 'Visa', value: 'Accredited Employer Work Visa (AEWV)' },
       { label: 'City', value: 'Auckland' },
       { label: 'Moving', value: 'Just me' },
-      { label: 'Work', value: 'Technology' },
+      { label: 'Work', value: 'Another job or profession' },
     ])
   })
 })

@@ -5,7 +5,7 @@ import { applicableTasks, ContentLoadError, fact, FileContentSource, itemsFor, l
 import type { Profile } from './types.js';
 
 const FIXTURE = resolve(import.meta.dirname, '__fixtures__/valid');
-const profile: Profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY' };
+const profile: Profile = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL' };
 
 beforeAll(() => {
   const r = buildBundle(FIXTURE, { now: new Date('2026-10-24T00:00:00Z'), allowUnverified: false });

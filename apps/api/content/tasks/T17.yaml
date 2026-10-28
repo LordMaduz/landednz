@@ -1,106 +1,163 @@
 id: T17
-name: NZQA Qualification Recognition
-phase: 3
+name: "Check whether you need a qualification assessment (IQA)"
+phase: 1
 priority: 60
 boosts: []
 urgency: []
-duration: 2–4 hours (application preparation); 10 weeks (increased from 25-40 working days due to high demand) (NZQA processing)
-processingTime: 25-40 working days
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
-dependsOn: []
+duration: 2–4 hours (gathering documents), then NZQA's processing time
+appliesTo: { occupation: [EDUCATION, SEEKING_WORK] }
+dependsOn:
+  - task: T24
+    type: soft
 retired: false
 why:
-  - id: T17.why.1
-    text: Assess your occupation and residency plans.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
+  - id: T17.why.inz
+    text: "Immigration New Zealand says you may need an International Qualification Assessment (IQA) to show your qualifications can be used in New Zealand."
+    source: inz-check-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.why.nzqa
+    text: "NZQA says the main reason people get an IQA is to meet immigration requirements."
+    source: nzqa-iqa-employers
+    checked: 2026-10-27
+    verified: true
+  - id: T17.why.teaching
+    text: "The Teaching Council says you need a Teaching IQA before you register as a teacher."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-requirements
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T17.steps.1
-    text: "Required: original academic transcripts, degree/diploma certificates, English translations if documents are not in English (Indian and Sri Lankan university documents are typically in English)."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.steps.2
-    text: "NZQA requires certified copies of transcripts. Options: certify via NZ Justice of the Peace (JP — free, find at jpanz.org.nz), or have originals sighted at a NZQA-approved authentication agent."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.steps.3
-    text: "URL: https://www.nzqa.govt.nz/qualifications-standards/qualifications/nzqa-qualifications/international-qualifications Complete the International Qualification Assessment (IQA) application online. Upload certified transcripts and certificates. Pay the assessment fee: $755 [Type B — NZQA fee schedule, confirm at nzqa.govt.nz]."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.steps.4
-    text: "Processing time: 10 weeks (increased from 25-40 working days due to high demand) [Type B — NZQA processing standard]. NZQA may request additional documents during assessment. Respond promptly to any requests."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.steps.5
-    text: You will receive a formal letter confirming your qualification's NZQF level equivalence. Store this document securely — it is required for residency applications and regulated occupation registration.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
+  - id: T17.steps.open-nzqa
+    text: "Open NZQA's page on applying for an IQA, confirm which type you need, and create an account in its portal when you're ready."
+    source: nzqa-apply-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.exemption
+    text: "If you're applying for a Skilled Migrant Category Resident Visa: use the tool on Immigration New Zealand's page to check whether your qualification is on its exemption list."
+    source: inz-check-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.eligible
+    text: "Check that NZQA can assess your qualification. It must be a completed tertiary or vocational qualification of at least {{nzqa.min-learning-hours}}, from a nationally recognised and accredited provider."
+    source: nzqa-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.overseas-evaluation
+    text: "If you have an evaluation from another country, ask the person or organisation you're applying to whether they accept it. NZQA can't."
+    source: nzqa-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.verify
+    text: "Arrange the verification of your documents before you apply."
+    source: nzqa-iqa-verify
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.submit
+    text: "Submit your application only when you have every required document."
+    source: nzqa-apply-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.reply
+    text: "Track your application in the NZQA portal and answer any request quickly. NZQA may cancel your application if you don't reply within {{nzqa.rfi-reply}} of being contacted."
+    source: nzqa-apply-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.steps.teachers
+    text: "If you're a teacher: read NZQA's page for teachers. Your main teaching qualification is assessed as a Teaching IQA."
+    when:
+      occupation: [EDUCATION]
+    source: nzqa-iqa-teachers
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T17.documents.1
-    text: visa
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
+  - id: T17.documents.passport
+    text: "The photo and personal information page of your passport"
+    source: nzqa-iqa-documents
+    checked: 2026-10-27
+    verified: true
+  - id: T17.documents.awards
+    text: "Your post-secondary award certificates and the transcripts for each year of study, as full colour scans"
+    source: nzqa-iqa-documents
+    checked: 2026-10-27
+    verified: true
+  - id: T17.documents.translation
+    text: "An English translation from a recognised official translation service for any document not in English"
+    source: nzqa-iqa-documents
+    checked: 2026-10-27
+    verified: true
+  - id: T17.documents.name-change
+    text: "If your names differ across documents: evidence of the change, such as a marriage certificate, deed poll or affidavit"
+    source: nzqa-iqa-documents
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T17.mistakes.1
-    text: NZQA assessment is of your qualification only — it does not assess your skills, work experience, or professional registration. Do not conflate a NZQA assessment with professional body registration.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.mistakes.2
-    text: "Failing to understand: If you are a registered engineer, nurse, or teacher in your home country, contact the relevant NZ professional body (Engineering NZ, Nursing Council, Teaching Council) directly — they have separate and specific assessment processes."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.mistakes.3
-    text: Processing time of 10 weeks (increased from 25-40 working days due to high demand) is the standard — do not apply at the last minute before a residency application deadline. Apply well in advance.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.mistakes.4
-    text: "Failing to understand: NZQA only assesses qualifications at degree level and above. Vocational qualifications, certificates, and diplomas below bachelor's level have a separate assessment pathway."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.mistakes.5
-    text: "Failing to understand: A NZQA assessment result is not the same as having a NZ qualification — it is an equivalence assessment only. This is sufficient for most immigration and employment purposes."
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
+  - id: T17.mistakes.unverified
+    text: "Applying before your documents can be verified. NZQA treats this as an incomplete application."
+    source: nzqa-iqa-verify
+    checked: 2026-10-27
+    verified: true
+  - id: T17.mistakes.black-white
+    text: "Sending black and white copies. NZQA says it can't accept them."
+    source: nzqa-iqa-documents
+    checked: 2026-10-27
+    verified: true
+  - id: T17.mistakes.work-letters
+    text: "Sending work experience letters. NZQA says not to include them with an IQA application."
+    source: nzqa-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.mistakes.unfinished
+    text: "Applying with a qualification you haven't finished. NZQA can't evaluate incomplete programmes."
+    source: nzqa-iqa
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T17.watchOuts.1
-    text: NZQA assessment is of your qualification only — it does not assess your skills, work experience, or professional registration. Do not conflate a NZQA assessment with professional body registration.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.watchOuts.2
-    text: If you are a registered engineer, nurse, or teacher in your home country, contact the relevant NZ professional body (Engineering NZ, Nursing Council, Teaching Council) directly — they have separate and specific assessment processes.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.watchOuts.3
-    text: Processing time of 10 weeks (increased from 25-40 working days due to high demand) is the standard — do not apply at the last minute before a residency application deadline. Apply well in advance.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.watchOuts.4
-    text: NZQA only assesses qualifications at degree level and above. Vocational qualifications, certificates, and diplomas below bachelor's level have a separate assessment pathway.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
-  - id: T17.watchOuts.5
-    text: A NZQA assessment result is not the same as having a NZ qualification — it is an equivalence assessment only. This is sufficient for most immigration and employment purposes.
-    source: www-nzqa-govt-nz-qualifications-standards-qualifications-nzqa-qualifications-international-qualifications
-    checked: 2026-03-03
-    verified: false
+  - id: T17.watchOuts.exempt-still
+    text: "Immigration New Zealand says it may still ask for an IQA even if your qualification is on the exemption list."
+    source: inz-check-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.watchOuts.no-experience
+    text: "NZQA doesn't assess work experience or competence. That's for the registration or licensing body, or the employer."
+    source: nzqa-iqa-employers
+    checked: 2026-10-27
+    verified: true
+  - id: T17.watchOuts.wait
+    text: "NZQA says the average wait for an IQA is {{nzqa.average-wait}}, and that it completes most applications within {{nzqa.complete-turnaround}} once they're complete."
+    source: nzqa-apply-iqa
+    checked: 2026-10-27
+    verified: true
+  - id: T17.watchOuts.extra-fees
+    text: "NZQA charges an extra {{nzqa.pre-1998-fee}} if you completed your qualification before 1998, and there's no refund if you cancel. An appeal costs {{nzqa.appeal-fee}} and must be made within {{nzqa.appeal-window}} of your outcome statement."
+    source: nzqa-iqa-fees
+    checked: 2026-10-27
+    verified: true
+  - id: T17.watchOuts.teaching-fee
+    text: "If you're a teacher: a Teaching IQA costs {{nzqa.teaching-fee}} and includes the evaluation of two more Standard IQAs."
+    when:
+      occupation: [EDUCATION]
+    source: nzqa-iqa-fees
+    checked: 2026-10-27
+    verified: true
+  - id: T17.watchOuts.teaching-exception
+    text: "If you're a teacher: the Teaching Council says it may make an exception for UK Qualified Teacher Status and US state licensure, which NZQA can't assess."
+    when:
+      occupation: [EDUCATION]
+    source: teaching-council-requirements
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T17.cost.standard
+  text: "A Standard IQA costs {{nzqa.standard-fee}} for one qualification."
+  source: nzqa-iqa-fees
+  checked: 2026-10-27
+  verified: true
+advice:
+  id: T17.advice.ask-first
+  text: "NZQA suggests asking the person or organisation you're applying to whether they accept an evaluation from another country before you apply."
+  required: false
+  source: nzqa-iqa
+  checked: 2026-10-27
+  verified: true

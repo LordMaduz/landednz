@@ -1,0 +1,116 @@
+id: T25
+name: "Check what you can bring and how to ship it"
+phase: 1
+priority: 75
+boosts: []
+urgency: []
+duration: 1–2 hours (checking rules and paperwork)
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T25.why.concession
+    text: "Customs has a household effects concession. If you meet its criteria, you don't pay GST and duties on most of the household items you ship; if you don't, duty and GST apply."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T25.steps.open-customs
+    text: "Open Customs' household effects page and read the concession criteria and the clearance steps."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.criteria
+    text: "Check the criteria Customs lists. It says you might qualify if you're moving to New Zealand for the first time, or moving back after {{customs.household-away-period}} or more away, and it lists the visas that count, such as a work visa issued for at least {{customs.household-work-visa-length}}."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.who-clears
+    text: "Decide who clears your shipment: the shipping company, if it offers this, a Customs broker, or you."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.inventory
+    text: "Number your boxes and make a detailed list of the items in each one."
+    source: mpi-household-goods
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.form
+    text: "Complete Customs form NZCS 218 and gather the other documents Customs lists."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.supplementary
+    text: "If you're sending goods that may be a biosecurity risk, consider MPI's supplementary declaration. MPI says it is voluntary and may mean lower clearance costs and faster clearance."
+    source: mpi-household-goods
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.wood
+    text: "If your goods are shipped in wooden crates or containers, or wood is used as flooring or walls, check MPI's wood packaging requirements."
+    source: mpi-household-goods
+    checked: 2026-10-27
+    verified: true
+  - id: T25.steps.vehicles
+    text: "If you're shipping a car, scooter or motorbike, follow Customs' vehicles page instead."
+    source: customs-vehicles
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T25.documents.nzcs-218
+    text: "Customs form NZCS 218"
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.documents.passport
+    text: "A copy of your passport and, if you don't hold a New Zealand or Australian passport, a document that shows you can live here"
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.documents.packing-list
+    text: "A packing list of everything in the shipment"
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.documents.shipping-document
+    text: "The shipping document, such as the bill of lading or airway bill"
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T25.mistakes.new-items
+    text: "Shipping new or unused items as household effects. Customs says they must be declared, and duty and GST apply."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.mistakes.vehicles
+    text: "Expecting the concession to cover cars, motorbikes, boats or commercial items. Customs says it doesn't."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.mistakes.paperwork
+    text: "Sending incomplete paperwork. Customs won't complete a clearance until it has all the documents."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T25.watchOuts.student-visa
+    text: "Customs says student visa holders don't qualify for the concession."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+  - id: T25.watchOuts.sea-containers
+    text: "Every sea container of household goods is inspected, by MPI or an accredited person."
+    source: mpi-household-goods
+    checked: 2026-10-27
+    verified: true
+  - id: T25.watchOuts.late-goods
+    text: "Goods that arrive more than {{customs.household-late-arrival}} after you do need a Customs officer's consent to come in under the concession."
+    source: customs-household-effects
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T25.cost.inspection
+  text: "MPI charges for inspecting household goods, starting at {{mpi.inspection-fee-one-item}} for one item."
+  source: mpi-clearance-fees
+  checked: 2026-10-27
+  verified: true

@@ -1,5 +1,5 @@
 // Integration tests for reopenTask() and the completedAt / blockingTaskIds roadmap fields
-// (spec §4.3 amendment) — real DB, canonical T06 → T07 HARD dependency.
+// (spec §4.3 amendment) — real DB, canonical T08 → T09 HARD dependency.
 
 import { describe, expect, test, beforeAll, afterAll, afterEach } from 'vitest';
 import type { FastifyInstance } from 'fastify';
@@ -40,7 +40,7 @@ const profile = () =>
     visaType: 'AEWV',
     city: 'AUCKLAND',
     familySituation: 'SOLO',
-    occupation: 'TECHNOLOGY',
+    occupation: 'OTHER_PROFESSIONAL',
     arrivalDate: ARRIVAL_DATE,
   }, CURRENT_DATE);
 
@@ -59,68 +59,68 @@ async function withRetired(taskId: string, fn: () => Promise<void>) {
 }
 
 describe('getRoadmap() completedAt and blockingTaskIds', () => {
-  test('open task has completedAt null; blocked T07 names T06 by id', async () => {
+  test('open task has completedAt null; blocked T09 names T08 by id', async () => {
     await profile();
-    const t06 = await findTask('T06');
-    const t07 = await findTask('T07');
-    expect(t06.completedAt).toBeNull();
-    expect(t07.blockingTaskIds).toEqual(['T06']);
-    expect(t07.blockingTaskNames).toEqual([contentTask('T06')!.name]);
+    const t08 = await findTask('T08');
+    const t07 = await findTask('T09');
+    expect(t08.completedAt).toBeNull();
+    expect(t07.blockingTaskIds).toEqual(['T08']);
+    expect(t07.blockingTaskNames).toEqual([contentTask('T08')!.name]);
   });
 
   test('completed task carries the stored completedAt as ISO', async () => {
     await profile();
-    await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
-    const t06 = await findTask('T06');
-    expect(t06.completedAt).toBe(CURRENT_DATE.toISOString());
-    expect((await findTask('T07')).blockingTaskIds).toEqual([]);
+    await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
+    const t08 = await findTask('T08');
+    expect(t08.completedAt).toBe(CURRENT_DATE.toISOString());
+    expect((await findTask('T09')).blockingTaskIds).toEqual([]);
   });
 });
 
 describe('reopenTask()', () => {
-  test('reopening done T06 clears completion and blocks T07 again', async () => {
+  test('reopening done T08 clears completion and blocks T09 again', async () => {
     await profile();
-    await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+    await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-    const result = await reopenTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+    const result = await reopenTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-    expect(result.taskId).toBe('T06');
+    expect(result.taskId).toBe('T08');
     expect(result.status).toBe('NOT_STARTED');
-    expect(result.reblockedTasks).toEqual(['T07']);
-    expect(result.newTopThree.map(t => t.taskId)).toContain('T06');
+    expect(result.reblockedTasks).toEqual(['T09']);
+    expect(result.newTopThree.map(t => t.taskId)).toContain('T08');
 
     const entry = await db.userRoadmapEntry.findUnique({
-      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T06' } },
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T08' } },
     });
     expect(entry!.status).toBe('NOT_STARTED');
     expect(entry!.completedAt).toBeNull();
     expect(entry!.completionMethod).toBeNull();
-    expect((await findTask('T07')).isBlocked).toBe(true);
+    expect((await findTask('T09')).isBlocked).toBe(true);
   });
 
   test('reopening a task that is not done changes nothing', async () => {
     await profile();
     const before = await getRoadmap(TEST_USER_ID);
 
-    const result = await reopenTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+    const result = await reopenTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-    expect(result).toMatchObject({ taskId: 'T06', status: 'NOT_STARTED', reblockedTasks: [] });
+    expect(result).toMatchObject({ taskId: 'T08', status: 'NOT_STARTED', reblockedTasks: [] });
     const after = await getRoadmap(TEST_USER_ID);
     expect(after.phases).toEqual(before.phases);
   });
 
   test('retired done task → AppError TASK_RETIRED (409), stays COMPLETE', async () => {
     await profile();
-    await completeTask(TEST_USER_ID, 'T06', CURRENT_DATE);
+    await completeTask(TEST_USER_ID, 'T08', CURRENT_DATE);
 
-    await withRetired('T06', async () => {
-      await expect(reopenTask(TEST_USER_ID, 'T06', CURRENT_DATE)).rejects.toMatchObject({
+    await withRetired('T08', async () => {
+      await expect(reopenTask(TEST_USER_ID, 'T08', CURRENT_DATE)).rejects.toMatchObject({
         code: 'TASK_RETIRED',
         statusCode: 409,
       });
     });
     const entry = await db.userRoadmapEntry.findUnique({
-      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T06' } },
+      where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T08' } },
     });
     expect(entry!.status).toBe('COMPLETE');
   });
@@ -144,7 +144,7 @@ describe('POST /roadmap/tasks/:taskId/reopen', () => {
   });
 
   test('no Authorization header → 401', async () => {
-    const response = await app.inject({ method: 'POST', url: '/roadmap/tasks/T06/reopen' });
+    const response = await app.inject({ method: 'POST', url: '/roadmap/tasks/T08/reopen' });
     expect(response.statusCode).toBe(401);
   });
 });

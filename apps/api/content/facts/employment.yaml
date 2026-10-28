@@ -1,0 +1,37 @@
+# Employment New Zealand figures. research/T29.md holds the evidence for each.
+employment.min-wage-adult:
+  value: "$23.95 an hour"
+  numberType: A
+  source: employment-nz-minimum-wage-rates
+  checked: 2026-10-27
+  verified: true
+employment.min-wage-starting-out:
+  value: "$19.16 an hour"
+  numberType: A
+  source: employment-nz-minimum-wage-rates
+  checked: 2026-10-27
+  verified: true
+employment.annual-holidays:
+  value: "4 weeks a year"
+  numberType: A
+  source: employment-nz-employee-rights
+  checked: 2026-10-27
+  verified: true
+employment.sick-leave:
+  value: "10 days a year"
+  numberType: A
+  source: employment-nz-employee-rights
+  checked: 2026-10-27
+  verified: true
+employment.mepv-validity:
+  value: "up to 6 months"
+  numberType: B
+  source: employment-nz-migrant-exploitation
+  checked: 2026-10-27
+  verified: true
+employment.mepv-apply-window:
+  value: "1 month"
+  numberType: B
+  source: employment-nz-migrant-exploitation
+  checked: 2026-10-27
+  verified: true

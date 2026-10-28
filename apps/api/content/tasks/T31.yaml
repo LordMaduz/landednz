@@ -1,0 +1,124 @@
+id: T31
+name: "Find early childhood education and 20 Hours ECE"
+phase: 4
+priority: 70
+boosts: []
+urgency: []
+duration: Varies
+appliesTo: { family: [FAMILY_WITH_CHILDREN, SOLE_PARENT] }
+dependsOn:
+  - task: T11
+    type: soft
+retired: false
+why:
+  - id: T31.why.funding
+    text: "If your child is under school age: the Ministry of Education says the Government subsidises all children to attend an ECE service, and children aged {{education.ece-age-range}} are eligible for up to {{education.ece-weekly-hours}} each week of {{education.ece-scheme-name}} funding."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.why.not-compulsory
+    text: "If your child is under school age: Immigration New Zealand says early childhood education (ECE) services provide education and care before children are old enough for primary school, and that ECE is not compulsory."
+    source: inz-childcare-schools
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T31.steps.choosing-guide
+    text: "Open the Ministry of Education guide to choosing an early learning service. It covers service types, opening hours, your child's age, cost, visits and waiting lists."
+    source: moe-ece-choosing
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.types
+    text: "Compare the types of service. The Ministry of Education lists kindergartens, education and care centres (daycare or preschool), home-based services, kōhanga reo, Playcentres and playgroups, and says each service sets its own fees, hours and routines."
+    source: moe-ece-types
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.find
+    text: "Find services near you. The Ministry of Education says Education Counts has contact details for centres and services in your area, and that you can find home-based providers by searching online or in your community."
+    source: moe-ece-choosing
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.visit-waitlist
+    text: "Visit the services you like, with or without your child, and ask about waiting lists. The Ministry of Education says a service may have a waiting list and may charge a fee to join it."
+    source: moe-ece-choosing
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.ask-costs
+    text: "Before you enrol, ask each service about its costs. The Ministry of Education suggests asking what you pay for the hours your child attends, whether you pay when they are away or the service is closed, whether there is a minimum enrolment, and whether food and nappies are extra."
+    source: moe-ece-choosing
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.enrol
+    text: "Contact the service to enrol. The Ministry of Education says any child can enrol {{education.ece-enrol-age-range}}, and each service sets its own enrolment process, which may include enrolment fees or minimum weekly hours."
+    source: moe-ece-enrolling
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.claim-20-hours
+    text: "If your child is {{education.ece-age-range}}: the Ministry of Education says the {{education.ece-scheme-name}} funding goes to the service and reduces the fees you pay. Say on the enrolment form which hours it should cover, and ask whether the service offers it, because some may not."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.steps.childcare-subsidy
+    text: "If you want more help with childcare costs: Work and Income says you may get a Childcare Subsidy if you are the principal caregiver of a dependent child, a New Zealand citizen or permanent resident who normally lives in New Zealand and intends to stay, your family is on a low or middle income, and your child attends an approved ECE service. Its page lists the conditions on your child's age and weekly hours, and has a 'Check what you might get' tool."
+    source: winz-childcare-subsidy
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T31.documents.enrolment-form
+    text: "The enrolment form, which the Ministry of Education says your early learning service gives you"
+    source: moe-ece-enrolling
+    checked: 2026-10-27
+    verified: true
+  - id: T31.documents.identity
+    text: "Proof of your child's identity and citizenship, which the Ministry of Education says you might need: a birth certificate, passport or residency document"
+    source: moe-ece-enrolling
+    checked: 2026-10-27
+    verified: true
+  - id: T31.documents.medical
+    text: "Any medical information about your child, such as allergies, medication and medical conditions, which the Ministry of Education says you might need to give"
+    source: moe-ece-enrolling
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T31.mistakes.assume-offered
+    text: "Assuming every service offers {{education.ece-scheme-name}}. The Ministry of Education says to ask, because some may not."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.mistakes.late
+    text: "Leaving the search late. Immigration New Zealand says demand for ECE is high, places can be hard to get (especially in bigger cities and towns), and you should check early that a service has room for your child."
+    source: inz-childcare-schools
+    checked: 2026-10-27
+    verified: true
+  - id: T31.mistakes.double-claim
+    text: "Applying for a Childcare Subsidy for the same hours as {{education.ece-scheme-name}}. The Ministry of Education says children receiving {{education.ece-scheme-name}} cannot get Work and Income childcare assistance for those hours, except for home-based educator top up payments."
+    source: www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T31.watchOuts.extra-charges
+    text: "The Ministry of Education says you may pay fees for any hours your child attends outside {{education.ece-scheme-name}}, and that enrolment and waiting-list charges are not subsidised."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.watchOuts.daily-cap
+    text: "The Ministry of Education says {{education.ece-scheme-name}} can be used for up to {{education.ece-daily-cap}} each day, and you can split the {{education.ece-weekly-hours}} between more than one service."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.watchOuts.donations
+    text: "The Ministry of Education says donations are voluntary and a service cannot require you to pay or call them fees. Optional charges are different: you must pay them if you agreed to them when you enrolled."
+    source: moe-ece-20-hours
+    checked: 2026-10-27
+    verified: true
+  - id: T31.watchOuts.eligibility-window
+    text: "The ECE Funding Handbook says eligibility for {{education.ece-scheme-name}} starts on your child's third birthday and ends on the day before their sixth birthday, or their last day of attendance before starting school if that comes first."
+    source: www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T31.advice.work-and-income
+  text: "For questions about childcare assistance, the ECE Funding Handbook points to Work and Income on 0800 559 009."
+  required: false
+  source: www-education-govt-nz-education-professionals-early-learning-funding-and-financials-ece-funding-handbook-chapter-4-20-hours-early-childhood-education-4-1-funding-eligibility
+  checked: 2026-10-27
+  verified: true

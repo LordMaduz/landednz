@@ -1,6 +1,6 @@
 id: T08
-name: IRD Number Application
-phase: 3
+name: Get your IRD number
+phase: 2
 priority: 98
 boosts:
   - when:
@@ -29,128 +29,97 @@ urgency:
     afterFirstYear: true
     by: 25
 duration: 20–30 minutes (online application)
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
-dependsOn:
-  - task: T07
-    type: soft
+appliesTo: all
+dependsOn: []
 retired: false
 why:
-  - id: T08.why.1
-    text: Apply on Day 1 or Day 2 of arrival — this is the single most time-sensitive administrative task for any new worker.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
+  - id: T08.why.tax-rate
+    text: "Without your IRD number and a tax code declaration, your employer deducts tax at {{ird.non-declaration-rate}} plus the earners' levy."
+    source: ird-ir330
+    checked: 2026-10-25
+    verified: true
 steps:
-  - id: T08.steps.1
-    text: "You will need: - Your passport (the one with your New Zealand visa) - Your New Zealand visa details (visa type, expiry date — visible in your passport or on your eVisa letter) - A New Zealand address (your temporary accommodation address is acceptable — hotel, Airbnb, or serviced apartment booking confirmation) - Your New Zealand bank account number if already opened (recommended — see T07 — but not mandatory) - An email address you check regularly (IRD correspondence will be sent here)"
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.steps.2
-    text: 'URL: https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals Select "Apply for an IRD number" → "New to New Zealand."'
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.steps.3
-    text: "The form asks for: - Personal details (name, date of birth, country of birth, nationality) - Contact details (NZ address, email, phone) - Visa information (visa type, expiry date) - Tax residency details (country of tax residency — most new arrivals: India, Sri Lanka, or Singapore) - Bank account number if available"
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.steps.4
-    text: After submission, IRD processes the application. For applicants with a valid NZ work visa and complete information, processing typically takes 1–2 business days. IRD will email your IRD number to the address provided.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.steps.5
-    text: Store it in your phone notes (password-protected), a secure document folder, and share with partner if applicable. You will use this number repeatedly — for your employer, KiwiSaver, bank, and any future IRD correspondence.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.steps.6
-    text: "As soon as you receive your IRD number, provide it to your employer's HR or payroll team along with your completed IR330 tax code declaration form (T09). Do this before your first pay day to avoid the 45% no-declaration tax rate. **If your application is delayed beyond 5 business days:** Contact IRD: Phone 0800 227 774 (individuals line, Mon–Fri 8am–8pm, Sat 9am–1pm). Note your application reference number from the confirmation email."
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
+  - id: T08.steps.register-myir
+    text: "Register for myIR, Inland Revenue's online service. You don't need an IRD number to register."
+    source: ird-myir-register
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.apply-new-arrival
+    text: "In myIR, apply as a new arrival. Inland Revenue checks your identity with Immigration New Zealand."
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.final-arrival-date
+    text: "Apply by your visa's final arrival date, the date you must arrive in New Zealand by. After that date you apply as living in New Zealand instead."
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.bank-or-ir997
+    text: "If you hold a work or student visa: Inland Revenue's work and study page says new arrivals on these visas also need a New Zealand bank account or a customer due diligence form (IR997). Have one of them ready."
+    when:
+      not:
+        visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT]
+    source: ird-work-or-study
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.delivery
+    text: "If your application is approved, your IRD number comes by text or email in {{ird.new-arrival-delivery}}."
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.employer
+    text: "Give your employer your IRD number with a completed tax code declaration (IR330)."
+    source: ird-ir330
+    checked: 2026-10-25
+    verified: true
+  - id: T08.steps.bank-interest
+    text: "Give your bank your IRD number too. Without it, tax on interest is deducted at {{ird.rwt-no-number-rate}}."
+    source: ird-rwt-rate
+    checked: 2026-10-25
+    verified: true
 documents:
-  - id: T08.documents.1
-    text: passport
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.documents.2
-    text: visa
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.documents.3
-    text: ird number
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.documents.4
-    text: tax code
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
+  - id: T08.documents.passport
+    text: "Your passport details"
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
+  - id: T08.documents.inz-number
+    text: "Your Immigration New Zealand application number (not needed if you have an Australian passport)"
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
+  - id: T08.documents.overseas-tax-number
+    text: "If you hold a work or student visa: your most recent overseas tax number, if you have one"
+    when:
+      not:
+        visa: [STRAIGHT_TO_RESIDENCE, SKILLED_MIGRANT_RESIDENT]
+    source: ird-new-arrival
+    checked: 2026-10-25
+    verified: true
 mistakes:
-  - id: T08.mistakes.1
-    text: Do not wait until your first pay day to apply — by then it is too late to avoid the 45% no-declaration rate on that pay. Apply on Day 1.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.mistakes.2
-    text: "Failing to understand: Your overseas tax number (PAN card, TIN, NRIC) is NOT valid in New Zealand. You need a New Zealand IRD number."
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.mistakes.3
-    text: "Failing to understand: The IRD number is different from your visa number, passport number, and NHI health number — these are all separate identifiers."
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.mistakes.4
-    text: If you previously lived in New Zealand, you may already have an IRD number. Do not apply for a new one — contact IRD to retrieve your existing number. Applying twice can create complications.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.mistakes.5
-    text: "Failing to understand: The 45% no-declaration rate is not a penalty — it is a withholding mechanism. Excess tax is credited and refunded at year-end assessment, but it harms your cash flow. Avoid by applying early."
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
+  - id: T08.mistakes.reapply
+    text: "Applying again when you've had an IRD number before. You keep the same number for life, so find your old one instead."
+    source: ird-find-number
+    checked: 2026-10-25
+    verified: true
 watchOuts:
-  - id: T08.watchOuts.1
-    text: Do not wait until your first pay day to apply — by then it is too late to avoid the 45% no-declaration rate on that pay. Apply on Day 1.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.watchOuts.2
-    text: Your overseas tax number (PAN card, TIN, NRIC) is NOT valid in New Zealand. You need a New Zealand IRD number.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.watchOuts.3
-    text: The IRD number is different from your visa number, passport number, and NHI health number — these are all separate identifiers.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.watchOuts.4
-    text: If you previously lived in New Zealand, you may already have an IRD number. Do not apply for a new one — contact IRD to retrieve your existing number. Applying twice can create complications.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.watchOuts.5
-    text: The 45% no-declaration rate is not a penalty — it is a withholding mechanism. Excess tax is credited and refunded at year-end assessment, but it harms your cash flow. Avoid by applying early.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
-  - id: T08.watchOuts.6
-    text: Some employers ask for your IRD number before your start date. If so, apply as soon as you arrive and relay the number immediately.
-    source: www-ird-govt-nz-managing-my-tax-ird-numbers-ird-numbers-for-individuals
-    checked: 2026-03-03
-    verified: false
+  - id: T08.watchOuts.free
+    text: "Applying is free. Inland Revenue doesn't charge for an IRD number."
+    source: ird-when-you-need-one
+    checked: 2026-10-25
+    verified: true
+  - id: T08.watchOuts.did-not-work
+    text: "If the new-arrival application doesn't work, Inland Revenue explains the other ways to apply."
+    source: ird-cannot-apply-online
+    checked: 2026-10-25
+    verified: true
+  - id: T08.watchOuts.phone
+    text: "Inland Revenue's phone number for personal customers is 0800 227 774, or +64 4 832 5223 from overseas."
+    source: ird-phone-numbers
+    checked: 2026-10-25
+    verified: true
+  - id: T08.watchOuts.living-in-nz-id-check
+    text: "If you apply as living in New Zealand instead, you take your identity documents to an AA Driver Licensing Agent within {{ird.living-in-nz-id-window}} of applying online."
+    source: ird-living-in-nz
+    checked: 2026-10-25
+    verified: true

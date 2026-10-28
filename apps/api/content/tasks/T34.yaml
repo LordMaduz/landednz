@@ -1,0 +1,121 @@
+id: T34
+name: "Understand your NZ tax residency and foreign-income exemption"
+phase: 4
+priority: 70
+boosts: []
+urgency: []
+duration: 20–30 minutes (reading and checking your dates)
+appliesTo: all
+dependsOn:
+  - task: T08
+    type: soft
+retired: false
+why:
+  - id: T34.why.status
+    text: "Inland Revenue says your tax residency status decides what taxes you pay in New Zealand, and that it is different from your immigration status."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.why.worldwide
+    text: "Inland Revenue says that as a New Zealand tax resident you'll generally pay tax on your worldwide income, even if you don't bring it into New Zealand or the other country has already deducted tax. If you pay tax on the same income in 2 countries, you'll usually be eligible for a foreign tax credit."
+    source: ird-tax-residents-international
+    checked: 2026-10-27
+    verified: true
+  - id: T34.why.exemption
+    text: "Inland Revenue says new tax residents, and people returning to New Zealand after {{ird.exemption-lookback}}, may qualify for a temporary tax exemption of about {{ird.exemption-length}} on most types of foreign income."
+    source: ird-tax-residents-international
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T34.steps.work-out-status
+    text: "Work out your tax residency status on Inland Revenue's page. You become a New Zealand tax resident when the first of these happens: you've been in New Zealand for more than {{ird.residency-days-present}} in any 12-month period (unless you're a non-resident visitor), or you have a permanent place of abode here."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.count-days
+    text: "Count your days present the way Inland Revenue says to. Parts of days, such as the day you arrive and the day you leave, count as whole days, and the days don't need to follow each other. Your residency is backdated to the first of those days."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.abode
+    text: "Think about whether you have a permanent place of abode. Inland Revenue says it is a place where you usually live in New Zealand, even if you're not there all the time, and you don't need to own it. It lists ties to consider, such as how often you return, how long you spend here, your family and social connections, your economic interests, your work connections and whether you intend to return to live here."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.not-sure
+    text: "If you're not sure of your status, Inland Revenue says you can fill in the New Zealand tax residence questionnaire (IR886) and send it in a myIR message or by post. Its new migrants factsheet is IR1096."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.qualify
+    text: "Check whether you qualify for the temporary tax exemption. Inland Revenue says you are a transitional tax resident if you are a new migrant or a New Zealander returning home, qualified as a tax resident on or after {{ird.exemption-from-date}}, and were not a tax resident at any time in the {{ird.exemption-lookback}} before you qualified."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.automatic
+    text: "Inland Revenue says you automatically qualify for the exemption if you are eligible, and you can only get it once."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.length
+    text: "Work out when your exemption ends. Inland Revenue says it starts on the first day you become a tax resident, and ends {{ird.exemption-length}} after the end of the month in which you first qualify, by whichever comes earlier: being here more than {{ird.residency-days-present}} in a 12-month period, or establishing a permanent place of abode. Unlike the start date, the end date is not backdated."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.not-exempt
+    text: "Show any overseas income that is not exempt in your Individual income tax return (IR3). Inland Revenue says income you earn overseas from employment or providing personal services is not exempt."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.steps.after
+    text: "Plan for the end of the exemption. Inland Revenue says that from the day after it ends you are subject to New Zealand income tax on your worldwide income, and you need to work out which overseas amounts to report in your IR3."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+documents: []
+mistakes:
+  - id: T34.mistakes.visa
+    text: "Assuming your visa decides your tax residency. Inland Revenue says tax residency is different from your immigration status."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.mistakes.ir3-opt-out
+    text: "Putting income the exemption covers in your IR3. Inland Revenue says that ends the exemption early, and you cannot revoke the choice to opt out."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T34.watchOuts.325
+    text: "Inland Revenue says you only become a non-resident taxpayer if you have no permanent place of abode in New Zealand and are away for more than {{ird.nonresident-days-absent}} in any 12-month period. For these absent days, parts of days you are in New Zealand, such as the day you leave, do not count as whole days."
+    source: www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individuals
+    checked: 2026-10-27
+    verified: true
+  - id: T34.watchOuts.leaving
+    text: "If you become a non-resident taxpayer during your exemption period, Inland Revenue says to tell it."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.watchOuts.wff
+    text: "If you're moving with children: Inland Revenue says the exemption ends early if you apply for Working for Families tax credits (including Best Start), or your partner does and they are a transitional resident."
+    when:
+      family: [FAMILY_WITH_CHILDREN, SOLE_PARENT]
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.watchOuts.dta
+    text: "For employment or personal services income earned overseas, Inland Revenue says full or partial relief may be available under an applicable double tax agreement."
+    source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+    checked: 2026-10-27
+    verified: true
+  - id: T34.watchOuts.fif
+    text: "Inland Revenue says that if you hold overseas shares worth over {{ird.fif-threshold}}, you'll probably need to apply the foreign investment fund (FIF) rules once the exemption doesn't cover you. It says to read guide IR461 or consult a tax professional."
+    source: ird-tax-residents-international
+    checked: 2026-10-27
+    verified: true
+advice:
+  id: T34.advice.tax-professional
+  text: "Inland Revenue says working out your exemption period can be complex, and deciding whether to opt out or what overseas income to include may need specialist help, so you may wish to speak with a tax professional."
+  required: false
+  source: www-ird-govt-nz-roles-nz-tax-residents-exemption
+  checked: 2026-10-27
+  verified: true

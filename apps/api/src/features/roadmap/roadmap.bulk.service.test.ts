@@ -4,7 +4,7 @@
 // AC-2-09: POST /roadmap/bulk-override marks all specified tasks COMPLETE in a single
 // request and returns correct newTopThree.
 //
-// Uses content task IDs (T06, T07, T08, T03) — fileParallelism: false ensures
+// Uses content task IDs (T02, T08, T09) — fileParallelism: false ensures
 // sequential execution so canonical IDs don't conflict between test files.
 //
 // Database must be running: docker-compose up -d
@@ -67,135 +67,135 @@ async function withRetired(taskId: string, fn: () => Promise<void>) {
 describe('bulkOverride()', () => {
 
   describe('Single task completion', () => {
-    test('Mark T03 only — marked=[T03], skipped=[], T03 COMPLETE in DB', async () => {
+    test('Mark T02 only — marked=[T02], skipped=[], T02 COMPLETE in DB', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await bulkOverride(TEST_USER_ID, ['T03'], CURRENT_DATE);
+      const result = await bulkOverride(TEST_USER_ID, ['T02'], CURRENT_DATE);
 
-      expect(result.marked).toEqual(['T03']);
+      expect(result.marked).toEqual(['T02']);
       expect(result.skipped).toEqual([]);
-      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T03');
+      expect(result.newTopThree.map(t => t.taskId)).not.toContain('T02');
 
       const entry = await db.userRoadmapEntry.findUnique({
-        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T02' } },
       });
       expect(entry!.status).toBe('COMPLETE');
       expect(entry!.completionMethod).toBe('BULK_OVERRIDE');
       expect(entry!.completedAt).not.toBeNull();
     });
 
-    test('Mark T06 — T07 unblocked, appears in newTopThree', async () => {
-      // T07 is HARD blocked by T06. Completing T06 → full recomputation → T07 unblocked
+    test('Mark T08 — T09 unblocked, appears in newTopThree', async () => {
+      // T09 is HARD blocked by T08. Completing T08 → full recomputation → T09 unblocked
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await bulkOverride(TEST_USER_ID, ['T06'], CURRENT_DATE);
+      const result = await bulkOverride(TEST_USER_ID, ['T08'], CURRENT_DATE);
 
-      expect(result.marked).toEqual(['T06']);
+      expect(result.marked).toEqual(['T08']);
       expect(result.skipped).toEqual([]);
 
       const topThreeIds = result.newTopThree.map(t => t.taskId);
-      expect(topThreeIds).toContain('T07');
+      expect(topThreeIds).toContain('T09');
 
-      const t07 = result.newTopThree.find(t => t.taskId === 'T07');
-      expect(t07!.isBlocked).toBe(false);
+      const t09 = result.newTopThree.find(t => t.taskId === 'T09');
+      expect(t09!.isBlocked).toBe(false);
     });
   });
 
   describe('Multiple tasks at once', () => {
-    test('Mark T03 + T06 together — both marked, T07 unblocked in newTopThree', async () => {
+    test('Mark T02 + T08 together — both marked, T09 unblocked in newTopThree', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      const result = await bulkOverride(TEST_USER_ID, ['T03', 'T06'], CURRENT_DATE);
+      const result = await bulkOverride(TEST_USER_ID, ['T02', 'T08'], CURRENT_DATE);
 
-      expect(result.marked).toContain('T03');
-      expect(result.marked).toContain('T06');
+      expect(result.marked).toContain('T02');
+      expect(result.marked).toContain('T08');
       expect(result.skipped).toEqual([]);
 
-      // T07 unblocked after T06 completion
+      // T09 unblocked after T08 completion
       const topThreeIds = result.newTopThree.map(t => t.taskId);
-      expect(topThreeIds).toContain('T07');
+      expect(topThreeIds).toContain('T09');
 
-      // T03 and T06 absent from newTopThree (COMPLETE)
-      expect(topThreeIds).not.toContain('T03');
-      expect(topThreeIds).not.toContain('T06');
+      // T02 and T08 absent from newTopThree (COMPLETE)
+      expect(topThreeIds).not.toContain('T02');
+      expect(topThreeIds).not.toContain('T08');
     });
   });
 
   describe('Already-complete tasks', () => {
-    test('Task already COMPLETE — marked=[], skipped=[T06]', async () => {
+    test('Task already COMPLETE — marked=[], skipped=[T08]', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      // Mark T06 complete first
-      await bulkOverride(TEST_USER_ID, ['T06'], CURRENT_DATE);
+      // Mark T08 complete first
+      await bulkOverride(TEST_USER_ID, ['T08'], CURRENT_DATE);
 
-      // Second call — T06 already complete
-      const result = await bulkOverride(TEST_USER_ID, ['T06'], CURRENT_DATE);
+      // Second call — T08 already complete
+      const result = await bulkOverride(TEST_USER_ID, ['T08'], CURRENT_DATE);
 
       expect(result.marked).toEqual([]);
-      expect(result.skipped).toEqual(['T06']);
+      expect(result.skipped).toEqual(['T08']);
     });
 
-    test('Mixed: T03 new + T06 already done — marked=[T03], skipped=[T06]', async () => {
+    test('Mixed: T02 new + T08 already done — marked=[T02], skipped=[T08]', async () => {
       await createProfile(TEST_USER_ID, {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
 
-      // Mark T06 complete first
-      await bulkOverride(TEST_USER_ID, ['T06'], CURRENT_DATE);
+      // Mark T08 complete first
+      await bulkOverride(TEST_USER_ID, ['T08'], CURRENT_DATE);
 
-      // Now bulk-override T03 (new) + T06 (already done)
-      const result = await bulkOverride(TEST_USER_ID, ['T03', 'T06'], CURRENT_DATE);
+      // Now bulk-override T02 (new) + T08 (already done)
+      const result = await bulkOverride(TEST_USER_ID, ['T02', 'T08'], CURRENT_DATE);
 
-      expect(result.marked).toEqual(['T03']);
-      expect(result.skipped).toEqual(['T06']);
+      expect(result.marked).toEqual(['T02']);
+      expect(result.skipped).toEqual(['T08']);
     });
   });
 
   describe('Retired tasks', () => {
-    test('Retired T03 is skipped, not marked; T06 is marked', async () => {
+    test('Retired T02 is skipped, not marked; T08 is marked', async () => {
       await createProfile(TEST_USER_ID, {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: ARRIVAL_DATE,
     }, CURRENT_DATE);
 
-      await withRetired('T03', async () => {
-        const result = await bulkOverride(TEST_USER_ID, ['T03', 'T06'], CURRENT_DATE);
-        expect(result.marked).toEqual(['T06']);
-        expect(result.skipped).toEqual(['T03']);
+      await withRetired('T02', async () => {
+        const result = await bulkOverride(TEST_USER_ID, ['T02', 'T08'], CURRENT_DATE);
+        expect(result.marked).toEqual(['T08']);
+        expect(result.skipped).toEqual(['T02']);
       });
       const entry = await db.userRoadmapEntry.findUnique({
-        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T03' } },
+        where: { userId_taskId: { userId: TEST_USER_ID, taskId: 'T02' } },
       });
       expect(entry!.status).toBe('NOT_STARTED');
     });
@@ -207,7 +207,7 @@ describe('bulkOverride()', () => {
         visaType: 'AEWV',
         city: 'AUCKLAND',
         familySituation: 'COUPLE_CONSTRAINED',
-        occupation: 'TECHNOLOGY',
+        occupation: 'OTHER_PROFESSIONAL',
         arrivalDate: ARRIVAL_DATE,
       }, CURRENT_DATE);
       const topThreeBefore = (await getRoadmap(TEST_USER_ID)).topThree.map(t => t.taskId);

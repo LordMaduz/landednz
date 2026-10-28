@@ -30,7 +30,7 @@ const profile = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2026-10-21',
 } as const
 const user = { name: 'Priya Sharma', email: 'priya@example.com', initials: 'PS', google: true }
@@ -46,7 +46,7 @@ describe('PlanForm', () => {
     expect(screen.getByLabelText('Visa')).toHaveDisplayValue('Accredited Employer Work Visa (AEWV)')
     expect(screen.getByLabelText('City')).toHaveDisplayValue('Auckland')
     expect(screen.getByLabelText("Who's moving with you")).toHaveDisplayValue('Just me')
-    expect(screen.getByLabelText('Work')).toHaveDisplayValue('Technology')
+    expect(screen.getByLabelText('Work')).toHaveDisplayValue('Another job or profession')
     expect(screen.getByLabelText('Arrival date')).toHaveValue('2026-10-21')
     expect(document.querySelectorAll('button.bg-ink')).toHaveLength(1)
     expect(screen.getByRole('button', { name: 'Save changes' })).toHaveClass('bg-ink')
@@ -59,7 +59,7 @@ describe('PlanForm', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
     expect(await screen.findByText('Changes saved')).toBeInTheDocument()
     expect(updateOnboardingProfile).toHaveBeenCalledWith(
-      { visaType: 'AEWV', city: 'WELLINGTON', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2026-10-21' },
+      { visaType: 'AEWV', city: 'WELLINGTON', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2026-10-21' },
       'tok',
     )
   })
@@ -74,10 +74,10 @@ describe('PlanForm', () => {
   it('a failed request says so and keeps the answers', async () => {
     updateOnboardingProfile.mockRejectedValue(new Error('down'))
     render(<PlanForm profile={profile} />)
-    fireEvent.change(screen.getByLabelText('Work'), { target: { value: 'FINANCE' } })
+    fireEvent.change(screen.getByLabelText('Work'), { target: { value: 'HEALTHCARE' } })
     fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
     expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't save your changes. Check your connection, then try again.")
-    expect(screen.getByLabelText('Work')).toHaveDisplayValue('Finance')
+    expect(screen.getByLabelText('Work')).toHaveDisplayValue('Healthcare (doctor, nurse or another registered health profession)')
   })
 
   it('no arrival date: not sent, says what is missing', async () => {

@@ -5,7 +5,7 @@ import { db } from '../../shared/db.js';
 import { logger } from '../../shared/logger.js';
 import { AppError } from '../../shared/errors.js';
 import { contentVersion } from '../../content/index.js';
-import { buildRoadmapEntries } from '../roadmap/roadmap.build.js';
+import { buildRoadmapEntries, reconcileRoadmap } from '../roadmap/roadmap.build.js';
 import type { CreateProfileRequest, CreateProfileResponse, GetProfileResponse } from './onboarding.types.js';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -100,38 +100,15 @@ export async function updateProfileAndRegenerateRoadmap(
 
     logger.info({ userId }, 'UserProfile updated');
 
-    // Step 2: Keep the user's completions (read before the delete), then delete all existing roadmap entries
-    const existingCompletions = await tx.userRoadmapEntry.findMany({
-      where: { userId, status: 'COMPLETE' },
-      select: { taskId: true, completedAt: true },
-    });
+    // Step 2: reconcile entries with the new answers — started entries stay, open ones that no longer apply go
+    const { applicable } = await reconcileRoadmap(tx, userId, request, arrivalDate, currentDate);
 
-    await tx.userRoadmapEntry.deleteMany({
-      where: { userId }
-    });
-
-    logger.info({ userId }, 'Existing roadmap entries deleted');
-
-    // Step 3: rebuild from content — completions survive for tasks that still apply
-    const completedAtById = new Map(existingCompletions.map(e => [e.taskId, e.completedAt]));
-    const version = contentVersion();
-    const roadmapEntries = buildRoadmapEntries(request, arrivalDate, currentDate, [...completedAtById.keys()]).map(e => ({
-      ...e,
-      userId,
-      contentVersion: version,
-      status: completedAtById.has(e.taskId) ? 'COMPLETE' as const : 'NOT_STARTED' as const,
-      completedAt: completedAtById.get(e.taskId) ?? null,
-    }));
-
-    // Step 4: bulk create all new roadmap entries
-    await tx.userRoadmapEntry.createMany({ data: roadmapEntries });
-
-    logger.info({ userId, entryCount: roadmapEntries.length }, 'New roadmap entries created');
+    logger.info({ userId, entryCount: applicable }, 'Roadmap entries reconciled');
 
     return {
       profileId: updatedProfile.id,
       roadmapGenerated: true,
-      entriesCreated: roadmapEntries.length
+      entriesCreated: applicable
     };
   });
 }

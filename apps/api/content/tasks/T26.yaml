@@ -1,0 +1,133 @@
+id: T26
+name: "If you're bringing a cat or dog"
+phase: 1
+priority: 60
+boosts: []
+urgency: []
+duration: 6 months or more (vet checks, tests and permit)
+appliesTo: all
+dependsOn: []
+retired: false
+why:
+  - id: T26.why.country-category
+    text: "The rules and timing for bringing a cat or dog depend on the country it comes from, so check your country's category first."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.why.standard-2026
+    text: "MPI's guide says the 2026 import health standard came into force on {{mpi.pet-standard-start}}, with a {{mpi.pet-transition}} transition period when the 2021 requirements can still be used."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+steps:
+  - id: T26.steps.open-guide
+    text: "Open MPI's step-by-step guide to bringing cats and dogs to New Zealand and check which category your country is in."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.microchip
+    text: "Have your pet microchipped. The microchip number is checked at every examination, test and vaccination."
+    source: mpi-cats-dogs-ihs-2026
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.id-check
+    text: "Book the pre-export identification check with an official vet at least {{mpi.pet-id-check-lead}} before you bring your pet."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.residency
+    text: "If your country is in category 2: your pet must have lived there for at least {{mpi.pet-residency}} before it travels, or since birth, or since it came directly from New Zealand."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.rabies
+    text: "If your country is in category 3: the primary rabies vaccination must be given at least {{mpi.pet-rabies-vaccine-lead}} before shipment, and a blood sample for the rabies antibody test taken {{mpi.pet-titre-window}} before shipment."
+    source: mpi-cats-dogs-ihs-2026
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.quarantine-booking
+    text: "If your pet isn't flying in from Australia: book a place at an MPI-approved quarantine facility. Your import permit application needs the booking confirmation."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.permit
+    text: "Apply online for the import permit at least {{mpi.pet-permit-lead}} before you need it."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.final-vet
+    text: "Arrange the final tick and flea treatment in the {{mpi.pet-parasite-window}} before shipment (dogs need an earlier treatment too), and the vet inspection in the {{mpi.pet-vet-check-window}} before shipment."
+    source: mpi-cats-dogs-ihs-2026
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.australia
+    text: "If your pet comes from Australia by air: it doesn't need an import permit, but email MPI at least {{mpi.pet-australia-notice}} before it arrives."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.arrival
+    text: "Pets flying in arrive at Auckland or Christchurch airport. Pets from category 2 and 3 countries spend at least {{mpi.pet-quarantine-min}} in quarantine."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.steps.register-dog
+    text: "Once you move in, register your dog with the council for the district where you keep it."
+    source: dog-control-act-1996
+    checked: 2026-10-27
+    verified: true
+documents:
+  - id: T26.documents.quarantine-booking
+    text: "Your quarantine booking confirmation, sent with the import permit application"
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.documents.rabies
+    text: "If your country is in category 3: the rabies vaccination certificates and the rabies antibody test results"
+    source: mpi-cats-dogs-ihs-2026
+    checked: 2026-10-27
+    verified: true
+mistakes:
+  - id: T26.mistakes.late-start
+    text: "Starting too late. The identification check, residency and rabies timings are all counted back from the date your pet travels."
+    source: mpi-cats-dogs-ihs-2026
+    checked: 2026-10-27
+    verified: true
+  - id: T26.mistakes.permit-before-booking
+    text: "Applying for the import permit before you have a quarantine booking."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+watchOuts:
+  - id: T26.watchOuts.banned-breeds
+    text: "Some dog breeds and types can't be imported into New Zealand at all."
+    source: dog-control-act-1996
+    checked: 2026-10-27
+    verified: true
+  - id: T26.watchOuts.hybrids
+    text: "Hybrid cats and dogs, other than Bengal cats, are likely to need approval from the Environmental Protection Authority."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.watchOuts.pregnancy
+    text: "A cat or dog can't be more than {{mpi.pet-pregnancy-limit}} pregnant on the day it's shipped."
+    source: mpi-pets-2026-guide
+    checked: 2026-10-27
+    verified: true
+  - id: T26.watchOuts.dog-registration-fine
+    text: "Not registering a dog older than {{dca.registration-age}} can mean a fine of up to {{dca.unregistered-dog-fine}}."
+    source: dog-control-act-1996
+    checked: 2026-10-27
+    verified: true
+cost:
+  id: T26.cost.importer-pays
+  text: "You pay all the costs, including documents, transport, storage and biosecurity clearance."
+  source: mpi-cats-dogs-ihs-2026
+  checked: 2026-10-27
+  verified: true
+advice:
+  id: T26.advice.pet-transport
+  text: "MPI recommends using a pet transport company to help with the process."
+  required: false
+  source: mpi-pets-2026-guide
+  checked: 2026-10-27
+  verified: true

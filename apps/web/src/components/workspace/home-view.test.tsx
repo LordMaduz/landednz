@@ -25,7 +25,7 @@ const profile = {
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation: 'SOLO',
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: '2026-10-21',
 } as const
 const DAY_3 = new Date('2026-10-23T15:00:00+13:00')

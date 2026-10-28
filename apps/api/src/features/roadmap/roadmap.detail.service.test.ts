@@ -19,7 +19,7 @@ const answers = (familySituation: string) => ({
   visaType: 'AEWV',
   city: 'AUCKLAND',
   familySituation,
-  occupation: 'TECHNOLOGY',
+  occupation: 'OTHER_PROFESSIONAL',
   arrivalDate: ARRIVAL_DATE,
 }) as Parameters<typeof createProfile>[1];
 
@@ -33,11 +33,14 @@ beforeAll(async () => {
   await db.user.deleteMany({ where: { id: TEST_USER_ID } });
   await db.user.create({ data: { id: TEST_USER_ID, email: `test-ac210-${TS}@example.com` } });
 
-  // Real bundle plus a family-only step on T01 (the converted content has no conditional items yet)
+  // Real bundle plus a family-only step on T01 (the content has no conditional items yet)
   bundle = await loadContent();
   const t01 = task('T01')!;
   const familyStep = { ...t01.steps[0]!, id: 'T01.steps.family', text: 'Family-only step', when: { family: ['FAMILY_WITH_CHILDREN'] } };
-  useContent({ ...bundle, tasks: bundle.tasks.map(t => (t.id === 'T01' ? { ...t, steps: [...t.steps, familyStep] } : t)) });
+  useContent({
+    ...bundle,
+    tasks: bundle.tasks.map(t => (t.id === 'T01' ? { ...t, steps: [...t.steps, familyStep] } : t)),
+  });
 });
 
 afterAll(async () => {
@@ -76,7 +79,7 @@ describe('getTaskDetail()', () => {
     expect(result.professionalAdviceRequired).toBe(false);
     expect(result.professionalAdviceNote).toBeNull();
     expect(result.relatedTasks).toEqual([]);
-    expect(result.governmentSourceUrl).toBe(source(t02.why[0]!.source).url);
+    expect(result.governmentSourceUrl).toBe(source(t02.steps[0]!.source).url);
     expect(result.lastVerified).toBe(t02.checkedAt);
     expect(result.contentVersion).toBe(contentVersion());
 
@@ -88,11 +91,31 @@ describe('getTaskDetail()', () => {
     expect(result.sources.advice).toEqual([]);
   });
 
+  test('the action link opens the first step source, not the why source', async () => {
+    await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
+    const t08 = task('T08')!;
+    expect(t08.steps[0]!.source).not.toBe(t08.why[0]!.source);
+
+    const result = await getTaskDetail(TEST_USER_ID, 'T08');
+
+    expect(result.governmentSourceUrl).toBe(source(t08.steps[0]!.source).url);
+  });
+
+  test('a retired stub (T13) returns no source url and no verified date', async () => {
+    await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
+    await db.userRoadmapEntry.create({ data: { userId: TEST_USER_ID, taskId: 'T13', priorityScore: 0 } });
+
+    const result = await getTaskDetail(TEST_USER_ID, 'T13');
+
+    expect(result.governmentSourceUrl).toBe('');
+    expect(result.lastVerified).toBeNull();
+  });
+
   test('advice item sets professionalAdviceRequired and its note', async () => {
     await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
-    const advice = task('T05')!.advice!;
+    const advice = task('T11')!.advice!;
 
-    const result = await getTaskDetail(TEST_USER_ID, 'T05');
+    const result = await getTaskDetail(TEST_USER_ID, 'T11');
 
     expect(result.professionalAdviceRequired).toBe(advice.required);
     expect(result.professionalAdviceNote).toBe(advice.text);
@@ -109,7 +132,9 @@ describe('getTaskDetail()', () => {
     await createProfile(TEST_USER_ID, answers('SOLO'), CURRENT_DATE);
     const solo = await getTaskDetail(TEST_USER_ID, 'T01');
     expect(solo.steps).not.toContain('Family-only step');
-    expect(solo.steps).toHaveLength(family.steps.length - 1);
+    // T01 has real child-only steps too, so solo is a strict subset rather than exactly one fewer
+    expect(family.steps).toEqual(expect.arrayContaining(solo.steps));
+    expect(solo.steps.length).toBeLessThan(family.steps.length);
   });
 
   test('Task not in user roadmap → 404 TASK_NOT_FOUND', async () => {

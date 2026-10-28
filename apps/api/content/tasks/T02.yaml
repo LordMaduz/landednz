@@ -1,136 +1,101 @@
 id: T02
-name: Temporary Accommodation Booking
+name: "Book temporary accommodation"
 phase: 1
 priority: 88
 boosts: []
 urgency: []
 duration: 1–2 hours (research and booking)
-processingTime: 2–4 weeks
-appliesTo:
-  family:
-    - SOLO
-    - COUPLE_DUAL_WORK
-    - COUPLE_CONSTRAINED
-    - FAMILY_WITH_CHILDREN
+appliesTo: all
 dependsOn: []
 retired: false
 why:
-  - id: T02.why.1
-    text: Book a studio or 1-bedroom serviced apartment in the CBD for 2–3 weeks.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T02.why.first-weeks
+    text: "Immigration New Zealand says that unless you're staying with family or have accommodation through your employer or education provider, you'll need somewhere to stay for the first few weeks while you look for something permanent."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
 steps:
-  - id: T02.steps.1
-    text: Temporary accommodation should be in or near your shortlisted permanent rental zone. Staying in the CBD for temporary accommodation is practical even if your long-term plan is a suburban rental — CBD gives easy access to bank branches, IRD, and the main business district for your first week of admin tasks.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.steps.2
-    text: 'Options in order of suitability for a 2–4 week stay: - **Serviced apartments (best):** Kitchen, laundry, weekly rates. Quest Serviced Apartments, Adina Apartment Hotels, and Barclay Suites in Auckland CBD are established options. Weekly rates approximately $700–$1,200/week for a 1-bedroom. Book direct for best rates. - **Airbnb weekly rentals:** Good value for 2+ weeks. Filter for "entire place" with kitchen. Set weekly view for pricing. CBD, Newmarket, Parnell, and Mt Eden have good supply. - **University of Auckland transitional accommodation:** UoA offers short-term accommodation for new students in some periods. Contact UoA Accommodation Office (accom@auckland.ac.nz) before departure — options not always publicly advertised. - **Community homestay:** Indian and Sri Lankan community networks (Facebook groups: "Indians in Auckland NZ", "Sri Lankans in New Zealand") sometimes offer homestay accommodation. Cheaper and culturally familiar. Less reliable to book in advance.'
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.steps.3
-    text: "Before confirming any booking, verify: - Full kitchen access (not just microwave) — important for South Asian cooking - Laundry access (in-unit or in-building) - Address clearly documented on booking confirmation — this is your official NZ address for Day 1 admin - Walking distance to or easy PT to CBD (for bank branch access in first week) - Flexible check-out or extension option in case rental search takes longer than expected"
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.steps.4
-    text: "Save your booking confirmation as a PDF. This document is your proof of NZ address for: - Bank account opening (T07) — ANZ, BNZ, Westpac accept hotel/serviced apartment bookings. ASB does not accept temporary/hostel addresses. - IRD number application (T08) - SIM card (T06 — no address required but useful to have)"
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.steps.5
-    text: "Confirm: airport transfer options, check-in time (especially for late evening flights), key collection process. Auckland Airport (AKL) is in Mangere, South Auckland — approximately 25–35 minutes from CBD by car off-peak, longer in traffic. AirportLink bus and Super Shuttle are standard airport transfer options."
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T02.steps.open-inz
+    text: "Open Immigration New Zealand's page on hotels, motels and other places to live temporarily."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.steps.compare
+    text: "Compare the options it describes, such as a hotel or motel, a holiday rental, a cabin at a holiday park or camping ground, or a boarding house."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.steps.quote
+    text: "Use a booking website to find a place, and for a hotel or motel, ask for a quote for a longer stay."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.steps.facilities
+    text: "Check the facilities at holiday parks. Immigration New Zealand says some have a shared kitchen, bathroom and laundry."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.steps.visit
+    text: "If you're renting a home, visit it before you commit."
+    source: inz-renting
+    checked: 2026-10-27
+    verified: true
+  - id: T02.steps.agreement
+    text: "Sign a tenancy agreement only when you're sure you want the property."
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
 documents:
-  - id: T02.documents.1
-    text: visa
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.documents.2
-    text: ird number
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T02.documents.bond-receipt
+    text: "If you pay a bond for a tenancy: the bond receipt, which the landlord must give you"
+    source: tenancy-new-tenants
+    checked: 2026-10-27
+    verified: true
 mistakes:
-  - id: T02.mistakes.1
-    text: Do not book non-refundable temporary accommodation before confirming your flight dates are fixed — NZ visa processing timelines can shift.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.mistakes.2
-    text: 'Failing to understand: Airbnb "entire place" is significantly better than a shared house for a couple arriving in a new country. The privacy and kitchen access are worth the small premium for a 2–4 week stay.'
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.mistakes.3
-    text: "Failing to understand: ASB Bank will reject a hostel or Airbnb address for bank account opening. If you plan to open with ASB, book a named serviced apartment hotel (Quest, Adina) that clearly appears as a business address on the booking confirmation."
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.mistakes.4
-    text: "Failing to understand: Auckland rental applications typically require a NZ bank account reference. Opening your bank account early in week 1 enables you to include it in rental applications by week 2."
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.mistakes.5
-    text: Do not extend temporary accommodation indefinitely — this is expensive. Set yourself a 4-week maximum deadline to secure a permanent rental, even if it means taking a good-enough option rather than a perfect one.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T02.mistakes.no-quote
+    text: "Booking a hotel or motel for a long stay without asking for a quote."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.mistakes.unseen
+    text: "Committing to a rental before you've visited it."
+    source: inz-renting
+    checked: 2026-10-27
+    verified: true
+  - id: T02.mistakes.unchecked-payment
+    text: "Making a payment before you've checked the request is genuine. Consumer Protection says to stop and think first."
+    source: consumer-protection-scams
+    checked: 2026-10-27
+    verified: true
 watchOuts:
-  - id: T02.watchOuts.1
-    text: Do not book non-refundable temporary accommodation before confirming your flight dates are fixed — NZ visa processing timelines can shift.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.watchOuts.2
-    text: Airbnb "entire place" is significantly better than a shared house for a couple arriving in a new country. The privacy and kitchen access are worth the small premium for a 2–4 week stay.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.watchOuts.3
-    text: ASB Bank will reject a hostel or Airbnb address for bank account opening. If you plan to open with ASB, book a named serviced apartment hotel (Quest, Adina) that clearly appears as a business address on the booking confirmation.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.watchOuts.4
-    text: Auckland rental applications typically require a NZ bank account reference. Opening your bank account early in week 1 enables you to include it in rental applications by week 2.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T02.watchOuts.5
-    text: Do not extend temporary accommodation indefinitely — this is expensive. Set yourself a 4-week maximum deadline to secure a permanent rental, even if it means taking a good-enough option rather than a perfect one.
-    source: www-auckland-ac-nz-en-on-campus-accommodation-html
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+  - id: T02.watchOuts.not-covered
+    text: "Tenancy Services says the Residential Tenancies Act doesn't cover hotels and motels, or holiday homes rented for a holiday."
+    source: tenancy-not-protected
+    checked: 2026-10-27
+    verified: true
+  - id: T02.watchOuts.short-fixed-term
+    text: "Tenancy Services says a short fixed-term tenancy lasts {{housing.short-fixed-term-max}} or less."
+    source: tenancy-short-fixed-term
+    checked: 2026-10-27
+    verified: true
+  - id: T02.watchOuts.seasons
+    text: "Immigration New Zealand says the price and availability of short-term places change through the year, with tourist numbers, university start dates and school holidays."
+    source: inz-temporary-places
+    checked: 2026-10-27
+    verified: true
+  - id: T02.watchOuts.bond-not-covered
+    text: "Tenancy Services says a bond shouldn't be lodged for an arrangement the Residential Tenancies Act doesn't cover."
+    source: tenancy-bond-problems
+    checked: 2026-10-27
+    verified: true
+  - id: T02.watchOuts.letting-fees
+    text: "If it's a tenancy: landlords and their agents can't charge letting fees or key money. Tenancy Services says the only exception to the key money ban is an option fee of at most {{housing.option-fee-max}}."
+    source: tenancy-letting-fees
+    checked: 2026-10-27
+    verified: true
 cost:
-  id: T02.cost.1
-  text: $700
-  source: www-auckland-ac-nz-en-on-campus-accommodation-html
-  checked: 2026-03-03
-  verified: false
-  numberType: C
+  id: T02.cost.holiday-parks
+  text: "Immigration New Zealand says holiday parks and camping grounds can be a cheaper option for short stays."
+  source: inz-temporary-places
+  checked: 2026-10-27
+  verified: true

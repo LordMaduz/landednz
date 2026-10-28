@@ -1,6 +1,6 @@
 // Integration tests for getRoadmap() — runs against real Docker postgres DB.
 // Tests verify golden1 scenario: constrained_couple, Day 2, no completions.
-// Scenario tasks must rank ["T06", "T08", "T03"] — T07 is HARD blocked by T06.
+// Scenario tasks must rank ["T06", "T08", "T02"] — T09 is HARD blocked by T08.
 //
 // Database must be running: docker-compose up -d
 
@@ -20,13 +20,13 @@ const TEST_USER_NO_PROFILE_ID = `test-user-ac206-noprofile-${TS}`;
 const TEST_USER_NO_ENTRIES_ID = `test-user-ac206-noentries-${TS}`;
 
 // Golden1: constrained_couple, Day 2 (arrivalDate=2026-03-13, currentDate=2026-03-14)
-// daysSince = floor(1 day) + 1 = 2 → Days 1-3 urgency fires for T06/T07
-// T06=128, T07=75 (HARD blocked), T08=118 (no urgency on Day 2), T03=82
+// daysSince = floor(1 day) + 1 = 2 → Days 1-3 urgency fires for T06
+// T06=128, T08=118 (no urgency on Day 2), T02=88, T09 HARD blocked by T08
 const ARRIVAL_DATE = '2026-03-13';
 const CURRENT_DATE = new Date('2026-03-14');
 
-// Content task ids — scenario tasks; T07 is HARD blocked by T06 in content
-const TASK_IDS = ['T06', 'T07', 'T08', 'T03'];
+// Content task ids — scenario tasks; T09 is HARD blocked by T08 in content
+const TASK_IDS = ['T06', 'T08', 'T09', 'T02'];
 
 // ─── Setup / teardown ─────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ beforeAll(async () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'COUPLE_CONSTRAINED',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: ARRIVAL_DATE,
     },
     CURRENT_DATE,
@@ -69,7 +69,7 @@ beforeAll(async () => {
       visaType: 'AEWV',
       city: 'AUCKLAND',
       familySituation: 'SOLO',
-      occupation: 'TECHNOLOGY',
+      occupation: 'OTHER_PROFESSIONAL',
       arrivalDate: new Date(ARRIVAL_DATE),
     },
   });
@@ -99,30 +99,30 @@ describe('getRoadmap()', () => {
         .filter(t => TASK_IDS.includes(t.taskId) && !t.isBlocked)
         .sort((a, b) => b.priorityScore - a.priorityScore);
 
-    test('scenario tasks rank ["T06", "T08", "T03"] — T07 excluded (HARD blocked)', () => {
-      expect(scenarioRanking().map(t => t.taskId)).toEqual(['T06', 'T08', 'T03']);
+    test('scenario tasks rank ["T06", "T08", "T02"] — T09 excluded (HARD blocked)', () => {
+      expect(scenarioRanking().map(t => t.taskId)).toEqual(['T06', 'T08', 'T02']);
     });
 
-    test('scenario tasks ordered by priorityScore DESC — T06(128) > T08(118) > T03(82)', () => {
+    test('scenario tasks ordered by priorityScore DESC — T06(128) > T08(118) > T02(88)', () => {
       const [first, second, third] = scenarioRanking();
       expect(first.priorityScore).toBe(128);
       expect(second.priorityScore).toBe(118);
-      expect(third.priorityScore).toBe(82);
+      expect(third.priorityScore).toBe(88);
       expect(first.priorityScore).toBeGreaterThan(second.priorityScore);
       expect(second.priorityScore).toBeGreaterThan(third.priorityScore);
     });
 
-    test('T07 appears in phases with isBlocked=true, absent from topThree', () => {
-      // T07 must NOT be in topThree
+    test('T09 appears in phases with isBlocked=true, absent from topThree', () => {
+      // T09 must NOT be in topThree
       const topThreeIds = golden1Response.topThree.map(t => t.taskId);
-      expect(topThreeIds).not.toContain('T07');
+      expect(topThreeIds).not.toContain('T09');
 
-      // T07 must be in phases with isBlocked=true
+      // T09 must be in phases with isBlocked=true
       const allPhaseTasks = golden1Response.phases.flatMap(p => p.tasks);
-      const t07 = allPhaseTasks.find(t => t.taskId === 'T07');
-      expect(t07).toBeDefined();
-      expect(t07!.isBlocked).toBe(true);
-      expect(t07!.blockingTaskNames).toEqual([task('T06')!.name]);
+      const t09 = allPhaseTasks.find(t => t.taskId === 'T09');
+      expect(t09).toBeDefined();
+      expect(t09!.isBlocked).toBe(true);
+      expect(t09!.blockingTaskNames).toEqual([task('T08')!.name]);
     });
 
     test('lastComputedAt is a truthy valid ISO date string', () => {

@@ -8,7 +8,7 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await page.goto('/')
   await page.getByRole('link', { name: 'Build my roadmap' }).click()
 
-  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Technology']) {
+  for (const label of ['Accredited Employer Work Visa (AEWV)', 'Auckland', 'Just me', 'Another job or profession']) {
     await page.getByLabel(label).check()
     await page.getByRole('button', { name: 'Continue' }).click()
   }
@@ -17,9 +17,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
 
   await expect(page).toHaveURL('/onboarding/preview')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your roadmap is ready')
-  // 20 in total: 10 listed in the first legs, 10 folded into "Month 1 and later"
-  await expect(page.getByText(/^10 tasks: /)).toBeVisible()
-  await expect(page.locator('main li.route-step')).toHaveCount(10)
+  // 19 in total: 15 listed in the first legs (phases 1 to 3), 4 folded into "Month 1 and later"
+  await expect(page.getByText(/^4 tasks: /)).toBeVisible()
+  await expect(page.locator('main li.route-step')).toHaveCount(15)
 
   await page.getByRole('link', { name: 'Save my roadmap' }).click()
   await expect(page).toHaveURL(/\/signin\?redirect=/)
@@ -29,8 +29,9 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
 
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Roadmap' }).click()
   await expect(page).toHaveURL('/app/roadmap')
-  await page.getByRole('button', { name: 'Show Week 1 tasks' }).click()
-  await page.getByRole('button', { name: /^Apply for your IRD number/ }).click()
+  // The IRD number is an Arrival task (phase 2), and the Arrival leg is open on arrival day
+  const arrival = page.getByRole('list', { name: 'Your route' }).getByRole('listitem').filter({ has: page.getByRole('heading', { name: /^Arrival/ }) })
+  await arrival.getByRole('button', { name: /^Apply for your IRD number/ }).click()
 
   const ask = page.getByRole('textbox', { name: /^Ask about / })
   await ask.fill('What documents do I need?')

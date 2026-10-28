@@ -5,7 +5,6 @@ priority: 72
 boosts: []
 urgency: []
 duration: 30–60 minutes (research and purchase)
-processingTime: 1–4 weeks
 appliesTo:
   family:
     - SOLO
@@ -13,106 +12,9 @@ appliesTo:
     - COUPLE_CONSTRAINED
     - FAMILY_WITH_CHILDREN
 dependsOn: []
-retired: false
-why:
-  - id: T04.why.1
-    text: Check your existing travel insurance covers one-way relocation trips.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-steps:
-  - id: T04.steps.1
-    text: "Make a rough inventory of high-value items: laptop, phone, camera, hard drives, jewellery, musical instruments. Assign rough replacement cost values. This determines whether additional transit insurance is worth purchasing."
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.steps.2
-    text: "Check your current home country travel insurance or contents insurance policy. Key questions: - Does it cover one-way relocation trips or only return/holiday travel? (Many policies exclude permanent relocation) - Does it cover valuables in checked luggage? - What is the per-item and total claim limit? If your existing policy covers you adequately, no additional purchase needed."
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.steps.3
-    text: 'If not adequately covered, purchase a single-trip travel insurance policy covering: - Medical evacuation and emergency treatment in transit - Baggage loss and delay - Trip cancellation (if flights are refundable-ticket) Note: ensure the policy covers one-way international relocation, not just holiday travel. Check policy wording carefully — "permanent emigration" is sometimes excluded.'
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.steps.4
-    text: "If you are shipping household goods via a removals company (not carrying everything as luggage), arrange specialist removals transit insurance separately from the removals company's standard liability. The removals company's own insurance is usually inadequate for full replacement cost. Options: your home country insurer, specialist marine cargo insurers, or the removals company's premium insurance upgrade."
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.steps.5
-    text: ACC covers injuries. But your belongings in temporary accommodation are not covered by the landlord's building insurance. If you arrive with $5,000+ in electronics, consider whether you need a short-term contents policy from Day 1. Most NZ contents insurers (AA Insurance, Tower, AMI) allow monthly policies — you can start one before your first rental lease is signed.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.steps.6
-    text: Once you have a permanent NZ rental address (Task T11), arrange NZ contents insurance immediately. This is separate from transit insurance and covers your belongings on an ongoing basis. Landlord has building insurance — that does not cover tenant belongings.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
+retired: true
+why: []
+steps: []
 documents: []
-mistakes:
-  - id: T04.mistakes.1
-    text: 'Failing to understand: "Permanent emigration" is sometimes excluded in travel insurance policies designed for holiday travel. Read the exclusions section, not just the coverage summary.'
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.mistakes.2
-    text: Do not rely on credit card travel insurance as your only coverage for a relocation trip — credit card policies typically cover return trips and have low baggage limits.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.mistakes.3
-    text: "Failing to understand: The removals company's standard liability for shipped goods is rarely adequate for electronics. Laptops declared at $1,500 replacement cost may only receive $300 under basic removals liability after depreciation."
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.mistakes.4
-    text: "Failing to understand: NZ landlord insurance covers the building structure only. Tenants who assume they are covered under the landlord's policy are making a common and expensive mistake."
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-watchOuts:
-  - id: T04.watchOuts.1
-    text: '"Permanent emigration" is sometimes excluded in travel insurance policies designed for holiday travel. Read the exclusions section, not just the coverage summary.'
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.watchOuts.2
-    text: Do not rely on credit card travel insurance as your only coverage for a relocation trip — credit card policies typically cover return trips and have low baggage limits.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.watchOuts.3
-    text: The removals company's standard liability for shipped goods is rarely adequate for electronics. Laptops declared at $1,500 replacement cost may only receive $300 under basic removals liability after depreciation.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-  - id: T04.watchOuts.4
-    text: NZ landlord insurance covers the building structure only. Tenants who assume they are covered under the landlord's policy are making a common and expensive mistake.
-    source: www-aainsurance-co-nz-home-contents-insurance
-    checked: 2026-03-03
-    verified: false
-    numberType: C
-cost:
-  id: T04.cost.1
-  text: $20
-  source: www-aainsurance-co-nz-home-contents-insurance
-  checked: 2026-03-03
-  verified: false
-  numberType: C
+mistakes: []
+watchOuts: []

@@ -1,18 +1,19 @@
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
+import { phaseOf } from '@/test/roadmap-fixtures'
 
-// SOLO: every KB task but T21 (couples only)
+// Synthetic T01–T20 laid out by phaseOf, not the live KB tasks
 const tasks = Array.from({ length: 20 }, (_, i) => {
   const taskId = `T${String(i + 1).padStart(2, '0')}`
-  return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: 1 }
+  return { taskId, name: `KB ${taskId}`, estimatedDuration: '1 day', phase: phaseOf(taskId) }
 })
 vi.mock('@/lib/api', () => ({ getRoadmapPreview: async () => ({ tasks }) }))
 vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams() }))
 
 const { SignIn } = await import('./sign-in-form')
 
-const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'TECHNOLOGY', arrivalDate: '2027-01-14' }
+const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: '2027-01-14' }
 
 afterEach(() => vi.unstubAllEnvs())
 
@@ -22,10 +23,10 @@ describe('SignIn', () => {
     expect(screen.getByRole('link', { name: 'Your roadmap preview' })).toHaveAttribute('href', '/onboarding/preview')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Save your roadmap')
     const aside = screen.getByRole('complementary', { name: "What you're saving" })
-    expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, technology, landing 14 January 2027')).toBeInTheDocument()
+    expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027')).toBeInTheDocument()
     const rows = (await within(aside).findAllByRole('listitem')).map(li => li.textContent)
     expect(rows).toEqual([
-      'Research Auckland suburbsFirst, 4 to 6 weeks before you leave',
+      'Choose where to liveFirst, 4 to 6 weeks before you leave',
       'Book temporary accommodation',
       '18 more tasks, in the order they unlock',
     ])
