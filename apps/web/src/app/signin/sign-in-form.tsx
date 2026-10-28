@@ -11,7 +11,7 @@ import { answersShort, type Answers } from "@/lib/answers";
 import { createClient } from "@/lib/supabase/client";
 import { safeRedirect } from "@/lib/safe-redirect";
 
-function SignInForm({ title }: { title: string }) {
+function SignInForm({ saving }: { saving: boolean }) {
   const searchParams = useSearchParams();
   const redirectTo = safeRedirect(searchParams.get("redirect"));
   const [error, setError] = useState(searchParams.get("error"));
@@ -54,7 +54,7 @@ function SignInForm({ title }: { title: string }) {
   return (
     <>
       <div className="flex flex-col gap-1.5">
-        <h1 className="text-title">{title}</h1>
+        <h1 className="text-title">{saving ? "Save your roadmap" : "Sign in"}</h1>
         <p className="text-muted">Sign in to tick tasks off, pick up where you left off on any device, and ask about any task. New here? Continue with Google to create your account.</p>
       </div>
       {error && <p role="alert" className="rounded-surface border border-ink p-4">{error}</p>}
@@ -75,7 +75,7 @@ function SignInForm({ title }: { title: string }) {
               <Field name="password" type="password" autoComplete="current-password" required className="min-h-11 font-normal" />
             </label>
             <Button type="submit" size="lg" disabled={pending} className="w-full">
-              {title === "Sign in" ? "Sign in" : "Save and sign in"}
+              {saving ? "Save and sign in" : "Sign in"}
             </Button>
           </form>
         </>
@@ -125,7 +125,7 @@ export function SignIn({ answers }: { answers: Answers | null }) {
             <SaveChip answers={answers} />
           </>
         )}
-        <SignInForm title={answers ? "Save your roadmap" : "Sign in"} />
+        <SignInForm saving={!!answers} />
       </Card>
     </main>
   );

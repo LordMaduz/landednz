@@ -13,4 +13,4 @@ Target: apps/web/src/app/signin/sign-in-form.tsx. Shots: signin-1440/390.png, sa
 - P0: none. P1: none. P2: none.
 
 ## Assessment B (detector)
-`impeccable detect --json apps/web/src/app/signin/sign-in-form.tsx` returned `[]`. Visual check at 1440x900 and 390x844: no overflow, 16 px phone gutter, card 460 px wide at 1440.
+`impeccable detect --json apps/web/src/app/signin/sign-in-form.tsx` returned `[]`. Visual check of the re-captured shots (fresh 3100 build) at 1440x900 and 390x844: no overflow. getBoundingClientRect on the card: 1440 gives x 490, width 460 (centred); 390 gives x 16, width 358 (16 px gutters). The divider's ::before/::after are 1 px tall and flex-grow 1, so the rules show either side of the text.
