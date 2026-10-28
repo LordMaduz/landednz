@@ -62,8 +62,14 @@ export function taskDots(route: RouteView) {
   })
 }
 
+// The stage whose days hold journey day `day` (the last stage past day 61)
+export const stageIndexOn = (day: number) => {
+  const i = STAGE_DAYS.findIndex((s, k) => k > 0 && day <= s.end)
+  return i < 0 ? STAGE_DAYS.length - 1 : i
+}
+
 // Days left in stage i after today; null before arrival or when none
-const daysLeftIn = (i: number, day: number) => (day < 1 ? null : STAGE_DAYS[i].end - day > 0 ? STAGE_DAYS[i].end - day : null)
+export const daysLeftIn = (i: number, day: number) => (day < 1 ? null : STAGE_DAYS[i].end - day > 0 ? STAGE_DAYS[i].end - day : null)
 
 export function routeProgress(route: RouteView, arrivalDate: string, now: Date) {
   const day = journeyDay(arrivalDate, now)

@@ -18,7 +18,7 @@ describe('buildRouteView — Priya, day 3', () => {
 
   it('task states and meta', () => {
     expect(task(view, 'T08')).toMatchObject({ state: 'current', meta: 'Next', title: 'Apply for your IRD number', topic: 'your IRD number' })
-    expect(task(view, 'T09')).toMatchObject({ state: 'blocked', meta: 'Needs your IRD number first' })
+    expect(task(view, 'T09')).toMatchObject({ state: 'blocked', meta: 'Waits on your IRD number' })
     expect(task(view, 'T10')).toMatchObject({ state: 'available', meta: '30–45 minutes', time: '30–45 minutes' })
     expect(task(view, 'T06')).toMatchObject({ state: 'done', meta: 'Done 21 Oct', completedAt: '2026-10-21T02:00:00.000Z' })
   })
@@ -65,7 +65,7 @@ describe('buildRouteView — edges', () => {
       NOW,
     )
     expect(view.current?.taskId).toBe('T07')
-    expect(task(view, 'T06')).toMatchObject({ state: 'blocked', meta: 'Needs another task first' })
+    expect(task(view, 'T06')).toMatchObject({ state: 'blocked', meta: 'Waits on another task' })
   })
 
   it('orders by phase before id: an earlier phase holds the current task', () => {
@@ -80,7 +80,7 @@ describe('buildRouteView — edges', () => {
       ARRIVAL,
       NOW,
     )
-    expect(task(view, 'T20').meta).toBe('Needs your IRD number first')
+    expect(task(view, 'T20').meta).toBe('Waits on your IRD number')
     expect(task(view, 'T20').blocker).toBe('T08')
     expect(task(view, 'T10').blocker).toBeNull()
   })

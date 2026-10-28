@@ -23,7 +23,7 @@ export default function Loading() {
           </Card>
         </div>
       </main>
-      <PublicFooter />
+      <PublicFooter app />
     </>
   )
 }

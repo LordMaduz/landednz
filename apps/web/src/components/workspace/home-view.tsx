@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Loading from "@/app/app/loading"
@@ -38,76 +38,85 @@ function Tick() {
   )
 }
 
+// Wide on desktop, hidden on phones (and the other way round for `Phone`)
+const Wide = ({ children }: { children: ReactNode }) => <span className="max-narrow:hidden">{children}</span>
+const Phone = ({ children }: { children: ReactNode }) => <span className="hidden max-narrow:inline">{children}</span>
+
 export function HomeView({ home, route, arrivalDate, now }: { home: Home; route: RouteView; arrivalDate: string; now: Date }) {
   const { top } = home
   return (
     <div className="flex flex-col gap-4">
-      <section aria-labelledby="hello" className="flex flex-col gap-1">
+      <section aria-labelledby="hello" className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h1 id="hello" className="text-title">{home.greeting}</h1>
-        <p className="text-muted">{home.subline}</p>
+        <p className="text-muted max-narrow:w-full max-narrow:text-small">
+          <Phone>{home.sublineShort}</Phone>
+          <Wide>{home.subline}</Wide>
+        </p>
       </section>
 
-      <Card aria-labelledby="route">
-        <CardHead
-          title="Your roadmap"
-          titleId="route"
-          aside={<Link href="/app/roadmap" className={LINK}>{route.doneCount} of {route.total} done · Open roadmap</Link>}
-        />
+      <Card aria-labelledby="route" className="max-narrow:gap-1.5">
+        <div className="max-narrow:hidden">
+          <CardHead title="Your 90 days" titleId="route" aside={<Link href="/app/roadmap" className={LINK}>Open roadmap</Link>} />
+        </div>
         <RouteTrack route={route} arrivalDate={arrivalDate} now={now} variant="compact" />
       </Card>
 
       <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">
         <Card aria-labelledby="next">
-          <CardHead title="Up next" titleId="next" aside={<span className="text-small text-muted">{home.nextMeta}</span>} />
           {top ? (
             <>
+              <h2 id="next" className="text-small font-semibold text-teal-text">
+                <Phone>{home.nextMetaShort}</Phone>
+                <Wide>{home.nextMeta}</Wide>
+              </h2>
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-section">{top.title}</h3>
                 {top.why && <p className="max-w-lede text-muted">{top.why}</p>}
+                {home.unlocks.length > 0 && (
+                  <p className="text-small text-muted max-narrow:hidden">Unlocks: {home.unlocks.join(" · ")}</p>
+                )}
               </div>
-              <CardFoot className="flex flex-wrap items-center justify-between gap-4">
-                <span className="text-small text-muted">About {top.time}</span>
-                <div className="flex gap-2 max-narrow:w-full max-narrow:flex-col-reverse">
-                  <Link href={`${taskHref(top.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet" })}>
-                    Ask about this
-                  </Link>
-                  <Link href={taskHref(top.taskId)} className={buttonVariants()}>
-                    Start task<span className="sr-only">: {top.title}</span>
-                  </Link>
-                </div>
+              <CardFoot className="flex gap-2 pt-1">
+                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "max-narrow:flex-1" })}>
+                  Start task<span className="sr-only">: {top.title}</span>
+                </Link>
+                <Link href={`${taskHref(top.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet" })}>
+                  <Wide>Ask about this</Wide>
+                  <Phone>Ask</Phone>
+                </Link>
               </CardFoot>
             </>
           ) : (
-            <p className="text-muted">You have finished every task on your roadmap.</p>
+            <>
+              <CardHead title="Your next move" titleId="next" />
+              <p className="text-muted">You have finished every task on your roadmap.</p>
+            </>
           )}
         </Card>
 
-        <Card as="aside" aria-labelledby="plan">
-          <CardHead
-            title="Your plan"
-            titleId="plan"
-            aside={<Link href="/settings" aria-label="Edit your plan" className={LINK}>Edit</Link>}
-          />
-          <dl className="m-0 grid grid-cols-plan items-baseline gap-x-3 gap-y-2">
-            {home.plan.map(p => (
-              <Fragment key={p.label}>
-                <dt className="text-small text-muted">{p.label}</dt>
-                <dd className="m-0 font-medium">{p.value}</dd>
-              </Fragment>
-            ))}
-          </dl>
-        </Card>
-
         <Card aria-labelledby="week">
-          <CardHead title="Also this week" titleId="week" aside={<span className="text-small text-muted">{home.weekCount}</span>} />
+          <CardHead
+            title="Then this week"
+            titleId="week"
+            aside={
+              <>
+                <span className="text-small text-muted max-narrow:hidden">{home.weekAside}</span>
+                {home.weekTotal > 0 && (
+                  <Link href="/app/roadmap" className={cn(LINK, "hidden max-narrow:inline-flex")}>
+                    {home.weekTotal} {home.weekTotal === 1 ? "task" : "tasks"}
+                  </Link>
+                )}
+              </>
+            }
+          />
           {home.week.length > 0 && (
             <Rows>
-              {home.week.map(t => (
-                <li key={t.taskId}>
+              {home.week.map(({ task: t, meta }, i) => (
+                <li key={t.taskId} className={cn(i > 1 && "max-narrow:hidden")}>
                   <Link href={taskHref(t.taskId)} className={ROW}>
                     <Waypoint state={t.state === "blocked" ? "blocked" : "available"} />
                     <span title={t.title} className="min-w-0 flex-1 truncate font-medium max-narrow:whitespace-normal">{t.title}</span>
-                    <span className={cn("max-w-1/3 truncate text-small text-muted", t.state !== "blocked" && "max-narrow:hidden")}>{t.meta}</span>
+                    <span className="flex-none text-small text-muted max-narrow:hidden">{meta}</span>
                   </Link>
                 </li>
               ))}
@@ -117,41 +126,56 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
           {home.nextLine ? (
             <p className="mt-auto text-small text-muted">{home.nextLine}</p>
           ) : (
-            home.weekMore > 0 && (
-              <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start")}>{home.weekMore} more this week · Open roadmap</Link>
-            )
-          )}
-        </Card>
-
-        <Card aria-labelledby="done">
-          <CardHead
-            title="Recently done"
-            titleId="done"
-            aside={home.recentTotal > 0 && <span className="text-small text-muted">{home.recentTotal} done</span>}
-          />
-          {home.recent.length > 0 ? (
-            <>
-              <Rows>
-                {home.recent.map(d => (
-                  <li key={d.taskId}>
-                    <Link href={taskHref(d.taskId)} className={ROW}>
-                      <Tick />
-                      <span title={d.title} className="min-w-0 flex-1 truncate max-narrow:whitespace-normal">{d.title}</span>
-                      <span className="text-small text-muted">{d.when}</span>
-                    </Link>
-                  </li>
-                ))}
-              </Rows>
-              <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start")}>See all {home.recentTotal} done</Link>
-            </>
-          ) : (
-            <>
-              <p className="text-muted">Nothing yet. Tasks you finish show up here, newest first.</p>
-              <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start")}>Already done some? Tick them off</Link>
-            </>
+            home.weekFoot && <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start max-narrow:hidden")}>{home.weekFoot}</Link>
           )}
         </Card>
       </div>
+
+      <Card aria-labelledby="done">
+        <CardHead
+          title="Recently done"
+          titleId="done"
+          aside={
+            home.recentTotal > 0 && (
+              <>
+                <span className="text-small text-muted max-narrow:hidden">
+                  {home.recentTotal} {home.recentTotal === 1 ? "task" : "tasks"} done ·{" "}
+                  <Link href="/app/roadmap?done=1" className="font-semibold">Show all</Link>
+                </span>
+                <Link href="/app/roadmap?done=1" className={cn(LINK, "hidden max-narrow:inline-flex")}>Show all {home.recentTotal}</Link>
+              </>
+            )
+          }
+        />
+        {home.recent.length > 0 ? (
+          <ol className="m-0 grid list-none grid-cols-4 p-0 max-narrow:grid-cols-1">
+            {home.recent.map((d, i) => (
+              <li
+                key={d.taskId}
+                className={cn(
+                  "min-w-0 border-l border-hairline px-4 first:border-l-0 first:pl-0 last:pr-0",
+                  "max-narrow:border-l-0 max-narrow:border-t max-narrow:px-0 max-narrow:first:border-t-0",
+                  i > 1 && "max-narrow:hidden",
+                )}
+              >
+                <Link href={taskHref(d.taskId)} className="flex items-start gap-3 py-1 text-ink no-underline hover:text-ink hover:underline max-narrow:min-h-11 max-narrow:items-center">
+                  <Tick />
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span>{d.title}</span>
+                    <span className="text-small text-muted max-narrow:hidden">{d.when}</span>
+                  </span>
+                  <span className="hidden text-small text-muted max-narrow:inline">{d.weekday}</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <>
+            <p className="text-muted">Nothing yet. Tasks you finish show up here, newest first.</p>
+            <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start")}>Already done some? Tick them off</Link>
+          </>
+        )}
+      </Card>
     </div>
   )
 }
@@ -197,7 +221,7 @@ export function HomeScreen({ user, firstName }: { user: { name: string; initials
           <main className="container-page py-6">
             {state === "down" ? <ApiDown onRetry={load} /> : <HomeView {...state} />}
           </main>
-          <PublicFooter />
+          <PublicFooter app />
         </>
       )}
     </>

@@ -40,7 +40,7 @@ export function SettingsScreen({ user }: { user: User }) {
 
   return (
     <>
-      <AppHeader active={null} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
+      <AppHeader active="settings" user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
       <main className="container-page flex flex-col gap-4 py-6">
         <h1 className="text-title">Settings</h1>
         <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1">
@@ -62,7 +62,7 @@ export function SettingsScreen({ user }: { user: User }) {
           <DeleteAccount />
         </div>
       </main>
-      <PublicFooter />
+      <PublicFooter app />
     </>
   )
 }

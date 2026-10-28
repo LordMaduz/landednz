@@ -226,7 +226,7 @@ describe('TaskSheet', () => {
 
   it('a blocked task: no Mark button; the meta says what it needs and links to it', () => {
     sheet('T09')
-    expect(screen.getByText('Needs your IRD number first')).toBeInTheDocument()
+    expect(screen.getByText('Waits on your IRD number')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /^Mark as/ })).toBeNull()
     const first = screen.getByText(/^Do this first:/)
     expect(within(first).getByRole('link', { name: 'Apply for your IRD number' })).toHaveAttribute('href', '/app/roadmap?task=T08')

@@ -165,7 +165,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
               <RoadmapView {...state} onOpen={open} />
             )}
           </main>
-          <PublicFooter />
+          <PublicFooter app />
         </>
       )}
     </>

@@ -40,10 +40,10 @@ export interface RouteView {
 
 const blockerOf = (t: RoadmapApiTask) => [...t.blockingTaskIds].sort()[0] ?? null
 
-function blockedMeta(t: RoadmapApiTask): string {
-  const blocker = blockerOf(t)
-  const topic = blocker && TASK_COPY[blocker]?.topic
-  return topic ? `Needs ${topic} first` : 'Needs another task first'
+// "Waits on your IRD number": what a blocked task needs first
+export function waitsOn(t: Pick<RouteTask, 'blocker'>): string {
+  const topic = t.blocker && TASK_COPY[t.blocker]?.topic
+  return topic ? `Waits on ${topic}` : 'Waits on another task'
 }
 
 export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string, now: Date): RouteView {
@@ -93,7 +93,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
         const meta = {
           done: t.completedAt ? `Done ${shortDayNZ(t.completedAt)}` : 'Done',
           current: 'Next',
-          blocked: blockedMeta(t),
+          blocked: waitsOn({ blocker: blockerOf(t) }),
           available: time,
           locked: time,
         }[taskState]

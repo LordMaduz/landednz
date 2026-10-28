@@ -24,36 +24,18 @@ describe('buildHomeView — Priya, day 3', () => {
 
   it('greets and says where the journey is', () => {
     expect(view.greeting).toBe('Welcome to Auckland, Priya')
-    expect(view.subline).toBe('Day 3 in Auckland · 7 of 20 tasks done.')
+    expect(view.subline).toBe('7 of 20 done · day 3 since you landed on Wed 21 Oct')
   })
 
   it('this week: the current task, then the rest of the leg', () => {
     expect(view.top?.taskId).toBe('T08')
-    expect(view.week.map(t => [t.taskId, t.meta])).toEqual([
-      ['T09', 'After your IRD number'],
+    expect(view.week.map(w => [w.task.taskId, w.meta])).toEqual([
+      ['T09', 'Waits on your IRD number'],
       ['T10', '30–45 minutes'],
     ])
-    expect(view.nextMeta).toBe('Week 1 · task 1 of 3')
-    expect(view.weekCount).toBe('2 more tasks')
+    expect(view.nextMeta).toBe('Your next move · Week 1 · 1 hour')
+    expect(view.weekFoot).toBeNull()
     expect(view.nextLine).toBeNull()
-  })
-
-  it('recently done: the last three by completedAt, newest first', () => {
-    expect(view.recent).toEqual([
-      { taskId: 'T07', title: 'Open a bank account', when: '22 Oct' },
-      { taskId: 'T06', title: 'Get an NZ SIM card', when: '21 Oct' },
-      { taskId: 'T05', title: 'Sort your home-country tax', when: '12 Oct' },
-    ])
-  })
-
-  it('plan: the answers the roadmap is built from', () => {
-    expect(view.plan).toEqual([
-      { label: 'Visa', value: 'Accredited Employer Work Visa (AEWV)' },
-      { label: 'City', value: 'Auckland' },
-      { label: 'Moving', value: 'Just me' },
-      { label: 'Work', value: 'Another job or profession' },
-      { label: 'Arriving', value: '21 October 2026' },
-    ])
   })
 })
 
@@ -82,13 +64,14 @@ describe('buildHomeView — before arrival and later', () => {
   it('greeting and subline', () => {
     expect(before.greeting).toBe('Welcome, Aleksandra')
     expect(before.subline).toBe('124 days until you land on 1 March 2027.')
+    expect(before.sublineShort).toBe(before.subline)
     expect(later.greeting).toBe('Welcome to Christchurch, Aleksandra')
-    expect(later.subline).toBe('Day 3 in Christchurch · 14 of 25 tasks done.')
+    expect(later.subline).toBe('14 of 25 done · day 3 since you landed on Mon 1 Mar')
   })
 
   it('before arrival the foot says what comes after landing; later it does not', () => {
     expect(before.nextLine).toMatch(/^After you land: /)
-    expect(before.nextMeta).toBe('Before you fly · task 1 of 10')
+    expect(before.nextMeta).toBe('Your next move · Before you fly · 1 hour')
     expect(later.nextLine).toBeNull()
   })
 
@@ -97,30 +80,91 @@ describe('buildHomeView — before arrival and later', () => {
     expect(view.greeting).toBe('Welcome to New Zealand, A')
   })
 
-  it('plan has an Arriving row', () => {
-    expect(later.plan.at(-1)).toEqual({ label: 'Arriving', value: '1 March 2027' })
-  })
-
-  it('also this week: three rows from the current leg, the count is all of them', () => {
-    expect(later.nextMeta).toBe('Week 1 · task 1 of 5')
-    expect(later.week.map(t => t.taskId)).toEqual(['T16', 'T17', 'T18'])
-    expect(later.weekCount).toBe('4 more tasks')
-    expect(later.weekMore).toBe(1)
-    expect(later.weekEmpty).toBeNull()
-  })
-
   it('only the current task left this week: nothing else, and when the next leg starts', () => {
     const view = aleks(nz('2027-03-03', '12:00:00'), board([10, 4, 1, 5, 1], 14))
     expect(view.week).toEqual([])
-    expect(view.weekCount).toBe('')
+    expect(view.weekFoot).toBeNull()
     expect(view.weekEmpty).toBe('Nothing else this week. Month 1 starts on 9 March.')
   })
 
-  it('recently done caps at 3 and counts all; none done is empty', () => {
-    expect(later.recent).toHaveLength(3)
+  it('recently done caps at 4 and counts all; none done is empty', () => {
+    expect(later.recent).toHaveLength(4)
     expect(later.recentTotal).toBe(14)
     expect(before.recent).toEqual([])
     expect(before.recentTotal).toBe(0)
+  })
+})
+
+// Board Home: arrived 2 Nov, now Fri 6 Nov (day 5), 9 of 22 done, the IRD number (T08) is the next move
+const BOARD_ARRIVAL = '2026-11-02'
+const doneAt: Record<string, string> = {
+  T06: '2026-11-01T01:00:00.000Z',
+  T07: '2026-11-02T01:00:00.000Z',
+  T09: '2026-11-03T01:00:00.000Z',
+  T10: '2026-11-04T01:00:00.000Z',
+}
+const boardRoute = (over: (id: string) => object = () => ({})) => {
+  const counts = [6, 4, 7, 4, 1]
+  let n = 0
+  return roadmap(
+    counts.flatMap((count, i) =>
+      Array.from({ length: count }, () => {
+        n += 1
+        const id = `T${String(n).padStart(2, '0')}`
+        const done = n <= 5 || doneAt[id]
+        return apiTask(id, {
+          phase: i + 1,
+          ...(done ? { status: 'COMPLETE' as const, completedAt: doneAt[id] ?? '2026-10-20T01:00:00.000Z' } : {}),
+          ...(['T11', 'T20'].includes(id) ? { isBlocked: true, blockingTaskIds: ['T08'] } : {}),
+          ...over(id),
+        })
+      }),
+    ),
+  )
+}
+const NOV_6 = nz('2026-11-06', '12:00:00')
+const boardHome = (r = boardRoute(), now = NOV_6) =>
+  buildHomeView(buildRouteView(r, BOARD_ARRIVAL, now), { ...profile, arrivalDate: BOARD_ARRIVAL }, user, now)
+
+describe('buildHomeView — Home C', () => {
+  const view = boardHome()
+
+  it('subline with and without the date', () => {
+    expect(view.subline).toBe('9 of 22 done · day 5 since you landed on Mon 2 Nov')
+    expect(view.sublineShort).toBe('9 of 22 done · day 5 since you landed')
+  })
+
+  it('next move: meta, and the tasks it unlocks in leg order', () => {
+    expect(view.top?.taskId).toBe('T08')
+    expect(view.nextMeta).toBe('Your next move · Arrival · 1 hour')
+    expect(view.nextMetaShort).toBe('Your next move · 1 hour')
+    expect(view.unlocks).toEqual(['Sign a rental and protect your bond', 'Review your KiwiSaver fund'])
+    expect(boardHome(boardRoute(() => ({ isBlocked: false, blockingTaskIds: [] }))).unlocks).toEqual([])
+  })
+
+  it('then this week: aside, rows with Waits on, and the footer', () => {
+    expect(view.weekAside).toBe('Week 1 · 3 days left')
+    expect(view.week.map(w => [w.task.taskId, w.meta])).toEqual([
+      ['T11', 'Waits on your IRD number'],
+      ['T12', '1 hour'],
+      ['T13', '1 hour'],
+    ])
+    expect(view.weekFoot).toBe('4 more in Week 1')
+    expect(view.weekTotal).toBe(7)
+    const small = boardHome(boardRoute(id => (Number(id.slice(1)) > 13 && Number(id.slice(1)) < 18 ? { status: 'COMPLETE', completedAt: '2026-11-05T01:00:00.000Z' } : {})))
+    expect(small.weekFoot).toBeNull()
+  })
+
+  it('recently done: four tiles, newest first', () => {
+    expect(view.recent).toHaveLength(4)
+    expect(view.recent[0]).toMatchObject({ taskId: 'T10', when: 'Done Wed 4 Nov · Arrival', weekday: 'Wed' })
+    expect(view.recent.map(r => r.taskId)).toEqual(['T10', 'T09', 'T07', 'T06'])
+    expect(view.recentTotal).toBe(9)
+    expect(boardHome(roadmap(Array.from({ length: 5 }, (_, i) => apiTask(`T0${i + 1}`)))).recent).toEqual([])
+  })
+
+  it('the Your plan block is gone', () => {
+    expect('plan' in view).toBe(false)
   })
 })
 
