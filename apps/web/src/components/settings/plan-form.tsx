@@ -61,9 +61,10 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
   const undoToast = useRef<string | number | undefined>(undefined)
 
   // Another answer picked (or the saved one changed): start from its saved value
-  const [seen, setSeen] = useState(`${editing}:${saved[editing]}`)
-  if (seen !== `${editing}:${saved[editing]}`) {
-    setSeen(`${editing}:${saved[editing]}`)
+  const marker = `${param}:${editing}:${saved[editing]}` // param too: leaving the editor with Back drops the draft
+  const [seen, setSeen] = useState(marker)
+  if (seen !== marker) {
+    setSeen(marker)
     setDraft(saved[editing])
     setError(null)
     setDateError(null)
@@ -74,7 +75,7 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
   const copy = COPY[editing]
   const editQuestion = editing === "arrivalDate" ? null : QUESTIONS.find(q => q.key === editing)!
   // The phone editor is its own page (?edit=); desktop keeps the list beside it
-  const leave = () => isPhone() && router.push("/settings")
+  const leave = () => isPhone() && router.replace("/settings")
 
   async function persist(next: Answers): Promise<boolean> {
     setError(null)

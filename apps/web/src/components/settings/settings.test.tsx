@@ -136,7 +136,7 @@ describe('PlanForm', () => {
     view()
     fireEvent.click(screen.getByLabelText('Wellington region'))
     fireEvent.click(saveBtn())
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/settings'))
+    await waitFor(() => expect(replace).toHaveBeenCalledWith('/settings'))
   })
 
   it('Cancel restores the saved value; on a phone it goes back to /settings', () => {
@@ -147,10 +147,64 @@ describe('PlanForm', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(screen.getByLabelText('Auckland')).toBeChecked()
     expect(saveBtn()).toBeDisabled()
-    expect(push).not.toHaveBeenCalled()
+    expect(replace).not.toHaveBeenCalled()
     phone = true
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(push).toHaveBeenCalledWith('/settings')
+    expect(replace).toHaveBeenCalledWith('/settings') // replace, so Back does not return to the editor
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('leaving the editor with Back drops the draft; reopening shows the saved value', () => {
+    search = new URLSearchParams('edit=visaType')
+    const ui = () => <PlanForm profile={profile} account={null} /> // a new element each time, or React skips the rerender
+    const { rerender } = render(ui())
+    fireEvent.click(screen.getByLabelText('Skilled Migrant Category Resident Visa'))
+    search = new URLSearchParams()
+    rerender(ui())
+    search = new URLSearchParams('edit=visaType')
+    rerender(ui())
+    expect(screen.getByLabelText('Accredited Employer Work Visa (AEWV)')).toBeChecked()
+    expect(saveBtn()).toBeDisabled()
+  })
+
+  it('changing back to the saved value makes Save disabled again', () => {
+    search = new URLSearchParams('edit=city')
+    view()
+    fireEvent.click(screen.getByLabelText('Wellington region'))
+    expect(saveBtn()).toBeEnabled()
+    fireEvent.click(screen.getByLabelText('Auckland'))
+    expect(saveBtn()).toBeDisabled()
+  })
+
+  it('a second save removes the first toast, so its Undo cannot overwrite newer answers', async () => {
+    search = new URLSearchParams('edit=city')
+    updateOnboardingProfile.mockResolvedValue({ success: true })
+    view()
+    fireEvent.click(screen.getByLabelText('Wellington region'))
+    fireEvent.click(saveBtn())
+    await screen.findByRole('button', { name: 'Undo' })
+    fireEvent.click(screen.getByLabelText('Somewhere else in NZ'))
+    fireEvent.click(saveBtn())
+    await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Undo' })).toHaveLength(1))
+    fireEvent.click(screen.getByRole('button', { name: 'Undo' }))
+    await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalledTimes(3))
+    expect(updateOnboardingProfile.mock.calls[2][0].city).toBe('WELLINGTON')
+  })
+
+  it('a saved date that has already passed does not block changing another answer', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2030-01-01T00:00:00Z'))
+    try {
+      search = new URLSearchParams('edit=city')
+      updateOnboardingProfile.mockResolvedValue({ success: true })
+      view()
+      fireEvent.click(screen.getByLabelText('Wellington region'))
+      fireEvent.click(saveBtn())
+      await waitFor(() => expect(updateOnboardingProfile).toHaveBeenCalled())
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('Undo puts the previous answers back with one call', async () => {
