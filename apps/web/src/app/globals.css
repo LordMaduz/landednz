@@ -261,35 +261,6 @@
   .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
   .ph { background: var(--color-wash); border-radius: 4px; padding: 0 4px; }
 
-  /* Task page (TaskPage board): steps beside a sticky column of actions and Ask. Under 861 px one column:
-     actions after the title, Ask after the content (the side column dissolves into the grid) */
-  .task-layout {
-    display: grid;
-    grid-template-columns: var(--grid-template-columns-task);
-    column-gap: 64px;
-    row-gap: 32px;
-    align-items: start;
-    padding-top: 48px;
-  }
-  .task-head, .task-body { grid-column: 1; }
-  .task-side {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    position: sticky;
-    top: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  @media (width < 861px) {
-    .task-layout { grid-template-columns: minmax(0, 1fr); padding-top: 24px; }
-    .task-side { display: contents; }
-    .task-head { order: 1; }
-    .task-acts { order: 2; }
-    .task-body { order: 3; }
-    .task-ask { order: 4; }
-  }
-
   /* Home track (docs/design/r0-polish/build.py ROUTE_CSS). The container query hides the labels and shows the summary under 561 px. */
   .track { container-type: inline-size; padding-inline: 6px; }
   .track-rv { position: relative; }

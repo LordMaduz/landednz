@@ -12,6 +12,11 @@ export function shortDay(date: string): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', timeZone: 'UTC' })
 }
 
+// "27 Oct 2026" for a calendar date
+export function shortDate(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+}
+
 // "14 January 2027" for a calendar date
 export function longDay(date: string): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })

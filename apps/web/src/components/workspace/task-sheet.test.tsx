@@ -84,7 +84,12 @@ describe('TaskSheet', () => {
     const action = within(page).getByRole('link', { name: 'Open the IRD application (opens in a new tab)' })
     expect(action).toHaveAttribute('href', 'https://www.ird.govt.nz/managing-my-tax/ird-numbers')
     expect(action).toHaveAttribute('target', '_blank')
-    expect(within(page).getByText(/^Source:/)).toHaveTextContent('Source: ird.govt.nz, checked 3 March 2026')
+    const sources = within(page).getByRole('complementary')
+    const only = within(within(sources).getByRole('region', { name: 'Sources' }))
+    expect(only.getByText('All checked 3 Mar 2026 · open in a new tab')).toBeInTheDocument()
+    expect(only.getAllByRole('listitem')).toHaveLength(1)
+    expect(only.getByRole('link', { name: 'Official page (opens in a new tab)' })).toHaveAttribute('target', '_blank')
+    expect(only.getByText('ird.govt.nz')).toBeInTheDocument()
     expect(getTaskDetail).toHaveBeenCalledWith('T08', 'tok')
   })
 
@@ -103,13 +108,29 @@ describe('TaskSheet', () => {
     )
   })
 
+  it('bottom navigation: cards for the neighbouring tasks, visible Previous and Next in the bar', () => {
+    sheet('T08')
+    const bar = within(screen.getByRole('navigation', { name: 'Tasks' }))
+    expect(bar.getByRole('link', { name: 'Previous task: Open a bank account' })).toHaveTextContent('Previous')
+    expect(bar.getByRole('link', { name: 'Next task: Give your employer a tax code (IR330)' })).toHaveTextContent('Next')
+    const pn = within(screen.getByRole('navigation', { name: 'Previous and next task' }))
+    expect(pn.getByRole('link', { name: 'Previous task Open a bank account' })).toHaveAttribute('href', '/app/roadmap?task=T07')
+    expect(pn.getByRole('link', { name: 'Next task Give your employer a tax code (IR330)' })).toHaveAttribute(
+      'href',
+      '/app/roadmap?task=T09',
+    )
+  })
+
   it('first and last task: no previous, no next', () => {
     const { unmount } = sheet('T01')
-    expect(screen.queryByRole('link', { name: /^Previous task/ })).toBeNull()
-    expect(screen.getByRole('link', { name: /^Next task/ })).toBeInTheDocument()
+    const pn = () => within(screen.getByRole('navigation', { name: 'Previous and next task' }))
+    expect(pn().queryByRole('link', { name: /^Previous task/ })).toBeNull()
+    expect(pn().getByRole('link', { name: /^Next task/ })).toBeInTheDocument()
+    expect(within(screen.getByRole('navigation', { name: 'Tasks' })).queryByRole('link', { name: /^Previous task/ })).toBeNull()
     unmount()
     sheet('T20')
-    expect(screen.queryByRole('link', { name: /^Next task/ })).toBeNull()
+    expect(pn().queryByRole('link', { name: /^Next task/ })).toBeNull()
+    expect(pn().getByRole('link', { name: /^Previous task/ })).toBeInTheDocument()
   })
 
   it("what you'll need and good to know (mistakes, then watch-outs); none when the KB has none", async () => {
@@ -134,7 +155,28 @@ describe('TaskSheet', () => {
     sheet('T08')
     await waitFor(() => expect(getTaskDetail).toHaveBeenCalled())
     expect(screen.queryByRole('link', { name: /opens in a new tab/ })).toBeNull()
-    expect(screen.queryByText(/Source:/)).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Sources' })).toBeNull()
+  })
+
+  it('a phone number in a step is a tel link and keeps its citation number', async () => {
+    const src = { itemId: 'T08.steps.0', title: 'Plunket', url: 'https://www.plunket.org.nz/contact', checked: '2026-10-25' }
+    getTaskDetail.mockResolvedValueOnce(
+      detail({ steps: ['Call 0800 184 803'], sources: { steps: [src] } }),
+    )
+    sheet('T08')
+    const tel = await screen.findByRole('link', { name: '0800 184 803' })
+    expect(tel).toHaveAttribute('href', 'tel:0800184803')
+    const item = tel.closest('li')!
+    expect(within(item).getByRole('link', { name: /^Source: Plunket/ })).toHaveTextContent('1')
+  })
+
+  it('Sources sit in the side column, after Ask', async () => {
+    sheet('T08')
+    await screen.findByRole('region', { name: 'Sources' })
+    const side = screen.getByRole('complementary')
+    expect(within(side).getByRole('region', { name: 'Sources' })).toBeInTheDocument()
+    const heads = within(side).getAllByRole('heading', { level: 2 }).map(h => h.textContent)
+    expect([heads[0], heads[1]?.startsWith('Ask about'), heads[2]]).toEqual(['Not started', true, 'Sources'])
   })
 
   it('a step with inline items: lead line and a nested list, no markdown markers', async () => {
@@ -148,7 +190,9 @@ describe('TaskSheet', () => {
   it('no checked date when lastVerified is null', async () => {
     getTaskDetail.mockResolvedValueOnce(detail({ lastVerified: null }))
     sheet('T08')
-    expect(await screen.findByText(/^Source:/)).toHaveTextContent(/^Source: ird\.govt\.nz$/)
+    const card = within(await screen.findByRole('region', { name: 'Sources' }))
+    expect(card.getByText('Links open in a new tab')).toBeInTheDocument()
+    expect(card.getByText('ird.govt.nz')).toBeInTheDocument()
   })
 
   it('Mark as done: stamp and toast; Undo reopens, stamp gone, route refetched', async () => {
@@ -245,10 +289,11 @@ describe('TaskSheet', () => {
       expect(refs[0]).toHaveAttribute('rel', 'noopener noreferrer')
 
       const list = screen.getByRole('region', { name: 'Sources' })
+      expect(within(list).getByText('All checked 25 Oct 2026 · open in a new tab')).toBeInTheDocument()
       const items = within(list).getAllByRole('listitem')
       expect(items.map(i => i.textContent)).toEqual([
-        'Tax codes for individuals (opens in a new tab), checked 24 October 2026',
-        `${NEW.title} (opens in a new tab), checked 25 October 2026`,
+        'Tax codes for individuals (opens in a new tab)ird.govt.nz',
+        `${NEW.title} (opens in a new tab)ird.govt.nz`,
       ])
       const title = within(items[0]).getByRole('link')
       expect(title).toHaveAttribute('href', CODES.url)
@@ -286,11 +331,12 @@ describe('TaskSheet', () => {
       expect(within(screen.getByRole('region', { name: 'Sources' })).getAllByRole('listitem')).toHaveLength(1)
     })
 
-    it('no sources: no numbers, no sources list, the single source line as before', async () => {
+    it('no cited sources: no numbers; the official page is the one source', async () => {
       sheet('T08')
-      expect(await screen.findByText(/^Source:/)).toHaveTextContent('Source: ird.govt.nz, checked 3 March 2026')
+      const card = within(await screen.findByRole('region', { name: 'Sources' }))
+      expect(card.getAllByRole('listitem')).toHaveLength(1)
+      expect(card.getByRole('link', { name: 'Official page (opens in a new tab)' })).toHaveAttribute('target', '_blank')
       expect(screen.queryByRole('link', { name: /^Source:/ })).toBeNull()
-      expect(screen.queryByRole('region', { name: 'Sources' })).toBeNull()
     })
   })
 })

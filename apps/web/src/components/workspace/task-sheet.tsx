@@ -7,12 +7,14 @@ import { toast } from "sonner"
 import { AskPanel } from "@/components/assistant/ask-panel"
 import { Stamp } from "@/components/route/stamp"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
-import { longDay, shortDayNZ } from "@/lib/nz-date"
+import { longDay, shortDate, shortDayNZ } from "@/lib/nz-date"
 import type { RouteView } from "@/lib/route-view"
 import { createClient } from "@/lib/supabase/client"
 import { TASK_COPY } from "@/lib/task-copy"
 import { stepParts } from "@/lib/task-steps"
+import { linkPhones } from "@/lib/tel-links"
 import { cn } from "@/lib/utils"
 
 type Source = NonNullable<TaskDetailApiResponse["sources"]>[string][number]
@@ -23,10 +25,27 @@ async function sessionToken(): Promise<string> {
   return data.session?.access_token ?? ""
 }
 
+const pnCard =
+  "flex flex-col gap-0.5 rounded-control border border-hairline px-4 py-3 text-ink no-underline hover:border-control hover:no-underline"
+
 const taskHref = (id: string) => `/app/roadmap?task=${id}`
 
-// The open task (?task=<id>): a page in place of the route (TaskPage board). The steps read on the left; Mark as done
-// and Ask stay beside them. Under 861 px it is one column: actions after the title, Ask after the content.
+const domainOf = (url: string) => new URL(url).hostname.replace(/^www\./, "")
+
+// Freephone numbers in a line become tel: links
+const phones = (text: string) =>
+  linkPhones(text).map((p, i) =>
+    typeof p === "string" ? (
+      p
+    ) : (
+      <a key={i} href={`tel:${p.tel}`} className="whitespace-nowrap">
+        {p.text}
+      </a>
+    ),
+  )
+
+// The open task (?task=<id>): a page in place of the route (TaskPage board). The steps read on the left; Status, Ask
+// and Sources stay beside them. Under 861 px it is one column and the side cards come after the content.
 export function TaskSheet({
   taskId,
   route,
@@ -98,7 +117,7 @@ export function TaskSheet({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
-        className="relative ml-1 align-super text-small leading-none after:absolute after:-inset-2"
+        className="-mx-1.5 -my-2 inline-flex min-h-6 min-w-6 items-center justify-center align-middle text-citation font-medium"
       >
         {cited.findIndex(c => c.url === s.url) + 1}
       </a>
@@ -112,13 +131,17 @@ export function TaskSheet({
         <ul className="flex list-disc flex-col gap-2 pl-6">
           {items.map(l => (
             <li key={l.text}>
-              {l.text}
+              {phones(l.text)}
               {ref(l.source)}
             </li>
           ))}
         </ul>
       </section>
     )
+  const sources = cited.length > 0 ? cited.map(s => ({ title: s.title, url: s.url, checked: s.checked })) : []
+  if (steps?.governmentSourceUrl && cited.length === 0)
+    sources.push({ title: "Official page", url: steps.governmentSourceUrl, checked: steps.lastVerified ?? "" })
+  const latest = sources.map(s => s.checked).filter(Boolean).sort().at(-1)
 
   async function reopen(id: string) {
     try {
@@ -146,113 +169,121 @@ export function TaskSheet({
 
   return (
     <article aria-labelledby={titleId}>
-      <nav aria-label="Tasks" className="flex min-h-14 items-center gap-2 border-b border-hairline">
+      <nav aria-label="Tasks" className="flex min-h-14 items-center gap-2 pb-2">
         <Link href="/app/roadmap" className={cn(buttonVariants({ variant: "ghost" }), "-ml-4")}>
           <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
           Roadmap
         </Link>
-        <span className="text-small text-muted">
+        <span className="text-small text-muted max-narrow:hidden">
           {leg.name}, task {leg.tasks.indexOf(task) + 1} of {leg.tasks.length}
         </span>
-        <div className="-mr-4 ml-auto flex">
+        <div className="ml-auto flex gap-2">
           {previous && (
             <Link
               href={taskHref(previous.taskId)}
               aria-label={`Previous task: ${previous.title}`}
-              className={cn(buttonVariants({ variant: "ghost" }), "max-split:w-11 max-split:px-0")}
+              className={buttonVariants({ variant: "quiet", size: "sm" })}
             >
-              <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
-              <span className="max-split:hidden">{previous.title}</span>
+              <ChevronLeft aria-hidden="true" size={14} strokeWidth={1.5} />
+              Previous
             </Link>
           )}
           {next && (
             <Link
               href={taskHref(next.taskId)}
               aria-label={`Next task: ${next.title}`}
-              className={cn(buttonVariants({ variant: "ghost" }), "max-split:w-11 max-split:px-0")}
+              className={buttonVariants({ variant: "quiet", size: "sm" })}
             >
-              <span className="max-split:hidden">{next.title}</span>
-              <ChevronRight aria-hidden="true" size={16} strokeWidth={1.5} />
+              Next
+              <ChevronRight aria-hidden="true" size={14} strokeWidth={1.5} />
             </Link>
           )}
         </div>
       </nav>
 
-      <div className="task-layout">
-        <div className="task-head flex flex-col gap-4">
-          <div className="flex items-start gap-4">
-            <div className="flex flex-1 flex-col gap-2">
-              <span className="text-small text-muted">{task.state === "blocked" ? task.meta : task.time}</span>
-              <h1 id={titleId} ref={titleRef} tabIndex={-1} className="text-title focus-visible:outline-none">
-                {task.title}
-              </h1>
+      <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1">
+        <Card as="div" className="gap-8 px-10 py-9 max-narrow:px-4 max-narrow:py-5">
+          <div className="flex max-w-prose flex-col gap-3">
+            <div className="flex items-start gap-4">
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-small text-muted">{task.state === "blocked" ? task.meta : task.time}</span>
+                <h1 id={titleId} ref={titleRef} tabIndex={-1} className="text-title focus-visible:outline-none max-narrow:text-section">
+                  {task.title}
+                </h1>
+              </div>
+              {doneOn && <Stamp date={doneOn} />}
             </div>
-            {doneOn && <Stamp date={doneOn} />}
+            {task.why && (
+              <p className="text-muted">
+                {task.why}
+                {ref(whySource)}
+              </p>
+            )}
           </div>
-          {task.why && (
-            <p className="max-w-lede">
-              {task.why}
-              {ref(whySource)}
-            </p>
-          )}
-        </div>
 
-        <div className="task-body flex flex-col gap-8">
-          {list(`${titleId}-need`, "What you'll need", needs)}
-          {stepLines.length > 0 && (
-            <section aria-labelledby={`${titleId}-steps`} className="flex flex-col gap-4">
-              <h2 id={`${titleId}-steps`} className="text-section">
-                Steps
+          <div className="flex max-w-prose flex-col gap-8">
+            {list(`${titleId}-need`, "What you'll need", needs)}
+            {stepLines.length > 0 && (
+              <section aria-labelledby={`${titleId}-steps`} className="flex flex-col gap-3">
+                <h2 id={`${titleId}-steps`} className="text-section">
+                  Steps
+                </h2>
+                <ol className="flex list-decimal flex-col gap-2.5 pl-6 tabular-nums">
+                  {stepLines.map(l => {
+                    const { lead, items } = stepParts(l.text)
+                    return (
+                      <li key={l.text}>
+                        {phones(lead)}
+                        {ref(l.source)}
+                        {items.length > 0 && (
+                          <ul className="mt-1 flex list-disc flex-col gap-1 pl-6">
+                            {items.map(i => (
+                              <li key={i}>{phones(i)}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ol>
+              </section>
+            )}
+            {list(`${titleId}-know`, "Good to know", know)}
+          </div>
+
+          <nav
+            aria-label="Previous and next task"
+            className="grid grid-cols-2 gap-3 border-t border-hairline pt-6 max-narrow:grid-cols-1"
+          >
+            {previous && (
+              <Link href={taskHref(previous.taskId)} className={pnCard}>
+                <span className="text-small text-muted">
+                  <span aria-hidden="true">← </span>Previous task
+                </span>{" "}
+                <span className="font-medium">{previous.title}</span>
+              </Link>
+            )}
+            {next && (
+              <Link href={taskHref(next.taskId)} className={cn(pnCard, "col-start-2 text-right max-narrow:col-start-1 max-narrow:text-left")}>
+                <span className="text-small text-muted">
+                  Next task<span aria-hidden="true"> →</span>
+                </span>{" "}
+                <span className="font-medium">{next.title}</span>
+              </Link>
+            )}
+          </nav>
+        </Card>
+
+        <aside aria-label="Task actions" className="flex flex-col gap-4">
+          <Card aria-labelledby={`${titleId}-status`}>
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 id={`${titleId}-status`} className="text-body font-semibold">
+                {doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"}
               </h2>
-              <ol className="flex list-decimal flex-col gap-2 pl-6">
-                {stepLines.map(l => {
-                  const { lead, items } = stepParts(l.text)
-                  return (
-                    <li key={l.text}>
-                      {lead}
-                      {ref(l.source)}
-                      {items.length > 0 && (
-                        <ul className="mt-1 flex list-disc flex-col gap-1 pl-6">
-                          {items.map(i => (
-                            <li key={i}>{i}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  )
-                })}
-              </ol>
-            </section>
-          )}
-          {list(`${titleId}-know`, "Good to know", know)}
-          {steps && cited.length > 0 && (
-            <section aria-label="Sources" className="border-t pt-4 text-small text-muted">
-              <ol className="flex list-decimal flex-col gap-1 pl-6">
-                {cited.map(s => (
-                  <li key={s.url}>
-                    <a href={s.url} target="_blank" rel="noopener noreferrer">
-                      {s.title}
-                      <span className="sr-only"> (opens in a new tab)</span>
-                    </a>
-                    , checked {longDay(s.checked)}
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-          {steps?.governmentSourceUrl && cited.length === 0 && (
-            <p className="text-small text-muted">
-              Source:{" "}
-              <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className="underline">
-                {new URL(steps.governmentSourceUrl).hostname.replace(/^www\./, "")}
-              </a>
-              {steps.lastVerified && `, checked ${longDay(steps.lastVerified)}`}
-            </p>
-          )}
-        </div>
-
-        <div className="task-side">
-          <div className="task-acts flex flex-col gap-2">
+              <span className="text-small tabular-nums text-muted">
+                {leg.name} · {leg.tasks.indexOf(task) + 1} of {leg.tasks.length}
+              </span>
+            </div>
             {error && (
               <p role="alert" className="text-small">
                 {error}
@@ -263,7 +294,10 @@ export function TaskSheet({
                 Mark as not done
               </Button>
             ) : task.state !== "blocked" ? (
-              <Button onClick={mark}>Mark as done</Button>
+              <>
+                <Button onClick={mark}>Mark as done</Button>
+                <p className="text-small text-muted">You can undo this from the Roadmap.</p>
+              </>
             ) : (
               blocker && (
                 <p>
@@ -283,11 +317,37 @@ export function TaskSheet({
                 <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} className="shrink-0" />
               </a>
             )}
-          </div>
-          <div className="task-ask">
+          </Card>
+          <Card as="div">
             <AskPanel key={taskId} taskId={taskId} topic={task.topic} detail={steps} inputRef={askRef} />
-          </div>
-        </div>
+          </Card>
+          {steps && sources.length > 0 && (
+            <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
+              <div className="flex flex-col gap-0.5">
+                <h2 id={`${titleId}-sources`} className="text-body font-semibold">
+                  Sources
+                </h2>
+                <p className="text-small text-muted">
+                  {latest ? `All checked ${shortDate(latest)} · open in a new tab` : "Links open in a new tab"}
+                </p>
+              </div>
+              <ol className="flex list-decimal flex-col gap-2.5 pl-5 text-small tabular-nums marker:text-muted">
+                {sources.map(s => (
+                  <li key={s.url} className="pl-1">
+                    <span className="flex flex-col">
+                      <a href={s.url} target="_blank" rel="noopener noreferrer" className="py-0.5 font-medium max-narrow:py-3">
+                        {s.title}{" "}
+                        <span className="sr-only">(opens in a new tab)</span>
+                        <ExternalLink aria-hidden="true" size={12} strokeWidth={1.5} className="ml-1 inline" />
+                      </a>
+                      <span className="text-muted">{domainOf(s.url)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </Card>
+          )}
+        </aside>
       </div>
     </article>
   )

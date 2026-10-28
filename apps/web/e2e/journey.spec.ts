@@ -33,6 +33,13 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await page.getByRole('button', { name: 'Show Arrival tasks' }).click()
   await page.getByRole('button', { name: /^Apply for your IRD number/ }).click()
 
+  // Sources sit beside the steps; each opens in a new tab
+  const source = page.getByRole('complementary').getByRole('region', { name: 'Sources' }).getByRole('link').first()
+  await expect(source).toHaveAttribute('target', '_blank')
+  const popup = page.waitForEvent('popup')
+  await source.click()
+  await (await popup).close()
+
   const ask = page.getByRole('textbox', { name: /^Ask about / })
   await ask.fill('What documents do I need?')
   await ask.press('Enter')
@@ -43,4 +50,10 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await expect(page.getByRole('img', { name: `Done ${today}` })).toBeVisible()
   await page.getByRole('button', { name: 'Undo' }).click()
   await expect(page.getByRole('img', { name: /^Done / })).toHaveCount(0)
+
+  // The bottom card goes to the next task in route order
+  const nextCard = page.getByRole('navigation', { name: 'Previous and next task' }).getByRole('link', { name: /^Next task/ })
+  const nextTitle = (await nextCard.locator('span').last().textContent())!
+  await nextCard.click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(nextTitle)
 })

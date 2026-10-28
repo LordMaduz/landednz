@@ -84,7 +84,7 @@ export function AskPanel({
   }
 
   return (
-    <section aria-labelledby="ask-title" className="flex flex-col gap-4 border-t border-hairline pt-6">
+    <section aria-labelledby="ask-title" className="flex flex-col gap-4">
       <h2 id="ask-title" className="text-body font-semibold">
         Ask about {topic}
       </h2>
@@ -140,6 +140,7 @@ export function AskPanel({
           </Button>
         )}
       </form>
+      <p className="text-small text-muted">Answers cite the same official sources.</p>
     </section>
   )
 }

@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, shortDay, shortDayNZ } from './nz-date'
+import { addDays, shortDate, shortDay, shortDayNZ } from './nz-date'
 
 describe('nz-date', () => {
   it('adds calendar days across a month', () => {
     expect(addDays('2026-10-31', 1)).toBe('2026-11-01')
     expect(shortDay('2026-11-01')).toBe('1 Nov')
+  })
+
+  it('formats a short date with the year', () => {
+    expect(shortDate('2026-10-27')).toBe('27 Oct 2026')
   })
 
   it('formats an instant on the NZ calendar', () => {
