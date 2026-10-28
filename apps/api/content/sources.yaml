@@ -95,7 +95,7 @@ www-ird-govt-nz-international-tax-individuals-tax-residency-status-for-individua
   tier: government
 www-ird-govt-nz-working-for-families-can-you-get-it-residency:
   url: https://www.ird.govt.nz/working-for-families/can-you-get-it/residency
-  title: "Working for Families: residency"
+  title: "Residency requirements"
   agency: Inland Revenue
   tier: government
 getready-govt-nz-prepared-household-make-a-plan:
@@ -823,4 +823,24 @@ nzta-converting-car-non-exempt:
   url: https://www.nzta.govt.nz/driver-licences/converting-to-nz-driver-licence/converting-a-car-licence/converting-a-car-licence-from-a-non-exempt-country
   title: Converting a car licence from a non-exempt country
   agency: NZ Transport Agency Waka Kotahi
+  tier: government
+www-ird-govt-nz-working-for-families-apply-register:
+  url: https://www.ird.govt.nz/working-for-families/apply/register
+  title: "Register for Working for Families"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it/new-or-returning-residents
+  title: "New or returning residents"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-can-you-get-it:
+  url: https://www.ird.govt.nz/working-for-families/can-you-get-it
+  title: "Can you get Working for Families?"
+  agency: Inland Revenue
+  tier: government
+www-ird-govt-nz-working-for-families-types:
+  url: https://www.ird.govt.nz/working-for-families/types
+  title: "Types of payment"
+  agency: Inland Revenue
   tier: government

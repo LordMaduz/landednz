@@ -13,17 +13,99 @@ dependsOn:
     type: soft
 retired: false
 why:
-  - id: T35.why.1
-    text: "Working for Families is a payment for families with children, and claiming it can affect your temporary tax exemption."
-    source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
-    checked: 2026-10-25
-    verified: false
+  - id: T35.why.tradeoff
+    text: "Inland Revenue says that if you're a new resident, or returning after {{ird.exemption-lookback}} away, you must choose between Working for Families payments (including Best Start) and keeping your temporary tax exemption on foreign-sourced income. It says you cannot have both."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.why.who
+    text: "Inland Revenue says you can get Working for Families if you're aged {{ird.wff-min-age}} or over, you care for a dependent child, you're the principal caregiver and you meet the residency requirements."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it
+    checked: 2026-10-28
+    verified: true
 steps:
-  - id: T35.steps.1
-    text: "Check the Inland Revenue residency rules for Working for Families before you apply."
+  - id: T35.steps.register
+    text: "Do the checks below before you register: Inland Revenue says that if you have a temporary tax exemption, you'll lose it if you apply. Then register for Working for Families in myIR (its 'Register for Working for Families' option), or by contacting Inland Revenue or using its registration tool if you don't have a myIR account."
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.tte-warning
+    text: "If you have a temporary tax exemption: Inland Revenue says you can apply for Working for Families once your exemption ends."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.tte-status
+    text: "Find out whether you or your partner has a temporary tax exemption. The exemption lasts {{ird.exemption-length}} for new and returning residents, and Inland Revenue says it applies to income other than salary or wages from overseas."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.partner
+    text: "If you're moving with a partner: Inland Revenue says a household can have either Working for Families or a temporary tax exemption, not both. It says that if one of you has the exemption, the other cannot apply for Working for Families, because they don't meet the definition of principal caregiver while the exemption lasts."
+    when:
+      family: [FAMILY_WITH_CHILDREN]
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.residency
+    text: "Check the residency requirements on Inland Revenue's page. For you, it lists: being a New Zealand resident, having lived in New Zealand for {{ird.wff-residency-months}} at any time, being a New Zealand tax resident for as long as you get the payments, and not being a transitional tax resident or the partner of one."
     source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
-    checked: 2026-10-25
-    verified: false
-documents: []
-mistakes: []
-watchOuts: []
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.child
+    text: "Check the child's requirements too. Inland Revenue says the child you care for must be a New Zealand resident and be present in New Zealand, and that you don't have to meet both sets of requirements: meeting one set will do."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.prepare
+    text: "Gather what Inland Revenue says you need to register: IRD numbers for you, your partner and your child, your estimated family income for the tax year, any child support paid or received by private agreement, and your bank account number. It says your child needs an IRD number if you want payments for more than {{ird.wff-child-ird-weeks}}."
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+  - id: T35.steps.notice
+    text: "After you register, Inland Revenue says you'll get a notice of entitlement showing your payment amount and first payment date: the next day if you use myIR, or {{ird.wff-notice-post}} if you don't."
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+documents:
+  - id: T35.documents.ird-numbers
+    text: "IRD numbers for you, your partner and your child"
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+  - id: T35.documents.income
+    text: "Your estimated family income for the tax year"
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+  - id: T35.documents.bank
+    text: "Your bank account number"
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+mistakes:
+  - id: T35.mistakes.apply-first
+    text: "Applying for Working for Families without checking your exemption first. Inland Revenue says that applying ends your temporary tax exemption and you cannot get it back."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.mistakes.visa-only
+    text: "Assuming a temporary visa is enough. Inland Revenue says that if you or your child hold only a temporary permit or visa, you're not entitled to Working for Families payments."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-residency
+    checked: 2026-10-28
+    verified: true
+watchOuts:
+  - id: T35.watchOuts.consider
+    text: "Inland Revenue says that if you have the exemption and qualify for Working for Families, it recommends you consider your options before you apply."
+    source: www-ird-govt-nz-working-for-families-can-you-get-it-new-or-returning-residents
+    checked: 2026-10-28
+    verified: true
+  - id: T35.watchOuts.changes
+    text: "Inland Revenue says that as a Working for Families customer you must check your information and tell it about changes to your family, income or hours of work, and contact or bank details."
+    source: www-ird-govt-nz-working-for-families-apply-register
+    checked: 2026-10-28
+    verified: true
+  - id: T35.watchOuts.types
+    text: "Inland Revenue lists the types of Working for Families payment, including Best Start, and says other government payments can affect your entitlement. Its types page explains which you could qualify for."
+    source: www-ird-govt-nz-working-for-families-types
+    checked: 2026-10-28
+    verified: true
