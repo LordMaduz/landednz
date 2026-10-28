@@ -15,6 +15,7 @@ export interface RouteTask {
   time: string
   why: string // the consequence line: what happens if it waits
   completedAt: string | null
+  blocker: string | null // the lowest-id task it waits on
 }
 
 export interface RouteLeg {
@@ -34,8 +35,10 @@ export interface RouteView {
   legs: RouteLeg[]
 }
 
+const blockerOf = (t: RoadmapApiTask) => [...t.blockingTaskIds].sort()[0] ?? null
+
 function blockedMeta(t: RoadmapApiTask): string {
-  const blocker = [...t.blockingTaskIds].sort()[0]
+  const blocker = blockerOf(t)
   const topic = blocker && TASK_COPY[blocker]?.topic
   return topic ? `Needs ${topic} first` : 'Needs another task first'
 }
@@ -99,6 +102,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string)
           time,
           why: t.consequenceLine,
           completedAt: t.completedAt,
+          blocker: blockerOf(t),
         }
       }),
     }

@@ -76,13 +76,6 @@ describe('RoadmapView', () => {
     expect(document.querySelectorAll('button.bg-ink')).toHaveLength(1)
   })
 
-  it('a task selected: the card collapses to a row', () => {
-    render(<RoadmapView view={view()} firstUse={false} selectedTaskId="T10" onOpen={() => {}} />)
-    expect(screen.queryByRole('heading', { level: 3 })).toBeNull()
-    expect(screen.getByRole('button', { name: /^Apply for your IRD number/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^Choose your KiwiSaver fund/ })).toHaveAttribute('aria-current', 'true')
-  })
-
   it('first use: the hint', () => {
     render(<RoadmapView view={view()} firstUse onOpen={() => {}} />)
     expect(screen.getByText('Done some already? Open a task and mark it done.')).toBeInTheDocument()
@@ -119,18 +112,17 @@ describe('RoadmapScreen', () => {
   it('opening a task puts it in the URL', async () => {
     render(<RoadmapScreen user={user} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Start: Apply for your IRD number' }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08', { scroll: false })
+    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08')
   })
 
-  it('?task=: the sheet beside the route; Close drops task from the URL', async () => {
+  it('?task=: the task page in place of the route', async () => {
     params = new URLSearchParams('task=T08')
     render(<RoadmapScreen user={user} />)
-    expect(await screen.findByRole('complementary', { name: 'Apply for your IRD number' })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Close task' }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap', { scroll: false })
+    expect(await screen.findByRole('article', { name: 'Apply for your IRD number' })).toBeInTheDocument()
+    expect(screen.queryByRole('list', { name: 'Your route' })).toBeNull()
   })
 
-  it('Mark as done then Undo: the route refetches and shows T09 blocked again (Review Focus 3)', async () => {
+  it('Mark as done then Undo: the route refetches each time and the page stays (Review Focus 3)', async () => {
     params = new URLSearchParams('task=T08')
     const afterDone = priyaWithWhy()
     for (const t of afterDone.phases.flatMap(p => p.tasks)) {
@@ -141,25 +133,22 @@ describe('RoadmapScreen', () => {
     completeTask.mockResolvedValue(undefined)
     reopenTask.mockResolvedValue(undefined)
     render(<><RoadmapScreen user={user} /><Toaster /></>)
-    const t09 = () => screen.getByRole('button', { name: /^Give your employer a tax code/ })
-
     fireEvent.click(await screen.findByRole('button', { name: 'Mark as done' }))
-    await waitFor(() => expect(t09()).not.toHaveTextContent('Needs your IRD number first'))
+    await waitFor(() => expect(getRoadmap).toHaveBeenCalledTimes(2))
     fireEvent.click(await screen.findByRole('button', { name: 'Undo' }))
-    await waitFor(() => expect(t09()).toHaveTextContent('Needs your IRD number first'))
-    expect(getRoadmap).toHaveBeenCalledTimes(3)
-    // refetches keep the sheet open: no loading state in between
-    expect(screen.getByRole('complementary', { name: 'Apply for your IRD number' })).toBeInTheDocument()
+    await waitFor(() => expect(getRoadmap).toHaveBeenCalledTimes(3))
+    // refetches keep the page up: no loading state in between
+    expect(screen.getByRole('article', { name: 'Apply for your IRD number' })).toBeInTheDocument()
   })
 
   it('header Ask with no task open: opens the current task', async () => {
     render(<RoadmapScreen user={user} />)
     await screen.findByRole('list', { name: 'Your route' })
     fireEvent.click(screen.getByRole('button', { name: /^Ask/ }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08', { scroll: false })
+    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08')
   })
 
-  it('header Ask with the sheet open: focuses the ask input', async () => {
+  it('header Ask with a task open: focuses the ask input', async () => {
     params = new URLSearchParams('task=T08')
     render(<RoadmapScreen user={user} />)
     const box = await screen.findByRole('textbox', { name: 'Ask about your IRD number' })
