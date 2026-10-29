@@ -23,7 +23,7 @@ export const understandingSchema = z.object({
 });
 
 const CRISIS_PATTERN =
-  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on)\b/i;
+  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on|take my own life|end it all|don'?t want to be here)\b/i;
 
 export function hasCrisisSignal(text: string): boolean {
   return CRISIS_PATTERN.test(text.replace(/’/g, "'"));
@@ -62,6 +62,7 @@ async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideCon
     ]);
     return {
       ...parsed,
+      searchQuery: parsed.searchQuery.trim() || question,
       memoryCandidates: parsed.memoryCandidates
         .slice(0, MAX_MEMORY_CANDIDATES)
         .map((m) => ({ ...m, text: m.text.slice(0, MAX_MEMORY_CHARS) })),

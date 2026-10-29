@@ -76,6 +76,23 @@ describe('liveSources', () => {
     expect(await liveSources('q', [cand(u('d'))], deps(fail))).toEqual({ passages: [], unavailable: true });
   });
 
+  it('treats a 503 as a fetch failure: serves the stale row and leaves it unchanged', async () => {
+    const old = hoursAgo(72);
+    await db.liveSourceCache.create({ data: { url: u('s'), title: 'Old', content: 'Old text.', fetchedAt: old } });
+    const d = deps({ fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, status: 503, contentType: 'text/html', body: html('<p>Access denied</p>') })) });
+    const r = await liveSources('q', [cand(u('s'))], d);
+    expect(r.passages[0]).toMatchObject({ content: 'Old text.', checkedAt: old.toISOString() });
+    const row = await db.liveSourceCache.findUnique({ where: { url: u('s') } });
+    expect(row).toMatchObject({ content: 'Old text.', fetchedAt: old });
+  });
+
+  it('breaks a single huge paragraph into passages of at most 800 chars', async () => {
+    const body = html(`<p>${'word '.repeat(1000)}</p>`);
+    const r = await liveSources('q', [cand(u('big'))], deps({ fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html', body })) }));
+    expect(r.passages.length).toBeGreaterThan(0);
+    for (const p of r.passages) expect(p.content.length).toBeLessThanOrEqual(800);
+  });
+
   it('searches once when there are no allowed candidates', async () => {
     const d = deps({ searchUrls: vi.fn(async () => [u('e'), 'https://example.com/x']) });
     const r = await liveSources('q', [], d);

@@ -54,6 +54,11 @@ describe('understand', () => {
     expect(await understand('how do I get one?', [], ctx)).toEqual(haikuResult);
   });
 
+  it('uses the question when Haiku returns a blank searchQuery', async () => {
+    setMockStructured(() => ({ ...haikuResult, searchQuery: '  ' }));
+    expect((await understand('how do I get one?', [], ctx)).searchQuery).toBe('how do I get one?');
+  });
+
   it('falls back to the raw question when Haiku throws', async () => {
     setMockStructured(() => {
       throw new Error('boom');
@@ -102,7 +107,7 @@ describe('understand', () => {
 });
 
 describe('hasCrisisSignal', () => {
-  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm'])(
+  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here'])(
     'flags %s',
     (text) => expect(hasCrisisSignal(text)).toBe(true),
   );

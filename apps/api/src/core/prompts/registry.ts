@@ -354,7 +354,7 @@ export function buildGuideAboutUser(ctx: GuideContext): string {
     `- Family: ${FAMILY_WORDS[ctx.profile.familySituation]}`,
     `- City: ${CITY_WORDS[ctx.profile.city]}`,
     `- Work: ${OCCUPATION_WORDS[ctx.profile.occupation]}`,
-    `- Days since arrival: ${ctx.daysSinceArrival}`,
+    ctx.daysSinceArrival < 0 ? `- Arrives in ${-ctx.daysSinceArrival} days` : `- Days since arrival: ${ctx.daysSinceArrival}`,
     `- Tasks done: ${titles(ctx.doneTasks)}`,
     `- Next tasks: ${titles(ctx.nextTasks)}`,
     `- Looking at now: ${ctx.currentTask?.title ?? 'their roadmap overview'}`,

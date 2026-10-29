@@ -1,13 +1,14 @@
 // Step 5 of the guide pipeline: read allowlisted official pages (24 h cache, 7 d stale fallback).
 
 import { db } from '../../shared/db.js';
+import { logger } from '../../shared/logger.js';
 import { generateEmbedding } from '../../shared/ai/embeddings.client.js';
 import { searchOfficialUrls } from '../../shared/ai/claude.client.js';
 import { OFFICIAL_ALLOWLIST, isAllowedHost } from './allowlist.js';
 import type { Passage } from './types.js';
 
 export type LiveDeps = {
-  fetchPage(url: string, signal: AbortSignal): Promise<{ finalUrl: string; contentType: string; body: string }>;
+  fetchPage(url: string, signal: AbortSignal): Promise<{ finalUrl: string; status?: number; contentType: string; body: string }>;
   searchUrls(query: string): Promise<string[]>;
   now(): Date;
 };
@@ -39,6 +40,8 @@ function split(text: string): string[] {
   for (const para of text.split('\n\n')) {
     if (cur && cur.length + para.length > 800) { out.push(cur); cur = ''; }
     cur = cur ? `${cur}\n\n${para}` : para;
+    // hard-cut: keeps every passage under the embedding model's input limit
+    while (cur.length > 800) { out.push(cur.slice(0, 800)); cur = cur.slice(800); }
   }
   if (cur) out.push(cur);
   return out;
@@ -63,7 +66,7 @@ const defaultDeps: LiveDeps = {
       size += value.length;
       if (size > MAX_BYTES) { await reader.cancel(); break; }
     }
-    return { finalUrl: res.url, contentType: res.headers.get('content-type') ?? '', body: Buffer.concat(chunks).toString('utf8') };
+    return { finalUrl: res.url, status: res.status, contentType: res.headers.get('content-type') ?? '', body: Buffer.concat(chunks).toString('utf8') };
   },
   searchUrls: (q) => searchOfficialUrls(q, [...OFFICIAL_ALLOWLIST]),
   now: () => new Date(),
@@ -77,12 +80,14 @@ async function loadPage(url: string, d: LiveDeps, signal: AbortSignal): Promise<
   if (row && now - row.fetchedAt.getTime() < 24 * HOUR) return row;
   try {
     const r = await d.fetchPage(url, signal);
+    if (r.status !== undefined && (r.status < 200 || r.status > 299)) throw new Error(`HTTP ${r.status}`);
     if (!isAllowedHost(r.finalUrl) || !/^text\/html\b/i.test(r.contentType) || r.body.length > MAX_BYTES) return null;
     const { title, text } = htmlToText(r.body);
     const page = { url, title, content: text, fetchedAt: d.now() };
     if (!signal.aborted) await db.liveSourceCache.upsert({ where: { url }, create: page, update: page }).catch(() => {});
     return page;
-  } catch {
+  } catch (err) {
+    logger.warn({ err, url }, 'guide live fetch failed');
     return row && now - row.fetchedAt.getTime() < 7 * 24 * HOUR ? row : null;
   }
 }
@@ -111,7 +116,7 @@ export async function liveSources(
   const timeout = new Promise<Passage[]>((resolve) => { timer = setTimeout(() => { ctl.abort(); resolve([]); }, STEP_MS); });
   try {
     // a search still running at timeout is abandoned; its rejection is swallowed
-    const passages = await Promise.race([run(query, candidates, deps, ctl.signal).catch(() => []), timeout]);
+    const passages = await Promise.race([run(query, candidates, deps, ctl.signal).catch((err) => { logger.warn({ err }, 'guide live step failed'); return []; }), timeout]);
     return { passages, unavailable: passages.length === 0 };
   } finally {
     clearTimeout(timer);

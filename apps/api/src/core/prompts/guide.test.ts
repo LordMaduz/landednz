@@ -44,6 +44,12 @@ describe('GUIDE_SYSTEM_PROMPT', () => {
 });
 
 describe('buildGuideAboutUser', () => {
+  test('pre-arrival users see days until arrival, not a negative number', () => {
+    const text = buildGuideAboutUser({ ...soloContext, daysSinceArrival: -3 });
+    expect(text).toContain('Arrives in 3 days');
+    expect(text).not.toContain('-3');
+  });
+
   test('a SOLO profile mentions no partner or second income', () => {
     const text = buildGuideAboutUser(soloContext).toLowerCase();
     for (const word of ['partner', 'spouse', 'single income']) expect(text).not.toContain(word);
