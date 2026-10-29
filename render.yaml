@@ -9,7 +9,8 @@ services:
     branch: main
     healthCheckPath: /health
     # preDeployCommand is not available on the free plan, so migrate on start
-    dockerCommand: sh -c "cd apps/api && npx prisma migrate deploy && node dist/src/server.js"
+    # Render keeps the quotes of `sh -c "…"`, so the shell part lives in an npm script
+    dockerCommand: npm run start:deploy -w @landednz/api
     envVars:
       - key: NODE_ENV
         value: production

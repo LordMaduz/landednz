@@ -5,7 +5,7 @@
     "dockerfilePath": "apps/api/Dockerfile"
   },
   "deploy": {
-    "preDeployCommand": ["sh -c \"cd apps/api && npx prisma migrate deploy\""],
+    "preDeployCommand": ["npm run migrate:deploy -w @landednz/api"],
     "healthcheckPath": "/health",
     "restartPolicyType": "ON_FAILURE"
   }
