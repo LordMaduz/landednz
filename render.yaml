@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: landednz-api-staging
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    region: singapore
+    plan: free
+    branch: main
+    healthCheckPath: /health
+    # preDeployCommand is not available on the free plan, so migrate on start
+    dockerCommand: sh -c "cd apps/api && npx prisma migrate deploy && node dist/src/server.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AI_MODE
+        value: live
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-5-5
+      - key: CHAT_DAILY_CAP
+        value: "10"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: BETA_MODE
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: ADMIN_API_KEY
+        sync: false

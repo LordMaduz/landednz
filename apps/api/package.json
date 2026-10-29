@@ -23,6 +23,7 @@
     "@landednz/types": "*",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
+    "@sentry/node": "11.10.0",
     "dotenv": "^17.4.1",
     "fastify": "5.12",
     "jose": "^6.2.1",

@@ -56,6 +56,11 @@ export function loadConfig(env: Env = process.env) {
     openaiApiKey: requireLive('OPENAI_API_KEY'),
     // Beta mode — if true, bypasses all subscription checks (all users get premium access)
     betaMode: env['BETA_MODE'] === 'true',
+    // Behind Render/Railway's proxy, so req.ip (and the rate limit) use X-Forwarded-For
+    trustProxy: env['TRUST_PROXY'] === 'true',
+    // Sentry is off without a DSN
+    sentryDsn: env['SENTRY_DSN'] || undefined,
+    release: env['RENDER_GIT_COMMIT'] ?? env['RAILWAY_GIT_COMMIT_SHA'],
   }
 }
 

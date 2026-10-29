@@ -43,7 +43,8 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   const ask = page.getByRole('textbox', { name: /^Ask about / })
   await ask.fill('What documents do I need?')
   await ask.press('Enter')
-  await expect(page.getByText('Answered from the LandedNZ knowledge base')).toBeVisible()
+  // A live reply cites domains ("Checked ...") instead of the knowledge base line
+  await expect(page.getByText(/^(Answered from the LandedNZ knowledge base|Checked )/)).toBeVisible()
 
   const today = new Intl.DateTimeFormat('en-NZ', { day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' }).format(new Date())
   await page.getByRole('button', { name: 'Mark as done' }).click()
