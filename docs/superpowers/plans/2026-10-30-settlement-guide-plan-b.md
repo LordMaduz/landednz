@@ -175,6 +175,8 @@ Execution: Tasks 1, 3, 5, 6, 7 inline (mechanical). Tasks 2 and 4 by a subagent 
 
 ### Task 8: UI design with impeccable (owner gate)
 
+**Scope (owner, 2026-10-30):** impeccable works on the chat only (the guide surface, its placement on home/roadmap/task, Settings → Memory, and the task-screen columns the chat frees up). The rest of the app keeps its approved r1-final look and is not redesigned. If impeccable asks for PRODUCT.md, keep it to the guide's facts.
+
 - [ ] Load `frontend-design` and `impeccable`; read the neighbouring screens (home, roadmap, task) and the design system before shaping.
 - [ ] Produce 2–3 directions as claude.ai artifacts (redesigned screens only), covering every item in spec §8.2: placement on home/roadmap/task at 1440 and 390 (push-aside panel, full screen, docked panel), conversation states, opening, memory (in-chat + Settings → Memory), edge states, task screen columns.
 - [ ] Owner picks a direction; iterate to approval. Then write Task 9's detailed steps into this plan (files, components, tests) from the approved boards.
