@@ -9,7 +9,7 @@ import {
   buildUnverifiedNote,
   buildWhereYouAre,
 } from './registry.js';
-import type { GuideContext } from '../../features/guide/types.js';
+import { GUIDE_AGENCIES, type GuideContext } from '../../features/guide/types.js';
 
 const soloContext: GuideContext = {
   userName: 'Ana',
@@ -98,9 +98,23 @@ describe('guide copy', () => {
     for (const s of strings) expect(s).not.toMatch(/\bT\d{2,3}\b/);
     const builtFromTask = [
       ...buildStarters({ kind: 'task', taskKey: 'T01' }, ['Get your IRD number']),
-      registry.GUIDE_OUT_OF_SCOPE_REPLY('Immigration New Zealand'),
-      registry.GUIDE_NOTHING_FOUND_REPLY('Inland Revenue'),
+      registry.GUIDE_OUT_OF_SCOPE_REPLY('immigration'),
+      registry.GUIDE_NOTHING_FOUND_REPLY(null),
     ];
     for (const s of builtFromTask) expect(s).not.toMatch(/\bT\d{2,3}\b/);
+  });
+
+  test('redirect replies use vetted copy with a website for every agency', () => {
+    for (const agency of GUIDE_AGENCIES) {
+      for (const reply of [registry.GUIDE_OUT_OF_SCOPE_REPLY(agency), registry.GUIDE_NOTHING_FOUND_REPLY(agency)]) {
+        expect(reply).toMatch(/\b[a-z]+\.(govt|org)\.nz\b/);
+        expect(reply).toMatch(/(^|\. )[A-Z]/);
+        expect(reply).not.toMatch(/\. [a-z]/);
+      }
+      expect(registry.GUIDE_UNDERSTAND_PROMPT).toContain(`"${agency}"`);
+    }
+    expect(registry.GUIDE_NOTHING_FOUND_REPLY(null)).toBe(
+      "I couldn't find this in checked sources. The government agency that handles it is the right place to ask.",
+    );
   });
 });

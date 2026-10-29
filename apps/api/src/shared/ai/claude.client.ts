@@ -142,6 +142,13 @@ export interface AnswerResult {
   usage: { input: number; output: number; cacheRead: number };
 }
 
+// The API rejects empty text turns and a first turn from the assistant (e.g. a reply cancelled before any text)
+function answerHistory(history: ChatMessage[]): ChatMessage[] {
+  const turns = history.filter(msg => msg.content.trim() !== '');
+  const firstUser = turns.findIndex(msg => msg.role === 'user');
+  return firstUser === -1 ? [] : turns.slice(firstUser).map(msg => ({ role: msg.role, content: msg.content }));
+}
+
 // Cited answer stream (guide answer step). An abort via signal resolves 'aborted', never throws.
 export async function streamGuideAnswer(
   req: GuideAnswerRequest,
@@ -162,7 +169,7 @@ export async function streamGuideAnswer(
         max_tokens: 2000,
         system: [{ type: 'text', text: req.system, cache_control: { type: 'ephemeral' } }],
         messages: [
-          ...req.history.map(msg => ({ role: msg.role, content: msg.content })),
+          ...answerHistory(req.history),
           {
             role: 'user',
             content: [
@@ -177,7 +184,8 @@ export async function streamGuideAnswer(
             ],
           },
         ],
-        thinking: { type: config.guideAnswerThinking },
+        // between_tools is Sonnet 5.5 only (400 elsewhere); other models keep their default
+        ...(config.anthropicModel === 'claude-sonnet-5-5' && { thinking: { type: config.guideAnswerThinking } }),
         output_config: { effort: 'low' },
       },
       { signal },
@@ -206,7 +214,8 @@ export async function streamGuideAnswer(
         stopReason = reason === 'max_tokens' || reason === 'refusal' ? reason : 'end_turn';
       }
     }
-    return { stopReason, usage };
+    // An abort with no pending read ends the iterator quietly instead of throwing
+    return { stopReason: signal.aborted ? 'aborted' : stopReason, usage };
   } catch (error) {
     if (signal.aborted) return { stopReason: 'aborted', usage };
     throw toAIFailure(error);

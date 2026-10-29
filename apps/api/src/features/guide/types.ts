@@ -1,7 +1,11 @@
-// Settlement guide types shared by the pipeline steps and the prompt registry (interface-only).
+// Settlement guide types shared by the pipeline steps and the prompt registry.
 
 import type { ReplyPart } from '@landednz/types';
 import type { City, FamilySituation, Occupation, VisaType } from '../../generated/prisma/enums.js';
+
+// Out-of-scope redirect targets; the registry maps each to vetted copy, so model text never reaches the user
+export const GUIDE_AGENCIES = ['immigration', 'health', 'employment', 'money'] as const;
+export type GuideAgency = (typeof GUIDE_AGENCIES)[number];
 
 export type TaskRef = { taskKey: string; title: string };
 
@@ -26,7 +30,7 @@ export type GuideContext = {
 export type Understanding = {
   searchQuery: string;
   scope: 'in' | 'out';
-  redirectAgency: string | null;
+  redirectAgency: GuideAgency | null;
   needsLive: boolean;
   distress: boolean;
   memoryCandidates: { text: string; sensitive: boolean; explicit: boolean }[];

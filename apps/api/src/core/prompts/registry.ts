@@ -2,7 +2,7 @@
 // This is the single registry for all AI prompt construction per constitutional constraint C04.
 
 import type { ChatEntryPoint, GuideScreen } from '@landednz/types';
-import type { GuideContext, TaskRef } from '../../features/guide/types.js';
+import type { GuideAgency, GuideContext, TaskRef } from '../../features/guide/types.js';
 
 export function buildChatOpeningMessage(
   entryPoint: ChatEntryPoint,
@@ -367,7 +367,7 @@ export function buildGuideAboutUser(ctx: GuideContext): string {
 export const GUIDE_UNDERSTAND_PROMPT = `You prepare a question for LandedNZ's settlement guide, which helps new migrants with the practical side of settling in New Zealand. Read the recent conversation and the latest question, then fill every field:
 - searchQuery: the latest question rewritten as one standalone search query, resolving words like "it" or "that" from the conversation. Plain words, no names.
 - scope: "in" for practical settling-in questions (documents, tax, banking, KiwiSaver, renting, health enrolment, schools, work rights, driver licences, settlement support). "out" for advice on a specific immigration case, medical diagnosis or treatment, legal disputes, or personal investment and debt advice.
-- redirectAgency: when scope is "out", the agency to ask (for example "a licensed immigration adviser", "Healthline", "Employment New Zealand", "Sorted"); otherwise null.
+- redirectAgency: when scope is "out", who to ask: "immigration" (visa or immigration case advice), "health" (symptoms, diagnosis or treatment), "employment" (problems at work or with an employer) or "money" (debt or investment choices). Otherwise null.
 - needsLive: true only when the answer depends on figures or rules that change often (fees, rates, thresholds, processing times) or on something recent.
 - distress: true when the person sounds distressed, hopeless, unsafe or in crisis.
 - memoryCandidates: up to 3 short facts the person stated about themselves in the latest question (for example "Partner starts work in March"), each under 200 characters. Never infer facts. Set sensitive to true for health, mental health or immigration problems such as a visa refusal. Set explicit to true only when they asked you to remember it. Empty when there are none.`;
@@ -376,11 +376,21 @@ export const GUIDE_UNDERSTAND_PROMPT = `You prepare a question for LandedNZ's se
 export const GUIDE_CRISIS_TEXT =
   'Lifeline NZ: 0800 543 354 (free, any time). Need to Talk? Free call or text 1737. If you are in danger right now, call 111.';
 
-export const GUIDE_OUT_OF_SCOPE_REPLY = (agency: string): string =>
-  `That's outside what I can help with, and I don't want to steer you wrong. ${agency} is the right place to ask.`;
+// Same contacts as the system prompt's Scope section
+const AGENCY_WORDS: Record<GuideAgency, string> = {
+  immigration: 'a licensed immigration adviser (find one at iaa.govt.nz) or Immigration New Zealand (immigration.govt.nz)',
+  health: 'your GP, or Healthline for free health advice at any time (healthnz.govt.nz)',
+  employment: 'Employment New Zealand (employment.govt.nz)',
+  money: 'Sorted (sorted.org.nz), which is free and independent',
+};
 
-export const GUIDE_NOTHING_FOUND_REPLY = (agency: string): string =>
-  `I couldn't find this in checked sources. ${agency} is the right place to ask.`;
+export const GUIDE_OUT_OF_SCOPE_REPLY = (agency: GuideAgency): string =>
+  `That's outside what I can help with, and I don't want to steer you wrong. The right place to ask is ${AGENCY_WORDS[agency]}.`;
+
+export const GUIDE_NOTHING_FOUND_REPLY = (agency: GuideAgency | null): string =>
+  `I couldn't find this in checked sources. ${
+    agency ? `The right place to ask is ${AGENCY_WORDS[agency]}.` : 'The government agency that handles it is the right place to ask.'
+  }`;
 
 export const GUIDE_REFUSAL_REPLY =
   "I can't help with that one. The government agency that handles it is the best place to ask.";
