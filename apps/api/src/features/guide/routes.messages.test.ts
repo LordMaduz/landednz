@@ -41,7 +41,7 @@ import { AIFailureError } from '../../shared/errors.js';
 import { setMockAnswer, setMockStructured } from '../../shared/ai/mock.js';
 import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
-import { turnCostCents } from './service.js';
+import { TURN_LIMITS, turnCostCents } from './service.js';
 import { remember } from './remember.js';
 import { retrieve } from './retrieve.js';
 import { GUIDE_CRISIS_TEXT } from '../../core/prompts/registry.js';
@@ -237,6 +237,28 @@ describe('POST /guide/messages', () => {
     setMockAnswer(async () => ({ stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } }));
     const events = parseSse((await ask('How do I get an IRD number?')).body);
     expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+  });
+
+  test('a pre-answer step that never resolves ends the turn failed before the sweep', async () => {
+    const turnMs = TURN_LIMITS.turnMs;
+    TURN_LIMITS.turnMs = 300;
+    try {
+      vi.mocked(retrieve).mockImplementationOnce(() => new Promise(() => {}));
+      const events = parseSse((await ask('How do I get an IRD number?')).body);
+      expect(parts(events)).toContainEqual({ type: 'error', code: 'AI_FAILURE', retryable: true });
+      expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+      const { userMessageId, assistantMessageId } = events[0]!.data as { userMessageId: string; assistantMessageId: string };
+      expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(false);
+
+      const retry = await app.inject({
+        method: 'POST',
+        url: `/guide/messages/${assistantMessageId}/retry`,
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+      expect(parseSse(retry.body).at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+    } finally {
+      TURN_LIMITS.turnMs = turnMs;
+    }
   });
 
   test('a memory save error after a full answer still completes', async () => {

@@ -27,8 +27,8 @@ const RATES = {
   searchCents: 1,
 } as const;
 const HISTORY_TURNS = 6;
-// Well past a normal answer; stops a stalled stream outliving the sweeper's streaming threshold
-const ANSWER_TIMEOUT_MS = 90_000;
+// Whole-turn limit, under the sweeper's 2-minute streaming threshold; mutable so a test can shorten it
+export const TURN_LIMITS = { turnMs: 100_000 };
 
 // shortcut: in-memory abort map assumes one API instance, move to a DB flag polled by the stream when scaling out
 const running = new Map<string, AbortController>();
@@ -72,6 +72,7 @@ export async function runTurn(args: {
 }): Promise<void> {
   const { userId, question, ids } = args;
   const t0 = Date.now();
+  const deadline = AbortSignal.timeout(TURN_LIMITS.turnMs);
   const ms = { understand: 0, retrieve: 0, live: 0, firstText: 0, total: 0 };
   const steps: string[] = [];
   const sent: ReplyPart[] = [];
@@ -98,7 +99,8 @@ export async function runTurn(args: {
 
   const finish = async (status: Exclude<GuideMessageStatus, 'streaming'>, textSent: boolean): Promise<void> => {
     finished = true;
-    running.delete(ids.assistantMessageId);
+    // A retry may have replaced this turn's entry; only remove our own
+    if (running.get(ids.assistantMessageId) === ctl) running.delete(ids.assistantMessageId);
     ms.total = Date.now() - t0;
     const meta = {
       ms,
@@ -128,7 +130,15 @@ export async function runTurn(args: {
 
     const timed = async <T>(key: 'understand' | 'retrieve' | 'live', p: Promise<T>): Promise<T> => {
       const start = Date.now();
-      const out = await p;
+      let onDeadline = () => {};
+      const out = await Promise.race([
+        p,
+        new Promise<never>((_, reject) => {
+          onDeadline = () => reject(new Error('turn deadline'));
+          if (deadline.aborted) onDeadline();
+          else deadline.addEventListener('abort', onDeadline, { once: true });
+        }),
+      ]).finally(() => deadline.removeEventListener('abort', onDeadline));
       ms[key] += Date.now() - start;
       steps.push(key);
       return out;
@@ -186,7 +196,7 @@ export async function runTurn(args: {
     steps.push('answer');
     let result: AnswerResult;
     try {
-      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), AbortSignal.any([ctl.signal, AbortSignal.timeout(ANSWER_TIMEOUT_MS)]));
+      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), AbortSignal.any([ctl.signal, deadline]));
     } catch (error) {
       if (!(error instanceof AIFailureError)) throw error;
       logger.error({ err: error, assistantMessageId: ids.assistantMessageId }, 'guide answer failed');
