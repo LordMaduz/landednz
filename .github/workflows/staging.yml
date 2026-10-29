@@ -39,6 +39,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.STAGING_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_API_URL: ${{ vars.STAGING_API_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SECRET_KEY }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
       - if: failure()
         uses: actions/upload-artifact@v4
