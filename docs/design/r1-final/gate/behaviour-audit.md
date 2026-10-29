@@ -20,7 +20,7 @@ below (fixtures renamed for the new enum values, new tests) are not listed.
 |---|---|
 | Spec-backed | 33 |
 | Reverted | 0 |
-| Owner decision | 2 |
+| Owner decision (ruled: kept) | 2 |
 
 ## apps/api and packages/types
 
@@ -36,7 +36,7 @@ below (fixtures renamed for the new enum values, new tests) are not listed.
 | 8 | `features/roadmap/roadmap.build.ts` `reconcileRoadmap`, `onboarding.service.ts`, `roadmap.recalculate.ts`, `roadmap.types.ts` (`entriesAdded`, `entriesRemoved`) | Changing answers and the content-deploy recalculate both reconcile: add newly applicable tasks, drop open (`NOT_STARTED`) ones that no longer apply, keep every started entry, rescore | CP §4.3 (no user data lost, retired tasks kept read-only), §8.3; plan `2026-10-25-content-verification.md` Task 6 |
 | 9 | `features/roadmap/roadmap.build.ts` `bestByDate`, `roadmap.service.ts` `getRoadmap`, `roadmap.types.ts` `RoadmapTask.bestBy` | `bestBy` = arrival + earliest `toDay` − 1 | FS §2 decision 5, §6.1 |
 | 10 | `features/chat/service.ts` | SSE CORS header echoes the request origin only when it is in `CORS_ORIGIN` (was hard-coded `http://localhost:3000`) | R0 §4.4 (CORS restricted to the environment's web origins) |
-| 11 | `features/roadmap/roadmap.service.ts` `getTaskDetail` | `governmentSourceUrl` (the task's action button) now comes from the first step's source, falling back to the why line's; main used the why line first | **Owner decision**, see below |
+| 11 | `features/roadmap/roadmap.service.ts` `getTaskDetail` | `governmentSourceUrl` (the task's action button) now comes from the first step's source, falling back to the why line's; main used the why line first | **Owner decision: kept**, see below |
 
 ## apps/web/src/lib
 
@@ -64,7 +64,7 @@ below (fixtures renamed for the new enum values, new tests) are not listed.
 | 31 | `home-view.ts` Your plan card data removed, `firstName` removed | The plan card goes; greeting no longer uses the name | FS §5.1 item 5, item 1 |
 | 32 | `tel-links.ts` (new) | NZ freephone numbers become `tel:` links | PS §3.5 |
 | 33 | `task-copy.ts` titles T01, T11, T12, T17, T19; new T28 | App titles match the verified tasks; title for the new visa-conditions task | CP §5 stages 1–2 |
-| 34 | `suggestions.ts` | Ask's starter questions drop "What documents do I need?" and "What do people get wrong?"; only "How long does it take?" remains | **Owner decision**, see below |
+| 34 | `suggestions.ts` | Ask's starter questions drop "What documents do I need?" and "What do people get wrong?"; only "How long does it take?" remains | **Owner decision: kept**, see below |
 | 35 | `answers.ts`, `legs.ts` comment-only edits | Example strings in comments | none needed (no behaviour) |
 
 ## Owner decisions
@@ -74,12 +74,16 @@ below (fixtures renamed for the new enum values, new tests) are not listed.
    says "`steps[0]` cites the page the user acts on … the task sheet's action link opens it", and all 36 verified tasks were
    written to that rule. Reverting would send every task's government button to the background page behind the why line
    instead of the form or online service. Not reverted: the revert reaches every task's main action and contradicts how the
-   verified content was written. Owner to confirm the plan rule stands.
+   verified content was written.
+   **Owner ruling (2026-10-29): kept.** The plan rule stands: `steps[0]` cites the page the user acts on, and the action button
+   opens it. Future task content follows the same rule.
 2. **#34 Fewer Ask starter questions** (`699ce15 feat(web): open a task as a full page instead of a side sheet`).
    No spec section names it. FS §6.2 says the Ask card is "the existing `AskPanel`, unchanged", and the panel at the
    spec's date already had this change. The approved Task board (`Task.dc.html`) shows no starter chips at all. Reverting
    would add two chips the board does not show, on a page that already lists "Have ready" and "Good to know".
-   Not reverted. Owner to confirm.
+   Not reverted.
+   **Owner ruling (2026-10-29): kept.** The Task page follows the approved board; the two dropped questions are answered on the
+   page itself by "Have ready" and "Good to know".
 
 ## Manual click-through
 
