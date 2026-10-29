@@ -8,6 +8,9 @@ export default defineConfig({
   fullyParallel: false,
   // Every spec resets the one shared e2e user
   workers: 1,
+  // A deployed target is slower than localhost: sign-in alone takes ~6 s on staging (Render free + serverless)
+  timeout: process.env.BASE_URL ? 120_000 : 30_000,
+  expect: { timeout: process.env.BASE_URL ? 15_000 : 5_000 },
   forbidOnly: !!process.env.CI,
   use: {
     baseURL: process.env.BASE_URL ?? process.env.E2E_WEB_URL ?? 'http://localhost:3000',
