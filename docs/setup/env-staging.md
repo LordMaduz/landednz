@@ -48,6 +48,7 @@ Same names as Preview, with production values: Railway API URL, `https://landedn
 | Name | Kind | Used as in `staging.yml` | Value comes from |
 | --- | --- | --- | --- |
 | `STAGING_SUPABASE_SECRET_KEY` | secret | `SUPABASE_SECRET_KEY` | Supabase item, staging secret key |
+| `VERCEL_AUTOMATION_BYPASS_SECRET` | secret | same name; Playwright sends it past Vercel Deployment Protection | Vercel → landednz → Settings → Deployment Protection → Protection Bypass for Automation |
 | `STAGING_SUPABASE_URL` | variable | `NEXT_PUBLIC_SUPABASE_URL` | Supabase item, staging project URL |
 | `STAGING_SUPABASE_ANON_KEY` | variable | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase item, staging publishable key |
 | `STAGING_API_URL` | variable | `NEXT_PUBLIC_API_URL`, API warm-up, `health.yml` | Render staging API URL |

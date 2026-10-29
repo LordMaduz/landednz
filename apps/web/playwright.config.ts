@@ -12,6 +12,10 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL ?? process.env.E2E_WEB_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
+    // Staging sits behind Vercel Deployment Protection; the bypass secret lets the run through
+    extraHTTPHeaders: process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+      ? { 'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET, 'x-vercel-set-bypass-cookie': 'true' }
+      : undefined,
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   // BASE_URL = a deployed target, so nothing starts locally. Otherwise Supabase must already be running
