@@ -229,11 +229,11 @@
     - Before release: each `\bT\d{2,3}\b` known in `taskTitles` becomes its title and queues one `task_link` part (once per task per reply) emitted after the sentence; unknown IDs and `CHUNK_\w+` are removed; double spaces collapsed.
     - The first time a passage is cited, emit `{type:'source', index, title, url, origin, checkedAt}` (index = order of first citation, starting at 1) before the sentence; the sentence's `text` part carries those indexes.
     - `end()` releases a buffered final sentence only if it ends with terminal punctuation; `dropTail()` discards the buffer (used on `max_tokens`, abort, failure).
-- [ ] **Step 1: Write failing tests**: `"Hello there. How are"` + `dropTail()` → one text part `"Hello there."`; chunks `"Do T"`, `"08 first. "` with T08 → text `"Do Get your IRD number first."` then a `task_link` part; unknown `T77` removed; `"e.g. this. Next."` → two sentences; `"1. Apply online\n2. Wait"` + `end()` → first line released, `"2. Wait"` released only if it ends with punctuation; citation to passage 0 emits `source` (index 1) before its text part with `citations: [1]`; two citations to the same passage emit one `source`; no emitted part (JSON) matches `/\bT\d{2,3}\b|CHUNK_/`.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): sentence gate that never sends half sentences or task IDs`
+- [x] **Step 1: Write failing tests**: `"Hello there. How are"` + `dropTail()` → one text part `"Hello there."`; chunks `"Do T"`, `"08 first. "` with T08 → text `"Do Get your IRD number first."` then a `task_link` part; unknown `T77` removed; `"e.g. this. Next."` → two sentences; `"1. Apply online\n2. Wait"` + `end()` → first line released, `"2. Wait"` released only if it ends with punctuation; citation to passage 0 emits `source` (index 1) before its text part with `citations: [1]`; two citations to the same passage emit one `source`; no emitted part (JSON) matches `/\bT\d{2,3}\b|CHUNK_/`.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): sentence gate that never sends half sentences or task IDs`
 
 ---
 
@@ -246,11 +246,11 @@
 - Produces:
   - `verify(sentences: ReleasedSentence[], passages: Passage[]): VerifyResult`, `VerifyResult = { unmatchedCitations: number; uncitedClaims: string[]; note: ReplyPart | null }`. A citation matches when its whitespace-normalised `citedText` is a substring of the passage content. A sentence is a factual claim when it matches `/\d|\$|%|\b(eligible|eligibility|must|required|fee|cost|deadline)\b/i`. `note` = one `{type:'unverified', text: buildUnverifiedNote(<first 60 chars of the first failing sentence>, <host of its best passage or the top official/guide passage URL host, else null>)}` when any check fails, else `null`.
   - `endParts(args: { verify: VerifyResult; stopReason: AnswerResult['stopReason']; ctx: GuideContext; answerText: string }): ReplyPart[]` — order: `unverified` note; on `max_tokens` `{type:'notice', kind:'truncated'}` then `follow_up` "Want the rest?"; otherwise at most one `follow_up` for `ctx.nextTasks[0]` when its title is not already in `answerText` and the answer text is non-empty.
-- [ ] **Step 1: Write failing tests**: matching citation → `note === null`; a citation not in any passage → note; `"The fee is $50."` with no citation → note naming it; `"Welcome to NZ."` uncited → no note; `max_tokens` → `[truncated notice, follow_up "Want the rest?"]`; next task title present in answer → no task follow-up.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): verify citations and uncited claims, build end parts`
+- [x] **Step 1: Write failing tests**: matching citation → `note === null`; a citation not in any passage → note; `"The fee is $50."` with no citation → note naming it; `"Welcome to NZ."` uncited → no note; `max_tokens` → `[truncated notice, follow_up "Want the rest?"]`; next task title present in answer → no task follow-up.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): verify citations and uncited claims, build end parts`
 
 ---
 
@@ -263,11 +263,11 @@
 - Produces:
   - `remember(args: { userId: string; messageId: string; candidates: Understanding['memoryCandidates']; skip: boolean }): Promise<ReplyPart[]>` — returns `[]` when `skip`; drops `sensitive && !explicit`; drops case-insensitive duplicates of existing memory text; stops at 50 per user; creates rows with `sourceMessageId`; returns one `memory_saved` part per new row.
   - `listMemories(userId): Promise<GuideMemoryDto[]>` (newest first), `updateMemory(userId, id, text): Promise<GuideMemoryDto>` (sets `editedByUser: true`; text trimmed 1–200 chars else 400 `VALIDATION_ERROR`), `deleteMemory(userId, id): Promise<void>` — another user's or missing id → 404 `MEMORY_NOT_FOUND`.
-- [ ] **Step 1: Write failing tests**: candidate saved and part returned; `skip: true` → nothing; sensitive non-explicit dropped, sensitive explicit saved; duplicate (different case) dropped; user with 50 memories → nothing saved; update/delete of another user's memory → 404; edit sets `editedByUser`.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): memory saving rules and memory CRUD`
+- [x] **Step 1: Write failing tests**: candidate saved and part returned; `skip: true` → nothing; sensitive non-explicit dropped, sensitive explicit saved; duplicate (different case) dropped; user with 50 memories → nothing saved; update/delete of another user's memory → 404; edit sets `editedByUser`.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): memory saving rules and memory CRUD`
 
 ---
 
@@ -283,11 +283,11 @@
   - `finishTurn(assistantMessageId: string, r: { status: Exclude<GuideMessageStatus,'streaming'>; parts: ReplyPart[]; text: string; meta: object; textSent: boolean }): Promise<void>` — updates the assistant row; when `!textSent && (status === 'failed' || status === 'cancelled')` sets the user row's `countsTowardCap = false`.
   - `restartTurn(userId: string, assistantMessageId: string, now?: Date): Promise<{ userMessageId: string; question: string; screen: GuideScreen }>` — same lock; row must belong to the user (else 404 `MESSAGE_NOT_FOUND`) and be `failed` or `interrupted` (else 409 `NOT_RETRYABLE`); if the user row is not counting, cap check then set counting; set assistant row `streaming`, clear `parts`.
   - `sweepStale(now?: Date): Promise<{ interrupted: number; cacheDeleted: number }>` (streaming rows with `createdAt` older than 2 min → `interrupted`; `LiveSourceCache.fetchedAt` older than 30 days deleted) `warnOnCost(now?: Date): Promise<void>` (logs `warn` `guide cost above budget` when the average `meta.costCents` of yesterday's NZ-day assistant rows exceeds 5; spec §9.5) and `startSweeper(): () => void` (runs `sweepStale` now and every 5 min and `warnOnCost` hourly, `unref()`ed timers, returns stop).
-- [ ] **Step 1: Write failing tests**: `startTurn` twice concurrently (`Promise.allSettled`) → one fulfilled, one 409 `GUIDE_BUSY`; 20 counting questions today → 429, 19 → ok; 25 non-counting rows don't block; question from yesterday NZ time doesn't count; `finishTurn` failed without text → user row not counting; cancelled with text → still counting; `restartTurn` on a `complete` row → 409 `NOT_RETRYABLE`, on another user's row → 404; sweeper marks a 3-min-old streaming row interrupted and leaves a 1-min-old one; `warnOnCost` logs once when yesterday's average is 6¢ and not at 4¢.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): atomic turn start, fair daily cap, stale-row sweeper`
+- [x] **Step 1: Write failing tests**: `startTurn` twice concurrently (`Promise.allSettled`) → one fulfilled, one 409 `GUIDE_BUSY`; 20 counting questions today → 429, 19 → ok; 25 non-counting rows don't block; question from yesterday NZ time doesn't count; `finishTurn` failed without text → user row not counting; cancelled with text → still counting; `restartTurn` on a `complete` row → 409 `NOT_RETRYABLE`, on another user's row → 404; sweeper marks a 3-min-old streaming row interrupted and leaves a 1-min-old one; `warnOnCost` logs once when yesterday's average is 6¢ and not at 4¢.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): atomic turn start, fair daily cap, stale-row sweeper`
 
 ---
 
