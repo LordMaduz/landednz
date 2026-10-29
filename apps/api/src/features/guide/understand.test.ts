@@ -25,6 +25,7 @@ const ctx: GuideContext = {
     arrivalDate: new Date('2026-09-01'),
   },
   daysSinceArrival: 58,
+  today: 'Friday, 30 October 2026',
   doneTasks: [],
   nextTasks: [],
   totalTasks: 0,
@@ -51,7 +52,7 @@ afterEach(() => {
 describe('understand', () => {
   it('passes the Haiku result through', async () => {
     setMockStructured(() => haikuResult);
-    expect(await understand('how do I get one?', [], ctx)).toEqual({ ...haikuResult, usage: { input: 0, output: 0, cacheRead: 0 } });
+    expect(await understand('how do I get one?', [], ctx)).toEqual({ ...haikuResult, usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } });
   });
 
   it('uses the question when Haiku returns a blank searchQuery', async () => {
@@ -70,15 +71,18 @@ describe('understand', () => {
       needsLive: false,
       distress: false,
       memoryCandidates: [],
-      usage: { input: 0, output: 0, cacheRead: 0 },
+      usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
     });
   });
 
-  it('falls back within 1.2 s when Haiku hangs', async () => {
+  it('waits past 2.5 s (live Haiku tail ~2 s) and falls back by 3.2 s when Haiku hangs', async () => {
     vi.useFakeTimers();
     hang.on = true;
-    const result = understand('What is KiwiSaver?', [], ctx);
-    await vi.advanceTimersByTimeAsync(1_200);
+    let settled = false;
+    const result = understand('What is KiwiSaver?', [], ctx).finally(() => (settled = true));
+    await vi.advanceTimersByTimeAsync(2_500);
+    expect(settled).toBe(false);
+    await vi.advanceTimersByTimeAsync(700);
     await expect(result).resolves.toMatchObject({ searchQuery: 'What is KiwiSaver?', scope: 'in' });
   });
 
@@ -108,12 +112,13 @@ describe('understand', () => {
 });
 
 describe('hasCrisisSignal', () => {
-  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here'])(
+  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here', 'I feel completely hopeless', "I don't see the point anymore"])(
     'flags %s',
     (text) => expect(hasCrisisSignal(text)).toBe(true),
   );
 
   it('ignores ordinary phrases', () => {
     expect(hasCrisisSignal('Can I kill two birds with one stone and get IRD and a bank account?')).toBe(false);
+    expect(hasCrisisSignal("I'm hopeless at forms, and I don't see the point of the IR330")).toBe(false);
   });
 });

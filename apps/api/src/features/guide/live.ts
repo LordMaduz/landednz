@@ -53,7 +53,7 @@ function cosine(a: number[], b: number[]): number {
   return na && nb ? dot / Math.sqrt(na * nb) : 0;
 }
 
-const defaultDeps: LiveDeps = {
+export const defaultDeps: LiveDeps = {
   async fetchPage(url, signal) {
     const res = await fetch(url, { redirect: 'follow', signal });
     const reader = res.body?.getReader();

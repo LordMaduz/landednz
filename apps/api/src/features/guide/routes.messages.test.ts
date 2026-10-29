@@ -18,7 +18,7 @@ vi.mock('./live.js', () => ({
     ],
     unavailable: false,
     searches: 1,
-    usage: { input: 0, output: 0, cacheRead: 0 },
+    usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
   })),
 }));
 
@@ -143,6 +143,10 @@ describe('POST /guide/messages', () => {
     expect(row.parts).toEqual(ps);
     // Mock calls use no tokens, so the cost is the one web search the live step reported
     expect(row.meta).toMatchObject({ ms: { total: expect.any(Number) }, steps: expect.arrayContaining(['answer']), costCents: 1 });
+    // Each released sentence with the passage text it cited, for the accuracy judge
+    const claims = (row.meta as { claims: { text: string; cited: string[] }[] }).claims;
+    expect(claims.map((c) => c.text)).toEqual(ps.flatMap((p) => (p.type === 'text' ? [p.text] : [])));
+    expect(claims.some((c) => c.cited.length === 1 && c.cited[0]!.length > 0)).toBe(true);
     expect(await db.guideMemory.count({ where: { userId } })).toBe(1);
   });
 
@@ -222,7 +226,7 @@ describe('POST /guide/messages', () => {
   });
 
   test('an answer aborted by its own timeout (not by the user) ends failed, not complete', async () => {
-    setMockAnswer(async () => ({ stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } }));
+    setMockAnswer(async () => ({ stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } }));
     const events = parseSse((await ask('How do I get an IRD number?')).body);
     expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
   });
@@ -251,6 +255,16 @@ describe('POST /guide/messages', () => {
     expect(firstText.text.startsWith('Lifeline NZ: 0800 543 354')).toBe(true);
   });
 
+  test('distress marked out of scope still gets an answer after the crisis text, not the redirect (spec §6.4)', async () => {
+    setMockStructured(() => ({ searchQuery: 'feeling hopeless', scope: 'out', redirectAgency: 'health', needsLive: false, distress: true, memoryCandidates: [] }));
+    const events = parseSse((await ask("I feel hopeless since moving and I can't stop crying")).body);
+    const texts = parts(events).flatMap((p) => (p.type === 'text' ? [p.text] : []));
+    expect(texts[0]).toMatch(/^Lifeline NZ/);
+    expect(texts.join(' ')).not.toContain("That's outside what I can help with");
+    expect(texts.length).toBeGreaterThan(1);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+  });
+
   test('out of scope: a fixed redirect and no answer call', async () => {
     setMockStructured(() => ({ searchQuery: 'visa appeal', scope: 'out', redirectAgency: 'immigration', needsLive: false, distress: false, memoryCandidates: [] }));
     setMockAnswer(async () => {
@@ -266,11 +280,18 @@ describe('POST /guide/messages', () => {
 
 describe('turnCostCents', () => {
   test('prices understand on Haiku, answer and search tokens on the configured model, plus 1 cent per search', () => {
-    const million = { input: 1e6, output: 1e6, cacheRead: 1e6 };
-    const none = { input: 0, output: 0, cacheRead: 0 };
+    const million = { input: 1e6, output: 1e6, cacheRead: 1e6, cacheWrite: 0 };
+    const none = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
     expect(turnCostCents({ understand: million, model: none, searches: 0 }, 'claude-sonnet-5-5')).toBeCloseTo(61);
     expect(turnCostCents({ understand: none, model: million, searches: 2 }, 'claude-sonnet-5-5')).toBeCloseTo(1222);
     expect(turnCostCents({ understand: none, model: million, searches: 0 }, 'claude-haiku-5-5')).toBeCloseTo(61);
+  });
+
+  test('prices cache-write tokens at 1.25x input (5-minute cache)', () => {
+    const none = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
+    const written = { ...none, cacheWrite: 1e6 };
+    expect(turnCostCents({ understand: none, model: written, searches: 0 }, 'claude-sonnet-5-5')).toBeCloseTo(250);
+    expect(turnCostCents({ understand: written, model: none, searches: 0 }, 'claude-sonnet-5-5')).toBeCloseTo(12.5);
   });
 });
 
@@ -300,7 +321,7 @@ describe('POST /guide/messages/:id/cancel', () => {
     setMockAnswer(async (_req, _onEvent, signal) => {
       reached();
       await new Promise((resolve) => signal!.addEventListener('abort', resolve));
-      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } };
+      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } };
     });
     const pending = ask("I can't go on, I don't know how to get an IRD number");
     await atAnswer;
@@ -318,7 +339,7 @@ describe('POST /guide/messages/:id/cancel', () => {
       onEvent({ type: 'block_end' });
       reached();
       await new Promise((resolve) => signal!.addEventListener('abort', resolve));
-      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } };
+      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } };
     });
     const pending = ask('How do I get an IRD number?');
     await atAnswer;

@@ -349,6 +349,7 @@ const titles = (tasks: TaskRef[]) => (tasks.length ? tasks.map(t => t.title).joi
 export function buildGuideAboutUser(ctx: GuideContext): string {
   const lines = [
     'About this user:',
+    `- Today (NZ time): ${ctx.today}`,
     `- Name: ${ctx.userName ?? 'not given'}`,
     `- Visa: ${VISA_WORDS[ctx.profile.visaType]}`,
     `- Family: ${FAMILY_WORDS[ctx.profile.familySituation]}`,
@@ -366,11 +367,14 @@ export function buildGuideAboutUser(ctx: GuideContext): string {
 // Instructions for the understand step (Haiku, structured output → Understanding).
 export const GUIDE_UNDERSTAND_PROMPT = `You prepare a question for LandedNZ's settlement guide, which helps new migrants with the practical side of settling in New Zealand. Read the recent conversation and the latest question, then fill every field:
 - searchQuery: the latest question rewritten as one standalone search query, resolving words like "it" or "that" from the conversation. Plain words, no names.
-- scope: "in" for practical settling-in questions (documents, tax, banking, KiwiSaver, renting, health enrolment, schools, work rights, driver licences, settlement support). "out" for advice on a specific immigration case, medical diagnosis or treatment, legal disputes, or personal investment and debt advice.
+- scope: "in" for practical settling-in questions (documents, tax, banking, KiwiSaver, renting, health enrolment, schools, work rights, driver licences, settlement support, finding or reading your own visa conditions, e.g. "Where can I check the conditions of my work visa?"). "out" for advice on a specific immigration case, medical diagnosis or treatment, legal disputes, or personal investment and debt advice. Distress alone never makes a question "out": someone who is struggling is "in" unless they also ask for one of those kinds of advice.
 - redirectAgency: when scope is "out", who to ask: "immigration" (visa or immigration case advice), "health" (symptoms, diagnosis or treatment), "employment" (problems at work or with an employer) or "money" (debt or investment choices). Otherwise null.
 - needsLive: true only when the answer depends on figures or rules that change often (fees, rates, thresholds, processing times) or on something recent.
 - distress: true when the person sounds distressed, hopeless, unsafe or in crisis.
 - memoryCandidates: up to 3 short facts the person stated about themselves in the latest question (for example "Partner starts work in March"), each under 200 characters. Never infer facts. Set sensitive to true for health, mental health or immigration problems such as a visa refusal. Set explicit to true only when they asked you to remember it. Empty when there are none.`;
+
+// Offline accuracy judge (scripts/guide-accuracy.ts, spec §9.3): one cited sentence against its cited text
+export const GUIDE_ACCURACY_JUDGE_PROMPT = `You check one sentence from a settlement guide answer against the text it cites. The cited text comes from the guide's own notes or an official page; it can include headings and labels such as "Why:" or "Steps:", and it attributes facts to agencies ("Inland Revenue says ..."). Treat all of it as the source. Reply supported: true when every fact in the sentence, including any attribution to an agency, is stated in or directly follows from the cited text; wording may differ. Advice phrased as a suggestion ("you can", "it's worth") counts as supported when the cited text backs the underlying fact. Reply supported: false when the sentence adds a fact, number, condition or attribution the cited text does not contain. Give your reason first.`;
 
 // Fixed crisis text (C08). Numbers checked on lifeline.org.nz and 1737.org.nz on 2026-10-29.
 export const GUIDE_CRISIS_TEXT =

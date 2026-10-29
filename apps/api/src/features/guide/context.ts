@@ -35,6 +35,7 @@ export async function loadGuideContext(userId: string, screen: GuideScreen): Pro
       arrivalDate: profile.arrivalDate,
     },
     daysSinceArrival: Math.floor((Date.now() - profile.arrivalDate.getTime()) / MS_PER_DAY),
+    today: new Date().toLocaleDateString('en-NZ', { timeZone: 'Pacific/Auckland', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
     doneTasks: live.filter(({ e }) => e.status === 'COMPLETE').map(({ r }) => r),
     // Array sort is stable, so score order from the query holds within each blocked group
     nextTasks: live

@@ -10,7 +10,9 @@ export type HistoryTurn = { role: 'user' | 'assistant'; content: string };
 // usage is the Haiku call's tokens, for the turn's cost (zero on fallback)
 export type UnderstandResult = Understanding & { usage: TokenUsage };
 
-const TIMEOUT_MS = 1_000;
+// Live Haiku (S7, 2026-10-30): p75 ~1.7 s, ~10% of calls reach 2 s; round-trip floor ~1 s; thinking makes no difference at effort low.
+// A fallback loses Haiku's distress and scope signals (C08), so the budget covers the tail
+const TIMEOUT_MS = 3_000;
 const MAX_MEMORY_CANDIDATES = 3;
 const MAX_MEMORY_CHARS = 200;
 const HISTORY_TURNS = 6;
@@ -26,7 +28,7 @@ export const understandingSchema = z.object({
 });
 
 const CRISIS_PATTERN =
-  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on|take my own life|end it all|don'?t want to be here)\b/i;
+  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on|take my own life|end it all|don'?t want to be here|feel(ing)?( \w+)? hopeless|don'?t see the point (anymore|any more|of living))\b/i;
 
 export function hasCrisisSignal(text: string): boolean {
   return CRISIS_PATTERN.test(text.replace(/’/g, "'"));

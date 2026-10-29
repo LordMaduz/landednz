@@ -20,10 +20,10 @@ import { buildAnswerRequest } from './answer.js';
 import { openSse } from './sse.js';
 import type { VerifyResult } from './types.js';
 
-// USD per million tokens; searchCents is per web search
+// USD per million tokens (cacheWrite = 5-minute cache, 1.25x input); searchCents is per web search
 const RATES = {
-  'claude-sonnet-5-5': { input: 2, output: 10, cacheRead: 0.2 },
-  'claude-haiku-5-5': { input: 0.1, output: 0.5, cacheRead: 0.01 },
+  'claude-sonnet-5-5': { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+  'claude-haiku-5-5': { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 },
   searchCents: 1,
 } as const;
 const HISTORY_TURNS = 6;
@@ -35,8 +35,8 @@ const running = new Map<string, AbortController>();
 
 type AbortStatus = Extract<GuideMessageStatus, 'cancelled' | 'interrupted'>;
 
-const priced = (u: TokenUsage, r: { input: number; output: number; cacheRead: number }): number =>
-  ((u.input * r.input + u.output * r.output + u.cacheRead * r.cacheRead) / 1e6) * 100;
+const priced = (u: TokenUsage, r: TokenUsage): number =>
+  ((u.input * r.input + u.output * r.output + u.cacheRead * r.cacheRead + u.cacheWrite * r.cacheWrite) / 1e6) * 100;
 
 // understand always runs on Haiku; the answer and the search call run on the configured model
 export function turnCostCents(spend: { understand: TokenUsage; model: TokenUsage; searches: number }, model = config.anthropicModel): number {
@@ -45,7 +45,10 @@ export function turnCostCents(spend: { understand: TokenUsage; model: TokenUsage
 }
 
 const addUsage = (...us: TokenUsage[]): TokenUsage =>
-  us.reduce((a, u) => ({ input: a.input + u.input, output: a.output + u.output, cacheRead: a.cacheRead + u.cacheRead }), noUsage());
+  us.reduce(
+    (a, u) => ({ input: a.input + u.input, output: a.output + u.output, cacheRead: a.cacheRead + u.cacheRead, cacheWrite: a.cacheWrite + u.cacheWrite }),
+    noUsage(),
+  );
 
 // Earlier turns only (a retry re-answers an older question), oldest first, empty texts dropped
 async function loadHistory(userMessageId: string): Promise<HistoryTurn[]> {
@@ -74,6 +77,8 @@ export async function runTurn(args: {
   const sent: ReplyPart[] = [];
   const spend = { understand: noUsage(), model: noUsage(), searches: 0 };
   let verified: VerifyResult | null = null;
+  // released sentences with the text they cited; stored for the accuracy judge (Task 15)
+  let claims: { text: string; cited: string[] }[] = [];
   let finished = false;
 
   const sse = openSse(args.reply);
@@ -101,6 +106,7 @@ export async function runTurn(args: {
       costCents: turnCostCents(spend),
       steps,
       verify: verified ? { unmatchedCitations: verified.unmatchedCitations, uncitedClaims: verified.uncitedClaims.length } : null,
+      claims,
     };
     const text = sent.flatMap((p) => (p.type === 'text' ? [p.text] : [])).join(' ');
     await finishTurn(ids.assistantMessageId, { status, parts: sent, text, meta, textSent });
@@ -148,7 +154,8 @@ export async function runTurn(args: {
       });
     };
 
-    if (understanding.scope === 'out') {
+    // Distress goes to the answer, which acknowledges feelings first (spec §6.4); a bare redirect reads as a brush-off
+    if (understanding.scope === 'out' && !understanding.distress) {
       say(understanding.redirectAgency ? GUIDE_OUT_OF_SCOPE_REPLY(understanding.redirectAgency) : GUIDE_REFUSAL_REPLY);
       return await finish('complete', true);
     }
@@ -190,6 +197,7 @@ export async function runTurn(args: {
       return await failed();
     }
     const released = g.end();
+    claims = released.map((r) => ({ text: r.text, cited: r.citations.map((c) => c.citedText) }));
     if (result.stopReason === 'refusal') {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');
       say(GUIDE_REFUSAL_REPLY);

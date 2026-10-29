@@ -49,6 +49,10 @@ describe('sentence gate', () => {
     expect(JSON.stringify(parts)).not.toMatch(/\bT\d{2,3}\b|CHUNK_/);
   });
 
+  it('splits after a bold list heading that ends ".**"', () => {
+    expect(texts(run([t('1. **Book a test.** Allow plenty of time. ')]).parts)).toEqual(['1. **Book a test.**', 'Allow plenty of time.']);
+  });
+
   it('does not split after abbreviations', () => {
     expect(texts(run([t('Bring e.g. this. Next.')]).parts)).toEqual(['Bring e.g. this.', 'Next.']);
   });

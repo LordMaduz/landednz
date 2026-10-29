@@ -18,7 +18,7 @@ const hoursAgo = (h: number) => new Date(Date.now() - h * 3600_000);
 
 const deps = (over: Partial<LiveDeps> = {}): LiveDeps & { fetchPage: ReturnType<typeof vi.fn>; searchUrls: ReturnType<typeof vi.fn> } => ({
   fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html; charset=utf-8', body: html() })),
-  searchUrls: vi.fn(async () => ({ urls: [], usage: { input: 0, output: 0, cacheRead: 0 } })),
+  searchUrls: vi.fn(async () => ({ urls: [], usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } })),
   now: () => new Date(),
   ...over,
 }) as never;
@@ -94,7 +94,7 @@ describe('liveSources', () => {
   });
 
   it('searches once when there are no allowed candidates', async () => {
-    const usage = { input: 900, output: 40, cacheRead: 0 };
+    const usage = { input: 900, output: 40, cacheRead: 0, cacheWrite: 0 };
     const d = deps({ searchUrls: vi.fn(async () => ({ urls: [u('e'), 'https://example.com/x'], usage })) });
     const r = await liveSources('q', [], d);
     expect(d.searchUrls).toHaveBeenCalledTimes(1);

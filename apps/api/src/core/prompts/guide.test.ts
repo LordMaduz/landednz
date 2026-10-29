@@ -21,6 +21,7 @@ const soloContext: GuideContext = {
     arrivalDate: new Date('2026-10-01T00:00:00Z'),
   },
   daysSinceArrival: 28,
+  today: 'Friday, 30 October 2026',
   doneTasks: [{ taskKey: 'T01', title: 'Get your IRD number' }],
   nextTasks: [{ taskKey: 'T02', title: 'Open a bank account' }],
   totalTasks: 12,
@@ -44,6 +45,10 @@ describe('GUIDE_SYSTEM_PROMPT', () => {
 });
 
 describe('buildGuideAboutUser', () => {
+  test("gives today's NZ date, so date cutoffs in the guide can be applied", () => {
+    expect(buildGuideAboutUser(soloContext)).toContain('- Today (NZ time): Friday, 30 October 2026');
+  });
+
   test('pre-arrival users see days until arrival, not a negative number', () => {
     const text = buildGuideAboutUser({ ...soloContext, daysSinceArrival: -3 });
     expect(text).toContain('Arrives in 3 days');

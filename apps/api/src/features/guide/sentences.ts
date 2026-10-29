@@ -11,7 +11,8 @@ export type SentenceGate = {
 };
 
 const ABBREVIATIONS = new Set(['e.g', 'i.e', 'etc', 'st', 'mt', 'no']);
-const BOUNDARY = /[.!?]["')]*(?=\s|$)|\n/g;
+// closers: quotes, brackets and Markdown bold/italic ("**Step one.**")
+const BOUNDARY = /[.!?]["')*_]*(?=\s|$)|\n/g;
 
 export function createSentenceGate(opts: {
   passages: Passage[];

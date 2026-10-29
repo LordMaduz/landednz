@@ -62,7 +62,7 @@ async function defaultAnswerStream(
   onEvent: (e: AnswerEvent) => void,
   signal?: AbortSignal,
 ): Promise<AnswerResult> {
-  const usage = { input: 0, output: 0, cacheRead: 0 };
+  const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
   if (signal?.aborted) return { stopReason: 'aborted', usage };
   onEvent({ type: 'text', text: 'This is a mock reply from LandedNZ. ' });
   const firstDoc = req.documents[0];

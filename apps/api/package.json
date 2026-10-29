@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "db:bootstrap": "node --env-file=.env.local --import=tsx/esm scripts/bootstrap.ts",
     "content:build": "node --env-file-if-exists=.env.local --import=tsx/esm scripts/content-build.ts",
-    "content:review": "node --env-file-if-exists=.env.local --import=tsx/esm scripts/content-review.ts"
+    "content:review": "node --env-file-if-exists=.env.local --import=tsx/esm scripts/content-review.ts",
+    "guide:accuracy": "node --env-file=.env.local --import=tsx/esm scripts/guide-accuracy.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.1.0",

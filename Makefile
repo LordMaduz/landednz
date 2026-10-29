@@ -2,7 +2,7 @@
 # Requires Node 24 (.nvmrc), Docker and the Supabase CLI.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup env content dev logs stop db-bootstrap db-reset kb-sync-live user typecheck lint test test-e2e lighthouse build check docker-api
+.PHONY: help setup env content dev logs stop db-bootstrap db-reset kb-sync-live guide-accuracy user typecheck lint test test-e2e lighthouse build check docker-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
@@ -40,6 +40,9 @@ db-reset: ## Wipe the local DB and bootstrap again (destroys local data)
 
 kb-sync-live: ## Re-embed the KB chunks with real OpenAI embeddings (needs both API keys)
 	AI_MODE=live npm run db:bootstrap -w @landednz/api
+
+guide-accuracy: ## Guide accuracy set on live models (stop make dev first; run make kb-sync-live after mock tests): ARGS="--thinking=adaptive --floor=0.3", BASE_URL=… for staging
+	AI_MODE=live npm run guide:accuracy -w @landednz/api -- $(ARGS)
 
 user: ## Create a confirmed local sign-in user: make user EMAIL=you@example.com PASSWORD=secret123
 	@[ -n "$(EMAIL)" ] && [ -n "$(PASSWORD)" ] || { echo "usage: make user EMAIL=... PASSWORD=..." >&2; exit 1; }

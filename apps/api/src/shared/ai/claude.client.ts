@@ -96,11 +96,21 @@ function toAIFailure(error: unknown): AIFailureError {
   return new AIFailureError(`Claude API error: ${error instanceof Error ? error.message : String(error)}`);
 }
 
-export type TokenUsage = { input: number; output: number; cacheRead: number };
-export const noUsage = (): TokenUsage => ({ input: 0, output: 0, cacheRead: 0 });
+export type TokenUsage = { input: number; output: number; cacheRead: number; cacheWrite: number };
+export const noUsage = (): TokenUsage => ({ input: 0, output: 0, cacheRead: 0, cacheWrite: 0 });
 
-type ApiUsage = { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null };
-const toUsage = (u: ApiUsage): TokenUsage => ({ input: u.input_tokens, output: u.output_tokens, cacheRead: u.cache_read_input_tokens ?? 0 });
+type ApiUsage = {
+  input_tokens: number;
+  output_tokens: number;
+  cache_read_input_tokens?: number | null;
+  cache_creation_input_tokens?: number | null;
+};
+const toUsage = (u: ApiUsage): TokenUsage => ({
+  input: u.input_tokens,
+  output: u.output_tokens,
+  cacheRead: u.cache_read_input_tokens ?? 0,
+  cacheWrite: u.cache_creation_input_tokens ?? 0,
+});
 
 // Small structured call (guide understand step) — schema-constrained JSON, aborted at timeoutMs
 export async function structuredHaiku<T>(
@@ -164,7 +174,7 @@ export async function streamGuideAnswer(
   if (config.aiMode === 'mock') return mockAnswerStream(req, onEvent, signal);
 
   const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
-  const usage = { input: 0, output: 0, cacheRead: 0 };
+  const usage = noUsage();
   let stopReason: AnswerResult['stopReason'] = 'end_turn';
   const textBlocks = new Set<number>();
 
@@ -201,6 +211,7 @@ export async function streamGuideAnswer(
       if (event.type === 'message_start') {
         usage.input = event.message.usage.input_tokens;
         usage.cacheRead = event.message.usage.cache_read_input_tokens ?? 0;
+        usage.cacheWrite = event.message.usage.cache_creation_input_tokens ?? 0;
       } else if (event.type === 'content_block_start' && event.content_block.type === 'text') {
         textBlocks.add(event.index);
       } else if (event.type === 'content_block_delta') {

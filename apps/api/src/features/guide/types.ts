@@ -19,6 +19,7 @@ export type GuideContext = {
     arrivalDate: Date;
   };
   daysSinceArrival: number;
+  today: string; // e.g. 'Friday, 30 October 2026', NZ time
   doneTasks: TaskRef[];
   nextTasks: TaskRef[];
   totalTasks: number;
