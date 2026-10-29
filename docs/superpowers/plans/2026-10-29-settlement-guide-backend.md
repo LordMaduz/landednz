@@ -105,11 +105,11 @@
   - `searchOfficialUrls(query: string, allowedDomains: string[]): Promise<string[]>` — `config.anthropicModel`, `tools: [{ type: 'web_search_20260209', name: 'web_search', allowed_domains, max_uses: 1 }]`, effort `low`, `max_tokens: 400`; returns result URLs from `web_search_tool_result` blocks, max 5.
 - Mocks in `mock.ts`: `mockStructured` returns `schema.parse` of a fixture chosen by the caller (export `setMockStructured(fn)` for tests, default throws so understand falls back); `mockAnswerStream` emits `"This is a mock reply from LandedNZ. "` with a citation to document 0 (`citedText` = first 40 chars of document 0, or no citation when there are no documents), then `"It has a second sentence."`, `block_end`, result `end_turn`; `mockSearchUrls` returns `[]`.
 
-- [ ] **Step 1: Write failing tests** in `mock.test.ts`: `mockAnswerStream` with one document emits text events joining to `"This is a mock reply from LandedNZ. It has a second sentence."`, one citation `{documentIndex: 0}` before the first `block_end`, and resolves `stopReason: 'end_turn'`; with zero documents emits no citation.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/shared/ai/mock.test.ts` → FAIL.
-- [ ] **Step 3: Implement** the three functions and mocks. Confirm event and param names against `node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts` (`CitationsDelta`, `ThinkingConfigBetweenTools`, `WebSearchTool20260209`, `OutputConfig`).
-- [ ] **Step 4: Run** the test and `npm run typecheck -w @landednz/api` → PASS.
-- [ ] **Step 5: Commit** `feat(guide): Claude calls for understand, cited answer stream and official search`
+- [x] **Step 1: Write failing tests** in `mock.test.ts`: `mockAnswerStream` with one document emits text events joining to `"This is a mock reply from LandedNZ. It has a second sentence."`, one citation `{documentIndex: 0}` before the first `block_end`, and resolves `stopReason: 'end_turn'`; with zero documents emits no citation.
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/shared/ai/mock.test.ts` → FAIL.
+- [x] **Step 3: Implement** the three functions and mocks. Confirm event and param names against `node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts` (`CitationsDelta`, `ThinkingConfigBetweenTools`, `WebSearchTool20260209`, `OutputConfig`).
+- [x] **Step 4: Run** the test and `npm run typecheck -w @landednz/api` → PASS.
+- [x] **Step 5: Commit** `feat(guide): Claude calls for understand, cited answer stream and official search`
 
 ---
 
@@ -127,11 +127,11 @@
   - `GUIDE_CRISIS_TEXT: string` — starts with `"Lifeline NZ: 0800 543 354"` (C08), then `"Need to Talk? Free call or text 1737."`; verify both numbers on lifeline.org.nz and 1737.org.nz before committing.
   - `GUIDE_OUT_OF_SCOPE_REPLY(agency: string): string`, `GUIDE_NOTHING_FOUND_REPLY(agency: string): string`, `GUIDE_REFUSAL_REPLY: string`, `buildUnverifiedNote(claim: string, host: string | null): string` (`"I couldn't confirm ${claim} against an official source. Check ${host}."`, host-less variant without the last sentence), `buildFollowUp(kind: 'more' | 'task', title?: string): string` (`"Want the rest?"` / `What's involved in "${title}"?`), `buildWhereYouAre(done: number, total: number, next: string | null): string`, `buildStarters(screen: GuideScreen, titles: string[]): string[]` (max 3).
   - `GuideContext` type is imported from `features/guide/types.ts` (Task 5) — define the type there first in this task as an interface-only file so registry compiles.
-- [ ] **Step 1: Write failing tests** `guide.test.ts`: `GUIDE_SYSTEM_PROMPT.length >= 2200`; it contains `"Never mention internal IDs"`; `buildGuideAboutUser` for a `SOLO` profile contains none of `partner`, `spouse`, `single income`; output contains every task title given and no `T\d{2}` key; `GUIDE_CRISIS_TEXT.startsWith('Lifeline NZ: 0800 543 354')`; `buildStarters` returns ≤ 3; no registry export string matches `/\bT\d{2,3}\b/`.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/core/prompts/guide.test.ts` → FAIL.
-- [ ] **Step 3: Implement** the exports; also create `apps/api/src/features/guide/types.ts` with `GuideContext`, `Understanding`, `Passage`, `ReleasedSentence`, `VerifyResult` (shapes in Tasks 5–10).
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): guide prompts and copy`
+- [x] **Step 1: Write failing tests** `guide.test.ts`: `GUIDE_SYSTEM_PROMPT.length >= 2200`; it contains `"Never mention internal IDs"`; `buildGuideAboutUser` for a `SOLO` profile contains none of `partner`, `spouse`, `single income`; output contains every task title given and no `T\d{2}` key; `GUIDE_CRISIS_TEXT.startsWith('Lifeline NZ: 0800 543 354')`; `buildStarters` returns ≤ 3; no registry export string matches `/\bT\d{2,3}\b/`.
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/core/prompts/guide.test.ts` → FAIL.
+- [x] **Step 3: Implement** the exports; also create `apps/api/src/features/guide/types.ts` with `GuideContext`, `Understanding`, `Passage`, `ReleasedSentence`, `VerifyResult` (shapes in Tasks 5–10).
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): guide prompts and copy`
 
 ---
 
