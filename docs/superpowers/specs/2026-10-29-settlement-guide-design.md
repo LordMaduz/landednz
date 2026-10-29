@@ -275,6 +275,9 @@ The last 6 messages sit between the system prompt and the final user turn. No pe
 - `distress` is set by Haiku or by the crisis keyword check (whichever fires; the keyword check works even when Haiku fails).
 - The answer acknowledges feelings first, then answers.
 - When the keyword check fires, the reply always includes fixed crisis text: Need to Talk? free call or text 1737, and Lifeline. The numbers are verified against their official pages during implementation and stored in `prompts.ts`, not generated.
+- The crisis text is sent at the start of the turn when the keyword check fires, before understand and retrieve finish, so a later failure still leaves it on screen (owner decision 2026-10-30).
+- Haiku is the main distress signal (it reads meaning; the keywords only catch explicit phrases). When understand times out, it keeps running in the background: a late `distress` before the answer starts sends the crisis text then; after the answer has started, the reply ends with a short check-in pointing to 1737. The understand prompt treats ambiguous cases as distress: a false alarm costs little, a miss costs a lot.
+- **Distress plus out of scope:** crisis text, then fixed warm copy that acknowledges the feeling and points to the right agency. No Sonnet call (owner decision 2026-10-30; replaces "crisis text then an answer").
 
 ## 7. Errors and edge cases
 
@@ -420,6 +423,18 @@ Daily sum of `meta.cost`; warn when the average per answer exceeds 5¢.
 2. UI build against the finished API, then the impeccable gate and owner review.
 3. Removal of the old chat (§8.3) in the same release.
 4. Staging owner test.
+
+Plan B starts with these backend tasks (owner decisions 2026-10-30, from the Plan A final review and Task 15):
+
+1. Crisis text at turn start on the keyword check (§6.4).
+2. Time limit on the steps before the answer: per-request embedding timeout (~10 s), a turn deadline under the 2-minute sweep, and `running.delete` only when the map still holds this turn's controller.
+3. Distress plus out of scope as fixed copy (§6.4).
+4. Late Haiku distress is not dropped (§6.4).
+5. Distress test set grown from 3 to ~40 varied questions (indirect, understated, typos, mixed with a task, plus "frustrated but fine" negatives); report catches and false alarms on every run.
+6. getready.govt.nz becomes "guide content only": no live reads of that host (it returns 403 to plain fetch); its guide chunks still answer and show their checked date.
+7. 429 body carries `resetAt` (§4.2) for the UI.
+
+**Release 2: monthly source refresh.** A scheduled job re-fetches every source page the guide cites, diffs it against the version the content was written from, and turns changes into a review item (the agent re-checks facts and updates content; the owner gets only judgement calls). It never rewrites content by itself. No bot-block workarounds: an honest User-Agent with a contact address, robots.txt respected, one fetch per page per run. For blocked hosts, ask the agency to allow the bot (getready.govt.nz: NEMA), then a real browser at human pace or Anthropic `web_fetch`; a page that still can't be read is marked "couldn't re-check" with its last checked date kept visible.
 
 ## 11. Implementation notes to verify
 
