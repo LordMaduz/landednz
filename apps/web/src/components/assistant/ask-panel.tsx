@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useId, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { createChatSession, streamChat, type TaskDetailApiResponse } from "@/lib/api"
@@ -12,7 +12,7 @@ import { AiReply } from "./ai-reply"
 type Message = { id: number; q: string; text: string; status: "streaming" | "done" | "stopped" | "failed" }
 
 const CAP_MESSAGE = "You've reached today's question limit. You can ask again after midnight."
-const FAILED_MESSAGE = "Couldn't get an answer. Check your connection, then ask again."
+const FAILED_MESSAGE = "That didn't work. Your question is still here, so you can send it again."
 
 function traceOf(m: Message): string {
   if (m.status === "streaming") return "Checking sources"
@@ -35,6 +35,7 @@ export function AskPanel({
   const [draft, setDraft] = useState("")
   const [capped, setCapped] = useState(false)
   const [failed, setFailed] = useState(false)
+  const uid = useId() // two panels (desktop and phone layouts) can be on the page
   const session = useRef<string | null>(null)
   const running = useRef<{ id: number; abort: AbortController } | null>(null)
   const nextId = useRef(0)
@@ -77,6 +78,13 @@ export function AskPanel({
     }
   }
 
+  function retry() {
+    const lastFailed = messages.findLast(m => m.status === "failed")
+    if (!lastFailed) return
+    setMessages(ms => ms.filter(m => m.id !== lastFailed.id))
+    ask(lastFailed.q)
+  }
+
   function stop() {
     if (!running.current) return
     running.current.abort.abort()
@@ -84,22 +92,39 @@ export function AskPanel({
   }
 
   return (
-    <section aria-labelledby="ask-title" className="flex flex-col gap-4 border-t border-hairline pt-6">
-      <h2 id="ask-title" className="text-body font-semibold">
+    <section aria-labelledby={`${uid}-title`} className="flex flex-col gap-4">
+      <h2 id={`${uid}-title`} className="text-body font-semibold">
         Ask about {topic}
       </h2>
       {messages.map(m => (
         <div key={m.id} className="contents">
           <p className="ask-q">{m.q}</p>
-          {(m.status !== "failed" || m.text) && (
+          {m.status === "streaming" && !m.text && (
+            <p role="status" className="flex items-center gap-2 text-small text-muted">
+              <span aria-hidden="true" className="flex gap-0.5 motion-safe:animate-pulse">
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+                <i className="size-1.5 rounded-full bg-teal opacity-40" />
+              </span>
+              Checking official sources…
+            </p>
+          )}
+          {(m.status !== "failed" || m.text) && (m.status !== "streaming" || m.text) && (
             <AiReply text={m.text} trace={traceOf(m)} streaming={m.status === "streaming"} />
           )}
         </div>
       ))}
       {(capped || failed) && (
-        <p role="alert" className="text-small">
-          {capped ? CAP_MESSAGE : FAILED_MESSAGE}
-        </p>
+        <div className="flex flex-col items-start gap-3">
+          <p role="alert" className="text-muted">
+            {capped ? CAP_MESSAGE : FAILED_MESSAGE}
+          </p>
+          {failed && !capped && (
+            <Button variant="quiet" onClick={retry}>
+              Try again
+            </Button>
+          )}
+        </div>
       )}
       {suggestions.length > 0 && !capped && (
         <div className="flex flex-wrap gap-2">
@@ -117,11 +142,11 @@ export function AskPanel({
           ask(draft)
         }}
       >
-        <label htmlFor="sheet-ask" className="sr-only">
+        <label htmlFor={`${uid}-input`} className="sr-only">
           Ask about {topic}
         </label>
         <Field
-          id="sheet-ask"
+          id={`${uid}-input`}
           ref={inputRef}
           className="min-w-0 flex-1"
           placeholder="Ask a question"
@@ -140,6 +165,7 @@ export function AskPanel({
           </Button>
         )}
       </form>
+      <p className="text-small text-muted">Answers cite the same official sources.</p>
     </section>
   )
 }

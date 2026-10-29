@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, shortDay, shortDayNZ } from './nz-date'
+import { addDays, shortDate, shortDay, shortDayNZ, weekdayDay, weekdayDayNZ } from './nz-date'
 
 describe('nz-date', () => {
   it('adds calendar days across a month', () => {
@@ -7,8 +7,17 @@ describe('nz-date', () => {
     expect(shortDay('2026-11-01')).toBe('1 Nov')
   })
 
+  it('formats a short date with the year', () => {
+    expect(shortDate('2026-10-27')).toBe('27 Oct 2026')
+  })
+
   it('formats an instant on the NZ calendar', () => {
     expect(shortDayNZ('2026-10-21T11:05:00Z')).toBe('22 Oct') // 00:05 NZDT
     expect(shortDayNZ('2026-10-21T10:30:00Z')).toBe('21 Oct')
   })
+})
+
+describe('weekday dates', () => {
+  it('weekdayDay', () => expect(weekdayDay('2026-11-15')).toBe('Sun 15 Nov'))
+  it('weekdayDayNZ uses the NZ calendar', () => expect(weekdayDayNZ('2026-11-03T20:00:00Z')).toBe('Wed 4 Nov'))
 })

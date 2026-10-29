@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
+import { PublicFooter } from "@/components/chrome/public-footer";
 import { PublicHeader } from "@/components/chrome/public-header";
 import { ANSWERS_COOKIE, decodeAnswers } from "@/lib/answers";
 import { SignIn } from "./sign-in-form";
@@ -20,11 +21,12 @@ async function Body() {
 
 export default function SignInPage() {
   return (
-    <div className={roboto.variable}>
+    <div className={`${roboto.variable} flex min-h-dvh flex-col`}>
       <PublicHeader />
       <Suspense>
         <Body />
       </Suspense>
+      <PublicFooter />
     </div>
   );
 }

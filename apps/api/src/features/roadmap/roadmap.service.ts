@@ -8,7 +8,7 @@ import { logger } from '../../shared/logger.js';
 import { AppError } from '../../shared/errors.js';
 import { getAffectedTasks } from '../../core/dependencies/resolver.js';
 import { contentVersion, itemsFor, source, task as contentTask } from '../../content/index.js';
-import { buildRoadmapEntries, dependencyEdges } from './roadmap.build.js';
+import { bestByDate, buildRoadmapEntries, dependencyEdges } from './roadmap.build.js';
 import type { RoadmapTask, RoadmapPhase, RoadmapResponse, TaskCompleteResponse, TaskReopenResponse, BulkOverrideResponse, TaskDetailResponse } from './roadmap.types.js';
 
 // Retired tasks are served read-only (spec §8.3)
@@ -77,6 +77,7 @@ export async function getRoadmap(userId: string): Promise<RoadmapResponse> {
       estimatedDuration: task.duration,
       taskType: 'FREE' as const,
       consequenceLine: itemsFor(task, profile).why?.text ?? '',
+      bestBy: bestByDate(task.urgency, profile.arrivalDate),
       retired: task.retired,
     }];
   });

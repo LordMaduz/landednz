@@ -3,6 +3,7 @@
 
 import { db } from '../../shared/db.js';
 import { AppError, AIFailureError } from '../../shared/errors.js';
+import { config } from '../../shared/config.js';
 import { logger } from '../../shared/logger.js';
 import { buildChatOpeningMessage, buildChatSystemPrompt, buildResponseStructuringPrompt } from '../../core/prompts/registry.js';
 import { streamMessage, generateText, type ChatMessage } from '../../shared/ai/claude.client.js';
@@ -139,14 +140,19 @@ export async function sendMessage(
       // Ignore setTimeout errors in test environment
     }
   }
+  const origin = reply.request.headers.origin;
+  const allowedOrigin = origin && config.corsOrigin.includes(origin) ? origin : undefined;
   reply.raw.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
     'X-Accel-Buffering': 'no',
-    // CORS headers (manually added because reply.raw bypasses @fastify/cors plugin)
-    'Access-Control-Allow-Origin': 'http://localhost:3000',
-    'Access-Control-Allow-Credentials': 'true',
+    // CORS headers (manually added because reply.raw bypasses @fastify/cors plugin): echo the origin only if configured
+    ...(allowedOrigin && {
+      'Access-Control-Allow-Origin': allowedOrigin,
+      'Access-Control-Allow-Credentials': 'true',
+    }),
+    'Vary': 'Origin',
   });
 
   try {

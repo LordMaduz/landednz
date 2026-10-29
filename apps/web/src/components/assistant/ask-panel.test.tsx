@@ -135,12 +135,27 @@ describe('AskPanel', () => {
     expect(screen.getByText('Your passport.')).toBeInTheDocument()
   })
 
-  it('any other failure: says so and lets them ask again', async () => {
+  it('thinking: "Checking official sources…" until the first words arrive', async () => {
+    panel()
+    fireEvent.click(screen.getByRole('button', { name: 'How long does it take?' }))
+    await waitFor(() => expect(streams).toHaveLength(1))
+    expect(screen.getByRole('status')).toHaveTextContent('Checking official sources…')
+    act(() => last().onChunk('Usually'))
+    expect(screen.queryByText('Checking official sources…')).toBeNull()
+  })
+
+  it('any other failure: keeps the question, says so, and Try again sends it once more', async () => {
     panel()
     fireEvent.click(screen.getByRole('button', { name: 'How long does it take?' }))
     await waitFor(() => expect(streams).toHaveLength(1))
     act(() => last().onError({ message: 'AI service unavailable' }))
-    expect(screen.getByRole('alert')).toHaveTextContent("Couldn't get an answer. Check your connection, then ask again.")
+    expect(screen.getByRole('alert')).toHaveTextContent("That didn't work. Your question is still here, so you can send it again.")
+    expect(screen.getByText('How long does it take?', { selector: '.ask-q' })).toBeInTheDocument()
     expect(input()).toBeEnabled()
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+    await waitFor(() => expect(streams).toHaveLength(2))
+    expect(last().content).toBe('How long does it take?')
+    expect(screen.getAllByText('How long does it take?', { selector: '.ask-q' })).toHaveLength(1)
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 })

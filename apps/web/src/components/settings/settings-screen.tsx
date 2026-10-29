@@ -1,21 +1,22 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
+import { PublicFooter } from "@/components/chrome/public-footer"
 import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api"
 import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
-import { DeleteAccount } from "./delete-account"
-import { PlanForm } from "./plan-form"
-import { SettingsSection } from "./settings-section"
+import { AnswersCard, PlanForm } from "./plan-form"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type User = { name: string; initials: string; email: string; google: boolean }
 
 // The plan needs the profile; Account and Delete work without it, so an API failure only replaces the plan
 export function SettingsScreen({ user }: { user: User }) {
   const router = useRouter()
+  const editing = useSearchParams().get("edit") !== null
   const [profile, setProfile] = useState<GetProfileResponse | "loading" | "down">("loading")
 
   const load = useCallback(async () => {
@@ -37,28 +38,31 @@ export function SettingsScreen({ user }: { user: User }) {
   }, [load])
 
   return (
-    <>
-      <AppHeader active={null} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
-      <main className="container-page flex flex-col gap-8 pt-12 pb-24">
-        <h1 className="text-title">Settings</h1>
-        <div>
-          {profile === "loading" ? (
-            <SettingsSection title="Your plan" lede="Your roadmap is built from these answers.">
-              <div aria-busy="true" className="h-48 rounded-surface bg-wash">
-                <span className="sr-only">Loading</span>
-              </div>
-            </SettingsSection>
-          ) : profile === "down" ? (
-            <SettingsSection title="Your plan" lede="Your roadmap is built from these answers.">
-              <ApiDown heading="h2" onRetry={load} />
-            </SettingsSection>
+    <div className="flex min-h-dvh flex-col">
+      <AppHeader active="settings" back={editing ? { href: "/settings", label: "Settings" } : undefined} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
+      <main className="container-page container-app py-6 max-narrow:py-4">
+        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-2.5">
+          {profile === "loading" || profile === "down" ? (
+            <div className="flex flex-col gap-4">
+              {profile === "loading" ? (
+                <AnswersCard>
+                  <span className="sr-only">Loading</span>
+                  <Skeleton className="mt-5 h-40 w-full bg-white/15" />
+                </AnswersCard>
+              ) : (
+                <>
+                  <h1 className="text-title">Settings</h1>
+                  <ApiDown heading="h2" onRetry={load} />
+                </>
+              )}
+              <AccountSection user={user} />
+            </div>
           ) : (
-            <PlanForm profile={profile} />
+            <PlanForm profile={profile} account={<AccountSection user={user} joined />} />
           )}
-          <AccountSection user={user} />
-          <DeleteAccount />
         </div>
       </main>
-    </>
+      <PublicFooter app />
+    </div>
   )
 }

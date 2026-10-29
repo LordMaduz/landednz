@@ -13,6 +13,7 @@ import { FastifyInstance } from 'fastify';
 import { db } from '../../shared/db.js';
 import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
+import { config } from '../../shared/config.js';
 
 const TS = Date.now();
 let TEST_EMAIL: string;
@@ -209,5 +210,30 @@ describe('AC-4-15: ChatMessage persisted both roles — retrievedChunks + guardr
 
     const flags = JSON.parse(assistantMessage!.guardrailFlags as string) as string[];
     expect(flags).toEqual([]);
+  }, 10000);
+});
+
+describe('SSE stream CORS', () => {
+  const send = (origin?: string) =>
+    app.inject({
+      method: 'POST',
+      url: `/chat/sessions/${TEST_SESSION_ID}/messages`,
+      headers: { Authorization: `Bearer ${TEST_JWT_TOKEN}`, ...(origin && { origin }) },
+      payload: { content: 'CORS check' },
+    });
+
+  test('echoes a configured origin with credentials and Vary', async () => {
+    const allowedOrigin = config.corsOrigin[0];
+    const res = await send(allowedOrigin);
+    expect(res.headers['access-control-allow-origin']).toBe(allowedOrigin);
+    expect(res.headers['access-control-allow-credentials']).toBe('true');
+    expect(res.headers['vary']).toBe('Origin');
+  }, 10000);
+
+  test.each([['a foreign origin', 'http://evil.example'], ['no origin', undefined]])('omits CORS headers for %s', async (_name, origin) => {
+    const res = await send(origin);
+    expect(res.headers['access-control-allow-origin']).toBeUndefined();
+    expect(res.headers['access-control-allow-credentials']).toBeUndefined();
+    expect(res.headers['vary']).toBe('Origin');
   }, 10000);
 });

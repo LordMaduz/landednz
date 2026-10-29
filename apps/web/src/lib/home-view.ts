@@ -1,81 +1,92 @@
-// What Home shows, from the route and the profile: greeting, this week, recently done and the plan.
+// What Home shows, from the route and the profile: greeting, next move, this week and recently done.
+import type { City } from '@landednz/types'
 import type { GetProfileResponse } from './api'
-import { answerLabel } from './answers'
 import { journeyDay } from './journey-day'
-import { shortDayNZ } from './nz-date'
-import type { RouteTask, RouteView } from './route-view'
+import { LEGS, legName, legStart } from './legs'
+import { dayMonth, longDay, weekdayDay, weekdayDayNZ } from './nz-date'
+import { daysLeftIn, stageIndexOn } from './route-progress'
+import { unlocksOf, waitsOn, type RouteTask, type RouteView } from './route-view'
 import { TASK_COPY } from './task-copy'
 
 export interface HomeView {
   greeting: string
-  subline: string
-  weekTitle: string
+  subline: string // "9 of 22 done · day 5 since you landed on Mon 2 Nov"
+  sublineShort: string // phone: without the date
   top: RouteTask | null
-  week: RouteTask[]
-  nextLine: string | null
-  recent: { taskId: string; title: string; when: string }[]
-  plan: { label: string; value: string }[]
+  nextMeta: string // "Your next move · Arrival · 20–30 min"
+  nextMetaShort: string // "Your next move · 20–30 min"
+  unlocks: string[] // titles of the tasks waiting on `top`
+  weekAside: string // "Week 1 · 3 days left"
+  week: { task: RouteTask; meta: string }[] // open tasks after `top` in this week's stage, at most 3
+  weekFoot: string | null // "4 more in Week 1"
+  weekTotal: number
+  weekEmpty: string | null
+  nextLine: string | null // before arrival: what the Arrival leg brings
+  recent: { taskId: string; title: string; when: string; weekday: string }[]
+  recentTotal: number
 }
 
-// The name Home greets: the first word of Google's full name, else the email's local part
-export function firstName(user: { email?: string; user_metadata?: { full_name?: string } }): string {
-  return user.user_metadata?.full_name?.trim().split(/\s+/)[0] || (user.email ?? '').split('@')[0]
-}
-
-function nzHour(now: Date): number {
-  return Number(new Intl.DateTimeFormat('en-NZ', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Pacific/Auckland' }).format(now))
+// "9 of 22 done · day 5 since you landed on Mon 2 Nov"; before arrival the count-down
+export function homeSubline(route: RouteView, arrivalDate: string, now: Date, short: boolean): string {
+  const day = journeyDay(arrivalDate, now)
+  if (day < 1) return `${1 - day} ${day === 0 ? 'day' : 'days'} until you land on ${longDay(arrivalDate)}.`
+  return `${route.doneCount} of ${route.total} done · day ${day} since you landed${short ? '' : ` on ${weekdayDay(arrivalDate)}`}`
 }
 
 const and = new Intl.ListFormat('en-NZ', { type: 'conjunction' })
 
-export function buildHomeView(route: RouteView, profile: GetProfileResponse, user: { firstName: string }, now: Date): HomeView {
-  const city = profile.city === 'OTHER' ? 'New Zealand' : answerLabel('city', profile.city)
-  const firstUse = route.doneCount === 0
-  const hour = nzHour(now)
-  const partOfDay = hour >= 5 && hour < 12 ? 'morning' : hour >= 12 && hour < 18 ? 'afternoon' : 'evening'
+const WEEK_CAP = 3
+const RECENT_CAP = 4
+// The short name the greeting uses
+const CITY_NAME: Record<City, string> = { AUCKLAND: 'Auckland', WELLINGTON: 'Wellington', CHRISTCHURCH: 'Christchurch', OTHER: 'New Zealand' }
 
+export function buildHomeView(route: RouteView, profile: GetProfileResponse, now: Date): HomeView {
+  const city = CITY_NAME[profile.city]
   const day = journeyDay(profile.arrivalDate, now)
-  const untilLanding = 1 - day
-  const arrivalDone = route.legs.find(l => l.id === 'arrival')?.state === 'done'
-  const subline =
-    day < 1
-      ? `${untilLanding} ${untilLanding === 1 ? 'day' : 'days'} until you land in ${city}.`
-      : firstUse
-        ? 'Start with the first task below. Each one you finish unlocks the next.'
-        : `Day ${day} in ${city}${arrivalDone ? ', and the basics are sorted' : ''}.`
 
   const tasks = route.legs.flatMap(l => l.tasks)
   const top = route.current
-  // The two open tasks after the current one, in route order; Home words a blocker as "After …"
-  const week = tasks
-    .filter(t => t.state !== 'done' && t !== top)
-    .slice(0, 2)
-    .map(t => (t.state === 'blocked' ? { ...t, meta: t.meta.replace(/^Needs (.+) first$/, 'After $1') } : t))
+  const leg = route.legs.find(l => l.state === 'current')
+  const nextLeg = leg && route.legs[route.legs.indexOf(leg) + 1]
+  // "This week" is the stage today falls in, or the current leg if the traveller is ahead of the calendar
+  const topIndex = leg ? LEGS.findIndex(l => l.id === leg.id) : 0
+  const weekIndex = day < 1 ? topIndex : Math.max(topIndex, stageIndexOn(day))
+  const weekLeg = route.legs.find(l => l.id === LEGS[weekIndex].id)
+  const rest = top && weekLeg ? weekLeg.tasks.filter(t => t.state !== 'done' && t.taskId !== top.taskId) : []
+  const week = rest.slice(0, WEEK_CAP).map(task => ({ task, meta: task.state === 'blocked' ? waitsOn(task) : task.time }))
+  const weekName = legName(LEGS[weekIndex].id, day < 1)
+  const daysLeft = daysLeftIn(weekIndex, day)
 
-  const currentLeg = route.legs.findIndex(l => l.state === 'current')
-  const nextLeg = currentLeg >= 0 ? route.legs[currentLeg + 1] : undefined
-  const nextBriefs = nextLeg?.tasks.filter(t => t.state !== 'done').map(t => TASK_COPY[t.taskId]?.brief ?? t.topic) ?? []
-  const nextLine = nextLeg && nextBriefs.length ? `${nextLeg.name} brings ${and.format(nextBriefs)}.` : null
+  const arrivalBriefs =
+    route.legs.find(l => l.id === 'arrival')?.tasks.filter(t => t.state !== 'done').map(t => TASK_COPY[t.taskId]?.brief ?? t.topic) ?? []
+  const nextLine = day < 1 && arrivalBriefs.length ? `After you land: ${and.format(arrivalBriefs)}.` : null
 
-  const recent = tasks
+  const done = tasks
     .filter(t => t.state === 'done' && t.completedAt)
     .sort((a, b) => b.completedAt!.localeCompare(a.completedAt!))
-    .slice(0, 3)
-    .map(t => ({ taskId: t.taskId, title: t.title, when: shortDayNZ(t.completedAt!) }))
+  const stageOf = (taskId: string) => route.legs.find(l => l.tasks.some(t => t.taskId === taskId))!.name
 
   return {
-    greeting: firstUse ? `Welcome to ${city}, ${user.firstName}` : `Good ${partOfDay}, ${user.firstName}`,
-    subline,
-    weekTitle: firstUse ? 'Start here' : 'This week',
+    greeting: day < 1 ? 'Welcome' : `Welcome to ${city}`,
+    subline: homeSubline(route, profile.arrivalDate, now, false),
+    sublineShort: homeSubline(route, profile.arrivalDate, now, true),
     top,
+    nextMeta: leg && top ? `Your next move · ${leg.name} · ${top.time}` : '',
+    nextMetaShort: top ? `Your next move · ${top.time}` : '',
+    unlocks: top ? unlocksOf(route, top.taskId).map(t => t.title) : [],
+    weekAside: daysLeft ? `${weekName} · ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left` : weekName,
     week,
+    weekFoot: rest.length > WEEK_CAP ? `${rest.length - WEEK_CAP} more in ${weekName}` : null,
+    weekTotal: rest.length,
+    weekEmpty:
+      top && !rest.length
+        ? `Nothing else this week.${nextLeg ? ` ${nextLeg.name} starts on ${dayMonth(legStart(nextLeg.id, profile.arrivalDate))}.` : ''}`
+        : null,
     nextLine,
-    recent,
-    plan: [
-      { label: 'Visa', value: answerLabel('visaType', profile.visaType) },
-      { label: 'City', value: answerLabel('city', profile.city) },
-      { label: 'Moving', value: answerLabel('familySituation', profile.familySituation) },
-      { label: 'Work', value: answerLabel('occupation', profile.occupation) },
-    ],
+    recent: done.slice(0, RECENT_CAP).map(t => {
+      const when = weekdayDayNZ(t.completedAt!)
+      return { taskId: t.taskId, title: t.title, when: `Done ${when} · ${stageOf(t.taskId)}`, weekday: when.split(' ')[0] }
+    }),
+    recentTotal: done.length,
   }
 }

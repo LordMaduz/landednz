@@ -10,7 +10,7 @@ export default defineConfig({
   workers: 1,
   forbidOnly: !!process.env.CI,
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.E2E_WEB_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
@@ -19,12 +19,12 @@ export default defineConfig({
     {
       command: 'npm run dev -w @landednz/api',
       cwd: '../..',
-      url: 'http://localhost:3001/health',
+      url: `${process.env.E2E_API_URL ?? 'http://localhost:3001'}/health`,
       reuseExistingServer: true,
     },
     {
       command: 'npm run dev',
-      url: 'http://localhost:3000',
+      url: process.env.E2E_WEB_URL ?? 'http://localhost:3000',
       reuseExistingServer: true,
     },
   ],

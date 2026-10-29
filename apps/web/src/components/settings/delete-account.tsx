@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
@@ -16,13 +16,13 @@ import {
 import { deleteAccount } from "@/lib/api"
 import { signOutAndLeave } from "@/lib/sign-out"
 import { createClient } from "@/lib/supabase/client"
-import { SettingsSection } from "./settings-section"
 
 const WHAT_GOES = "Removes your answers, your roadmap and your questions to the assistant. This can't be undone."
 
 export function DeleteAccount() {
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const keep = useRef<HTMLButtonElement>(null)
 
   async function confirm() {
     setError(null)
@@ -38,21 +38,29 @@ export function DeleteAccount() {
   }
 
   return (
-    <SettingsSection title="Delete your account" lede={WHAT_GOES}>
-      <AlertDialog onOpenChange={open => !open && setError(null)}>
-        <AlertDialogTrigger render={<Button variant="quiet" className="self-start" />}>Delete my account</AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-            <AlertDialogDescription>{WHAT_GOES}</AlertDialogDescription>
-          </AlertDialogHeader>
-          {error && <p role="alert" className="text-ink">{error}</p>}
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm} disabled={deleting}>Delete my account</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </SettingsSection>
+    <AlertDialog onOpenChange={open => !open && setError(null)}>
+      <AlertDialogTrigger
+        render={<button type="button" className="min-h-11 cursor-pointer border-0 bg-transparent p-0 font-medium text-danger-on-ink hover:text-white max-narrow:basis-full max-narrow:text-left max-narrow:border-t max-narrow:border-hairline max-narrow:text-danger max-narrow:hover:text-danger" />}
+      >
+        Delete account<span className="hidden max-narrow:inline">…</span>
+      </AlertDialogTrigger>
+      <AlertDialogContent initialFocus={keep}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+          <AlertDialogDescription>{WHAT_GOES}</AlertDialogDescription>
+        </AlertDialogHeader>
+        {error && <p role="alert" className="text-danger">{error}</p>}
+        <AlertDialogFooter>
+          <AlertDialogCancel ref={keep}>Keep my account</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirm}
+            disabled={deleting}
+            className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
+          >
+            Delete account
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

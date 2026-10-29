@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Task details, phone</title><script src="./support.js"></script></head>
+<body><x-dc><helmet><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap"><style>
+body{margin:0}*{box-sizing:border-box}
+a{color:#0A6463;text-decoration:none}
+::selection{background:#CFE5E3}
+.pg{display:flex;flex-direction:column;background:#FFFFFF;color:#0F2A3A;font-family:Geist,system-ui,sans-serif;font-size:15px;line-height:1.5;overflow:hidden;position:relative;font-variant-numeric:tabular-nums}
+.muted{color:#4B6170}.small{font-size:13px}.teal{color:#0A6463}.b{font-weight:600}
+.hd{height:64px;border-bottom:1px solid #E3E8EA;display:flex;align-items:center;gap:40px;padding:0 120px;flex:none}
+.hd nav{display:flex;gap:4px;flex:1}
+.hd nav a{height:36px;padding:0 12px;border-radius:8px;display:flex;align-items:center;color:#4B6170;font-weight:500}
+.hd nav a.on{color:#0F2A3A;background:#F6F8F8}
+.brand{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:-0.01em}
+.askb{height:40px;padding:0 10px 0 14px;border:1px solid #D5DFE2;border-radius:8px;display:flex;align-items:center;gap:10px;font-weight:500}
+.kbd{font-size:13px;color:#4B6170;border:1px solid #D5DFE2;border-radius:4px;padding:0 6px;line-height:18px}
+.av{width:32px;height:32px;border-radius:50%;background:#E8F2F1;color:#0A6463;display:grid;place-items:center;font-size:13px;font-weight:600;flex:none}
+.ft{height:48px;border-top:1px solid #E3E8EA;display:flex;align-items:center;justify-content:space-between;padding:0 120px;font-size:13px;color:#4B6170;flex:none;background:#fff}
+.ft nav{display:flex;gap:24px}
+main{flex:1;min-height:0;padding:28px 120px 0;display:flex;flex-direction:column}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-0.015em;text-wrap:balance}
+h2{margin:0;font-size:18px;line-height:1.35;letter-spacing:-0.01em;font-weight:600}
+.btn{height:40px;padding:0 16px;border-radius:8px;border:1px solid #0F2A3A;background:#0F2A3A;color:#fff;font:inherit;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn.quiet{background:#fff;border-color:#D5DFE2;color:#0F2A3A}
+.btn.ghost{background:transparent;border-color:transparent;color:#0A6463;padding:0 8px}
+.btn.full{width:100%;height:44px}
+.btn.dis{background:#F6F8F8;border-color:#F6F8F8;color:#7A8F99}
+.row{display:flex;align-items:center;gap:14px;min-height:44px;padding:8px 0;border-top:1px solid #E3E8EA}
+.rows>.row:last-child{border-bottom:1px solid #E3E8EA}
+.ck{width:20px;height:20px;border-radius:50%;border:1.5px solid #7A8F99;flex:none;display:grid;place-items:center}
+.ck.done{background:#0E7C7B;border-color:#0E7C7B}
+.ck.wait{border-style:dashed}
+.today{background:#F6F8F8;border-radius:12px}
+.lab{font-size:13px;color:#0A6463;font-weight:600}
+.cite{font-size:13px;color:#0A6463;font-weight:600;vertical-align:super;margin-left:2px}
+.opt{display:flex;align-items:center;gap:14px;min-height:50px;padding:10px 16px;border:1px solid #D5DFE2;border-radius:10px;background:#fff}
+.opt .r{width:20px;height:20px;border-radius:50%;border:1.5px solid #7A8F99;flex:none;display:grid;place-items:center}
+.opt.on{border-color:#0E7C7B;box-shadow:inset 0 0 0 1px #0E7C7B;background:#F3F9F8}
+.opt.on .r{border-color:#0E7C7B;background:#0E7C7B}.opt.on .r::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.ph .hd{height:56px;padding:0 16px;gap:12px}
+.ph main{padding:16px 16px 0}
+.ph h1{font-size:22px}
+.tabs{height:56px;border-top:1px solid #E3E8EA;display:grid;grid-template-columns:repeat(3,1fr);flex:none;background:#fff}
+.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:500;color:#4B6170}
+.tabs a.on{color:#0F2A3A}
+.tabs a.on svg{color:#0E7C7B}
+.pft{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:13px;color:#4B6170;border-top:1px solid #E3E8EA;flex:none}
+.fade{position:absolute;left:0;right:0;bottom:0;height:56px;background:linear-gradient(rgba(255,255,255,0),#fff);pointer-events:none}
+.pop{position:absolute;background:#fff;border:1px solid #D5DFE2;border-radius:12px;box-shadow:0 1px 2px rgba(15,42,58,.04),0 16px 48px rgba(15,42,58,.12);padding:6px;display:flex;flex-direction:column}
+.pop span{padding:10px 12px;border-radius:8px}
+.pop .on{background:#F3F9F8;color:#0A6463;font-weight:600}
+
+.crd{background:#fff;border:1px solid #E3E8EA;border-radius:12px;box-shadow:0 1px 2px rgba(15,42,58,.04),0 16px 48px rgba(15,42,58,.08);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ph .crd{padding:16px;gap:10px}
+.crd .rows>.row:last-child{border-bottom:0}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.pg{background:#FFFFFF}
+</style></helmet>
+<div class="pg ph" style="width: 390px; height: 844px;">
+<header class="hd"><a href="#" style="display:flex;align-items:center;gap:4px;color:#0F2A3A;font-weight:500;flex:1"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Roadmap</a><span class="askb" style="height:36px">Ask</span><span class="av">SR</span></header><main style="position:relative;overflow:hidden;padding-bottom:0">
+<article class="crd" style="gap:8px">
+<span class="small muted">Arrival · 20–30 min · best done by Sun 15 Nov</span><h1 style="margin-top:-4px">Get your IRD number</h1>
+<div style="display:flex;gap:16px;border-bottom:1px solid #E3E8EA"><span style="padding:8px 0;font-weight:500;border-bottom:2px solid #0F2A3A">Steps</span><span style="padding:8px 0;font-weight:500;color:#4B6170">Good to know</span><span style="padding:8px 0;font-weight:500;color:#4B6170">Sources 9</span></div>
+<div style="padding-top:4px"><ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;counter-reset:s 0"><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">1</span><span>Register for myIR, Inland Revenue's online service. You don't need an IRD number to register.<span class="cite">2</span></span></li><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">2</span><span>In myIR, apply as a new arrival. Inland Revenue checks your identity with Immigration New Zealand.<span class="cite">1</span></span></li><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">3</span><span>Apply by your visa's final arrival date, the date you must arrive in New Zealand by. After that date you apply as living in New Zealand instead.<span class="cite">1</span></span></li><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">4</span><span>Inland Revenue's work and study page says new arrivals on work or student visas also need a New Zealand bank account or a customer due diligence form (IR997). Have one of them ready.<span class="cite">3</span></span></li><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">5</span><span>If your application is approved, your IRD number comes by text or email in 2 days.<span class="cite">1</span></span></li><li style="display:grid;grid-template-columns:28px 1fr;font-size:15px"><span class="b teal">6</span><span>Give your employer your IRD number with a completed tax code declaration (IR330).<span class="cite">4</span></span></li></ol></div>
+</article><div class="fade"></div></main>
+<div style="padding:12px 16px;border-top:1px solid #E3E8EA;display:flex;gap:8px;flex:none;background:#fff"><a class="btn" href="#" style="flex:1;height:44px">Mark as done</a><a class="btn quiet" href="#" style="height:44px">Ask</a></div><nav class="tabs" aria-label="Main"><a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 9 10 3l7 6v8H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Home</a><a href="#" class=on aria-current=page><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 15c4-1 5-7 9-8s5 1 7-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="7" r="2" fill="currentColor"/></svg>Roadmap</a><a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 6h12M4 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="6" r="2" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="14" r="2" fill="#fff" stroke="currentColor" stroke-width="1.5"/></svg>Settings</a></nav>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script></body></html>
+<style>h1{font-size:18px !important;line-height:1.35 !important}</style>

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { TASK_COPY, taskTitle } from './task-copy'
 
 describe('TASK_COPY', () => {
-  it('covers T01–T21', () => {
-    const ids = Array.from({ length: 21 }, (_, i) => `T${String(i + 1).padStart(2, '0')}`)
+  it('covers T01–T21 and T28', () => {
+    const ids = [...Array.from({ length: 21 }, (_, i) => `T${String(i + 1).padStart(2, '0')}`), 'T28']
     expect(Object.keys(TASK_COPY).sort()).toEqual(ids)
   })
 

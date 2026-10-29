@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { answersSummary, decodeAnswers, encodeAnswers, parseAnswers, type Answers } from './answers'
+import { answersShort, answersSummary, decodeAnswers, encodeAnswers, parseAnswers, type Answers } from './answers'
 
 const priya: Answers = {
   visaType: 'AEWV',
@@ -75,5 +75,12 @@ describe('answersSummary', () => {
     expect(answersSummary({ ...priya, city: 'OTHER', familySituation: 'FAMILY_WITH_CHILDREN' })).toBe(
       'Accredited Employer Work Visa (AEWV), you, your partner and your children, another job or profession, landing 14 January 2027',
     )
+  })
+})
+
+describe('answersShort', () => {
+  it('is the one-line form for the save chip', () => {
+    expect(answersShort(priya)).toBe('Accredited Employer Work Visa (AEWV) · Auckland · just you · lands 14 Jan')
+    expect(answersShort({ ...priya, city: 'OTHER' })).toBe('Accredited Employer Work Visa (AEWV) · just you · lands 14 Jan')
   })
 })

@@ -30,6 +30,7 @@ export const TASK_COPY: Record<string, TaskCopy> = {
   T19: { title: 'Prepare an NZ-style CV', topic: 'CVs', brief: 'your CV' },
   T20: { title: 'Review your KiwiSaver fund', topic: 'KiwiSaver reviews', brief: 'a KiwiSaver review' },
   T21: { title: 'Open a joint bank account', topic: 'joint accounts', brief: 'a joint account' },
+  T28: { title: 'Check your visa conditions in your eVisa record', topic: 'your visa conditions', brief: 'your visa conditions' },
 }
 
 // KB task names are not user-facing titles; fall back to them only for unknown ids
