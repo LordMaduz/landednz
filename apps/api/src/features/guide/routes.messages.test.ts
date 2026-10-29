@@ -44,7 +44,7 @@ import { buildApp } from '../../server.js';
 import { TURN_LIMITS, turnCostCents } from './service.js';
 import { remember } from './remember.js';
 import { retrieve } from './retrieve.js';
-import { GUIDE_CRISIS_TEXT } from '../../core/prompts/registry.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY } from '../../core/prompts/registry.js';
 
 let app: FastifyInstance;
 let userId: string;
@@ -304,14 +304,25 @@ describe('POST /guide/messages', () => {
     expect(ps.filter((p) => p.type === 'text' && p.text === GUIDE_CRISIS_TEXT)).toHaveLength(1);
   });
 
-  test('distress marked out of scope still gets an answer after the crisis text, not the redirect (spec §6.4)', async () => {
-    setMockStructured(() => ({ searchQuery: 'feeling hopeless', scope: 'out', redirectAgency: 'health', needsLive: false, distress: true, memoryCandidates: [] }));
-    const events = parseSse((await ask("I feel hopeless since moving and I can't stop crying")).body);
-    const texts = parts(events).flatMap((p) => (p.type === 'text' ? [p.text] : []));
-    expect(texts[0]).toMatch(/^Lifeline NZ/);
-    expect(texts.join(' ')).not.toContain("That's outside what I can help with");
-    expect(texts.length).toBeGreaterThan(1);
-    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+  test('distress out of scope gets crisis text then fixed warm copy, no answer call (spec §6.4)', async () => {
+    const answer = vi.fn(async () => {
+      throw new Error('answer must not be called');
+    });
+    setMockAnswer(answer);
+    for (const agency of ['health', null] as const) {
+      await db.guideConversation.deleteMany({ where: { userId } });
+      setMockStructured(() => ({ searchQuery: 'feeling hopeless', scope: 'out', redirectAgency: agency, needsLive: false, distress: true, memoryCandidates: [] }));
+      const events = parseSse((await ask("I feel hopeless since moving and I can't stop crying")).body);
+      expect(parts(events)).toEqual([
+        { type: 'notice', kind: 'checking_guide' },
+        { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [] },
+        { type: 'text', text: GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY(agency), citations: [] },
+      ]);
+      expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+      const { userMessageId } = events[0]!.data as { userMessageId: string };
+      expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(true);
+    }
+    expect(answer).not.toHaveBeenCalled();
   });
 
   test('out of scope: a fixed redirect and no answer call', async () => {

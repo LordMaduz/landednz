@@ -6,7 +6,7 @@ import { config } from '../../shared/config.js';
 import { logger } from '../../shared/logger.js';
 import { AppError, AIFailureError } from '../../shared/errors.js';
 import { noUsage, streamGuideAnswer, type AnswerResult, type TokenUsage } from '../../shared/ai/claude.client.js';
-import { GUIDE_CRISIS_TEXT, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
 import { loadGuideContext } from './context.js';
 import { hasCrisisSignal, understand, type HistoryTurn } from './understand.js';
 import { fusePassages, retrieve } from './retrieve.js';
@@ -167,9 +167,9 @@ export async function runTurn(args: {
       });
     };
 
-    // Distress goes to the answer, which acknowledges feelings first (spec §6.4); a bare redirect reads as a brush-off
-    if (understanding.scope === 'out' && !understanding.distress) {
-      say(understanding.redirectAgency ? GUIDE_OUT_OF_SCOPE_REPLY(understanding.redirectAgency) : GUIDE_REFUSAL_REPLY);
+    if (understanding.scope === 'out') {
+      if (understanding.distress) say(GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY(understanding.redirectAgency));
+      else say(understanding.redirectAgency ? GUIDE_OUT_OF_SCOPE_REPLY(understanding.redirectAgency) : GUIDE_REFUSAL_REPLY);
       return await finish('complete', true);
     }
 

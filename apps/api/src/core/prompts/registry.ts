@@ -391,6 +391,12 @@ const AGENCY_WORDS: Record<GuideAgency, string> = {
 export const GUIDE_OUT_OF_SCOPE_REPLY = (agency: GuideAgency): string =>
   `That's outside what I can help with, and I don't want to steer you wrong. The right place to ask is ${AGENCY_WORDS[agency]}.`;
 
+// Follows GUIDE_CRISIS_TEXT ("the people above"); no answer call (owner decision 2026-10-30)
+export const GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY = (agency: GuideAgency | null): string =>
+  `That sounds really hard, and I'm sorry you're going through it. This is outside what I can help with, ${
+    agency ? `so please talk to ${AGENCY_WORDS[agency]}. The people above are there for you any time too.` : 'but the people above are there for you any time.'
+  }`;
+
 export const GUIDE_NOTHING_FOUND_REPLY = (agency: GuideAgency | null): string =>
   `I couldn't find this in checked sources. ${
     agency ? `The right place to ask is ${AGENCY_WORDS[agency]}.` : 'The government agency that handles it is the right place to ask.'
