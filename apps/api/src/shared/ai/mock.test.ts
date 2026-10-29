@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { mockEmbedding, mockStream } from './mock.js';
+import { mockAnswerStream, mockEmbedding, mockSearchUrls, mockStream } from './mock.js';
+import type { AnswerEvent } from './claude.client.js';
 
 describe('mockEmbedding', () => {
   test('mockEmbedding returns 1536 unit-length numbers', () => {
@@ -22,5 +23,39 @@ describe('mockStream', () => {
     await mockStream([{ role: 'user', content: 'Hello' }], chunk => chunks.push(chunk));
     expect(chunks).toHaveLength(3);
     expect(chunks.join('')).toBe('This is a mock reply from LandedNZ.');
+  });
+});
+
+describe('mockAnswerStream', () => {
+  const request = (documents: { title: string; text: string }[]) => ({
+    system: 'sys',
+    history: [],
+    aboutUser: 'About me',
+    documents,
+    question: 'How do I get an IRD number?',
+  });
+
+  test('mockAnswerStream emits the reply with a citation to document 0 before the first block_end', async () => {
+    const events: AnswerEvent[] = [];
+    const doc = { title: 'IRD', text: 'Apply for an IRD number online through myIR once you have a visa.' };
+    const result = await mockAnswerStream(request([doc]), e => events.push(e));
+    const text = events.flatMap(e => (e.type === 'text' ? [e.text] : [])).join('');
+    expect(text).toBe('This is a mock reply from LandedNZ. It has a second sentence.');
+    const citations = events.filter(e => e.type === 'citation');
+    expect(citations).toEqual([{ type: 'citation', documentIndex: 0, citedText: doc.text.slice(0, 40) }]);
+    expect(events.findIndex(e => e.type === 'citation')).toBeLessThan(events.findIndex(e => e.type === 'block_end'));
+    expect(result.stopReason).toBe('end_turn');
+  });
+
+  test('mockAnswerStream emits no citation when there are no documents', async () => {
+    const events: AnswerEvent[] = [];
+    await mockAnswerStream(request([]), e => events.push(e));
+    expect(events.some(e => e.type === 'citation')).toBe(false);
+  });
+});
+
+describe('mockSearchUrls', () => {
+  test('mockSearchUrls returns no URLs', async () => {
+    expect(await mockSearchUrls()).toEqual([]);
   });
 });

@@ -11,6 +11,9 @@ import { registerAuthRoutes } from './features/auth/auth.route.js'
 import { registerOnboardingRoutes } from './features/onboarding/onboarding.route.js'
 import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
 import { registerChatRoutes } from './features/chat/routes.js'
+import { registerGuideRoutes } from './features/guide/routes.js'
+import { startSweeper } from './features/guide/sweeper.js'
+import { warmUnderstand } from './features/guide/understand.js'
 import { registerAccountRoutes } from './features/account/account.route.js'
 import { registerAuthDecoration } from './shared/middleware/auth.js'
 import { registerRateLimit } from './shared/rate-limit.js'
@@ -43,6 +46,7 @@ export async function buildApp() {
   registerOnboardingRoutes(app)
   registerRoadmapRoutes(app)
   registerChatRoutes(app)
+  registerGuideRoutes(app)
   registerAccountRoutes(app)
 
   return app
@@ -76,6 +80,9 @@ async function start() {
   try {
     await app.listen({ port: config.port, host: '0.0.0.0' })
     logger.info({ port: config.port }, 'Server listening')
+    startSweeper()
+    // Takes the slow first structured-output compile off the first question; warmUnderstand never throws
+    if (config.aiMode === 'live') void warmUnderstand()
   } catch (err) {
     logger.error({ err }, 'Failed to start server')
     process.exit(1)

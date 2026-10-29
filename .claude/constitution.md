@@ -8,7 +8,7 @@
 ## INVIOLABLE BOUNDARIES
 
 **[C01] Two AI Jobs Are Always Separate**
-features/roadmap/ and features/chat/ NEVER import from each other.
+features/roadmap/ and features/chat/ (and features/guide/ alongside chat) NEVER import from each other.
 Shared types go in packages/types/ only.
 The AI never touches task sequencing, dependency resolution, or priority scoring.
 *Holds for R0; to be rewritten in R2.*
@@ -31,9 +31,9 @@ No prompt string literals anywhere except core/prompts/registry.ts.
 CORRECT: load all embeddings → THEN run `CREATE INDEX USING ivfflat`.
 VIOLATION: ivfflat created before embeddings loaded, or in sync-chunks.ts.
 
-**[C06] SSE Pipeline 10-Step Order Must Be Preserved**
-Step 2 (Level 1 guardrail) BEFORE step 6 (streamMessage).
-Step 9 (Level 2 guardrail) AFTER step 8 (persist response).
+**[C06] Guide Pipeline Order Must Be Preserved**
+Guide pipeline order: start transaction → understand ∥ retrieve → live → answer through the sentence gate → verify → end parts → remember → finish → done.
+No text part bypasses the sentence gate.
 Any reordering = violation.
 
 **[C07] RAG Persona Pre-Filter Runs in SQL Before Vector Search**

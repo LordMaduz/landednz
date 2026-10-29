@@ -37,3 +37,40 @@ export interface OnboardingPreviewRequest {
 export interface OnboardingPreviewResponse {
   tasks: { taskId: string; name: string; estimatedDuration: string; phase: number }[];
 }
+
+// Settlement guide — one finished reply piece, sent as an SSE `part` event and stored in GuideMessage.parts
+export type ReplyPart =
+  | { type: 'notice'; kind: 'checking_guide' | 'checking_official' | 'official_unavailable' | 'interrupted' | 'truncated' }
+  | { type: 'text'; text: string; citations: number[] }           // one finished sentence; indexes into the reply's sources
+  | { type: 'source'; index: number; title: string; url: string; origin: 'guide' | 'official'; checkedAt: string }
+  | { type: 'task_link'; taskKey: string; title: string }          // taskKey for routing only; UI renders the title
+  | { type: 'unverified'; text: string }
+  | { type: 'follow_up'; text: string }
+  | { type: 'memory_saved'; memoryId: string; text: string }
+  | { type: 'error'; code: 'AI_FAILURE'; retryable: boolean };
+// Reserved for the agent feature: { type: 'action'; ... } with a confirm step.
+
+export type GuideScreen = { kind: 'home' | 'roadmap' | 'task'; taskKey?: string };
+
+export type GuideMessageStatus = 'streaming' | 'complete' | 'failed' | 'interrupted' | 'cancelled';
+
+export type GuideSseEvent =
+  | { event: 'start'; data: { userMessageId: string; assistantMessageId: string } }
+  | { event: 'part'; data: ReplyPart }
+  | { event: 'done'; data: { assistantMessageId: string; status: GuideMessageStatus } };
+
+export type GuideMessageDto = {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+  parts: ReplyPart[] | null;
+  status: GuideMessageStatus;
+  screen: GuideScreen;
+  createdAt: string;
+};
+
+export type GuideConversationPage = { messages: GuideMessageDto[]; nextBefore: string | null };
+
+export type GuideOpeningResponse = { whereYouAre: string; starters: string[] };
+
+export type GuideMemoryDto = { id: string; text: string; createdAt: string; updatedAt: string };

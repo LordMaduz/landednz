@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "GuideMessage" ADD COLUMN     "streamStartedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
