@@ -28,7 +28,7 @@ export const understandingSchema = z.object({
 });
 
 const CRISIS_PATTERN =
-  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on|take my own life|end it all|don'?t want to be here|feel(ing)?( \w+)? hopeless|don'?t see the point (anymore|any more|of living))\b/i;
+  /\b(suicide|suicidal|kill myself|end my life|self[- ]harm|hurt myself|want to die|no reason to live|can'?t go on|take my own life|end it all|don'?t want to be here|(feel|feels|feeling|felt)( \w+){0,2} hopeless|no point in living|don'?t see the point (of living|(anymore|any more)(?! \w)))\b/i;
 
 export function hasCrisisSignal(text: string): boolean {
   return CRISIS_PATTERN.test(text.replace(/’/g, "'"));

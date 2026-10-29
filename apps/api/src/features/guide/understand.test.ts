@@ -112,7 +112,7 @@ describe('understand', () => {
 });
 
 describe('hasCrisisSignal', () => {
-  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here', 'I feel completely hopeless', "I don't see the point anymore"])(
+  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here', 'I feel completely hopeless', "I don't see the point anymore", 'I felt hopeless all week', 'feeling so very hopeless', 'everything feels hopeless', 'there is no point in living'])(
     'flags %s',
     (text) => expect(hasCrisisSignal(text)).toBe(true),
   );
@@ -120,5 +120,6 @@ describe('hasCrisisSignal', () => {
   it('ignores ordinary phrases', () => {
     expect(hasCrisisSignal('Can I kill two birds with one stone and get IRD and a bank account?')).toBe(false);
     expect(hasCrisisSignal("I'm hopeless at forms, and I don't see the point of the IR330")).toBe(false);
+    expect(hasCrisisSignal("I don't see the point anymore in keeping my UK account")).toBe(false);
   });
 });

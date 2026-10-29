@@ -71,6 +71,16 @@ export async function scoreAnswer(
   };
 }
 
+type Meta = { costCents?: number; claims?: AccuracyRun['claims']; ms?: Record<string, number> };
+
+// A missing row or claims would score as fully grounded at 0¢, e.g. BASE_URL on staging with DATABASE_URL still local
+export function readMeta(row: { meta: unknown } | null, status: string, text: string): Meta {
+  if (!row) throw new Error('no message row for the answer: DATABASE_URL must point at the database BASE_URL writes to');
+  const meta = (row.meta ?? {}) as Meta;
+  if (status === 'complete' && text && !meta.claims) throw new Error('complete answer has no meta.claims: the server does not record claims');
+  return meta;
+}
+
 // ---- runner ----
 
 const API_ROOT = resolve(import.meta.dirname, '..');
@@ -151,7 +161,7 @@ async function ask(base: string, jwt: string, text: string, screen: GuideScreen)
 }
 
 async function runQuestion(base: string, q: AccuracyQuestion, judge: (c: string, t: string) => Promise<boolean>): Promise<Outcome> {
-  const { createTestUser } = await import('../src/test-utils/supabase-user.js');
+  const { createTestUser, deleteTestUser } = await import('../src/test-utils/supabase-user.js');
   const { db } = await import('../src/shared/db.js');
   // One user per question: history from other questions must not leak into this one
   const user = await createTestUser('guide-accuracy');
@@ -168,12 +178,14 @@ async function runQuestion(base: string, q: AccuracyQuestion, judge: (c: string,
 
     const r = await ask(base, user.jwt, q.question, q.screen);
     const row = await db.guideMessage.findUnique({ where: { id: r.assistantMessageId }, select: { meta: true } });
-    const meta = (row?.meta ?? {}) as { costCents?: number; claims?: AccuracyRun['claims']; ms?: Record<string, number> };
     const text = r.parts.flatMap((p) => (p.type === 'text' ? [p.text] : [])).join(' ');
+    const meta = readMeta(row, r.status, text);
     const score = await scoreAnswer(q, { parts: r.parts, text, claims: meta.claims ?? [] }, judge);
     return { q, score, status: r.status, firstText: r.firstText, total: r.total, costCents: meta.costCents ?? 0, steps: meta.ms ?? {}, text };
   } finally {
-    await fetch(`${base}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${user.jwt}` } }).catch(() => {});
+    const deleted = await fetch(`${base}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${user.jwt}` } }).then((r) => r.ok, () => false);
+    // e.g. the API died or /auth/verify failed: remove the Supabase user directly so test users don't pile up
+    if (!deleted) await deleteTestUser(user.userId).catch((err) => console.error(`left test user ${user.email}: ${err instanceof Error ? err.message : err}`));
   }
 }
 
@@ -188,6 +200,7 @@ function report(outcomes: Outcome[]): boolean {
     const flags = [
       !s.sourcesOk && 'sources',
       s.grounded < 1 && `grounded ${s.grounded.toFixed(2)}/${s.judged}`,
+      !o.q.expect.decline && o.status === 'complete' && s.judged === 0 && 'no citations judged',
       !s.declineOk && 'decline',
       s.inventedProfileFact && 'invented',
       !s.crisisOk && 'crisis',
@@ -261,6 +274,8 @@ async function main(): Promise<void> {
   const judge = async (claim: string, cited: string) => {
     const { value } = await structuredHaiku(GUIDE_ACCURACY_JUDGE_PROMPT, `Sentence: ${claim}\n\nCited text:\n${cited}`, verdict, 20_000);
     if (!value.supported) reasons.set(claim, value.reason);
+    // --show-verdicts: print supported verdicts too, to hand-check the judge's calibration
+    if (value.supported && process.argv.includes('--show-verdicts')) console.log(`supported: ${claim}\n  cited: ${cited.replace(/\s+/g, ' ').slice(0, 400)}\n  judge: ${value.reason}`);
     return value.supported;
   };
 

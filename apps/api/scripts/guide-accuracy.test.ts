@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ReplyPart } from '@landednz/types';
 import { GUIDE_CRISIS_TEXT, GUIDE_OUT_OF_SCOPE_REPLY } from '../src/core/prompts/registry.js';
-import { scoreAnswer, type AccuracyQuestion } from './guide-accuracy.js';
+import { readMeta, scoreAnswer, type AccuracyQuestion } from './guide-accuracy.js';
 
 const question = (over: Partial<AccuracyQuestion> = {}): AccuracyQuestion => ({
   id: 'q',
@@ -67,5 +67,21 @@ describe('scoreAnswer', () => {
     ]);
     expect((await scoreAnswer(question(), r, judge)).grounded).toBe(0.5);
     expect(seen).toEqual(['IRD says good.', 'IRD says other.\nMore text.']);
+  });
+});
+
+describe('readMeta', () => {
+  it('throws when the message row is missing, so a run against another database cannot pass as fully grounded', () => {
+    expect(() => readMeta(null, 'complete', 'Apply online.')).toThrow(/no message row/);
+  });
+
+  it('throws when a complete answer with text has no claims', () => {
+    expect(() => readMeta({ meta: { costCents: 0.1 } }, 'complete', 'Apply online.')).toThrow(/no meta.claims/);
+  });
+
+  it('returns the meta, and allows missing claims on an answer with no text', () => {
+    const meta = { costCents: 0.1, claims: [{ text: 'Apply online.', cited: ['IRD'] }] };
+    expect(readMeta({ meta }, 'complete', 'Apply online.')).toBe(meta);
+    expect(readMeta({ meta: {} }, 'failed', '')).toEqual({});
   });
 });

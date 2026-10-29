@@ -15,7 +15,7 @@ Direct calls with the real `GUIDE_UNDERSTAND_PROMPT` and schema, ~1,125 input / 
 
 `output_tokens_details.thinking_tokens` was 0 on every call in both arms: at effort `low` Haiku does not think on this task, so the thinking setting is not the cause.
 
-**Ruling:** understand timeout 1,000 → 3,000 ms, thinking left at the default. The 1 s budget sat at the network floor, so live understand fell back on almost every question (S6 curl runs) and Haiku's distress, scope and memory signals never fired. A first raise to 2 s still lost a distress signal at 2,004 ms in the accuracy run (about 1 call in 10 reaches 2 s), so the budget covers the tail at 3 s. Spec §7 "understand fails / > 1 s" now reads 3 s in code.
+**Ruling:** understand timeout 1,000 → 3,000 ms, thinking left at the default. The 1 s budget sat at the network floor, so live understand fell back on almost every question (S6 curl runs) and Haiku's distress, scope and memory signals never fired. A first raise to 2 s still lost a distress signal at 2,004 ms in the accuracy run (about 1 call in 10 reaches 2 s), so the budget covers the tail at 3 s. Spec §3.1 and §7 now say 3 s. Because understand runs before the answer starts, a 3 s tail also pushes first text past the §5.2 2.5 s target (owner question).
 
 ## 2. Pricing (checked against the Claude API reference, 2026-10-30)
 
@@ -53,3 +53,13 @@ Before the fixes (floor 0.3): grounded 92.1% FAIL, sources 97%, OOS declines 75%
 **Ruling:** `GUIDE_RELEVANCE_FLOOR` stays 0.3 (best groundedness and speed; sources are 100% at every floor). Groundedness passes with a thin margin: the unsupported sentences are mostly true facts the model adds beside a citation (e.g. the Tenancy line's phone number next to a cited Tenancy Services sentence), so the Sonnet staging run is the real check.
 
 **Speed:** p75 first text is 4.4–6.9 s on local Haiku against the §5.2 target of 2.5 s. Understand (~1.2–1.5 s) and retrieval (~0.35 s) sit before the answer starts, and needsLive adds 0.3–2.4 s on about half the questions. Measure on staging with Sonnet before deciding on changes (owner question).
+
+### Judge calibration and a rerun (after the S7 batch review)
+
+The judge prompt was tuned in the same session as the product fixes, so the review asked whether the pass came from a looser judge. A rerun at floor 0.3 with `--show-verdicts` printed every verdict (251 supported). I hand-checked 21 of them (every 12th) against their cited text, and **21 of 21 were right**: each sentence restates its cited text, at most dropping an attribution or narrowing scope ("a specific bond" for "bonds or any other tenancy matter"). The unsupported ones are real additions (e.g. "Immigration New Zealand will give you an Agreement and schedule", Healthline's number when no passage cited it). So the judge is not passing added facts, and the product changes account for the gain from 92.1%.
+
+| Run | Grounded | Sources | Invented | OOS declines | Crisis text | p75 first text guide / official | Avg cost |
+|---|---|---|---|---|---|---|---|
+| rerun, floor 0.3 | 96.2% | 100% | 0 | 100% | **66.7% FAIL** | 6,699 / 5,684 ms | 0.15¢ |
+
+**Crisis miss:** on `distress-with-task` ("so overwhelmed I can barely get out of bed … failing everyone"), understand took 3,002 ms and fell back, and the wording has none of the crisis keywords, so no crisis text was shown. Two of the 41 understand calls in this run hit 3 s. The keyword list is a backstop for explicit phrases; widening it to match this one test question would be fitting the test set, so it stays as is. The release bar for crisis text therefore depends on Haiku answering within budget. Owner question: raise the budget again, or run the distress check as its own faster call. The Sonnet staging run (Step 6) uses the same Haiku understand step, so it will show the same risk.
