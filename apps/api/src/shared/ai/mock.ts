@@ -2,7 +2,8 @@
 // Imports no SDK: claude.client.ts and embeddings.client.ts delegate here (C03 holds).
 
 import { createHash } from 'crypto';
-import type { ChatMessage } from './claude.client.js';
+import type { z } from 'zod';
+import type { AnswerEvent, AnswerResult, ChatMessage, GuideAnswerRequest } from './claude.client.js';
 
 const MOCK_REPLY_CHUNKS = ['This is a mock ', 'reply from ', 'LandedNZ.'];
 const EMBEDDING_DIMENSIONS = 1536;
@@ -23,4 +24,39 @@ export function mockEmbedding(text: string): number[] {
   });
   const norm = Math.sqrt(vector.reduce((sum, n) => sum + n * n, 0));
   return vector.map(n => n / norm);
+}
+
+// Tests pick the structured fixture; the default throws so callers exercise their fallback path.
+type StructuredFixture = (system: string, user: string) => unknown;
+const throwingFixture: StructuredFixture = () => {
+  throw new Error('No mock structured fixture set');
+};
+let structuredFixture = throwingFixture;
+
+export function setMockStructured(fn: StructuredFixture | null): void {
+  structuredFixture = fn ?? throwingFixture;
+}
+
+export async function mockStructured<T>(system: string, user: string, schema: z.ZodType<T>): Promise<T> {
+  return schema.parse(structuredFixture(system, user));
+}
+
+export async function mockAnswerStream(
+  req: GuideAnswerRequest,
+  onEvent: (e: AnswerEvent) => void,
+  signal?: AbortSignal,
+): Promise<AnswerResult> {
+  const usage = { input: 0, output: 0, cacheRead: 0 };
+  if (signal?.aborted) return { stopReason: 'aborted', usage };
+  onEvent({ type: 'text', text: 'This is a mock reply from LandedNZ. ' });
+  const firstDoc = req.documents[0];
+  if (firstDoc) onEvent({ type: 'citation', documentIndex: 0, citedText: firstDoc.text.slice(0, 40) });
+  onEvent({ type: 'block_end' });
+  onEvent({ type: 'text', text: 'It has a second sentence.' });
+  onEvent({ type: 'block_end' });
+  return { stopReason: 'end_turn', usage };
+}
+
+export async function mockSearchUrls(): Promise<string[]> {
+  return [];
 }
