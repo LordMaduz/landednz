@@ -27,6 +27,8 @@ const RATES = {
   searchCents: 1,
 } as const;
 const HISTORY_TURNS = 6;
+// Well past a normal answer; stops a stalled stream outliving the sweeper's streaming threshold
+const ANSWER_TIMEOUT_MS = 90_000;
 
 // shortcut: in-memory abort map assumes one API instance, move to a DB flag polled by the stream when scaling out
 const running = new Map<string, AbortController>();
@@ -105,7 +107,8 @@ export async function runTurn(args: {
     sse.send({ event: 'done', data: { assistantMessageId: ids.assistantMessageId, status } });
     sse.end();
   };
-  const textPartSent = () => sent.some((p) => p.type === 'text');
+  // A question counts once answer or fixed-reply text was sent; crisis text alone never costs one
+  const replyTextSent = () => sent.some((p) => p.type === 'text' && p.text !== GUIDE_CRISIS_TEXT);
   const aborted = () => (ctl.signal.aborted ? (ctl.signal.reason as AbortStatus) : null);
 
   sse.send({ event: 'start', data: ids });
@@ -138,7 +141,11 @@ export async function runTurn(args: {
     const skipMemory = args.isRetry || understanding.scope === 'out' || understanding.distress;
     const rememberParts = async (): Promise<ReplyPart[]> => {
       if (!skipMemory) steps.push('remember');
-      return remember({ userId, messageId: ids.assistantMessageId, candidates: understanding.memoryCandidates, skip: skipMemory });
+      // Memory is best-effort: a save error must not turn a finished answer into a failed one
+      return remember({ userId, messageId: ids.assistantMessageId, candidates: understanding.memoryCandidates, skip: skipMemory }).catch((err) => {
+        logger.error({ err, assistantMessageId: ids.assistantMessageId }, 'guide memory save failed');
+        return [];
+      });
     };
 
     if (understanding.scope === 'out') {
@@ -155,7 +162,7 @@ export async function runTurn(args: {
       if (live.unavailable) emit({ type: 'notice', kind: 'official_unavailable' });
       passages = [...live.passages, ...passages];
     }
-    if (aborted()) return await finish(aborted()!, textPartSent());
+    if (aborted()) return await finish(aborted()!, replyTextSent());
 
     if (passages.length === 0) {
       logger.info({ searchQuery: understanding.searchQuery }, 'guide knowledge gap');
@@ -169,7 +176,7 @@ export async function runTurn(args: {
     steps.push('answer');
     let result: AnswerResult;
     try {
-      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), ctl.signal);
+      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), AbortSignal.any([ctl.signal, AbortSignal.timeout(ANSWER_TIMEOUT_MS)]));
     } catch (error) {
       if (!(error instanceof AIFailureError)) throw error;
       logger.error({ err: error, assistantMessageId: ids.assistantMessageId }, 'guide answer failed');
@@ -178,12 +185,16 @@ export async function runTurn(args: {
     }
     spend.model = addUsage(spend.model, result.usage);
     if (result.stopReason !== 'end_turn') g.dropTail();
+    if (result.stopReason === 'aborted' && !aborted()) {
+      logger.error({ assistantMessageId: ids.assistantMessageId }, 'guide answer timed out');
+      return await failed();
+    }
     const released = g.end();
     if (result.stopReason === 'refusal') {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');
       say(GUIDE_REFUSAL_REPLY);
     }
-    if (aborted()) return await finish(aborted()!, textPartSent());
+    if (aborted()) return await finish(aborted()!, replyTextSent());
 
     steps.push('verify');
     verified = verify(released, passages);
@@ -191,7 +202,7 @@ export async function runTurn(args: {
     if (result.stopReason === 'max_tokens') logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer truncated');
     endParts({ verify: verified, stopReason: result.stopReason, ctx, answerText: released.map((s) => s.text).join(' ') }).forEach(emit);
     (await rememberParts()).forEach(emit);
-    return await finish('complete', textPartSent());
+    return await finish('complete', replyTextSent());
   } catch (error) {
     // C13: nothing escapes once the stream is open; the row must never stay streaming
     logger.error({ err: error, assistantMessageId: ids.assistantMessageId }, 'guide turn failed');
@@ -216,5 +227,8 @@ export async function cancelTurn(userId: string, assistantMessageId: string): Pr
     select: { id: true },
   });
   if (!row) throw new AppError('MESSAGE_NOT_FOUND', 'Message not found.', 404);
-  running.get(assistantMessageId)?.abort('cancelled' satisfies AbortStatus);
+  const ctl = running.get(assistantMessageId);
+  if (ctl) return ctl.abort('cancelled' satisfies AbortStatus);
+  // No stream in this process (it died with a restart): close the row now instead of waiting for the sweeper. What was sent is unknown, so it counts.
+  await finishTurn(assistantMessageId, { status: 'cancelled', parts: [], text: '', meta: {}, textSent: true });
 }

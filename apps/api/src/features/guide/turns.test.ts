@@ -63,6 +63,7 @@ describe('startTurn', () => {
     await userRows(1, new Date(Date.now() - 3600_000), false);
     const res = await Promise.allSettled([startTurn(userId, 'a', home), startTurn(userId, 'b', home)]);
     expect(res.filter(r => r.status === 'fulfilled')).toHaveLength(1);
+    expect((res.find(r => r.status === 'rejected') as PromiseRejectedResult).reason).toMatchObject(rejects409);
     await expectOneTurn();
   });
 

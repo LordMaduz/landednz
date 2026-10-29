@@ -22,6 +22,12 @@ vi.mock('./live.js', () => ({
   })),
 }));
 
+// Real remember by default; one test makes it throw
+vi.mock('./remember.js', async (importOriginal) => {
+  const m = await importOriginal<typeof import('./remember.js')>();
+  return { ...m, remember: vi.fn(m.remember) };
+});
+
 import type { FastifyInstance } from 'fastify';
 import type { GuideSseEvent, ReplyPart } from '@landednz/types';
 import { db } from '../../shared/db.js';
@@ -30,6 +36,7 @@ import { setMockAnswer, setMockStructured } from '../../shared/ai/mock.js';
 import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
 import { turnCostCents } from './service.js';
+import { remember } from './remember.js';
 
 let app: FastifyInstance;
 let userId: string;
@@ -189,6 +196,55 @@ describe('POST /guide/messages', () => {
     expect((await db.guideMessage.findUniqueOrThrow({ where: { id: assistantMessageId } })).status).toBe('complete');
   });
 
+  test('distress then answer failure before answer text: failed, crisis text kept, question not counting', async () => {
+    setMockAnswer(async () => {
+      throw new AIFailureError('boom');
+    });
+    const events = parseSse((await ask("I can't go on, I don't know how to get an IRD number")).body);
+    expect((parts(events).find((p) => p.type === 'text') as { text: string }).text).toMatch(/^Lifeline NZ/);
+    expect(parts(events)).toContainEqual({ type: 'error', code: 'AI_FAILURE', retryable: true });
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+    const { userMessageId } = events[0]!.data as { userMessageId: string };
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(false);
+  });
+
+  test('answer failure after answer text: interrupted notice, text kept, question counts', async () => {
+    setMockAnswer(async (_req, onEvent) => {
+      onEvent({ type: 'text', text: 'First sentence is here. ' });
+      onEvent({ type: 'block_end' });
+      throw new AIFailureError('boom');
+    });
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    expect(parts(events)).toContainEqual({ type: 'notice', kind: 'interrupted' });
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'interrupted' } });
+    const { userMessageId } = events[0]!.data as { userMessageId: string };
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(true);
+  });
+
+  test('an answer aborted by its own timeout (not by the user) ends failed, not complete', async () => {
+    setMockAnswer(async () => ({ stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } }));
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+  });
+
+  test('a memory save error after a full answer still completes', async () => {
+    vi.mocked(remember).mockRejectedValueOnce(new Error('db down'));
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+    expect(parts(events).some((p) => p.type === 'notice' && p.kind === 'interrupted')).toBe(false);
+  });
+
+  test('a screen taskKey over 16 characters is 400 and writes nothing', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/guide/messages',
+      headers: { Authorization: `Bearer ${jwt}` },
+      payload: { text: 'hi', screen: { kind: 'task', taskKey: 'x'.repeat(17) } },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(await db.guideMessage.count({ where: { conversation: { userId } } })).toBe(0);
+  });
+
   test('distress: the first text part is the Lifeline crisis text', async () => {
     const ps = parts(parseSse((await ask("I can't go on, I don't know how to get an IRD number")).body));
     const firstText = ps.find((p) => p.type === 'text') as { text: string };
@@ -226,6 +282,32 @@ describe('POST /guide/messages/:id/cancel', () => {
     const res = await app.inject({ method: 'POST', url: `/guide/messages/${a.id}/cancel`, headers: { Authorization: `Bearer ${otherJwt}` } });
     expect(res.statusCode).toBe(404);
     expect(res.json().error).toBe('MESSAGE_NOT_FOUND');
+  });
+
+  test('cancel of a streaming row with no running stream (after a restart) marks it cancelled and frees the user', async () => {
+    const conv = await conversationId();
+    const q = await db.guideMessage.create({ data: { conversationId: conv, role: 'user', text: 'q', screenKind: 'home', status: 'complete' } });
+    const a = await db.guideMessage.create({ data: { conversationId: conv, role: 'assistant', text: '', screenKind: 'home', status: 'streaming', replyToId: q.id } });
+    const res = await app.inject({ method: 'POST', url: `/guide/messages/${a.id}/cancel`, headers: { Authorization: `Bearer ${jwt}` } });
+    expect(res.statusCode).toBe(204);
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: a.id } })).status).toBe('cancelled');
+    expect((await ask('How do I get an IRD number?')).statusCode).toBe(200);
+  });
+
+  test('distress then cancel before answer text: cancelled, question not counting (crisis text is free)', async () => {
+    let reached!: () => void;
+    const atAnswer = new Promise<void>((resolve) => (reached = resolve));
+    setMockAnswer(async (_req, _onEvent, signal) => {
+      reached();
+      await new Promise((resolve) => signal!.addEventListener('abort', resolve));
+      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } };
+    });
+    const pending = ask("I can't go on, I don't know how to get an IRD number");
+    await atAnswer;
+    const row = await db.guideMessage.findFirstOrThrow({ where: { conversation: { userId }, role: 'assistant', status: 'streaming' } });
+    await app.inject({ method: 'POST', url: `/guide/messages/${row.id}/cancel`, headers: { Authorization: `Bearer ${jwt}` } });
+    expect(parseSse((await pending).body).at(-1)).toMatchObject({ event: 'done', data: { status: 'cancelled' } });
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: row.replyToId! } })).countsTowardCap).toBe(false);
   });
 
   test('cancel mid-answer ends the stream as cancelled and keeps sent text', async () => {

@@ -10,7 +10,7 @@ import { cancelTurn, runTurn } from './service.js';
 
 const askSchema = z.object({
   text: z.string().trim().min(1).max(2000),
-  screen: z.object({ kind: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).optional() }),
+  screen: z.object({ kind: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).max(16).optional() }),
 });
 
 const conversationQuery = z.object({
@@ -18,7 +18,7 @@ const conversationQuery = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });
 
-const openingQuery = z.object({ screen: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).optional() });
+const openingQuery = z.object({ screen: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).max(16).optional() });
 
 const memoryBody = z.object({ text: z.string() });
 
