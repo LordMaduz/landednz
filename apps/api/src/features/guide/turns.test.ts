@@ -45,6 +45,12 @@ describe('startTurn', () => {
     expect(a).toMatchObject({ role: 'assistant', status: 'streaming', replyToId: r.userMessageId, screenKind: 'task', taskKey: 'ird' });
   });
 
+  test('the assistant row is created after its question', async () => {
+    const r = await startTurn(userId, 'hello', home);
+    const [u, a] = await Promise.all([r.userMessageId, r.assistantMessageId].map(id => db.guideMessage.findUniqueOrThrow({ where: { id } })));
+    expect(a.createdAt.getTime()).toBeGreaterThan(u.createdAt.getTime());
+  });
+
   test('two concurrent starts: one wins, one gets 409 GUIDE_BUSY', async () => {
     const res = await Promise.allSettled([startTurn(userId, 'a', home), startTurn(userId, 'b', home)]);
     expect(res.filter(r => r.status === 'fulfilled')).toHaveLength(1);

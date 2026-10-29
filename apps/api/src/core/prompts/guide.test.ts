@@ -74,9 +74,9 @@ describe('guide copy', () => {
 
   test('unverified note names the host, or drops the last sentence without one', () => {
     expect(buildUnverifiedNote('the fee', 'ird.govt.nz')).toBe(
-      "I couldn't confirm the fee against an official source. Check ird.govt.nz.",
+      'I couldn\'t confirm "the fee" against an official source. Check ird.govt.nz.',
     );
-    expect(buildUnverifiedNote('the fee', null)).toBe("I couldn't confirm the fee against an official source.");
+    expect(buildUnverifiedNote('the fee', null)).toBe('I couldn\'t confirm "the fee" against an official source.');
   });
 
   test('follow-ups', () => {

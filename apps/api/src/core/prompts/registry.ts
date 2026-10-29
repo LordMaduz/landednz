@@ -396,7 +396,7 @@ export const GUIDE_REFUSAL_REPLY =
   "I can't help with that one. The government agency that handles it is the best place to ask.";
 
 export function buildUnverifiedNote(claim: string, host: string | null): string {
-  const note = `I couldn't confirm ${claim} against an official source.`;
+  const note = `I couldn't confirm "${claim}" against an official source.`;
   return host ? `${note} Check ${host}.` : note;
 }
 

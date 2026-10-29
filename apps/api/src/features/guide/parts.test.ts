@@ -4,7 +4,7 @@ import type { GuideContext, VerifyResult } from './types.js';
 
 const ctx = { nextTasks: [{ taskKey: 'T08', title: 'Get your IRD number' }] } as GuideContext;
 const clean: VerifyResult = { unmatchedCitations: 0, uncitedClaims: [], note: null };
-const note = { type: 'unverified' as const, text: "I couldn't confirm the fee against an official source." };
+const note = { type: 'unverified' as const, text: 'I couldn\'t confirm "the fee" against an official source.' };
 
 describe('endParts', () => {
   test('max_tokens ends with a truncated notice and "Want the rest?"', () => {

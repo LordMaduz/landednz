@@ -4,16 +4,24 @@ import type { Passage, ReleasedSentence, VerifyResult } from './types.js';
 
 const FACTUAL = /\d|\$|%|\b(eligible|eligibility|must|required|fee|cost|deadline)\b/i;
 const NOTE_CLAIM_CHARS = 60;
+const LIST_MARKER = /^\s*\d+[.)]\s+/;
 
 const normalise = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
 function hostOf(url: string | undefined): string | null {
   if (!url) return null;
   try {
-    return new URL(url).hostname;
+    return new URL(url).hostname.replace(/^www\./, '');
   } catch {
     return null;
   }
+}
+
+function claimOf(text: string): string {
+  const claim = text.replace(LIST_MARKER, '').replace(/[.!?…]+["')\u201d\u2019]*\s*$/, '').trim();
+  if (claim.length <= NOTE_CLAIM_CHARS) return claim;
+  const cut = claim.slice(0, NOTE_CLAIM_CHARS + 1).replace(/\s+\S*$/, '');
+  return `${cut || claim.slice(0, NOTE_CLAIM_CHARS)}…`;
 }
 
 export function verify(sentences: ReleasedSentence[], passages: Passage[]): VerifyResult {
@@ -23,8 +31,8 @@ export function verify(sentences: ReleasedSentence[], passages: Passage[]): Veri
   let firstFailing: ReleasedSentence | null = null;
 
   for (const sentence of sentences) {
-    const unmatched = sentence.citations.filter(c => !contents.some(content => content.includes(normalise(c.citedText)))).length;
-    const uncited = sentence.citations.length === 0 && FACTUAL.test(sentence.text);
+    const unmatched = sentence.citations.filter(c => !contents[c.passageIndex]?.includes(normalise(c.citedText))).length;
+    const uncited = sentence.citations.length === 0 && FACTUAL.test(sentence.text.replace(LIST_MARKER, ''));
     unmatchedCitations += unmatched;
     if (uncited) uncitedClaims.push(sentence.text);
     if ((unmatched > 0 || uncited) && !firstFailing) firstFailing = sentence;
@@ -36,6 +44,6 @@ export function verify(sentences: ReleasedSentence[], passages: Passage[]): Veri
   return {
     unmatchedCitations,
     uncitedClaims,
-    note: { type: 'unverified', text: buildUnverifiedNote(firstFailing.text.slice(0, NOTE_CLAIM_CHARS), host) },
+    note: { type: 'unverified', text: buildUnverifiedNote(claimOf(firstFailing.text), host) },
   };
 }

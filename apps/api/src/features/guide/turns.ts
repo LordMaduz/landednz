@@ -31,7 +31,7 @@ export async function startTurn(userId: string, text: string, screen: GuideScree
         data: { conversationId, role: 'user', text, status: 'complete', countsTowardCap: true, createdAt: now, ...base },
       });
       const assistant = await tx.guideMessage.create({
-        data: { conversationId, role: 'assistant', text: '', status: 'streaming', replyToId: user.id, createdAt: now, streamStartedAt: now, ...base },
+        data: { conversationId, role: 'assistant', text: '', status: 'streaming', replyToId: user.id, createdAt: new Date(now.getTime() + 1), streamStartedAt: now, ...base },
       });
       return { conversationId, userMessageId: user.id, assistantMessageId: assistant.id };
     });
