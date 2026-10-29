@@ -22,6 +22,12 @@ vi.mock('./live.js', () => ({
   })),
 }));
 
+// Real retrieve by default; tests make it fail or hang
+vi.mock('./retrieve.js', async (importOriginal) => {
+  const m = await importOriginal<typeof import('./retrieve.js')>();
+  return { ...m, retrieve: vi.fn(m.retrieve) };
+});
+
 // Real remember by default; one test makes it throw
 vi.mock('./remember.js', async (importOriginal) => {
   const m = await importOriginal<typeof import('./remember.js')>();
@@ -37,6 +43,8 @@ import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.j
 import { buildApp } from '../../server.js';
 import { turnCostCents } from './service.js';
 import { remember } from './remember.js';
+import { retrieve } from './retrieve.js';
+import { GUIDE_CRISIS_TEXT } from '../../core/prompts/registry.js';
 
 let app: FastifyInstance;
 let userId: string;
@@ -253,6 +261,25 @@ describe('POST /guide/messages', () => {
     const ps = parts(parseSse((await ask("I can't go on, I don't know how to get an IRD number")).body));
     const firstText = ps.find((p) => p.type === 'text') as { text: string };
     expect(firstText.text.startsWith('Lifeline NZ: 0800 543 354')).toBe(true);
+  });
+
+  test('keyword crisis text is sent before retrieve finishes, so a retrieve failure still shows it', async () => {
+    vi.mocked(retrieve).mockRejectedValueOnce(new Error('embedding down'));
+    const events = parseSse((await ask('Nothing is working out and I want to end my life')).body);
+    expect(parts(events)).toEqual([
+      { type: 'notice', kind: 'checking_guide' },
+      { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [] },
+      { type: 'error', code: 'AI_FAILURE', retryable: true },
+    ]);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+    const { userMessageId } = events[0]!.data as { userMessageId: string };
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(false);
+  });
+
+  test('crisis text appears once when Haiku and the keyword check both fire', async () => {
+    setMockStructured(() => ({ searchQuery: 'want to end my life', scope: 'in', redirectAgency: null, needsLive: false, distress: true, memoryCandidates: [] }));
+    const ps = parts(parseSse((await ask('Nothing is working out and I want to end my life')).body));
+    expect(ps.filter((p) => p.type === 'text' && p.text === GUIDE_CRISIS_TEXT)).toHaveLength(1);
   });
 
   test('distress marked out of scope still gets an answer after the crisis text, not the redirect (spec §6.4)', async () => {

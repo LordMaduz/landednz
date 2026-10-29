@@ -8,7 +8,7 @@ import { AppError, AIFailureError } from '../../shared/errors.js';
 import { noUsage, streamGuideAnswer, type AnswerResult, type TokenUsage } from '../../shared/ai/claude.client.js';
 import { GUIDE_CRISIS_TEXT, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
 import { loadGuideContext } from './context.js';
-import { understand, type HistoryTurn } from './understand.js';
+import { hasCrisisSignal, understand, type HistoryTurn } from './understand.js';
 import { fusePassages, retrieve } from './retrieve.js';
 import { liveSources } from './live.js';
 import { createSentenceGate, type SentenceGate } from './sentences.js';
@@ -115,11 +115,14 @@ export async function runTurn(args: {
   };
   // A question counts once answer or fixed-reply text was sent; crisis text alone never costs one
   const replyTextSent = () => sent.some((p) => p.type === 'text' && p.text !== GUIDE_CRISIS_TEXT);
+  const crisisSent = () => sent.some((p) => p.type === 'text' && p.text === GUIDE_CRISIS_TEXT);
   const aborted = () => (ctl.signal.aborted ? (ctl.signal.reason as AbortStatus) : null);
 
   sse.send({ event: 'start', data: ids });
   try {
     emit({ type: 'notice', kind: 'checking_guide' });
+    // C08: the keyword check needs no model, so its crisis text goes out before anything can fail
+    if (hasCrisisSignal(question)) say(GUIDE_CRISIS_TEXT);
     const [ctx, history] = await Promise.all([loadGuideContext(userId, args.screen), loadHistory(ids.userMessageId)]);
     const retrieveOpts = { profile: ctx.profile, taskKey: ctx.currentTask?.taskKey ?? null };
 
@@ -143,7 +146,7 @@ export async function runTurn(args: {
     if (aborted()) return await finish(aborted()!, false);
 
     // C08: crisis text before any settlement information
-    if (understanding.distress) say(GUIDE_CRISIS_TEXT);
+    if (understanding.distress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
     const skipMemory = args.isRetry || understanding.scope === 'out' || understanding.distress;
     const rememberParts = async (): Promise<ReplyPart[]> => {
       if (!skipMemory) steps.push('remember');
