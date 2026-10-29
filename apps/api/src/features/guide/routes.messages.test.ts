@@ -369,6 +369,24 @@ describe('POST /guide/messages', () => {
     expect(texts[1]).toMatch(/^I couldn't find this in checked sources/);
   });
 
+  test('late distress then an answer failure before text: crisis text before the error, not counting', async () => {
+    let resolveLate!: (d: boolean) => void;
+    const late = new Promise<boolean>((resolve) => (resolveLate = resolve));
+    vi.mocked(understand).mockImplementationOnce(async (q) => timedOut(q, late));
+    setMockAnswer(async () => {
+      resolveLate(true);
+      await new Promise((r) => setTimeout(r, 0));
+      throw new AIFailureError('boom');
+    });
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    const ps = parts(events);
+    expect(ps.findIndex(isText(GUIDE_CRISIS_TEXT))).toBeGreaterThanOrEqual(0);
+    expect(ps.findIndex(isText(GUIDE_CRISIS_TEXT))).toBeLessThan(ps.findIndex((p) => p.type === 'error'));
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+    const { userMessageId } = events[0]!.data as { userMessageId: string };
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(false);
+  });
+
   test('late distress after the answer started ends the reply with the 1737 check-in', async () => {
     let resolveLate!: (d: boolean) => void;
     const late = new Promise<boolean>((resolve) => (resolveLate = resolve));

@@ -81,6 +81,7 @@ export async function runTurn(args: {
   // released sentences with the text they cited; stored for the accuracy judge (Task 15)
   let claims: { text: string; cited: string[] }[] = [];
   let finished = false;
+  let lateDistress = false;
 
   const sse = openSse(args.reply);
   const ctl = new AbortController();
@@ -118,6 +119,10 @@ export async function runTurn(args: {
   // A question counts once answer or fixed-reply text was sent; crisis text alone never costs one
   const replyTextSent = () => sent.some((p) => p.type === 'text' && p.text !== GUIDE_CRISIS_TEXT);
   const crisisSent = () => sent.some((p) => p.type === 'text' && p.text === GUIDE_CRISIS_TEXT);
+  // A late Haiku distress (spec §6.4): full crisis text before any answer text, the 1737 check-in after it
+  const sayLateDistress = (): void => {
+    if (lateDistress && !crisisSent()) say(answerTextSent() ? GUIDE_DISTRESS_CHECKIN : GUIDE_CRISIS_TEXT);
+  };
   const aborted = () => (ctl.signal.aborted ? (ctl.signal.reason as AbortStatus) : null);
 
   sse.send({ event: 'start', data: ids });
@@ -149,7 +154,6 @@ export async function runTurn(args: {
     ]);
     spend.understand = understanding.usage;
     // Haiku timed out but keeps running: its distress can still arrive (spec §6.4)
-    let lateDistress = false;
     understanding.lateDistress?.then((d) => {
       lateDistress = d;
     });
@@ -189,8 +193,7 @@ export async function runTurn(args: {
     }
     if (aborted()) return await finish(aborted()!, replyTextSent());
 
-    // A late Haiku distress before any reply text: crisis text now (spec §6.4)
-    if (lateDistress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
+    sayLateDistress();
     if (passages.length === 0) {
       logger.info({ searchQuery: understanding.searchQuery }, 'guide knowledge gap');
       say(GUIDE_NOTHING_FOUND_REPLY(understanding.redirectAgency));
@@ -217,12 +220,12 @@ export async function runTurn(args: {
       return await failed();
     }
     const released = g.end();
-    if (lateDistress && !crisisSent()) say(GUIDE_DISTRESS_CHECKIN);
     claims = released.map((r) => ({ text: r.text, cited: r.citations.map((c) => c.citedText) }));
     if (result.stopReason === 'refusal') {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');
       say(GUIDE_REFUSAL_REPLY);
     }
+    sayLateDistress();
     if (aborted()) return await finish(aborted()!, replyTextSent());
 
     steps.push('verify');
@@ -241,6 +244,7 @@ export async function runTurn(args: {
 
   // Before any answer text: error + Retry, question stops counting. After: keep the text, mark interrupted.
   async function failed(): Promise<void> {
+    sayLateDistress();
     if (answerTextSent()) {
       emit({ type: 'notice', kind: 'interrupted' });
       return finish('interrupted', true);

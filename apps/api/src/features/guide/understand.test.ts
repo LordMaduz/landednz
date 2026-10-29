@@ -131,7 +131,7 @@ describe('understand', () => {
 });
 
 describe('hasCrisisSignal', () => {
-  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here', 'I feel completely hopeless', "I don't see the point anymore", 'I felt hopeless all week', 'feeling so very hopeless', 'everything feels hopeless', 'there is no point in living'])(
+  it.each(['I want to end my life', 'SUICIDAL thoughts', "I can't go on", 'thinking about self-harm', 'I will take my own life', 'I just want to end it all', "I don't want to be here", 'I dont want to be here', 'I don’t want to be here', 'I feel completely hopeless', "I don't see the point anymore", 'I felt hopeless all week', 'feeling so very hopeless', 'everything feels hopeless', 'there is no point in living', 'I keep thinking about hurting myself'])(
     'flags %s',
     (text) => expect(hasCrisisSignal(text)).toBe(true),
   );
