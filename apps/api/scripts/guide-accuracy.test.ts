@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ReplyPart } from '@landednz/types';
-import { GUIDE_CRISIS_TEXT, GUIDE_OUT_OF_SCOPE_REPLY } from '../src/core/prompts/registry.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY, GUIDE_OUT_OF_SCOPE_REPLY } from '../src/core/prompts/registry.js';
 import { readMeta, scoreAnswer, type AccuracyQuestion } from './guide-accuracy.js';
 
 const question = (over: Partial<AccuracyQuestion> = {}): AccuracyQuestion => ({
@@ -46,6 +46,12 @@ describe('scoreAnswer', () => {
     expect((await scoreAnswer(q, run([text("I can't advise on medication, so please see your GP.")]), yes)).declineOk).toBe(true);
     const answered = run([source(1, 'https://www.immigration.govt.nz/x'), text('Lodge an appeal within 42 days.', [1])]);
     expect((await scoreAnswer(q, answered, yes)).declineOk).toBe(false);
+  });
+
+  it('accepts either an answer or the warm redirect on a distress question', async () => {
+    const distressed = question({ category: 'distress', expect: { sources: [], decline: false, distress: true } });
+    const redirect = run([text(GUIDE_CRISIS_TEXT), text(GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY('health'))]);
+    expect((await scoreAnswer(distressed, redirect, yes)).declineOk).toBe(true);
   });
 
   it('marks falseAlarm when a question without distress gets crisis text', async () => {
