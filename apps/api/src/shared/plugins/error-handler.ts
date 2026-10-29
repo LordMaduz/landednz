@@ -11,7 +11,7 @@ export function registerErrorHandler(app: FastifyInstance): void {
     (error: FastifyError | AppError | Error, _request: FastifyRequest, reply: FastifyReply) => {
       if (error instanceof AppError) {
         logger.warn({ code: error.code, statusCode: error.statusCode }, error.message)
-        reply.status(error.statusCode).send({ error: error.code, message: error.message })
+        reply.status(error.statusCode).send({ error: error.code, message: error.message, ...error.details })
         return
       }
 

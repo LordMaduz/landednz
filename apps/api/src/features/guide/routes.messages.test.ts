@@ -35,7 +35,8 @@ vi.mock('./remember.js', async (importOriginal) => {
 });
 
 import type { FastifyInstance } from 'fastify';
-import type { GuideSseEvent, ReplyPart } from '@landednz/types';
+import type { GuideCapError, GuideSseEvent, ReplyPart } from '@landednz/types';
+import { nextNzMidnight } from '../../shared/nz-day.js';
 import { db } from '../../shared/db.js';
 import { AIFailureError } from '../../shared/errors.js';
 import { setMockAnswer, setMockStructured } from '../../shared/ai/mock.js';
@@ -181,7 +182,9 @@ describe('POST /guide/messages', () => {
     });
     const res = await ask('How do I get an IRD number?');
     expect(res.statusCode).toBe(429);
-    expect(res.json().error).toBe('CHAT_DAILY_CAP_REACHED');
+    const body = res.json() as GuideCapError;
+    expect(body.error).toBe('CHAT_DAILY_CAP_REACHED');
+    expect(body.resetAt).toBe(nextNzMidnight(new Date()).toISOString());
   });
 
   test('answer failure before text: error part, failed, not counting; retry completes and counts', async () => {

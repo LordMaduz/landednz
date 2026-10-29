@@ -12,8 +12,8 @@ export function countToday(tx: TransactionClient, conversationId: string, now: D
 
 export async function assertUnderGuideCap(tx: TransactionClient, conversationId: string, now: Date): Promise<void> {
   if ((await countToday(tx, conversationId, now)) >= config.guideDailyCap) {
-    throw new AppError('CHAT_DAILY_CAP_REACHED', 'Daily question limit reached. It resets at midnight NZ time.', 429);
+    throw new AppError('CHAT_DAILY_CAP_REACHED', 'Daily question limit reached. It resets at midnight NZ time.', 429, {
+      resetAt: nextNzMidnight(now).toISOString(),
+    });
   }
 }
-
-export const capResetAt = nextNzMidnight;

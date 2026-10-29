@@ -59,6 +59,9 @@ export type GuideSseEvent =
   | { event: 'part'; data: ReplyPart }
   | { event: 'done'; data: { assistantMessageId: string; status: GuideMessageStatus } };
 
+// 429 body of POST /guide/messages and retry; resetAt is the next midnight NZ time (ISO)
+export type GuideCapError = { error: 'CHAT_DAILY_CAP_REACHED'; message: string; resetAt: string };
+
 export type GuideMessageDto = {
   id: string;
   role: 'user' | 'assistant';

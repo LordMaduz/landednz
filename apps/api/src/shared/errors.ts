@@ -31,6 +31,8 @@ export class AppError extends Error {
     public readonly code: ErrorCode,
     message: string,
     public readonly statusCode: number = 500,
+    // extra body fields for the client, e.g. resetAt on the daily cap
+    public readonly details?: Record<string, unknown>,
   ) {
     super(message)
     this.name = 'AppError'
