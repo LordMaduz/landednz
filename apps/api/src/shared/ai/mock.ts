@@ -51,7 +51,6 @@ export async function mockAnswerStream(
   onEvent({ type: 'text', text: 'This is a mock reply from LandedNZ. ' });
   const firstDoc = req.documents[0];
   if (firstDoc) onEvent({ type: 'citation', documentIndex: 0, citedText: firstDoc.text.slice(0, 40) });
-  onEvent({ type: 'block_end' });
   onEvent({ type: 'text', text: 'It has a second sentence.' });
   onEvent({ type: 'block_end' });
   return { stopReason: 'end_turn', usage };
