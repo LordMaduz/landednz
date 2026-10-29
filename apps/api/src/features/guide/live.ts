@@ -13,6 +13,7 @@ export type LiveDeps = {
 };
 
 const MAX_BYTES = 2 * 1024 * 1024;
+const MAX_PASSAGES_PER_PAGE = 20;
 const STEP_MS = 5000;
 const HOUR = 3600_000;
 const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" };
@@ -92,10 +93,14 @@ async function run(query: string, candidates: Passage[], d: LiveDeps, signal: Ab
   const pages = (await Promise.all(urls.map((u) => loadPage(u, d, signal)))).filter((p): p is Page => !!p);
   if (!pages.length) return [];
   const q = await generateEmbedding(query);
-  const all = await Promise.all(pages.flatMap((p) => split(p.content).map(async (content, i): Promise<Passage> => ({
-    id: `live:${p.url}#${i}`, title: p.title, url: p.url, origin: 'official', content,
-    similarity: cosine(q, await generateEmbedding(content)), taskKey: null, checkedAt: p.fetchedAt.toISOString(),
-  }))));
+  // shortcut: only the first 20 passages per page are embedded, later sections are never considered; upgrade to a batched embedding call if accuracy runs show misses
+  const all = (await Promise.all(pages.flatMap((p) => split(p.content).slice(0, MAX_PASSAGES_PER_PAGE).map(async (content, i): Promise<Passage | null> => {
+    if (signal.aborted) return null; // step timed out: stop spending on the embedding provider
+    return {
+      id: `live:${p.url}#${i}`, title: p.title, url: p.url, origin: 'official', content,
+      similarity: cosine(q, await generateEmbedding(content)), taskKey: null, checkedAt: p.fetchedAt.toISOString(),
+    };
+  })))).filter((x): x is Passage => !!x);
   return all.sort((a, b) => b.similarity - a.similarity).slice(0, 3);
 }
 

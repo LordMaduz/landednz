@@ -1,8 +1,14 @@
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
+import * as embeddings from '../../shared/ai/embeddings.client.js';
 import { db } from '../../shared/db.js';
 import { isAllowedHost } from './allowlist.js';
 import { htmlToText, liveSources, type LiveDeps } from './live.js';
 import type { Passage } from './types.js';
+
+vi.mock('../../shared/ai/embeddings.client.js', async (orig) => {
+  const m = await orig<typeof import('../../shared/ai/embeddings.client.js')>();
+  return { ...m, generateEmbedding: vi.fn(m.generateEmbedding) };
+});
 
 const run = Math.random().toString(36).slice(2);
 const u = (n: string) => `https://www.ird.govt.nz/t8-${run}-${n}`;
@@ -82,6 +88,13 @@ describe('liveSources', () => {
     const body = html(Array.from({ length: 12 }, (_, i) => `<p>${`para ${i} `.repeat(60)}</p>`).join(''));
     const r = await liveSources('q', [cand(u('f'))], deps({ fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html', body })) }));
     expect(r.passages.length).toBe(3);
+  });
+
+  it('embeds at most 20 passages per page plus the query', async () => {
+    const body = html(Array.from({ length: 50 }, (_, i) => `<p>${`para ${i} `.repeat(150)}</p>`).join(''));
+    vi.mocked(embeddings.generateEmbedding).mockClear();
+    await liveSources('q', [cand(u('h'))], deps({ fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html', body })) }));
+    expect(vi.mocked(embeddings.generateEmbedding).mock.calls.length).toBe(21);
   });
 
   it('gives up on a 6 s fetch within 5.5 s', async () => {
