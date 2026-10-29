@@ -52,7 +52,7 @@ afterEach(() => {
 describe('understand', () => {
   it('passes the Haiku result through', async () => {
     setMockStructured(() => haikuResult);
-    expect(await understand('how do I get one?', [], ctx)).toEqual({ ...haikuResult, usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } });
+    expect(await understand('how do I get one?', [], ctx)).toEqual({ ...haikuResult, usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, lateDistress: null });
   });
 
   it('uses the question when Haiku returns a blank searchQuery', async () => {
@@ -72,6 +72,7 @@ describe('understand', () => {
       distress: false,
       memoryCandidates: [],
       usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+      lateDistress: null,
     });
   });
 
@@ -84,6 +85,24 @@ describe('understand', () => {
     expect(settled).toBe(false);
     await vi.advanceTimersByTimeAsync(700);
     await expect(result).resolves.toMatchObject({ searchQuery: 'What is KiwiSaver?', scope: 'in' });
+  });
+
+  it('a Haiku reply after the budget still reports distress through lateDistress', async () => {
+    setMockStructured(() => new Promise((resolve) => setTimeout(() => resolve({ ...haikuResult, distress: true }), 80)));
+    const result = await understand('How do I get an IRD number?', [], ctx, 20);
+    expect(result).toMatchObject({ searchQuery: 'How do I get an IRD number?', distress: false });
+    expect(await result.lateDistress).toBe(true);
+  });
+
+  it('an in-time reply has no lateDistress', async () => {
+    setMockStructured(() => haikuResult);
+    expect((await understand('how do I get one?', [], ctx)).lateDistress).toBeNull();
+  });
+
+  it('a late call that errors resolves lateDistress to false', async () => {
+    setMockStructured(() => new Promise((_, reject) => setTimeout(() => reject(new Error('boom')), 80)));
+    const result = await understand('How do I get an IRD number?', [], ctx, 20);
+    expect(await result.lateDistress).toBe(false);
   });
 
   it('turns distress on from the keyword check when Haiku says no', async () => {

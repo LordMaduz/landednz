@@ -7,12 +7,15 @@ import { GUIDE_AGENCIES, type GuideContext, type Understanding } from './types.j
 
 export type HistoryTurn = { role: 'user' | 'assistant'; content: string };
 
-// usage is the Haiku call's tokens, for the turn's cost (zero on fallback)
-export type UnderstandResult = Understanding & { usage: TokenUsage };
+// usage is the Haiku call's tokens, for the turn's cost (zero on fallback).
+// lateDistress: on timeout, the still-running call's distress (false if it errors); null otherwise.
+export type UnderstandResult = Understanding & { usage: TokenUsage; lateDistress: Promise<boolean> | null };
 
 // Live Haiku (S7, 2026-10-30): p75 ~1.7 s, ~10% of calls reach 2 s; round-trip floor ~1 s; thinking makes no difference at effort low.
 // A fallback loses Haiku's distress and scope signals (C08), so the budget covers the tail
 const TIMEOUT_MS = 3_000;
+// The client call outlives the budget so a late distress signal still reaches the turn (spec §6.4)
+const LATE_MS = 15_000;
 const MAX_MEMORY_CANDIDATES = 3;
 const MAX_MEMORY_CHARS = 200;
 const HISTORY_TURNS = 6;
@@ -42,6 +45,7 @@ const fallback = (question: string): UnderstandResult => ({
   distress: false,
   memoryCandidates: [],
   usage: noUsage(),
+  lateDistress: null,
 });
 
 function buildUserMessage(question: string, history: HistoryTurn[], ctx: GuideContext): string {
@@ -55,17 +59,17 @@ function buildUserMessage(question: string, history: HistoryTurn[], ctx: GuideCo
     .join('\n\n');
 }
 
-async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<UnderstandResult> {
+async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideContext, timeoutMs: number): Promise<UnderstandResult> {
+  const call = structuredHaiku(GUIDE_UNDERSTAND_PROMPT, buildUserMessage(question, history, ctx), understandingSchema, LATE_MS);
   let timer: NodeJS.Timeout | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new Error('understand timed out')), TIMEOUT_MS);
-  });
   try {
-    // The client aborts at the same limit; this race also covers mock mode and a stuck parse.
-    const { value: parsed, usage } = await Promise.race([
-      structuredHaiku(GUIDE_UNDERSTAND_PROMPT, buildUserMessage(question, history, ctx), understandingSchema, TIMEOUT_MS),
-      timeout,
-    ]);
+    // Only the wait is bounded; the call itself keeps running for lateDistress
+    const reply = await Promise.race([call, new Promise<null>((resolve) => (timer = setTimeout(() => resolve(null), timeoutMs)))]);
+    if (!reply) {
+      logger.warn('guide understand timed out, distress checked late');
+      return { ...fallback(question), lateDistress: call.then((r) => r.value.distress, () => false) };
+    }
+    const { value: parsed, usage } = reply;
     return {
       ...parsed,
       searchQuery: parsed.searchQuery.trim() || question,
@@ -73,16 +77,17 @@ async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideCon
         .slice(0, MAX_MEMORY_CANDIDATES)
         .map((m) => ({ ...m, text: m.text.slice(0, MAX_MEMORY_CHARS) })),
       usage,
+      lateDistress: null,
     };
   } finally {
     clearTimeout(timer);
   }
 }
 
-export async function understand(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<UnderstandResult> {
+export async function understand(question: string, history: HistoryTurn[], ctx: GuideContext, timeoutMs = TIMEOUT_MS): Promise<UnderstandResult> {
   let result: UnderstandResult;
   try {
-    result = await callHaiku(question, history, ctx);
+    result = await callHaiku(question, history, ctx, timeoutMs);
   } catch (error) {
     logger.warn({ err: error }, 'guide understand fell back');
     result = fallback(question);

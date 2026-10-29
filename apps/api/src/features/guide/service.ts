@@ -6,7 +6,7 @@ import { config } from '../../shared/config.js';
 import { logger } from '../../shared/logger.js';
 import { AppError, AIFailureError } from '../../shared/errors.js';
 import { noUsage, streamGuideAnswer, type AnswerResult, type TokenUsage } from '../../shared/ai/claude.client.js';
-import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_CHECKIN, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
 import { loadGuideContext } from './context.js';
 import { hasCrisisSignal, understand, type HistoryTurn } from './understand.js';
 import { fusePassages, retrieve } from './retrieve.js';
@@ -148,6 +148,11 @@ export async function runTurn(args: {
       timed('retrieve', retrieve(question, retrieveOpts)),
     ]);
     spend.understand = understanding.usage;
+    // Haiku timed out but keeps running: its distress can still arrive (spec §6.4)
+    let lateDistress = false;
+    understanding.lateDistress?.then((d) => {
+      lateDistress = d;
+    });
     let found = first;
     if (understanding.searchQuery !== question) {
       const again = await timed('retrieve', retrieve(understanding.searchQuery, retrieveOpts));
@@ -191,6 +196,7 @@ export async function runTurn(args: {
       return await finish('complete', true);
     }
 
+    if (lateDistress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
     const g = createSentenceGate({ passages, taskTitles: ctx.taskTitles, emit });
     gate = g;
     steps.push('answer');
@@ -210,6 +216,7 @@ export async function runTurn(args: {
       return await failed();
     }
     const released = g.end();
+    if (lateDistress && !crisisSent()) say(GUIDE_DISTRESS_CHECKIN);
     claims = released.map((r) => ({ text: r.text, cited: r.citations.map((c) => c.citedText) }));
     if (result.stopReason === 'refusal') {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');

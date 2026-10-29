@@ -380,6 +380,9 @@ export const GUIDE_ACCURACY_JUDGE_PROMPT = `You check one sentence from a settle
 export const GUIDE_CRISIS_TEXT =
   'Lifeline NZ: 0800 543 354 (free, any time). Need to Talk? Free call or text 1737. If you are in danger right now, call 111.';
 
+// Ends an answer when Haiku's distress arrived after the answer had started (spec §6.4)
+export const GUIDE_DISTRESS_CHECKIN = 'If things feel heavy right now, you can free call or text 1737 any time to talk with a trained counsellor.';
+
 // Same contacts as the system prompt's Scope section
 const AGENCY_WORDS: Record<GuideAgency, string> = {
   immigration: 'a licensed immigration adviser (find one at iaa.govt.nz) or Immigration New Zealand (immigration.govt.nz)',

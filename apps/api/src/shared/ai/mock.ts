@@ -26,7 +26,7 @@ export function mockEmbedding(text: string): number[] {
   return vector.map(n => n / norm);
 }
 
-// Tests pick the structured fixture; the default throws so callers exercise their fallback path.
+// Tests pick the structured fixture (a value or a promise); the default throws so callers exercise their fallback path.
 type StructuredFixture = (system: string, user: string) => unknown;
 const throwingFixture: StructuredFixture = () => {
   throw new Error('No mock structured fixture set');
@@ -38,7 +38,7 @@ export function setMockStructured(fn: StructuredFixture | null): void {
 }
 
 export async function mockStructured<T>(system: string, user: string, schema: z.ZodType<T>): Promise<T> {
-  return schema.parse(structuredFixture(system, user));
+  return schema.parse(await structuredFixture(system, user));
 }
 
 // Tests can swap the answer stream (e.g. to throw AIFailureError); null restores the default.

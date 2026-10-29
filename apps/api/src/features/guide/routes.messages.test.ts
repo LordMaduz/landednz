@@ -28,6 +28,12 @@ vi.mock('./retrieve.js', async (importOriginal) => {
   return { ...m, retrieve: vi.fn(m.retrieve) };
 });
 
+// Real understand by default; tests make Haiku answer late
+vi.mock('./understand.js', async (importOriginal) => {
+  const m = await importOriginal<typeof import('./understand.js')>();
+  return { ...m, understand: vi.fn(m.understand) };
+});
+
 // Real remember by default; one test makes it throw
 vi.mock('./remember.js', async (importOriginal) => {
   const m = await importOriginal<typeof import('./remember.js')>();
@@ -45,7 +51,8 @@ import { buildApp } from '../../server.js';
 import { TURN_LIMITS, turnCostCents } from './service.js';
 import { remember } from './remember.js';
 import { retrieve } from './retrieve.js';
-import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY } from '../../core/prompts/registry.js';
+import { understand, type UnderstandResult } from './understand.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_CHECKIN, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY } from '../../core/prompts/registry.js';
 
 let app: FastifyInstance;
 let userId: string;
@@ -326,6 +333,48 @@ describe('POST /guide/messages', () => {
       expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(true);
     }
     expect(answer).not.toHaveBeenCalled();
+  });
+
+  // Understand timed out: the fallback, with Haiku's distress still on its way
+  const timedOut = (question: string, lateDistress: Promise<boolean>): UnderstandResult => ({
+    searchQuery: question,
+    scope: 'in',
+    redirectAgency: null,
+    needsLive: false,
+    distress: false,
+    memoryCandidates: [],
+    usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    lateDistress,
+  });
+  const isText = (text: string) => (p: ReplyPart) => p.type === 'text' && p.text === text;
+
+  test('late distress before the answer starts sends the crisis text then', async () => {
+    vi.mocked(understand).mockImplementationOnce(async (q) => timedOut(q, Promise.resolve(true)));
+    const ps = parts(parseSse((await ask('How do I get an IRD number?')).body));
+    const crisis = ps.findIndex(isText(GUIDE_CRISIS_TEXT));
+    const firstAnswer = ps.findIndex((p) => p.type === 'text' && p.text !== GUIDE_CRISIS_TEXT);
+    expect(crisis).toBeGreaterThanOrEqual(0);
+    expect(firstAnswer).toBeGreaterThan(crisis);
+    expect(ps.filter(isText(GUIDE_CRISIS_TEXT))).toHaveLength(1);
+    expect(ps.some(isText(GUIDE_DISTRESS_CHECKIN))).toBe(false);
+  });
+
+  test('late distress after the answer started ends the reply with the 1737 check-in', async () => {
+    let resolveLate!: (d: boolean) => void;
+    const late = new Promise<boolean>((resolve) => (resolveLate = resolve));
+    vi.mocked(understand).mockImplementationOnce(async (q) => timedOut(q, late));
+    setMockAnswer(async (_req, onEvent) => {
+      onEvent({ type: 'text', text: 'You can apply for an IRD number online. ' });
+      onEvent({ type: 'block_end' });
+      resolveLate(true);
+      await new Promise((r) => setTimeout(r, 0));
+      return { stopReason: 'end_turn', usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } };
+    });
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    const texts = parts(events).filter((p) => p.type === 'text');
+    expect(texts.at(-1)).toMatchObject({ text: GUIDE_DISTRESS_CHECKIN });
+    expect(texts.some(isText(GUIDE_CRISIS_TEXT))).toBe(false);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
   });
 
   test('out of scope: a fixed redirect and no answer call', async () => {
