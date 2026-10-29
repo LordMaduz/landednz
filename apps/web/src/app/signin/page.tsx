@@ -21,7 +21,7 @@ async function Body() {
 
 export default function SignInPage() {
   return (
-    <div className={roboto.variable}>
+    <div className={`${roboto.variable} flex min-h-dvh flex-col`}>
       <PublicHeader />
       <Suspense>
         <Body />

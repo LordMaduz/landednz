@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardFoot, CardHead } from "@/components/ui/card"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,31 +38,29 @@ export function DeleteAccount() {
   }
 
   return (
-    <Card aria-labelledby="del" className="gap-3">
-      <CardHead title="Delete account" titleId="del" />
-      <p className="text-small text-muted">{WHAT_GOES}</p>
-      <CardFoot>
-        <AlertDialog onOpenChange={open => !open && setError(null)}>
-          <AlertDialogTrigger render={<Button variant="quiet" className="text-danger hover:text-danger" />}>Delete my account</AlertDialogTrigger>
-          <AlertDialogContent initialFocus={keep}>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-              <AlertDialogDescription>{WHAT_GOES}</AlertDialogDescription>
-            </AlertDialogHeader>
-            {error && <p role="alert" className="text-danger">{error}</p>}
-            <AlertDialogFooter>
-              <AlertDialogCancel ref={keep}>Keep my account</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={confirm}
-                disabled={deleting}
-                className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
-              >
-                Delete account
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardFoot>
-    </Card>
+    <AlertDialog onOpenChange={open => !open && setError(null)}>
+      <AlertDialogTrigger
+        render={<button type="button" className="min-h-11 cursor-pointer border-0 bg-transparent p-0 font-medium text-danger-on-ink hover:text-white max-narrow:basis-full max-narrow:text-left max-narrow:border-t max-narrow:border-hairline max-narrow:text-danger max-narrow:hover:text-danger" />}
+      >
+        Delete account<span className="hidden max-narrow:inline">…</span>
+      </AlertDialogTrigger>
+      <AlertDialogContent initialFocus={keep}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+          <AlertDialogDescription>{WHAT_GOES}</AlertDialogDescription>
+        </AlertDialogHeader>
+        {error && <p role="alert" className="text-danger">{error}</p>}
+        <AlertDialogFooter>
+          <AlertDialogCancel ref={keep}>Keep my account</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirm}
+            disabled={deleting}
+            className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
+          >
+            Delete account
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Answers } from '@/lib/answers'
 import { phaseOf } from '@/test/roadmap-fixtures'
@@ -18,18 +18,13 @@ const priya: Answers = { visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'S
 afterEach(() => vi.unstubAllEnvs())
 
 describe('SignIn', () => {
-  it('with answers: back to the preview, heading and what you are saving', async () => {
+  it('with answers: back to the preview, heading and the save chip', async () => {
     render(<SignIn answers={priya} />)
     expect(screen.getByRole('link', { name: 'Your roadmap preview' })).toHaveAttribute('href', '/onboarding/preview')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Save your roadmap')
-    const aside = screen.getByRole('complementary', { name: "What you're saving" })
-    expect(within(aside).getByText('Accredited Employer Work Visa (AEWV), Auckland, just you, another job or profession, landing 14 January 2027')).toBeInTheDocument()
-    const rows = (await within(aside).findAllByRole('listitem')).map(li => li.textContent)
-    expect(rows).toEqual([
-      'Choose where to liveFirst, 4 to 6 weeks before you leave',
-      'Book temporary accommodation',
-      '18 more tasks, in the order they unlock',
-    ])
+    expect(await screen.findByText('Saving your roadmap · 20 tasks')).toBeInTheDocument()
+    expect(screen.getByText('Accredited Employer Work Visa (AEWV) · Auckland · just you · lands 14 Jan')).toBeInTheDocument()
+    expect(screen.queryByRole('complementary')).toBeNull()
   })
 
   it('without answers: just Sign in', () => {
@@ -55,5 +50,6 @@ describe('SignIn', () => {
     render(<SignIn answers={null} />)
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
     expect(screen.getByLabelText('Password')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument()
   })
 })

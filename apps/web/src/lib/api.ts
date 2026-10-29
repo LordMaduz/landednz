@@ -140,6 +140,7 @@ export interface RoadmapApiTask {
   estimatedDuration: string
   taskType: 'FREE' | 'PREMIUM'
   consequenceLine: string
+  bestBy: string | null
   priorityScore: number
 }
 

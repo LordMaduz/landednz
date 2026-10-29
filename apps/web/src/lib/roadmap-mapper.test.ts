@@ -17,6 +17,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'FREE',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('not_started')
@@ -36,6 +37,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'FREE',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('in_progress')
@@ -55,6 +57,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'FREE',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('complete')
@@ -74,6 +77,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'PREMIUM',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('complete')
@@ -93,6 +97,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'FREE',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('blocked')
@@ -112,6 +117,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'PREMIUM',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('premium_locked')
@@ -131,6 +137,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'PREMIUM',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('premium_locked')
@@ -150,6 +157,7 @@ describe('deriveCardState()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'PREMIUM',
       consequenceLine: 'Test consequence',
+      bestBy: null,
       priorityScore: 50,
     }
     expect(deriveCardState(task)).toBe('in_progress')
@@ -171,6 +179,7 @@ describe('mapApiTaskToListItem()', () => {
       estimatedDuration: '45 minutes',
       taskType: 'FREE',
       consequenceLine: 'Important consequence',
+      bestBy: null,
       priorityScore: 75,
     }
 
@@ -203,6 +212,7 @@ describe('mapApiTaskToListItem()', () => {
       estimatedDuration: '60 minutes',
       taskType: 'PREMIUM',
       consequenceLine: 'Premium consequence',
+      bestBy: null,
       priorityScore: 90,
     }
 
@@ -226,6 +236,7 @@ describe('mapApiTaskToListItem()', () => {
       estimatedDuration: '30 minutes',
       taskType: 'FREE',
       consequenceLine: 'Blocked consequence',
+      bestBy: null,
       priorityScore: 60,
     }
 

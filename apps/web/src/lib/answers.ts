@@ -11,7 +11,7 @@ import {
   type Occupation,
   type VisaType,
 } from '@landednz/types'
-import { longDay } from './nz-date'
+import { longDay, shortDay } from './nz-date'
 
 export type Answers = OnboardingPreviewRequest
 
@@ -115,4 +115,14 @@ export function answersSummary(a: Answers): string {
   ]
   const text = parts.filter(Boolean).join(', ')
   return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+// "Working holiday visa · Auckland · just you · lands 30 Oct"
+export function answersShort(a: Answers): string {
+  return [
+    answerLabel('visaType', a.visaType),
+    a.city === 'OTHER' ? '' : answerLabel('city', a.city),
+    WHO[a.familySituation],
+    `lands ${shortDay(a.arrivalDate)}`,
+  ].filter(Boolean).join(' · ')
 }

@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { ANSWERS } from './test-user'
 
 // "Change my answers" on the preview reopens step 1 with the saved answers, and Continue works
 test('change my answers keeps the answers editable', async ({ page }) => {
@@ -8,7 +7,7 @@ test('change my answers keeps the answers editable', async ({ page }) => {
     await page.getByLabel(label).check()
     await page.getByRole('button', { name: 'Continue' }).click()
   }
-  await page.getByLabel('Arrival date').fill(ANSWERS.arrivalDate)
+  await page.locator('[role=gridcell][data-today]').click() // ANSWERS.arrivalDate is today
   await page.getByRole('button', { name: 'See my roadmap' }).click()
   await expect(page).toHaveURL('/onboarding/preview')
 

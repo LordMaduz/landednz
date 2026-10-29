@@ -112,6 +112,12 @@ describe('getRoadmap()', () => {
       expect(second.priorityScore).toBeGreaterThan(third.priorityScore);
     });
 
+    test('bestBy is arrival + 13 days for T08 and null without urgency', () => {
+      const all = golden1Response.phases.flatMap(p => p.tasks);
+      expect(all.find(t => t.taskId === 'T08')?.bestBy).toBe('2026-03-26');
+      expect(all.find(t => t.taskId === 'T02')?.bestBy).toBeNull();
+    });
+
     test('T09 appears in phases with isBlocked=true, absent from topThree', () => {
       // T09 must NOT be in topThree
       const topThreeIds = golden1Response.topThree.map(t => t.taskId);

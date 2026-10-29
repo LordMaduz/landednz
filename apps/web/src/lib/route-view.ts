@@ -17,6 +17,8 @@ export interface RouteTask {
   why: string // the consequence line: what happens if it waits
   completedAt: string | null
   blocker: string | null // the lowest-id task it waits on
+  blockedBy: string[] // every task it waits on
+  bestBy: string | null // YYYY-MM-DD, when the task's day window closes
 }
 
 export interface RouteLeg {
@@ -38,10 +40,10 @@ export interface RouteView {
 
 const blockerOf = (t: RoadmapApiTask) => [...t.blockingTaskIds].sort()[0] ?? null
 
-function blockedMeta(t: RoadmapApiTask): string {
-  const blocker = blockerOf(t)
-  const topic = blocker && TASK_COPY[blocker]?.topic
-  return topic ? `Needs ${topic} first` : 'Needs another task first'
+// "Waits on your IRD number": what a blocked task needs first
+export function waitsOn(t: Pick<RouteTask, 'blocker'>): string {
+  const topic = t.blocker && TASK_COPY[t.blocker]?.topic
+  return topic ? `Waits on ${topic}` : 'Waits on another task'
 }
 
 export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string, now: Date): RouteView {
@@ -91,7 +93,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
         const meta = {
           done: t.completedAt ? `Done ${shortDayNZ(t.completedAt)}` : 'Done',
           current: 'Next',
-          blocked: blockedMeta(t),
+          blocked: waitsOn({ blocker: blockerOf(t) }),
           available: time,
           locked: time,
         }[taskState]
@@ -105,6 +107,8 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
           why: t.consequenceLine,
           completedAt: t.completedAt,
           blocker: blockerOf(t),
+          blockedBy: t.blockingTaskIds,
+          bestBy: t.bestBy,
         }
       }),
     }
@@ -113,3 +117,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
   const current = routeLegs.flatMap(l => l.tasks).find(t => t.state === 'current') ?? null
   return { total: tasks.length, doneCount: tasks.filter(isDone).length, current, legs: routeLegs }
 }
+
+// Tasks that wait on taskId, in leg order then route order
+export const unlocksOf = (route: RouteView, taskId: string): RouteTask[] =>
+  route.legs.flatMap(l => l.tasks).filter(t => t.blockedBy.includes(taskId))

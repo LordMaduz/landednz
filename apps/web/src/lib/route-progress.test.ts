@@ -1,82 +1,136 @@
 import { describe, expect, it } from 'vitest'
 import { LEGS } from './legs'
-import { routeProgress, stageLabels, terrainY } from './route-progress'
-import type { RouteLeg, RouteView } from './route-view'
+import { phoneStages, routeProgress, stageLabels, stageSpan, taskDots, terrainY, todayX, TRACK_FLAGS, youX } from './route-progress'
+import type { RouteLeg, RouteTask, RouteView, WaypointState } from './route-view'
 
-const ARRIVAL = '2027-03-01'
-const COUNTS = [10, 4, 5, 5, 1]
-const NOW_BEFORE = new Date('2026-10-28T09:00:00+13:00')
-const DAY_3 = new Date('2027-03-03T10:00:00+13:00')
-const DAY_200 = new Date('2027-09-16T10:00:00+12:00')
+const ARRIVAL = '2026-11-02'
+const COUNTS = [6, 4, 7, 4, 1]
+const at = (iso: string) => new Date(`${iso}T10:00:00+13:00`)
+const DAY_0 = at('2026-11-01')
+const DAY_1 = at('2026-11-02')
+const DAY_5 = at('2026-11-06')
+const DAY_200 = at('2027-05-20')
 
-// Five legs of 10/4/5/5/1 tasks; `done` is how many are done in each leg
-function view(done: number[], skip: number[] = []): RouteView {
+const task = (id: string, state: WaypointState): RouteTask => ({
+  taskId: id, title: id, topic: id, state, meta: '', time: '', why: '', completedAt: null, blocker: null, blockedBy: [], bestBy: null,
+})
+
+// Five legs of 6/4/7/4/1 tasks; `done` is how many are done in each leg
+// `cur` forces the current leg (the open task can sit past a leg whose last task is blocked)
+function view(done: number[], skip: number[] = [], cur?: number): RouteView {
   const legs: RouteLeg[] = LEGS.map((l, i) => ({
-    id: l.id, name: l.name, when: '', done: done[i], total: COUNTS[i], state: 'open' as const, tasks: [],
+    id: l.id, name: l.name, when: '', done: done[i], total: COUNTS[i], state: 'open' as const,
+    tasks: Array.from({ length: COUNTS[i] }, (_, k) => task(`${l.id}${k}`, k < done[i] ? 'done' : 'available')),
   })).filter((_, i) => !skip.includes(i))
-  const cur = legs.find(l => l.done < l.total)
-  if (cur) cur.state = 'current'
-  legs.forEach(l => { if (l.done === l.total) l.state = 'done' })
-  const total = legs.reduce((n, l) => n + l.total, 0)
-  return { total, doneCount: legs.reduce((n, l) => n + l.done, 0), current: null, legs }
+  const open = legs[cur ?? -1] ?? legs.find(l => l.done < l.total)
+  if (open) open.state = 'current'
+  legs.forEach(l => { if (l !== open && l.done === l.total) l.state = 'done' })
+  return { total: legs.reduce((n, l) => n + l.total, 0), doneCount: legs.reduce((n, l) => n + l.done, 0), current: null, legs }
 }
-const week1Open = () => view([10, 4, 0, 0, 0])
+const week1Open = () => view([6, 3, 0, 0, 0])
+
+describe('geometry', () => {
+  it('flags and stage spans', () => {
+    expect(TRACK_FLAGS).toEqual([150, 270, 530, 820, 1000])
+    expect(stageSpan(0)).toEqual([0, 150])
+    expect(stageSpan(2)).toEqual([270, 530])
+  })
+})
+
+describe('youX', () => {
+  it('Arrival current with 3 of 4 done', () => expect(youX(view([6, 3, 0, 0, 0]))).toBe(240))
+  it('Before current with 2 of 6 done', () => expect(youX(view([2, 0, 0, 0, 0]))).toBe(50))
+  it('nothing done anywhere', () => expect(youX(view([0, 0, 0, 0, 0]))).toBe(0))
+  it('all done', () => expect(youX(view(COUNTS))).toBe(1000))
+  it('no tasks at all: 0, not NaN', () => expect(youX({ total: 0, doneCount: 0, current: null, legs: [] })).toBe(0))
+})
+
+describe('todayX', () => {
+  it('null before arrival', () => expect(todayX(ARRIVAL, DAY_0)).toBeNull())
+  it('day 1 is half of Arrival', () => expect(todayX(ARRIVAL, DAY_1)).toBe(210))
+  it('day 5 is half of Week 1', () => expect(todayX(ARRIVAL, DAY_5)).toBe(400))
+  it('past day 61 is the end', () => expect(todayX(ARRIVAL, DAY_200)).toBe(1000))
+})
+
+describe('taskDots', () => {
+  it('spreads a stage evenly and maps states', () => {
+    const v = view([0, 0, 0, 0, 0])
+    const [a, b, c] = v.legs[0].tasks
+    a.state = 'done'; b.state = 'blocked'; c.blockedBy = ['x']
+    const dots = taskDots(v).slice(0, 6)
+    expect(dots.map(d => d.x)).toEqual([1, 2, 3, 4, 5, 6].map(k => (150 * k) / 7))
+    expect(dots.slice(0, 4).map(d => d.state)).toEqual(['done', 'blocked', 'blocked', 'open'])
+  })
+})
 
 describe('routeProgress', () => {
-  it("before arrival, 0 done: x 40, '124 days to go'", () => {
-    const p = routeProgress(view([0, 0, 0, 0, 0]), ARRIVAL, NOW_BEFORE)
-    expect(p.x).toBe(40)
-    expect(p.label).toBe('You · 124 days to go')
+  it("before arrival: x 0, '1 day to go', no Today", () => {
+    const p = routeProgress(view([0, 0, 0, 0, 0]), ARRIVAL, DAY_0)
+    expect(p).toMatchObject({ x: 0, todayX: null, label: 'You · 1 day to go' })
   })
 
-  it('day 3, Week 1 open: x 433', () => {
-    const p = routeProgress(week1Open(), ARRIVAL, DAY_3)
-    expect(Math.round(p.x)).toBe(433)
-    expect(p.label).toBe('You · day 3')
-    expect(p.passed).toEqual([true, true, false, false, false])
+  it("on day 5 the pin reads You're here", () => {
+    const p = routeProgress(week1Open(), ARRIVAL, DAY_5)
+    expect(p).toMatchObject({ x: 270, todayX: 400, label: "You're here", passed: [true, false, false, false, false] })
+    expect(p.summary).toBe('Arrival · 3 of 4')
   })
 
-  it('summary names the current stage', () => {
-    expect(routeProgress(week1Open(), ARRIVAL, DAY_3).summary).toBe('Week 1 · 0 of 5 · 6 days left')
-    expect(routeProgress(view([0, 0, 0, 0, 0]), ARRIVAL, NOW_BEFORE).summary).toBe('Before you flew · 0 of 10 · by 1 Mar')
+  it('day 1 with Before you flew tasks open: the pin sits on Arrival, the stage behind reads still open', () => {
+    const v = view([4, 0, 0, 0, 0])
+    expect(routeProgress(v, ARRIVAL, DAY_1).x).toBe(150)
+    const labels = stageLabels(v, ARRIVAL, DAY_1)
+    expect(labels.map(l => l.now)).toEqual([false, true, false, false, false])
+    expect(labels.map(l => l.open)).toEqual([true, false, false, false, false])
   })
 
-  it('caps at the last flag', () => {
+  it('before arrival the pin and now stay on Before you flew', () => {
+    const v = view([4, 0, 0, 0, 0])
+    expect(routeProgress(v, ARRIVAL, DAY_0).x).toBe(100)
+    const labels = stageLabels(v, ARRIVAL, DAY_0)
+    expect(labels.map(l => l.now)).toEqual([true, false, false, false, false])
+    expect(labels.some(l => l.open)).toBe(false)
+  })
+
+  it('names the stage and days left', () => {
+    expect(routeProgress(view([6, 4, 0, 0, 0]), ARRIVAL, DAY_5).summary).toBe('Week 1 · 0 of 7 · 3 days left')
+    expect(routeProgress(view([0, 0, 0, 0, 0]), ARRIVAL, DAY_0).summary).toBe('Before you flew · 0 of 6 · by 2 Nov')
+  })
+
+  it('all done caps at the last flag', () => {
     const p = routeProgress(view(COUNTS), ARRIVAL, DAY_200)
     expect(p.x).toBe(1000)
-    expect(p.label).toBe('You · day 200')
-  })
-
-  it('a stage with no tasks keeps its flag', () => {
-    const p = routeProgress(view([10, 4, 0, 0, 0], [4]), ARRIVAL, DAY_3)
-    expect(Math.round(p.x)).toBe(433)
-    expect(p.passed).toHaveLength(5)
-  })
-
-  it('ahead of schedule stays past the previous flag', () => {
-    const p = routeProgress(view([10, 4, 5, 0, 0]), ARRIVAL, DAY_3)
-    expect(p.x).toBe(640)
-    expect(p.passed[2]).toBe(true)
-  })
-
-  it('from arrival with the before stage unfinished: pin on the first flag, no NaN', () => {
-    const p = routeProgress(view([5, 0, 0, 0, 0]), ARRIVAL, DAY_3)
-    expect(p.x).toBe(200)
-    expect(p.label).toBe('You · day 3')
     expect(p.summary).not.toMatch(/NaN/)
   })
 
   it('no tasks at all', () => {
-    const p = routeProgress({ total: 0, doneCount: 0, current: null, legs: [] }, ARRIVAL, DAY_3)
-    expect(Number.isFinite(p.x)).toBe(true)
+    const p = routeProgress({ total: 0, doneCount: 0, current: null, legs: [] }, ARRIVAL, DAY_5)
     expect(p.label + p.summary).not.toMatch(/NaN|undefined/)
   })
+})
 
-  it('stage labels', () => {
-    const labels = stageLabels(week1Open(), ARRIVAL, DAY_3)
-    expect(labels.map(l => l.state)).toEqual(['done ✓', 'done ✓', '0 of 5 · to 8 Mar', '0 of 5 · to 31 Mar', '0 of 1 · from April'])
+describe('stageLabels', () => {
+  it('done, untouched and part-done stages', () => {
+    const labels = stageLabels(view([6, 3, 0, 0, 0]), ARRIVAL, DAY_5)
+    expect(labels.map(l => l.state)).toEqual([
+      '6 of 6 done · by 2 Nov', '3 of 4 done · 2–3 Nov', '7 tasks · to 9 Nov', '4 tasks · to 2 Dec', '1 task · from December',
+    ])
     expect(labels.map(l => l.now)).toEqual([false, false, true, false, false])
-    expect(labels[0].name).toBe('Before you flew')
+  })
+})
+
+describe('phoneStages', () => {
+  it('day 5 with Arrival 3 of 4 behind and Week 1 current', () => {
+    expect(phoneStages(view([6, 3, 0, 0, 0], [], 2), ARRIVAL, DAY_5)).toEqual({
+      prev: { name: 'Arrival', state: '3 of 4' }, cur: { name: 'Week 1', daysLeft: 3 }, next: 'Month 1',
+    })
+  })
+  it('a finished previous stage reads ✓', () => {
+    expect(phoneStages(view([6, 4, 0, 0, 0]), ARRIVAL, DAY_5).prev).toEqual({ name: 'Arrival', state: '✓' })
+  })
+  it('no days left before arrival', () => {
+    expect(phoneStages(view([0, 0, 0, 0, 0]), ARRIVAL, DAY_0)).toEqual({
+      prev: null, cur: { name: 'Before you fly', daysLeft: null }, next: 'Arrival',
+    })
   })
 })
 

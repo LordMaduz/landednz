@@ -36,3 +36,13 @@ export function shortDayNZ(instant: string | Date): string {
 export function nzCalendarDate(instant: Date): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Pacific/Auckland' }).format(instant)
 }
+
+// "Sun 15 Nov" for a calendar date
+export function weekdayDay(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).replace(',', '')
+}
+
+// "Wed 4 Nov" for an instant (ISO timestamp), on the NZ calendar
+export function weekdayDayNZ(instant: string | Date): string {
+  return new Date(instant).toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' }).replace(',', '')
+}

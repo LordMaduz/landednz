@@ -15,6 +15,7 @@ export interface RoadmapTask {
   estimatedDuration: string;
   taskType: TaskType;
   consequenceLine: string;
+  bestBy: string | null;  // YYYY-MM-DD, arrival + the earliest day window's end; null without one
   retired: boolean;  // task retired from content: shown read-only, never in topThree
 }
 
