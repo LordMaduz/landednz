@@ -21,6 +21,10 @@ export type ErrorCode =
   | 'SESSION_ACCESS_DENIED'
   | 'CHAT_DAILY_CAP_REACHED'
   | 'RATE_LIMITED'
+| 'GUIDE_BUSY'
+| 'MESSAGE_NOT_FOUND'
+| 'MEMORY_NOT_FOUND'
+| 'NOT_RETRYABLE'
 
 export class AppError extends Error {
   constructor(

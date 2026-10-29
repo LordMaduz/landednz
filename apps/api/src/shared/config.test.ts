@@ -35,6 +35,19 @@ describe('loadConfig', () => {
     }
   });
 
+  test('guide settings default and validate', () => {
+    const c = loadConfig(MOCK_ENV);
+    expect(c.guideDailyCap).toBe(20);
+    expect(c.guideRelevanceFloor).toBe(0.3);
+    expect(c.guideAnswerThinking).toBe('between_tools');
+    expect(() => loadConfig({ ...MOCK_ENV, GUIDE_RELEVANCE_FLOOR: '1.5' })).toThrow(
+      'GUIDE_RELEVANCE_FLOOR must be a number from 0 to 1',
+    );
+    expect(() => loadConfig({ ...MOCK_ENV, GUIDE_ANSWER_THINKING: 'off' })).toThrow(
+      'GUIDE_ANSWER_THINKING must be between_tools or adaptive',
+    );
+  });
+
   test('config throws "Missing required environment variable: CHAT_DAILY_CAP" when unset', () => {
     const { CHAT_DAILY_CAP: _unset, ...env } = MOCK_ENV;
     expect(() => loadConfig(env)).toThrow('Missing required environment variable: CHAT_DAILY_CAP');
