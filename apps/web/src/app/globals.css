@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Desktop windows too short for the landing hero's full padding (zoomed-in laptops) */
+@custom-variant short (@media (min-width: 961px) and (max-height: 799px));
+
 /* Precise design tokens (docs/design/r0-boards/ui_parts.py). The only place raw values live (CW01). */
 @theme {
   --color-ink: #0F2A3A;
@@ -63,6 +66,7 @@
   --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
   --container-hero-title: 560px;
   --container-hero-lede: 520px;
+  --spacing-hero-max: 760px; /* landing hero stops growing here on tall windows; spare height goes above the footer */
   --container-auth: 460px;
   --container-question: 600px;
   --container-preview: 680px;
@@ -370,8 +374,10 @@
   * {
     @apply border-hairline;
   }
+  /* Background on html too, so the overscroll bounce stays white in dark-mode browsers */
   html {
-    @apply font-sans;
+    @apply font-sans bg-white;
+    color-scheme: light;
   }
   body {
     @apply bg-white text-body text-ink antialiased;
