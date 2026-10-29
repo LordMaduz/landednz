@@ -1,8 +1,10 @@
-// Guide message routes: ask (SSE), cancel, retry. Validation and turn-start errors return JSON before the stream opens.
+// Guide routes: ask (SSE), cancel, retry, plus history, opening and memories. Validation and turn-start errors return JSON before the stream opens.
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { AppError } from '../../shared/errors.js';
 import { authenticateRequest } from '../../shared/middleware/auth.js';
+import { getConversation, getOpening, getTaskMessages } from './history.js';
+import { deleteMemory, listMemories, updateMemory } from './memories.js';
 import { restartTurn, startTurn } from './turns.js';
 import { cancelTurn, runTurn } from './service.js';
 
@@ -10,6 +12,21 @@ const askSchema = z.object({
   text: z.string().trim().min(1).max(2000),
   screen: z.object({ kind: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).optional() }),
 });
+
+const conversationQuery = z.object({
+  before: z.string().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
+const openingQuery = z.object({ screen: z.enum(['home', 'roadmap', 'task']), taskKey: z.string().min(1).optional() });
+
+const memoryBody = z.object({ text: z.string() });
+
+function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+  const r = schema.safeParse(value);
+  if (!r.success) throw new AppError('VALIDATION_ERROR', r.error.issues[0]?.message ?? 'Invalid request', 400);
+  return r.data;
+}
 
 type IdParams = { Params: { id: string } };
 
@@ -38,5 +55,30 @@ export function registerGuideRoutes(app: FastifyInstance): void {
       ids: { userMessageId: turn.userMessageId, assistantMessageId },
       isRetry: true,
     });
+  });
+
+  app.get('/guide/conversation', { preHandler: authenticateRequest }, async (request) => {
+    const { before, limit } = parse(conversationQuery, request.query);
+    return getConversation(request.userId, before ?? null, limit);
+  });
+
+  app.get<{ Params: { taskKey: string } }>('/guide/conversation/task/:taskKey', { preHandler: authenticateRequest }, async (request) =>
+    getTaskMessages(request.userId, request.params.taskKey),
+  );
+
+  app.get('/guide/opening', { preHandler: authenticateRequest }, async (request) => {
+    const { screen, taskKey } = parse(openingQuery, request.query);
+    return getOpening(request.userId, { kind: screen, ...(taskKey ? { taskKey } : {}) });
+  });
+
+  app.get('/guide/memories', { preHandler: authenticateRequest }, async (request) => listMemories(request.userId));
+
+  app.patch<IdParams>('/guide/memories/:id', { preHandler: authenticateRequest }, async (request) =>
+    updateMemory(request.userId, request.params.id, parse(memoryBody, request.body).text),
+  );
+
+  app.delete<IdParams>('/guide/memories/:id', { preHandler: authenticateRequest }, async (request, reply) => {
+    await deleteMemory(request.userId, request.params.id);
+    reply.status(204).send();
   });
 }
