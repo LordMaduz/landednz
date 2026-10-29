@@ -93,14 +93,13 @@ async function run(query: string, candidates: Passage[], d: LiveDeps, signal: Ab
   const pages = (await Promise.all(urls.map((u) => loadPage(u, d, signal)))).filter((p): p is Page => !!p);
   if (!pages.length) return [];
   const q = await generateEmbedding(query);
-  // shortcut: only the first 20 passages per page are embedded, later sections are never considered; upgrade to a batched embedding call if accuracy runs show misses
-  const all = (await Promise.all(pages.flatMap((p) => split(p.content).slice(0, MAX_PASSAGES_PER_PAGE).map(async (content, i): Promise<Passage | null> => {
-    if (signal.aborted) return null; // step timed out: stop spending on the embedding provider
+  // shortcut: only the first 20 passages per page are embedded, later sections are never considered; upgrade to a batched embedding call if accuracy runs show misses; embeddings already started finish after a timeout (generateEmbedding takes no signal)
+  const all = (await Promise.all(pages.flatMap((p) => split(p.content).slice(0, MAX_PASSAGES_PER_PAGE).map(async (content, i): Promise<Passage> => {
     return {
       id: `live:${p.url}#${i}`, title: p.title, url: p.url, origin: 'official', content,
       similarity: cosine(q, await generateEmbedding(content)), taskKey: null, checkedAt: p.fetchedAt.toISOString(),
     };
-  })))).filter((x): x is Passage => !!x);
+  }))));
   return all.sort((a, b) => b.similarity - a.similarity).slice(0, 3);
 }
 
