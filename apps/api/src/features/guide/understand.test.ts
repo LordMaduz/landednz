@@ -51,7 +51,7 @@ afterEach(() => {
 describe('understand', () => {
   it('passes the Haiku result through', async () => {
     setMockStructured(() => haikuResult);
-    expect(await understand('how do I get one?', [], ctx)).toEqual(haikuResult);
+    expect(await understand('how do I get one?', [], ctx)).toEqual({ ...haikuResult, usage: { input: 0, output: 0, cacheRead: 0 } });
   });
 
   it('uses the question when Haiku returns a blank searchQuery', async () => {
@@ -70,6 +70,7 @@ describe('understand', () => {
       needsLive: false,
       distress: false,
       memoryCandidates: [],
+      usage: { input: 0, output: 0, cacheRead: 0 },
     });
   });
 

@@ -5,7 +5,7 @@ import { db } from '../../shared/db.js';
 import { config } from '../../shared/config.js';
 import { logger } from '../../shared/logger.js';
 import { AppError, AIFailureError } from '../../shared/errors.js';
-import { streamGuideAnswer, type AnswerResult } from '../../shared/ai/claude.client.js';
+import { noUsage, streamGuideAnswer, type AnswerResult, type TokenUsage } from '../../shared/ai/claude.client.js';
 import { GUIDE_CRISIS_TEXT, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
 import { loadGuideContext } from './context.js';
 import { understand, type HistoryTurn } from './understand.js';
@@ -20,10 +20,11 @@ import { buildAnswerRequest } from './answer.js';
 import { openSse } from './sse.js';
 import type { VerifyResult } from './types.js';
 
-// USD per million tokens
+// USD per million tokens; searchCents is per web search
 const RATES = {
   'claude-sonnet-5-5': { input: 2, output: 10, cacheRead: 0.2 },
   'claude-haiku-5-5': { input: 0.1, output: 0.5, cacheRead: 0.01 },
+  searchCents: 1,
 } as const;
 const HISTORY_TURNS = 6;
 
@@ -32,10 +33,17 @@ const running = new Map<string, AbortController>();
 
 type AbortStatus = Extract<GuideMessageStatus, 'cancelled' | 'interrupted'>;
 
-function costCents(usage: AnswerResult['usage']): number {
-  const r = config.anthropicModel === 'claude-haiku-5-5' ? RATES['claude-haiku-5-5'] : RATES['claude-sonnet-5-5'];
-  return ((usage.input * r.input + usage.output * r.output + usage.cacheRead * r.cacheRead) / 1e6) * 100;
+const priced = (u: TokenUsage, r: { input: number; output: number; cacheRead: number }): number =>
+  ((u.input * r.input + u.output * r.output + u.cacheRead * r.cacheRead) / 1e6) * 100;
+
+// understand always runs on Haiku; the answer and the search call run on the configured model
+export function turnCostCents(spend: { understand: TokenUsage; model: TokenUsage; searches: number }, model = config.anthropicModel): number {
+  const rates = model === 'claude-haiku-5-5' ? RATES['claude-haiku-5-5'] : RATES['claude-sonnet-5-5'];
+  return priced(spend.understand, RATES['claude-haiku-5-5']) + priced(spend.model, rates) + spend.searches * RATES.searchCents;
 }
+
+const addUsage = (...us: TokenUsage[]): TokenUsage =>
+  us.reduce((a, u) => ({ input: a.input + u.input, output: a.output + u.output, cacheRead: a.cacheRead + u.cacheRead }), noUsage());
 
 // Earlier turns only (a retry re-answers an older question), oldest first, empty texts dropped
 async function loadHistory(userMessageId: string): Promise<HistoryTurn[]> {
@@ -62,7 +70,7 @@ export async function runTurn(args: {
   const ms = { understand: 0, retrieve: 0, live: 0, firstText: 0, total: 0 };
   const steps: string[] = [];
   const sent: ReplyPart[] = [];
-  let usage: AnswerResult['usage'] = { input: 0, output: 0, cacheRead: 0 };
+  const spend = { understand: noUsage(), model: noUsage(), searches: 0 };
   let verified: VerifyResult | null = null;
   let finished = false;
 
@@ -87,8 +95,8 @@ export async function runTurn(args: {
     ms.total = Date.now() - t0;
     const meta = {
       ms,
-      tokens: usage,
-      costCents: costCents(usage),
+      tokens: addUsage(spend.understand, spend.model),
+      costCents: turnCostCents(spend),
       steps,
       verify: verified ? { unmatchedCitations: verified.unmatchedCitations, uncitedClaims: verified.uncitedClaims.length } : null,
     };
@@ -117,6 +125,7 @@ export async function runTurn(args: {
       timed('understand', understand(question, history, ctx)),
       timed('retrieve', retrieve(question, retrieveOpts)),
     ]);
+    spend.understand = understanding.usage;
     let found = first;
     if (understanding.searchQuery !== question) {
       const again = await timed('retrieve', retrieve(understanding.searchQuery, retrieveOpts));
@@ -141,6 +150,8 @@ export async function runTurn(args: {
     if (passages.length === 0 || understanding.needsLive) {
       emit({ type: 'notice', kind: 'checking_official' });
       const live = await timed('live', liveSources(understanding.searchQuery, found.candidates));
+      spend.searches += live.searches;
+      spend.model = addUsage(spend.model, live.usage);
       if (live.unavailable) emit({ type: 'notice', kind: 'official_unavailable' });
       passages = [...live.passages, ...passages];
     }
@@ -165,14 +176,14 @@ export async function runTurn(args: {
       g.dropTail();
       return await failed();
     }
-    usage = result.usage;
+    spend.model = addUsage(spend.model, result.usage);
     if (result.stopReason !== 'end_turn') g.dropTail();
     const released = g.end();
     if (result.stopReason === 'refusal') {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');
       say(GUIDE_REFUSAL_REPLY);
     }
-    if (aborted()) return await finish(aborted()!, answerTextSent());
+    if (aborted()) return await finish(aborted()!, textPartSent());
 
     steps.push('verify');
     verified = verify(released, passages);
@@ -180,7 +191,7 @@ export async function runTurn(args: {
     if (result.stopReason === 'max_tokens') logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer truncated');
     endParts({ verify: verified, stopReason: result.stopReason, ctx, answerText: released.map((s) => s.text).join(' ') }).forEach(emit);
     (await rememberParts()).forEach(emit);
-    return await finish('complete', answerTextSent() || textPartSent());
+    return await finish('complete', textPartSent());
   } catch (error) {
     // C13: nothing escapes once the stream is open; the row must never stay streaming
     logger.error({ err: error, assistantMessageId: ids.assistantMessageId }, 'guide turn failed');

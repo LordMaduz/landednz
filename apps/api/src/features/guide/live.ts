@@ -3,13 +3,13 @@
 import { db } from '../../shared/db.js';
 import { logger } from '../../shared/logger.js';
 import { generateEmbedding } from '../../shared/ai/embeddings.client.js';
-import { searchOfficialUrls } from '../../shared/ai/claude.client.js';
+import { noUsage, searchOfficialUrls, type TokenUsage } from '../../shared/ai/claude.client.js';
 import { OFFICIAL_ALLOWLIST, isAllowedHost } from './allowlist.js';
 import type { Passage } from './types.js';
 
 export type LiveDeps = {
   fetchPage(url: string, signal: AbortSignal): Promise<{ finalUrl: string; status?: number; contentType: string; body: string }>;
-  searchUrls(query: string): Promise<string[]>;
+  searchUrls(query: string): Promise<{ urls: string[]; usage: TokenUsage }>;
   now(): Date;
 };
 
@@ -92,9 +92,17 @@ async function loadPage(url: string, d: LiveDeps, signal: AbortSignal): Promise<
   }
 }
 
-async function run(query: string, candidates: Passage[], d: LiveDeps, signal: AbortSignal): Promise<Passage[]> {
+type Spent = { searches: number; usage: TokenUsage };
+
+async function run(query: string, candidates: Passage[], d: LiveDeps, signal: AbortSignal, spent: Spent): Promise<Passage[]> {
   let urls = [...new Set(candidates.map((c) => c.url))].filter(isAllowedHost).slice(0, 2);
-  if (!urls.length) urls = [...new Set(await d.searchUrls(query))].filter(isAllowedHost).slice(0, 2);
+  if (!urls.length) {
+    // One search per call (max_uses 1), counted up front so a failed call is still costed
+    spent.searches++;
+    const found = await d.searchUrls(query);
+    spent.usage = found.usage;
+    urls = [...new Set(found.urls)].filter(isAllowedHost).slice(0, 2);
+  }
   const pages = (await Promise.all(urls.map((u) => loadPage(u, d, signal)))).filter((p): p is Page => !!p);
   if (!pages.length) return [];
   const q = await generateEmbedding(query);
@@ -110,14 +118,16 @@ async function run(query: string, candidates: Passage[], d: LiveDeps, signal: Ab
 
 export async function liveSources(
   query: string, candidates: Passage[], deps: LiveDeps = defaultDeps,
-): Promise<{ passages: Passage[]; unavailable: boolean }> {
+): Promise<{ passages: Passage[]; unavailable: boolean } & Spent> {
   const ctl = new AbortController();
+  const spent: Spent = { searches: 0, usage: noUsage() };
   let timer: NodeJS.Timeout | undefined;
   const timeout = new Promise<Passage[]>((resolve) => { timer = setTimeout(() => { ctl.abort(); resolve([]); }, STEP_MS); });
   try {
     // a search still running at timeout is abandoned; its rejection is swallowed
-    const passages = await Promise.race([run(query, candidates, deps, ctl.signal).catch((err) => { logger.warn({ err }, 'guide live step failed'); return []; }), timeout]);
-    return { passages, unavailable: passages.length === 0 };
+    const passages = await Promise.race([run(query, candidates, deps, ctl.signal, spent).catch((err) => { logger.warn({ err }, 'guide live step failed'); return []; }), timeout]);
+    // shortcut: a search still running at timeout has its tokens uncounted, upgrade if staging cost drifts from meta
+    return { passages, unavailable: passages.length === 0, ...spent };
   } finally {
     clearTimeout(timer);
   }

@@ -18,7 +18,7 @@ const hoursAgo = (h: number) => new Date(Date.now() - h * 3600_000);
 
 const deps = (over: Partial<LiveDeps> = {}): LiveDeps & { fetchPage: ReturnType<typeof vi.fn>; searchUrls: ReturnType<typeof vi.fn> } => ({
   fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html; charset=utf-8', body: html() })),
-  searchUrls: vi.fn(async () => []),
+  searchUrls: vi.fn(async () => ({ urls: [], usage: { input: 0, output: 0, cacheRead: 0 } })),
   now: () => new Date(),
   ...over,
 }) as never;
@@ -54,7 +54,7 @@ describe('liveSources', () => {
   it('skips off-allowlist redirect, non-HTML and oversize pages', async () => {
     const mk = (o: object) => deps({ fetchPage: vi.fn(async (url: string) => ({ finalUrl: url, contentType: 'text/html', body: html(), ...o })) });
     for (const o of [{ finalUrl: 'https://evil.example/x' }, { contentType: 'application/pdf' }, { body: 'x'.repeat(3 * 1024 * 1024) }]) {
-      expect(await liveSources('q', [cand(u('b'))], mk(o))).toEqual({ passages: [], unavailable: true });
+      expect(await liveSources('q', [cand(u('b'))], mk(o))).toMatchObject({ passages: [], unavailable: true, searches: 0 });
     }
   });
 
@@ -73,7 +73,7 @@ describe('liveSources', () => {
     const r = await liveSources('q', [cand(u('d'))], deps(fail));
     expect(r.passages[0].checkedAt).toBe(old.toISOString());
     await db.liveSourceCache.update({ where: { url: u('d') }, data: { fetchedAt: hoursAgo(240) } });
-    expect(await liveSources('q', [cand(u('d'))], deps(fail))).toEqual({ passages: [], unavailable: true });
+    expect(await liveSources('q', [cand(u('d'))], deps(fail))).toMatchObject({ passages: [], unavailable: true, searches: 0 });
   });
 
   it('treats a 503 as a fetch failure: serves the stale row and leaves it unchanged', async () => {
@@ -94,9 +94,11 @@ describe('liveSources', () => {
   });
 
   it('searches once when there are no allowed candidates', async () => {
-    const d = deps({ searchUrls: vi.fn(async () => [u('e'), 'https://example.com/x']) });
+    const usage = { input: 900, output: 40, cacheRead: 0 };
+    const d = deps({ searchUrls: vi.fn(async () => ({ urls: [u('e'), 'https://example.com/x'], usage })) });
     const r = await liveSources('q', [], d);
     expect(d.searchUrls).toHaveBeenCalledTimes(1);
+    expect(r).toMatchObject({ searches: 1, usage });
     expect(d.fetchPage).toHaveBeenCalledTimes(1);
     expect(r.unavailable).toBe(false);
   });
@@ -118,7 +120,7 @@ describe('liveSources', () => {
     const slow = vi.fn(() => new Promise<never>(() => {}));
     const t0 = Date.now();
     const r = await liveSources('q', [cand(u('g'))], deps({ fetchPage: slow }));
-    expect(r).toEqual({ passages: [], unavailable: true });
+    expect(r).toMatchObject({ passages: [], unavailable: true, searches: 0 });
     expect(Date.now() - t0).toBeLessThan(5500);
   }, 8000);
 });

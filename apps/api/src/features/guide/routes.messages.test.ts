@@ -17,6 +17,8 @@ vi.mock('./live.js', () => ({
       },
     ],
     unavailable: false,
+    searches: 1,
+    usage: { input: 0, output: 0, cacheRead: 0 },
   })),
 }));
 
@@ -27,6 +29,7 @@ import { AIFailureError } from '../../shared/errors.js';
 import { setMockAnswer, setMockStructured } from '../../shared/ai/mock.js';
 import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
 import { buildApp } from '../../server.js';
+import { turnCostCents } from './service.js';
 
 let app: FastifyInstance;
 let userId: string;
@@ -131,7 +134,8 @@ describe('POST /guide/messages', () => {
     const row = await db.guideMessage.findUniqueOrThrow({ where: { id: start.assistantMessageId } });
     expect(row.status).toBe('complete');
     expect(row.parts).toEqual(ps);
-    expect(row.meta).toMatchObject({ ms: { total: expect.any(Number) }, steps: expect.arrayContaining(['answer']) });
+    // Mock calls use no tokens, so the cost is the one web search the live step reported
+    expect(row.meta).toMatchObject({ ms: { total: expect.any(Number) }, steps: expect.arrayContaining(['answer']), costCents: 1 });
     expect(await db.guideMemory.count({ where: { userId } })).toBe(1);
   });
 
@@ -201,6 +205,16 @@ describe('POST /guide/messages', () => {
     expect(texts).toHaveLength(1);
     expect((texts[0] as { text: string }).text).toContain('iaa.govt.nz');
     expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+  });
+});
+
+describe('turnCostCents', () => {
+  test('prices understand on Haiku, answer and search tokens on the configured model, plus 1 cent per search', () => {
+    const million = { input: 1e6, output: 1e6, cacheRead: 1e6 };
+    const none = { input: 0, output: 0, cacheRead: 0 };
+    expect(turnCostCents({ understand: million, model: none, searches: 0 }, 'claude-sonnet-5-5')).toBeCloseTo(61);
+    expect(turnCostCents({ understand: none, model: million, searches: 2 }, 'claude-sonnet-5-5')).toBeCloseTo(1222);
+    expect(turnCostCents({ understand: none, model: million, searches: 0 }, 'claude-haiku-5-5')).toBeCloseTo(61);
   });
 });
 

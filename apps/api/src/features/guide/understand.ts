@@ -1,11 +1,14 @@
 // Understand step: Haiku rewrites the question and flags scope, live need, distress and memory candidates (spec §3.1).
 import { z } from 'zod';
-import { structuredHaiku } from '../../shared/ai/claude.client.js';
+import { noUsage, structuredHaiku, type TokenUsage } from '../../shared/ai/claude.client.js';
 import { logger } from '../../shared/logger.js';
 import { GUIDE_UNDERSTAND_PROMPT } from '../../core/prompts/registry.js';
 import { GUIDE_AGENCIES, type GuideContext, type Understanding } from './types.js';
 
 export type HistoryTurn = { role: 'user' | 'assistant'; content: string };
+
+// usage is the Haiku call's tokens, for the turn's cost (zero on fallback)
+export type UnderstandResult = Understanding & { usage: TokenUsage };
 
 const TIMEOUT_MS = 1_000;
 const MAX_MEMORY_CANDIDATES = 3;
@@ -29,13 +32,14 @@ export function hasCrisisSignal(text: string): boolean {
   return CRISIS_PATTERN.test(text.replace(/’/g, "'"));
 }
 
-const fallback = (question: string): Understanding => ({
+const fallback = (question: string): UnderstandResult => ({
   searchQuery: question,
   scope: 'in',
   redirectAgency: null,
   needsLive: false,
   distress: false,
   memoryCandidates: [],
+  usage: noUsage(),
 });
 
 function buildUserMessage(question: string, history: HistoryTurn[], ctx: GuideContext): string {
@@ -49,14 +53,14 @@ function buildUserMessage(question: string, history: HistoryTurn[], ctx: GuideCo
     .join('\n\n');
 }
 
-async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<Understanding> {
+async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<UnderstandResult> {
   let timer: NodeJS.Timeout | undefined;
   const timeout = new Promise<never>((_, reject) => {
     timer = setTimeout(() => reject(new Error('understand timed out')), TIMEOUT_MS);
   });
   try {
     // The client aborts at the same limit; this race also covers mock mode and a stuck parse.
-    const parsed = await Promise.race([
+    const { value: parsed, usage } = await Promise.race([
       structuredHaiku(GUIDE_UNDERSTAND_PROMPT, buildUserMessage(question, history, ctx), understandingSchema, TIMEOUT_MS),
       timeout,
     ]);
@@ -66,14 +70,15 @@ async function callHaiku(question: string, history: HistoryTurn[], ctx: GuideCon
       memoryCandidates: parsed.memoryCandidates
         .slice(0, MAX_MEMORY_CANDIDATES)
         .map((m) => ({ ...m, text: m.text.slice(0, MAX_MEMORY_CHARS) })),
+      usage,
     };
   } finally {
     clearTimeout(timer);
   }
 }
 
-export async function understand(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<Understanding> {
-  let result: Understanding;
+export async function understand(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<UnderstandResult> {
+  let result: UnderstandResult;
   try {
     result = await callHaiku(question, history, ctx);
   } catch (error) {

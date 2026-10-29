@@ -96,14 +96,20 @@ function toAIFailure(error: unknown): AIFailureError {
   return new AIFailureError(`Claude API error: ${error instanceof Error ? error.message : String(error)}`);
 }
 
+export type TokenUsage = { input: number; output: number; cacheRead: number };
+export const noUsage = (): TokenUsage => ({ input: 0, output: 0, cacheRead: 0 });
+
+type ApiUsage = { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null };
+const toUsage = (u: ApiUsage): TokenUsage => ({ input: u.input_tokens, output: u.output_tokens, cacheRead: u.cache_read_input_tokens ?? 0 });
+
 // Small structured call (guide understand step) — schema-constrained JSON, aborted at timeoutMs
 export async function structuredHaiku<T>(
   system: string,
   user: string,
   schema: z.ZodType<T>,
   timeoutMs: number,
-): Promise<T> {
-  if (config.aiMode === 'mock') return mockStructured(system, user, schema);
+): Promise<{ value: T; usage: TokenUsage }> {
+  if (config.aiMode === 'mock') return { value: await mockStructured(system, user, schema), usage: noUsage() };
 
   const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
   try {
@@ -118,7 +124,7 @@ export async function structuredHaiku<T>(
       { signal: AbortSignal.timeout(timeoutMs) },
     );
     if (message.parsed_output == null) throw new AIFailureError('No structured output in Claude response');
-    return message.parsed_output;
+    return { value: message.parsed_output, usage: toUsage(message.usage) };
   } catch (error) {
     throw toAIFailure(error);
   }
@@ -139,7 +145,7 @@ export type AnswerEvent =
 
 export interface AnswerResult {
   stopReason: 'end_turn' | 'max_tokens' | 'refusal' | 'aborted';
-  usage: { input: number; output: number; cacheRead: number };
+  usage: TokenUsage;
 }
 
 // The API rejects empty text turns and a first turn from the assistant (e.g. a reply cancelled before any text)
@@ -222,9 +228,9 @@ export async function streamGuideAnswer(
   }
 }
 
-// One web search restricted to official domains; returns up to 5 result URLs
-export async function searchOfficialUrls(query: string, allowedDomains: string[]): Promise<string[]> {
-  if (config.aiMode === 'mock') return mockSearchUrls();
+// One web search restricted to official domains; returns up to 5 result URLs and the call's token usage
+export async function searchOfficialUrls(query: string, allowedDomains: string[]): Promise<{ urls: string[]; usage: TokenUsage }> {
+  if (config.aiMode === 'mock') return { urls: await mockSearchUrls(), usage: noUsage() };
 
   const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
   try {
@@ -238,7 +244,7 @@ export async function searchOfficialUrls(query: string, allowedDomains: string[]
     const urls = message.content.flatMap(block =>
       block.type === 'web_search_tool_result' && Array.isArray(block.content) ? block.content.map(r => r.url) : [],
     );
-    return [...new Set(urls)].slice(0, 5);
+    return { urls: [...new Set(urls)].slice(0, 5), usage: toUsage(message.usage) };
   } catch (error) {
     throw toAIFailure(error);
   }
