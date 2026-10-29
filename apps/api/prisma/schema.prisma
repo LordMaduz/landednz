@@ -17,6 +17,8 @@ model User {
   subscription   Subscription?
   profile        UserProfile?
   roadmapEntries UserRoadmapEntry[]
+  guideConversation GuideConversation?
+  guideMemories     GuideMemory[]
 }
 
 model UserProfile {
@@ -65,11 +67,14 @@ model KnowledgeBaseChunk {
   sourceIds      String?
   embeddingMode  String?
   embedding      Unsupported("vector(1536)")?
+  // GENERATED ALWAYS column from the migration (raw SQL); dbgenerated mirrors it so migrate diff stays clean. Keyword arm of guide retrieval
+  searchText     Unsupported("tsvector")? @default(dbgenerated("to_tsvector('english'::regconfig, content)"))
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   // ivfflat (vector_cosine_ops) is created by scripts/create-vector-index.ts; declared so migrate diff keeps it
   @@index([embedding], map: "kb_chunk_embedding_ivfflat")
+  @@index([searchText], map: "kb_chunk_search_text_gin", type: Gin)
 }
 
 model ChatSession {
@@ -184,4 +189,53 @@ enum MessageRole {
 enum SubscriptionPlan {
   MONTHLY
   SIX_MONTH
+}
+
+// Settlement guide: one continuous conversation per user
+model GuideConversation {
+  id        String         @id @default(uuid())
+  userId    String         @unique
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  GuideMessage[]
+  createdAt DateTime       @default(now())
+}
+
+// One streaming assistant row per conversation is enforced by the partial unique index guide_message_one_streaming (raw SQL)
+model GuideMessage {
+  id              String            @id @default(uuid())
+  conversationId  String
+  conversation    GuideConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            String            // 'user' | 'assistant'
+  replyToId       String?           @unique  // assistant row → the user row it answers
+  text            String            // user question, or assistant plain text for history replay
+  parts           Json?             // assistant ReplyPart[] as sent
+  screenKind      String
+  taskKey         String?
+  status          String            // assistant: 'streaming' | 'complete' | 'failed' | 'interrupted' | 'cancelled'; user: 'complete'
+  countsTowardCap Boolean           @default(true)  // user rows only
+  meta            Json?             // latency per step, tokens, cost, steps run, verify result
+  createdAt       DateTime          @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([conversationId, taskKey])
+}
+
+model GuideMemory {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text            String
+  sourceMessageId String?
+  editedByUser    Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model LiveSourceCache {
+  url       String   @id
+  title     String
+  content   String   // page text, capped at 100k characters
+  fetchedAt DateTime
 }
