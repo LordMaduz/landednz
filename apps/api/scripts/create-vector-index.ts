@@ -25,9 +25,13 @@ export async function createVectorIndex(): Promise<boolean> {
   `;
   if (Number(existing) > 0) return false;
 
-  await db.$executeRawUnsafe(
-    `CREATE INDEX IF NOT EXISTS ${INDEX_NAME} ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)`,
-  );
+  // Supabase free caps maintenance_work_mem at 32 MB; the build needs ~61 MB. SET LOCAL lasts only this transaction.
+  await db.$transaction([
+    db.$executeRawUnsafe(`SET LOCAL maintenance_work_mem = '128MB'`),
+    db.$executeRawUnsafe(
+      `CREATE INDEX IF NOT EXISTS ${INDEX_NAME} ON "KnowledgeBaseChunk" USING ivfflat (embedding vector_cosine_ops)`,
+    ),
+  ]);
   logger.info({ index: INDEX_NAME }, 'ivfflat index created');
   return true;
 }
