@@ -14,7 +14,7 @@ Everything that ships can be checked on a Mac before any cloud account is touche
 
 Database: `make db-reset` (mock embeddings) or `make db-reset-live` (real embeddings) runs `prisma migrate deploy`, seeds the knowledge base and creates the ivfflat index after the embeddings load (C05). Re-running bootstrap on a populated DB is safe: no duplicates, no second index.
 
-## Cloud (Stage C — not started)
+## Cloud (Stage C — staging live, production not started)
 
 Spec: `docs/superpowers/specs/2026-10-28-r0-polish-and-stage-c-design.md` §4. Plan: `docs/superpowers/plans/2026-10-28-r0-polish-and-stage-c.md`.
 
@@ -45,4 +45,31 @@ The agent verifies every ticked item from the CLIs before it builds on it.
 
 Every env var per platform: [env-staging.md](env-staging.md).
 
-Deploy steps, DNS records, rollback and the health workflow are written here as Stage C runs.
+Production deploy steps, DNS records, rollback and the health workflow are written here as Stage C runs.
+
+## Staging (verified 2026-10-29)
+
+| Part | Where | URL |
+|---|---|---|
+| API | Render free web service `landednz-api-staging` (Singapore, `render.yaml`) | https://landednz-api-staging.onrender.com |
+| Web | Vercel project `landednz`, branch alias of `main` (Preview scope) | https://landednz-git-main-lordmaduzs-projects.vercel.app |
+| DB + auth | Supabase `landednz-staging` (ref `caksnoejabxbakjijyjz`, Sydney) | `https://caksnoejabxbakjijyjz.supabase.co` |
+
+**Deploy.** Merge to `main`. Render rebuilds the API image and runs `npm run start:deploy` (migrations on start; the free plan has no pre-deploy step).
+Vercel builds the web app. Then the `Staging` workflow wakes the API and runs `a11y.spec.ts` and `auth.spec.ts` against the deployed pair.
+
+**Env.** Every variable per platform: [env-staging.md](env-staging.md). Secrets live only in Render, Vercel and GitHub, never in git.
+
+**DNS.** None for staging: it uses the `onrender.com` and `vercel.app` URLs. The custom domain comes with production.
+
+**Cold start.** The free Render service sleeps after 15 min idle; the first request takes up to ~1 min. Hit `/health` first.
+
+**Web access.** The Vercel URL sits behind Deployment Protection: sign in to Vercel in the browser, or send `x-vercel-protection-bypass` (GitHub secret `VERCEL_AUTOMATION_BYPASS_SECRET`) from scripts.
+
+**Full e2e locally against staging.** Export the variables the `Staging` workflow sets (`BASE_URL`, `NEXT_PUBLIC_*`, `SUPABASE_SECRET_KEY`, `VERCEL_AUTOMATION_BYPASS_SECRET`) in the shell, never in a file, then `cd apps/web && npx playwright test`.
+`supabase projects api-keys` masks the secret key unless you pass `--reveal`.
+
+**Rollback.**
+- API: Render dashboard → `landednz-api-staging` → Events → pick the last good deploy → **Rollback**. A rollback does not undo migrations; a schema change needs a forward migration.
+- Web: Vercel dashboard → Deployments → the last good `main` deployment → **Redeploy**.
+- Then `git revert` the bad commit on `main`, so the next push does not bring it back.
