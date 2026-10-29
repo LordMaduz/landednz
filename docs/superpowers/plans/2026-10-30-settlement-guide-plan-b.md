@@ -167,7 +167,7 @@ Execution: Tasks 1, 3, 5, 6, 7 inline (mechanical). Tasks 2 and 4 by a subagent 
 
 - [x] Full suite with `make dev` stopped: `npm test -w @landednz/api` and root `npm run typecheck`, `npm run lint -w @landednz/api`.
 - [x] One review of `main..HEAD` (superpowers:requesting-code-review). Fix Critical/Important; log Minors in `.superpowers/sdd/2026-10-30-settlement-guide-plan-b/progress.md`.
-- [ ] **STOP for the owner** before Task 8.
+- [x] **STOP for the owner** before Task 8. Owner deferred further distress work (results doc §5); go to Task 8.
 
 ---
 
