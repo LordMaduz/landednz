@@ -11,7 +11,7 @@ let conversationId: string;
 
 const assistant = (createdAt: Date, status: string, meta?: object) =>
   db.guideMessage.create({
-    data: { conversationId, role: 'assistant', text: '', screenKind: 'home', status, createdAt, meta },
+    data: { conversationId, role: 'assistant', text: '', screenKind: 'home', status, createdAt, streamStartedAt: createdAt, meta },
   });
 
 beforeEach(async () => {

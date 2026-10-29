@@ -215,6 +215,7 @@ model GuideMessage {
   countsTowardCap Boolean           @default(true)  // user rows only
   meta            Json?             // latency per step, tokens, cost, steps run, verify result
   createdAt       DateTime          @default(now())
+  streamStartedAt DateTime          @default(now())  // reset on restart; the sweeper ages streaming rows by this
 
   @@index([conversationId, createdAt])
   @@index([conversationId, taskKey])

@@ -31,7 +31,7 @@ export async function startTurn(userId: string, text: string, screen: GuideScree
         data: { conversationId, role: 'user', text, status: 'complete', countsTowardCap: true, createdAt: now, ...base },
       });
       const assistant = await tx.guideMessage.create({
-        data: { conversationId, role: 'assistant', text: '', status: 'streaming', replyToId: user.id, createdAt: now, ...base },
+        data: { conversationId, role: 'assistant', text: '', status: 'streaming', replyToId: user.id, createdAt: now, streamStartedAt: now, ...base },
       });
       return { conversationId, userMessageId: user.id, assistantMessageId: assistant.id };
     });
@@ -50,7 +50,7 @@ export async function finishTurn(
       data: { status: r.status, parts: r.parts as unknown as Prisma.InputJsonValue, text: r.text, meta: r.meta as Prisma.InputJsonValue },
     });
     // Nothing reached the user, so the question does not use up their daily allowance.
-    if (!r.textSent && (r.status === 'failed' || r.status === 'cancelled') && a.replyToId) {
+    if (!r.textSent && r.status !== 'complete' && a.replyToId) {
       await tx.guideMessage.update({ where: { id: a.replyToId }, data: { countsTowardCap: false } });
     }
   });
@@ -74,7 +74,7 @@ export async function restartTurn(userId: string, assistantMessageId: string, no
         await assertUnderGuideCap(tx, a.conversationId, now);
         await tx.guideMessage.update({ where: { id: user.id }, data: { countsTowardCap: true } });
       }
-      await tx.guideMessage.update({ where: { id: a.id }, data: { status: 'streaming', parts: Prisma.DbNull } });
+      await tx.guideMessage.update({ where: { id: a.id }, data: { status: 'streaming', parts: Prisma.DbNull, streamStartedAt: now } });
       return {
         userMessageId: user.id,
         question: user.text,

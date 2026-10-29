@@ -3,12 +3,19 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeEach, describe, expect, test } from 'vitest';
 import { db } from '../../shared/db.js';
 import { startOfNzDay } from '../../shared/nz-day.js';
+import { sweepStale } from './sweeper.js';
 import { finishTurn, restartTurn, startTurn } from './turns.js';
 
 const userId = randomUUID();
 const otherId = randomUUID();
 const home = { kind: 'home' } as const;
 const rejects409 = { code: 'GUIDE_BUSY', statusCode: 409 };
+
+async function expectOneTurn() {
+  const where = { conversation: { userId } };
+  expect(await db.guideMessage.count({ where: { ...where, role: 'user', countsTowardCap: true } })).toBe(1);
+  expect(await db.guideMessage.count({ where: { ...where, role: 'assistant' } })).toBe(1);
+}
 
 async function userRows(n: number, createdAt: Date, countsTowardCap = true) {
   const c = await db.guideConversation.upsert({ where: { userId }, create: { userId }, update: {} });
@@ -43,6 +50,14 @@ describe('startTurn', () => {
     expect(res.filter(r => r.status === 'fulfilled')).toHaveLength(1);
     const lost = res.find(r => r.status === 'rejected') as PromiseRejectedResult;
     expect(lost.reason).toMatchObject(rejects409);
+    await expectOneTurn();
+  });
+
+  test('race on an existing conversation: cap counts once, one assistant row', async () => {
+    await userRows(1, new Date(Date.now() - 3600_000), false);
+    const res = await Promise.allSettled([startTurn(userId, 'a', home), startTurn(userId, 'b', home)]);
+    expect(res.filter(r => r.status === 'fulfilled')).toHaveLength(1);
+    await expectOneTurn();
   });
 
   test('second start while streaming is 409', async () => {
@@ -81,6 +96,13 @@ describe('finishTurn', () => {
     expect(u.countsTowardCap).toBe(false);
   });
 
+  test('interrupted without text releases the cap slot', async () => {
+    const r = await startTurn(userId, 'q', home);
+    await finishTurn(r.assistantMessageId, { status: 'interrupted', parts: [], text: '', meta: {}, textSent: false });
+    const u = await db.guideMessage.findUniqueOrThrow({ where: { id: r.userMessageId } });
+    expect(u.countsTowardCap).toBe(false);
+  });
+
   test('cancelled with text still counts', async () => {
     const r = await startTurn(userId, 'q', home);
     await finish(r.assistantMessageId, 'cancelled', true);
@@ -102,6 +124,16 @@ describe('restartTurn', () => {
     expect(a.status).toBe('streaming');
     expect(a.parts).toBeNull();
     expect(u.countsTowardCap).toBe(true);
+  });
+
+  test('a restarted old answer is not swept while streaming', async () => {
+    const r = await startTurn(userId, 'q', home);
+    await finishTurn(r.assistantMessageId, { status: 'failed', parts: [], text: '', meta: {}, textSent: false });
+    const old = new Date(Date.now() - 10 * 60_000);
+    await db.guideMessage.updateMany({ where: { id: { in: [r.userMessageId, r.assistantMessageId] } }, data: { createdAt: old } });
+    await restartTurn(userId, r.assistantMessageId);
+    await sweepStale();
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: r.assistantMessageId } })).status).toBe('streaming');
   });
 
   test('complete row is 409 NOT_RETRYABLE', async () => {

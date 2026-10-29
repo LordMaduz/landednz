@@ -10,7 +10,7 @@ const COST_BUDGET_CENTS = 5;
 export async function sweepStale(now: Date = new Date()): Promise<{ interrupted: number; cacheDeleted: number }> {
   const [stale, cache] = await Promise.all([
     db.guideMessage.updateMany({
-      where: { role: 'assistant', status: 'streaming', createdAt: { lt: new Date(now.getTime() - 2 * MIN) } },
+      where: { role: 'assistant', status: 'streaming', streamStartedAt: { lt: new Date(now.getTime() - 2 * MIN) } },
       data: { status: 'interrupted' },
     }),
     db.liveSourceCache.deleteMany({ where: { fetchedAt: { lt: new Date(now.getTime() - 30 * DAY) } } }),
