@@ -65,7 +65,7 @@ jobs:
         run: |
           (cd apps/api && node --env-file=.env.local dist/src/server.js > ../../api.log 2>&1 &)
           (npm run start -w @landednz/web > web.log 2>&1 &)
-          for i in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             curl -sf localhost:3001/health && curl -sf -o /dev/null localhost:3000 && exit 0
             sleep 1
           done
