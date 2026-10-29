@@ -313,7 +313,7 @@
     - verify → `endParts` → `remember` (skip on retry, out-of-scope, distress) → `finishTurn` with `meta` `{ ms: {understand, retrieve, live, firstText, total}, tokens, costCents, steps, verify: {unmatchedCitations, uncitedClaims: n} }` (`costCents` from usage at Sonnet 5.5 $2/$10, cache reads $0.20, Haiku 5.5 $0.10/$0.50 per MTok, plus 1¢ per web search; rates in one constant) → `done`.
   - An in-process `Map<assistantMessageId, AbortController>`; client `close` before `done` aborts with status `interrupted`; `cancelTurn(userId, assistantMessageId): Promise<void>` aborts with status `cancelled` (404 `MESSAGE_NOT_FOUND` when not the user's streaming row). Comment: `// shortcut: in-memory abort map assumes one API instance, move to a DB flag polled by the stream when scaling out`.
   - Routes (all `preHandler: authenticateRequest`): `POST /guide/messages` (body zod: `text` trimmed 1–2,000 chars, `screen` per `GuideScreen`; validation and `startTurn` errors return JSON before SSE opens; then `start` event and `runTurn`), `POST /guide/messages/:id/cancel` (204), `POST /guide/messages/:id/retry` (`restartTurn` then SSE as above with `isRetry: true`).
-- [ ] **Step 1: Write failing route tests** (real Supabase user, mock AI, `app.inject` is fine for event order):
+- [x] **Step 1: Write failing route tests** (real Supabase user, mock AI, `app.inject` is fine for event order):
   - events in order `start`, `part notice checking_guide`, …, `done`; at least one `source` before the first cited `text`; no body text matches `/\bT\d{2,3}\b|CHUNK_/`; `memory_saved` (send `"Remember that my partner starts work in March"` with `setMockStructured` returning a candidate) arrives before `done`;
   - `text: ''`, `'   '` and 2,001 chars → 400 `VALIDATION_ERROR` and no `GuideMessage` rows;
   - a second POST while a streaming row exists → 409 `GUIDE_BUSY`;
@@ -321,10 +321,10 @@
   - mock answer throwing `AIFailureError` → `error` part, status `failed`, question not counting; retry of that message → `complete` and counting;
   - distress question → first `text` part starts with `Lifeline NZ: 0800 543 354`;
   - cancel of another user's message → 404.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/routes.messages.test.ts` → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** the guide tests and `npm run typecheck -w @landednz/api` → PASS. Then start the API (`make dev`) and confirm progressive delivery with `curl -N` against `POST /guide/messages` (C14: `app.inject` buffers): sentences arrive as separate events before `done`.
-- [ ] **Step 5: Commit** `feat(guide): guide pipeline, SSE stream, cancel and retry`
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/routes.messages.test.ts` → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** the guide tests and `npm run typecheck -w @landednz/api` → PASS. Then start the API (`make dev`) and confirm progressive delivery with `curl -N` against `POST /guide/messages` (C14: `app.inject` buffers): sentences arrive as separate events before `done`.
+- [x] **Step 5: Commit** `feat(guide): guide pipeline, SSE stream, cancel and retry`
 
 ---
 
@@ -339,11 +339,11 @@
   - `getConversation(userId, before: string | null, limit: number): Promise<GuideConversationPage>` (newest first, `limit` 1–50 default 20, `before` = message id cursor) and `getTaskMessages(userId, taskKey): Promise<GuideMessageDto[]>` (oldest first, max 50).
   - `getOpening(userId, screen): Promise<GuideOpeningResponse>` from `loadGuideContext` + `buildWhereYouAre` / `buildStarters`; no model call.
   - Routes: `GET /guide/conversation`, `GET /guide/conversation/task/:taskKey`, `GET /guide/opening?screen=home|roadmap|task&taskKey=`, `GET /guide/memories`, `PATCH /guide/memories/:id` (body `{ text }`), `DELETE /guide/memories/:id` (204).
-- [ ] **Step 1: Write failing tests**: paging returns `nextBefore` and the next page continues without overlap; task view returns only that task's messages; opening has ≤ 3 starters and no `T\d{2}` keys; memories list/patch/delete; another user's memory → 404; `DELETE /account` leaves no guide rows for that user.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): conversation history, opening and memory routes`
+- [x] **Step 1: Write failing tests**: paging returns `nextBefore` and the next page continues without overlap; task view returns only that task's messages; opening has ≤ 3 starters and no `T\d{2}` keys; memories list/patch/delete; another user's memory → 404; `DELETE /account` leaves no guide rows for that user.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): conversation history, opening and memory routes`
 
 ---
 
