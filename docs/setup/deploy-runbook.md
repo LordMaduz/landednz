@@ -41,6 +41,6 @@ The agent verifies every ticked item from the CLIs before it builds on it.
 
 ### Code already needed (agent)
 
-- [ ] Fastify `trustProxy` for the Render/Railway proxy hop, so the per-IP rate limit sees client IPs (plan Task C1).
+- [x] Fastify `trustProxy` for the Render/Railway proxy hop, so the per-IP rate limit sees client IPs (plan Task C1). Set `TRUST_PROXY=true` on the API service.
 
 Deploy steps, DNS records, rollback and the health workflow are written here as Stage C runs.

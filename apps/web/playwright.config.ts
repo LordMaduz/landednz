@@ -10,12 +10,13 @@ export default defineConfig({
   workers: 1,
   forbidOnly: !!process.env.CI,
   use: {
-    baseURL: process.env.E2E_WEB_URL ?? 'http://localhost:3000',
+    baseURL: process.env.BASE_URL ?? process.env.E2E_WEB_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  // Supabase must already be running (`supabase start`); the API and web app start here if not up.
-  webServer: [
+  // BASE_URL = a deployed target, so nothing starts locally. Otherwise Supabase must already be running
+  // (`supabase start`); the API and web app start here if not up.
+  webServer: process.env.BASE_URL ? undefined : [
     {
       command: 'npm run dev -w @landednz/api',
       cwd: '../..',

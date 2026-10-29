@@ -1,3 +1,5 @@
+import './instrument.js'
+import * as Sentry from '@sentry/node'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import { config } from './shared/config.js'
@@ -16,7 +18,15 @@ import { loadContent } from './content/index.js'
 import { checkStoredTaskIds } from './content/integrity.js'
 
 export async function buildApp() {
-  const app = Fastify({ logger: false })
+  const app = Fastify({
+    logger: false,
+    // Fastify 5 treats a numeric trustProxy as "trust nobody", so trust exactly one hop with a function:
+    // req.ip is then the address the platform proxy appended, which a client cannot forge
+    trustProxy: config.trustProxy ? (_addr, hop) => hop < 1 : false,
+  })
+
+  // Reports unexpected 5xx errors; the error handler below still shapes the response
+  if (config.sentryDsn) Sentry.setupFastifyErrorHandler(app)
 
   // Enable CORS for browser requests from web app
   app.register(cors, {

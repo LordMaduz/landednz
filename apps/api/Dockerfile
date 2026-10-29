@@ -13,7 +13,7 @@ COPY package.json package-lock.json tsconfig.base.json ./
 COPY packages/types ./packages/types
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
-RUN npm ci -w @landednz/api --include-workspace-root
+RUN npm ci -w @landednz/api --include-workspace-root --ignore-scripts
 
 ARG CONTENT_ALLOW_UNVERIFIED=false
 COPY apps/api ./apps/api
@@ -34,7 +34,7 @@ COPY package.json package-lock.json ./
 COPY packages/types ./packages/types
 COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
-RUN npm ci -w @landednz/api --include-workspace-root --omit=dev
+RUN npm ci -w @landednz/api --include-workspace-root --omit=dev --ignore-scripts
 
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/content-bundle.json ./apps/api/

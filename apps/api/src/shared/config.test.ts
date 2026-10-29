@@ -70,4 +70,16 @@ describe('loadConfig', () => {
     expect(config.anthropicModel).toBe('claude-haiku-5-5');
     expect(config.openaiApiKey).toBe('sk-test');
   });
+
+  test('trustProxy is false unless TRUST_PROXY is "true"', () => {
+    expect(loadConfig(MOCK_ENV).trustProxy).toBe(false);
+    expect(loadConfig({ ...MOCK_ENV, TRUST_PROXY: 'true' }).trustProxy).toBe(true);
+  });
+
+  test('sentryDsn and release are read from env and optional', () => {
+    expect(loadConfig(MOCK_ENV).sentryDsn).toBeUndefined();
+    const config = loadConfig({ ...MOCK_ENV, SENTRY_DSN: 'https://k@o.ingest.sentry.io/1', RAILWAY_GIT_COMMIT_SHA: 'abc' });
+    expect(config.sentryDsn).toBe('https://k@o.ingest.sentry.io/1');
+    expect(config.release).toBe('abc');
+  });
 });

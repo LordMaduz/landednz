@@ -3,6 +3,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { SITE_URL } from "@/lib/site";
+import { Analytics } from "@/lib/analytics";
 
 const geist = Geist({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-geist" });
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
@@ -22,4 +23,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Source maps upload only when SENTRY_AUTH_TOKEN is set (staging/production builds)
+export default withSentryConfig(nextConfig, {
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: true,
+  telemetry: false,
+  sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+});
