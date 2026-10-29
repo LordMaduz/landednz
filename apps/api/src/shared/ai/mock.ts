@@ -41,7 +41,23 @@ export async function mockStructured<T>(system: string, user: string, schema: z.
   return schema.parse(structuredFixture(system, user));
 }
 
-export async function mockAnswerStream(
+// Tests can swap the answer stream (e.g. to throw AIFailureError); null restores the default.
+type AnswerFixture = typeof defaultAnswerStream;
+let answerFixture: AnswerFixture | null = null;
+
+export function setMockAnswer(fn: AnswerFixture | null): void {
+  answerFixture = fn;
+}
+
+export function mockAnswerStream(
+  req: GuideAnswerRequest,
+  onEvent: (e: AnswerEvent) => void,
+  signal?: AbortSignal,
+): Promise<AnswerResult> {
+  return (answerFixture ?? defaultAnswerStream)(req, onEvent, signal);
+}
+
+async function defaultAnswerStream(
   req: GuideAnswerRequest,
   onEvent: (e: AnswerEvent) => void,
   signal?: AbortSignal,

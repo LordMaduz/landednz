@@ -1,0 +1,238 @@
+// Guide message routes end to end: real Supabase users, real DB, AI_MODE=mock. app.inject buffers SSE, so this checks event order only.
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
+
+// Live official pages are network calls; one fixed official passage stands in for them
+vi.mock('./live.js', () => ({
+  liveSources: vi.fn(async () => ({
+    passages: [
+      {
+        id: 'live:https://www.ird.govt.nz/ird-numbers#0',
+        title: 'IRD numbers',
+        url: 'https://www.ird.govt.nz/ird-numbers',
+        origin: 'official',
+        content: 'You need an IRD number to work, open KiwiSaver and pay the right tax in New Zealand.',
+        similarity: 0.9,
+        taskKey: null,
+        checkedAt: new Date().toISOString(),
+      },
+    ],
+    unavailable: false,
+  })),
+}));
+
+import type { FastifyInstance } from 'fastify';
+import type { GuideSseEvent, ReplyPart } from '@landednz/types';
+import { db } from '../../shared/db.js';
+import { AIFailureError } from '../../shared/errors.js';
+import { setMockAnswer, setMockStructured } from '../../shared/ai/mock.js';
+import { createTestUser, deleteTestUser } from '../../test-utils/supabase-user.js';
+import { buildApp } from '../../server.js';
+
+let app: FastifyInstance;
+let userId: string;
+let jwt: string;
+let otherId: string;
+let otherJwt: string;
+
+const LEAK = /\bT\d{2,3}\b|CHUNK_/;
+
+function parseSse(body: string): GuideSseEvent[] {
+  return body
+    .split('\n\n')
+    .filter(Boolean)
+    .map((block) => {
+      const event = /^event: (.+)$/m.exec(block)?.[1];
+      const data = /^data: (.+)$/m.exec(block)?.[1];
+      return { event, data: JSON.parse(data!) } as GuideSseEvent;
+    });
+}
+
+const parts = (events: GuideSseEvent[]): ReplyPart[] => events.flatMap((e) => (e.event === 'part' ? [e.data] : []));
+
+function ask(text: unknown, token = jwt) {
+  return app.inject({
+    method: 'POST',
+    url: '/guide/messages',
+    headers: { Authorization: `Bearer ${token}` },
+    payload: { text, screen: { kind: 'home' } },
+  });
+}
+
+async function conversationId(uid = userId): Promise<string> {
+  const c = await db.guideConversation.upsert({ where: { userId: uid }, create: { userId: uid }, update: {} });
+  return c.id;
+}
+
+beforeAll(async () => {
+  const a = await createTestUser('test-guide-routes');
+  const b = await createTestUser('test-guide-routes-other');
+  ({ userId, jwt } = a);
+  ({ userId: otherId, jwt: otherJwt } = b);
+  for (const [id, email] of [[userId, a.email], [otherId, b.email]]) {
+    await db.user.create({ data: { id, email, name: 'Aroha' } });
+    await db.userProfile.create({
+      data: { userId: id, visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: new Date(Date.now() - 10 * 86_400_000) },
+    });
+  }
+  app = await buildApp();
+}, 60_000);
+
+beforeEach(async () => {
+  await db.guideConversation.deleteMany({ where: { userId: { in: [userId, otherId] } } });
+  await db.guideMemory.deleteMany({ where: { userId: { in: [userId, otherId] } } });
+});
+
+afterEach(() => {
+  setMockStructured(null);
+  setMockAnswer(null);
+});
+
+afterAll(async () => {
+  for (const id of [userId, otherId]) {
+    await db.user.deleteMany({ where: { id } });
+    await deleteTestUser(id);
+  }
+  await app.close();
+  await db.$disconnect();
+}, 60_000);
+
+describe('POST /guide/messages', () => {
+  test('streams start, notices, sources before cited text, memory_saved, then done', async () => {
+    setMockStructured(() => ({
+      searchQuery: 'partner starts work in March',
+      scope: 'in',
+      redirectAgency: null,
+      needsLive: false,
+      distress: false,
+      memoryCandidates: [{ text: 'Partner starts work in March', sensitive: false, explicit: true }],
+    }));
+    const res = await ask('Remember that my partner starts work in March');
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toBe('text/event-stream');
+
+    const events = parseSse(res.body);
+    expect(events[0]).toEqual({ event: 'start', data: { userMessageId: expect.any(String), assistantMessageId: expect.any(String) } });
+    expect(events[1]).toEqual({ event: 'part', data: { type: 'notice', kind: 'checking_guide' } });
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+
+    const ps = parts(events);
+    const firstSource = ps.findIndex((p) => p.type === 'source');
+    const firstCited = ps.findIndex((p) => p.type === 'text' && p.citations.length > 0);
+    expect(firstSource).toBeGreaterThanOrEqual(0);
+    expect(firstCited).toBeGreaterThan(firstSource);
+    expect(ps.findIndex((p) => p.type === 'memory_saved')).toBeGreaterThan(firstCited);
+
+    for (const p of ps) {
+      const visible = p.type === 'task_link' ? { ...p, taskKey: '' } : p;
+      expect(JSON.stringify(visible)).not.toMatch(LEAK);
+    }
+
+    const start = events[0]!.data as { assistantMessageId: string };
+    const row = await db.guideMessage.findUniqueOrThrow({ where: { id: start.assistantMessageId } });
+    expect(row.status).toBe('complete');
+    expect(row.parts).toEqual(ps);
+    expect(row.meta).toMatchObject({ ms: { total: expect.any(Number) }, steps: expect.arrayContaining(['answer']) });
+    expect(await db.guideMemory.count({ where: { userId } })).toBe(1);
+  });
+
+  test.each([[''], ['   '], ['x'.repeat(2001)]])('rejects text %# with 400 and writes nothing', async (text) => {
+    const res = await ask(text);
+    expect(res.statusCode).toBe(400);
+    expect(res.json().error).toBe('VALIDATION_ERROR');
+    expect(await db.guideMessage.count({ where: { conversation: { userId } } })).toBe(0);
+  });
+
+  test('a second question while one is streaming gets 409 GUIDE_BUSY', async () => {
+    const conv = await conversationId();
+    const q = await db.guideMessage.create({ data: { conversationId: conv, role: 'user', text: 'q', screenKind: 'home', status: 'complete' } });
+    await db.guideMessage.create({ data: { conversationId: conv, role: 'assistant', text: '', screenKind: 'home', status: 'streaming', replyToId: q.id } });
+    const res = await ask('How do I get an IRD number?');
+    expect(res.statusCode).toBe(409);
+    expect(res.json().error).toBe('GUIDE_BUSY');
+  });
+
+  test('the 21st question of the day gets 429 CHAT_DAILY_CAP_REACHED', async () => {
+    const conv = await conversationId();
+    await db.guideMessage.createMany({
+      data: Array.from({ length: 20 }, () => ({ conversationId: conv, role: 'user', text: 'q', screenKind: 'home', status: 'complete' })),
+    });
+    const res = await ask('How do I get an IRD number?');
+    expect(res.statusCode).toBe(429);
+    expect(res.json().error).toBe('CHAT_DAILY_CAP_REACHED');
+  });
+
+  test('answer failure before text: error part, failed, not counting; retry completes and counts', async () => {
+    setMockAnswer(async () => {
+      throw new AIFailureError('boom');
+    });
+    const events = parseSse((await ask('How do I get an IRD number?')).body);
+    expect(parts(events)).toContainEqual({ type: 'error', code: 'AI_FAILURE', retryable: true });
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
+    const { userMessageId, assistantMessageId } = events[0]!.data as { userMessageId: string; assistantMessageId: string };
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(false);
+
+    setMockAnswer(null);
+    const retry = await app.inject({
+      method: 'POST',
+      url: `/guide/messages/${assistantMessageId}/retry`,
+      headers: { Authorization: `Bearer ${jwt}` },
+    });
+    const again = parseSse(retry.body);
+    expect(again[0]).toEqual({ event: 'start', data: { userMessageId, assistantMessageId } });
+    expect(again.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+    expect(parts(again).some((p) => p.type === 'text')).toBe(true);
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: userMessageId } })).countsTowardCap).toBe(true);
+    expect((await db.guideMessage.findUniqueOrThrow({ where: { id: assistantMessageId } })).status).toBe('complete');
+  });
+
+  test('distress: the first text part is the Lifeline crisis text', async () => {
+    const ps = parts(parseSse((await ask("I can't go on, I don't know how to get an IRD number")).body));
+    const firstText = ps.find((p) => p.type === 'text') as { text: string };
+    expect(firstText.text.startsWith('Lifeline NZ: 0800 543 354')).toBe(true);
+  });
+
+  test('out of scope: a fixed redirect and no answer call', async () => {
+    setMockStructured(() => ({ searchQuery: 'visa appeal', scope: 'out', redirectAgency: 'immigration', needsLive: false, distress: false, memoryCandidates: [] }));
+    setMockAnswer(async () => {
+      throw new Error('answer must not be called');
+    });
+    const events = parseSse((await ask('Should I appeal my visa decision?')).body);
+    const texts = parts(events).filter((p) => p.type === 'text');
+    expect(texts).toHaveLength(1);
+    expect((texts[0] as { text: string }).text).toContain('iaa.govt.nz');
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });
+  });
+});
+
+describe('POST /guide/messages/:id/cancel', () => {
+  test("another user's message is 404", async () => {
+    const conv = await conversationId();
+    const q = await db.guideMessage.create({ data: { conversationId: conv, role: 'user', text: 'q', screenKind: 'home', status: 'complete' } });
+    const a = await db.guideMessage.create({ data: { conversationId: conv, role: 'assistant', text: '', screenKind: 'home', status: 'streaming', replyToId: q.id } });
+    const res = await app.inject({ method: 'POST', url: `/guide/messages/${a.id}/cancel`, headers: { Authorization: `Bearer ${otherJwt}` } });
+    expect(res.statusCode).toBe(404);
+    expect(res.json().error).toBe('MESSAGE_NOT_FOUND');
+  });
+
+  test('cancel mid-answer ends the stream as cancelled and keeps sent text', async () => {
+    let reached!: () => void;
+    const atAnswer = new Promise<void>((resolve) => (reached = resolve));
+    setMockAnswer(async (_req, onEvent, signal) => {
+      onEvent({ type: 'text', text: 'First sentence is here. ' });
+      onEvent({ type: 'block_end' });
+      reached();
+      await new Promise((resolve) => signal!.addEventListener('abort', resolve));
+      return { stopReason: 'aborted', usage: { input: 0, output: 0, cacheRead: 0 } };
+    });
+    const pending = ask('How do I get an IRD number?');
+    await atAnswer;
+    const row = await db.guideMessage.findFirst({ where: { conversation: { userId }, role: 'assistant', status: 'streaming' } });
+    const cancel = await app.inject({ method: 'POST', url: `/guide/messages/${row!.id}/cancel`, headers: { Authorization: `Bearer ${jwt}` } });
+    expect(cancel.statusCode).toBe(204);
+    const events = parseSse((await pending).body);
+    expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'cancelled' } });
+    const saved = await db.guideMessage.findUniqueOrThrow({ where: { id: row!.id } });
+    expect(saved.status).toBe('cancelled');
+    expect(saved.text).toBe('First sentence is here.');
+  });
+});
