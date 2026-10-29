@@ -155,6 +155,10 @@
   .radio::after { content: ""; width: 8px; height: 8px; border-radius: 9999px; }
   .radio:checked { background: var(--color-teal); border-color: var(--color-teal); }
   .radio:checked::after { background: var(--color-white); }
+  @media (forced-colors: active) {
+    .radio:checked { border-color: Highlight; }
+    .radio:checked::after { background: CanvasText; }
+  }
   .wp-mark { width: 20px; height: 20px; }
   .wp-done { background: var(--color-teal); }
   .wp-current { width: 16px; height: 16px; border: 2px solid var(--color-ink); }

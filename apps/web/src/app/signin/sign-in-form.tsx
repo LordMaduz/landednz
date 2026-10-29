@@ -112,7 +112,7 @@ function SaveChip({ answers }: { answers: Answers }) {
 // With onboarding answers the page saves them; without, it is a plain sign-in
 export function SignIn({ answers }: { answers: Answers | null }) {
   return (
-    <main className="container-page flex justify-center py-12 max-narrow:px-4 max-narrow:pt-6 max-narrow:pb-8">
+    <main className="container-page flex justify-center py-12 max-narrow:pt-6 max-narrow:pb-8">
       <Card as="div" className="w-full max-w-auth gap-5 p-8 max-narrow:gap-4.5 max-narrow:px-5 max-narrow:py-6">
         {answers && (
           <>

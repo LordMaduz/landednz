@@ -84,6 +84,7 @@ export function routeProgress(route: RouteView, arrivalDate: string, now: Date) 
   const day = journeyDay(arrivalDate, now)
   const { cur, i } = current(route)
   const x = youX(route, day)
+  const walked = youX(route)
 
   const label = day < 1 ? `You · ${plural(1 - day, 'day')} to go` : "You're here"
   const name = cur?.name ?? legName(LEGS[i].id, day < 1)
@@ -91,7 +92,7 @@ export function routeProgress(route: RouteView, arrivalDate: string, now: Date) 
   const tail = day < 1 ? `by ${shortDay(arrivalDate)}` : left ? `${plural(left, 'day')} left` : ''
   const summary = [name, `${cur?.done ?? 0} of ${cur?.total ?? 0}`, tail].filter(Boolean).join(' · ')
 
-  return { x, todayX: todayX(arrivalDate, now), label, summary, walked: youX(route), passed: TRACK_FLAGS.map(fx => fx <= youX(route)) }
+  return { x, todayX: todayX(arrivalDate, now), label, summary, walked, passed: TRACK_FLAGS.map(fx => fx <= walked) }
 }
 
 // The phone row: the stage behind, the stage now with its days left, the stage ahead
