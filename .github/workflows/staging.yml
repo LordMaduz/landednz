@@ -1,0 +1,47 @@
+name: Staging
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  e2e:
+    # Skipped until the staging web URL exists, so pushes to main stay green
+    if: vars.STAGING_WEB_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+
+      - name: Wait for the API (free tier cold start)
+        run: curl -sf --retry 9 --retry-delay 10 --retry-all-errors --max-time 30 "$API_URL/health"
+        env:
+          API_URL: ${{ vars.STAGING_API_URL }}
+
+      # playwright.config.ts loads this file unconditionally
+      - run: touch apps/web/.env.local
+
+      - run: npx playwright test e2e/a11y.spec.ts e2e/auth.spec.ts
+        working-directory: apps/web
+        env:
+          BASE_URL: ${{ vars.STAGING_WEB_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.STAGING_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_API_URL: ${{ vars.STAGING_API_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SECRET_KEY }}
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-e2e-artifacts
+          path: apps/web/test-results

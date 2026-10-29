@@ -43,4 +43,6 @@ The agent verifies every ticked item from the CLIs before it builds on it.
 
 - [x] Fastify `trustProxy` for the Render/Railway proxy hop, so the per-IP rate limit sees client IPs (plan Task C1). Set `TRUST_PROXY=true` on the API service.
 
+Every env var per platform: [env-staging.md](env-staging.md).
+
 Deploy steps, DNS records, rollback and the health workflow are written here as Stage C runs.

@@ -1,0 +1,39 @@
+name: Health
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: staging
+            url: ${{ vars.STAGING_API_URL }}
+          - env: production
+            url: ${{ vars.PROD_API_URL }}
+    steps:
+      - name: Check /health
+        run: curl -sf --retry 3 --retry-delay 30 --max-time 90 "$URL/health"
+        env:
+          URL: ${{ matrix.url }}
+
+      - name: Open an issue on failure
+        if: failure()
+        run: |
+          if [ -z "$(gh issue list --label health --state open --search "Health check failed: $ENV_NAME" --json number --jq '.[0].number')" ]; then
+            gh issue create --title "Health check failed: $ENV_NAME" --label health \
+              --body "$URL/health did not answer. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ENV_NAME: ${{ matrix.env }}
+          URL: ${{ matrix.url }}
