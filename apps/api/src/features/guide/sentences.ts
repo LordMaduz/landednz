@@ -56,10 +56,11 @@ export function createSentenceGate(opts: {
       .replace(/ {2,}/g, ' ')
       .replace(/ +([.,!?])/g, '$1')
       .trim();
+    if (!text) return; // keep waiting citations for the next real sentence
     const citations = pending;
     pending = [];
-    if (!text) return;
 
+    // shortcut: a citation that arrives before a multi-sentence chunk attaches to its first sentence; cited blocks are usually one claim — revisit if live answers show mis-attached sources
     const indexes: number[] = [];
     for (const c of citations) {
       const passage = opts.passages[c.passageIndex];
@@ -99,6 +100,12 @@ export function createSentenceGate(opts: {
     },
     end() {
       drain(true);
+      // Nothing follows now, so an excepted ending ("etc.", "So do I.") is a finished sentence; a bare "2." is not
+      const tail = buf.trim();
+      if (/[.!?]["')]*$/.test(tail) && !/(^|\n)\s*\d+\.$/.test(tail)) {
+        buf = '';
+        release(tail);
+      }
       return released;
     },
     dropTail() {

@@ -121,4 +121,24 @@ describe('sentence gate', () => {
     expect(parts).toEqual([]);
     expect(gate.sentTextCount()).toBe(0);
   });
+
+  it('releases a final sentence that ends in an excepted word at end()', () => {
+    expect(texts(run([t('Bring ID, passport, etc.')]).parts)).toEqual(['Bring ID, passport, etc.']);
+    expect(texts(run([t('Yes. So do I.')]).parts)).toEqual(['Yes.', 'So do I.']);
+  });
+
+  it('still holds a bare list marker at end()', () => {
+    expect(texts(run([t('1. Apply online\n2.')]).parts)).toEqual(['1. Apply online']);
+  });
+
+  it('keeps pending citations across a whitespace-only segment', () => {
+    const { parts } = run([
+      t('Done. '),
+      { type: 'block_end' },
+      { type: 'citation', documentIndex: 0, citedText: 'q' },
+      t('\n\nNext one.'),
+    ]);
+    expect(parts.map((p) => p.type)).toEqual(['text', 'source', 'text']);
+    expect(parts[2]).toMatchObject({ text: 'Next one.', citations: [1] });
+  });
 });
