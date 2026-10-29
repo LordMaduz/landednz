@@ -56,13 +56,13 @@
 - Produces config fields: `guideDailyCap: number` (env `GUIDE_DAILY_CAP`, default `20`), `guideRelevanceFloor: number` (env `GUIDE_RELEVANCE_FLOOR`, default `0.3`, 0–1), `guideAnswerThinking: 'between_tools' | 'adaptive'` (env `GUIDE_ANSWER_THINKING`, default `between_tools`).
 - Produces `startOfNzDay(now: Date): Date` and `nextNzMidnight(now: Date): Date` in `shared/nz-day.ts`.
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
   - `nz-day.test.ts`: `startOfNzDay(new Date('2026-10-24T10:30:00Z'))` equals `new Date('2026-10-23T11:00:00Z')` (NZDT); `nextNzMidnight(new Date('2026-10-24T10:30:00Z'))` equals `new Date('2026-10-24T11:00:00Z')`; a winter date `2026-06-15T05:00:00Z` → start `2026-06-14T12:00:00Z` (NZST).
   - `config.test.ts`: defaults `guideDailyCap === 20`, `guideRelevanceFloor === 0.3`, `guideAnswerThinking === 'between_tools'`; `GUIDE_RELEVANCE_FLOOR: '1.5'` throws `'GUIDE_RELEVANCE_FLOOR must be a number from 0 to 1'`; `GUIDE_ANSWER_THINKING: 'off'` throws `'GUIDE_ANSWER_THINKING must be between_tools or adaptive'`.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/shared/nz-day.test.ts src/shared/config.test.ts` → FAIL (module/fields missing).
-- [ ] **Step 3: Implement.** Move `nzParts`, `nzOffset`, `startOfNzDay` from `features/chat/daily-cap.ts` into `shared/nz-day.ts` unchanged; add `nextNzMidnight(now) = startOfNzDay(new Date(startOfNzDay(now).getTime() + 36 * 3600_000))` (36 h lands inside the next NZ day across DST). Optional env vars use the existing `parseEnv({ NAME: default, ...env }, …)` pattern. Add the three vars to `.env.example` with their defaults. Append the types to `packages/types/index.ts`.
-- [ ] **Step 4: Run** the same tests plus `src/features/chat/daily-cap.test.ts` and `npm run typecheck` → PASS.
-- [ ] **Step 5: Commit** `feat(guide): shared types, config and NZ-day helper`
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/shared/nz-day.test.ts src/shared/config.test.ts` → FAIL (module/fields missing).
+- [x] **Step 3: Implement.** Move `nzParts`, `nzOffset`, `startOfNzDay` from `features/chat/daily-cap.ts` into `shared/nz-day.ts` unchanged; add `nextNzMidnight(now) = startOfNzDay(new Date(startOfNzDay(now).getTime() + 36 * 3600_000))` (36 h lands inside the next NZ day across DST). Optional env vars use the existing `parseEnv({ NAME: default, ...env }, …)` pattern. Add the three vars to `.env.example` with their defaults. Append the types to `packages/types/index.ts`.
+- [x] **Step 4: Run** the same tests plus `src/features/chat/daily-cap.test.ts` and `npm run typecheck` → PASS.
+- [x] **Step 5: Commit** `feat(guide): shared types, config and NZ-day helper`
 
 ---
 
@@ -77,14 +77,14 @@
 - Produces Prisma models `GuideConversation`, `GuideMessage`, `GuideMemory`, `LiveSourceCache` exactly as spec §4.4, plus `guideConversation GuideConversation?` and `guideMemories GuideMemory[]` on `User`, and `searchText Unsupported("tsvector")?` on `KnowledgeBaseChunk` with `@@index([searchText], map: "kb_chunk_search_text_gin", type: Gin)` declared so `migrate diff` keeps it.
 - Produces DB objects: generated column `"searchText" tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED`, GIN index `kb_chunk_search_text_gin`, partial unique index `guide_message_one_streaming ON "GuideMessage" ("conversationId") WHERE status = 'streaming'`.
 
-- [ ] **Step 1: Write failing test** `schema.test.ts`:
+- [x] **Step 1: Write failing test** `schema.test.ts`:
   - inserting two `GuideMessage` rows with `status: 'streaming'` in one conversation rejects with Prisma code `P2002`; a second row with `status: 'complete'` is accepted;
   - `SELECT count(*) FROM "KnowledgeBaseChunk" WHERE "searchText" @@ plainto_tsquery('english', 'IRD number')` returns > 0 (BigInt replacer applied);
   - deleting the `User` removes its conversation, messages and memories.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/schema.test.ts` → FAIL.
-- [ ] **Step 3: Implement.** Edit the schema, run `npx prisma migrate dev --create-only --name guide` in `apps/api`, rename the folder to `20261030000000_guide`, append the raw SQL for the generated column (replace any Prisma-generated `ADD COLUMN "searchText"`), GIN index and partial unique index, then `npx prisma migrate dev` and `npm run prisma:generate -w @landednz/api`.
-- [ ] **Step 4: Run** the test and `npx prisma migrate diff --from-migrations prisma/migrations --to-schema prisma/schema.prisma --exit-code` (exit 0, no drift) → PASS.
-- [ ] **Step 5: Commit** `feat(guide): guide tables, keyword search column, one-streaming index`
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/schema.test.ts` → FAIL.
+- [x] **Step 3: Implement.** Edit the schema, run `npx prisma migrate dev --create-only --name guide` in `apps/api`, rename the folder to `20261030000000_guide`, append the raw SQL for the generated column (replace any Prisma-generated `ADD COLUMN "searchText"`), GIN index and partial unique index, then `npx prisma migrate dev` and `npm run prisma:generate -w @landednz/api`.
+- [x] **Step 4: Run** the test and `npx prisma migrate diff --from-migrations prisma/migrations --to-schema prisma/schema.prisma --exit-code` (exit 0, no drift) → PASS.
+- [x] **Step 5: Commit** `feat(guide): guide tables, keyword search column, one-streaming index`
 
 ---
 
