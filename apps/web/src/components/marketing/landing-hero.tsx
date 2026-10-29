@@ -21,7 +21,7 @@ function Topo() {
 
 export function LandingHero() {
   return (
-    <section aria-labelledby="hero-title" className="relative overflow-hidden border-b border-hairline">
+    <section aria-labelledby="hero-title" className="relative flex flex-1 flex-col justify-center overflow-hidden border-b border-hairline">
       <Topo />
       <div className="container-page relative grid grid-cols-hero items-center gap-16 py-24 max-stack:grid-cols-1 max-stack:gap-12 max-stack:pt-12 max-stack:pb-16">
         <div className="flex flex-col items-start gap-6">

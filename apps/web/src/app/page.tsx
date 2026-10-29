@@ -38,7 +38,7 @@ export default function Landing() {
     <div className="flex min-h-dvh flex-col">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "quiet" })}>Sign in</Link>} />
-      <main>
+      <main className="flex flex-1 flex-col">
         <LandingHero />
         <section aria-label="What you get" className="container-page grid grid-cols-3 gap-12 pt-16 pb-24 max-stack:grid-cols-1 max-stack:gap-8 max-stack:pt-12 max-stack:pb-16">
           {FEATURES.map(([heading, text]) => (
