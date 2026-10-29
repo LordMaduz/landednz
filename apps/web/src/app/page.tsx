@@ -35,7 +35,7 @@ const FEATURES = [
 
 export default function Landing() {
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "quiet" })}>Sign in</Link>} />
       <main>
@@ -50,6 +50,6 @@ export default function Landing() {
         </section>
       </main>
       <PublicFooter />
-    </>
+    </div>
   )
 }

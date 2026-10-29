@@ -12,7 +12,7 @@ const components = { code: ({ children }: { children?: React.ReactNode }) => <sp
 export function LegalPage({ title, updated, file }: { title: string; updated: string; file: "privacy" | "terms" }) {
   const markdown = readFileSync(join(process.cwd(), "src/content/legal", `${file}.md`), "utf8")
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "quiet" })}>Sign in</Link>} />
       <main className="legal">
         <div className="flex flex-col gap-2">
@@ -22,6 +22,6 @@ export function LegalPage({ title, updated, file }: { title: string; updated: st
         <ReactMarkdown components={components}>{markdown}</ReactMarkdown>
       </main>
       <PublicFooter />
-    </>
+    </div>
   )
 }
