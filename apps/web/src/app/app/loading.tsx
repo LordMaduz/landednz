@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 // Grey blocks in the shape of the cards while the page loads (no spinner)
 export default function Loading() {
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       <main aria-busy="true" className="container-page container-app flex flex-col gap-4 py-6">
         <span className="sr-only">Loading</span>
         <Skeleton className="h-8 w-48" />
@@ -24,6 +24,6 @@ export default function Loading() {
         </div>
       </main>
       <PublicFooter app />
-    </>
+    </div>
   )
 }

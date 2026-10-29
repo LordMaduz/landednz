@@ -212,7 +212,7 @@ export function HomeScreen({ user }: { user: { name: string; initials: string } 
   const ask = current ? () => router.push(`${taskHref(current.taskId)}&ask=1`) : undefined
 
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       <AppHeader active="home" user={user} onAsk={ask} askDisabled={state === "down"} />
       {state === "loading" ? (
         <Loading />
@@ -224,6 +224,6 @@ export function HomeScreen({ user }: { user: { name: string; initials: string } 
           <PublicFooter app />
         </>
       )}
-    </>
+    </div>
   )
 }

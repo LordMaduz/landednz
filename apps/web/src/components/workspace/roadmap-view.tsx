@@ -258,7 +258,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   const refetch = useCallback(() => load(true), [load])
 
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       <AppHeader active="roadmap" back={selectedTaskId ? { href: "/app/roadmap", label: "Roadmap" } : undefined} user={user} onAsk={askTaskId ? ask : undefined} askDisabled={state === "down"} />
       {state === "loading" ? (
         <Loading />
@@ -278,11 +278,11 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
               <RoadmapView {...state} />
             )}
           </main>
-          <div className={selectedTaskId ? "max-narrow:hidden" : undefined}>
+          <div className={cn("mt-auto", selectedTaskId && "max-narrow:hidden")}>
             <PublicFooter app />
           </div>
         </>
       )}
-    </>
+    </div>
   )
 }
