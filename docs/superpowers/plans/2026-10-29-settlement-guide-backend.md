@@ -145,11 +145,11 @@
   - `GuideContext = { userName: string | null; profile: { visaType; city; familySituation; occupation; arrivalDate: Date }; daysSinceArrival: number; doneTasks: TaskRef[]; nextTasks: TaskRef[]; totalTasks: number; currentTask: TaskRef | null; memories: { id: string; text: string }[]; taskTitles: Map<string, string> }`, `TaskRef = { taskKey: string; title: string }`.
   - Reads `User`, `UserProfile`, `UserRoadmapEntry` (status, priorityScore) and `GuideMemory` via `db`; titles from `content/index.ts` `task(id)?.name`, skipping retired. `nextTasks` = not complete/skipped, unblocked first, by `priorityScore` desc, max 5. `taskTitles` covers every non-retired task in the bundle. Throws `AppError('PROFILE_NOT_FOUND', …, 404)` without a profile.
   - Never imports `features/roadmap` (C01).
-- [ ] **Step 1: Write failing tests** (seed a user, profile, three entries T08 complete / two not started, one memory): `doneTasks` has T08's title; `nextTasks` ordered by score; `currentTask` for `{kind:'task', taskKey:'T08'}` is T08's title; `{kind:'task', taskKey:'T999'}` → `currentTask === null`, no throw; no profile → 404 `PROFILE_NOT_FOUND`; memories included.
-- [ ] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/context.test.ts` → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): build guide context from the database only`
+- [x] **Step 1: Write failing tests** (seed a user, profile, three entries T08 complete / two not started, one memory): `doneTasks` has T08's title; `nextTasks` ordered by score; `currentTask` for `{kind:'task', taskKey:'T08'}` is T08's title; `{kind:'task', taskKey:'T999'}` → `currentTask === null`, no throw; no profile → 404 `PROFILE_NOT_FOUND`; memories included.
+- [x] **Step 2: Run** `npm run test:run -w @landednz/api -- src/features/guide/context.test.ts` → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): build guide context from the database only`
 
 ---
 
@@ -166,11 +166,11 @@
   - `understand(question: string, history: HistoryTurn[], ctx: GuideContext): Promise<Understanding>` — 1,000 ms timeout; on any error returns the spec §3.1 fallback; `distress = haiku.distress || hasCrisisSignal(question)`.
   - `warmUnderstand(): Promise<void>` — one call with a fixed question, errors logged and swallowed.
   - `HistoryTurn = { role: 'user' | 'assistant'; content: string }`.
-- [ ] **Step 1: Write failing tests** (use `setMockStructured`): Haiku result passes through; Haiku throws → fallback with `searchQuery === question`; Haiku hangs 2 s → fallback within 1.2 s (fake timers allowed); `"I want to end my life"` with Haiku `distress:false` → `distress:true`; `hasCrisisSignal('Can I kill two birds…')` is `false`.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): understand step with fallback and crisis check`
+- [x] **Step 1: Write failing tests** (use `setMockStructured`): Haiku result passes through; Haiku throws → fallback with `searchQuery === question`; Haiku hangs 2 s → fallback within 1.2 s (fake timers allowed); `"I want to end my life"` with Haiku `distress:false` → `distress:true`; `hasCrisisSignal('Can I kill two birds…')` is `false`.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): understand step with fallback and crisis check`
 
 ---
 
@@ -184,11 +184,11 @@
   - `Passage = { id: string; title: string; url: string; origin: 'guide' | 'official'; content: string; similarity: number; taskKey: string | null; checkedAt: string }` (guide passages: `id` = chunkKey, `title` = sourceName, `checkedAt` = chunk `updatedAt` ISO).
   - `retrieve(query: string, opts: { profile: Profile; taskKey: string | null; floor?: number }): Promise<{ passages: Passage[]; candidates: Passage[] }>` — condition pre-filter on chunk keys exactly as `features/chat/rag/retrieval.ts` step 1 (copy, don't import: C01 is about roadmap, but the chat folder is deleted in plan B); vector top 20 by `<=>` and keyword top 20 by `ts_rank("searchText", plainto_tsquery('english', $q))` within the filtered keys; reciprocal-rank fusion with k = 60; task chunks (`taskId === taskKey`) get +0.01; `passages` = fused order filtered to `similarity >= floor` (default `config.guideRelevanceFloor`), max 6; `candidates` = fused order unfiltered, max 10.
   - `fusePassages(lists: Passage[][]): Passage[]` — RRF over lists, dedupe by `id`, keep max similarity; used by the service to merge the raw-question and rewritten-query results.
-- [ ] **Step 1: Write failing tests** against the seeded DB: a query whose exact words appear in one chunk ranks that chunk in `candidates[0..2]` even with mock embeddings (keyword arm); `floor: 1.01` → `passages` empty, `candidates` non-empty; with `taskKey: 'T08'` a T08 chunk is in `passages` when `floor: -1`; chunks whose `when` excludes the profile never appear; `fusePassages([[a,b],[b,c]])` returns `[b, a, c]` order.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement** (two `$queryRaw` calls with the C10 replacer; `Promise.all` with the embedding call).
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): hybrid retrieval with fusion, floor and task boost`
+- [x] **Step 1: Write failing tests** against the seeded DB: a query whose exact words appear in one chunk ranks that chunk in `candidates[0..2]` even with mock embeddings (keyword arm); `floor: 1.01` → `passages` empty, `candidates` non-empty; with `taskKey: 'T08'` a T08 chunk is in `passages` when `floor: -1`; chunks whose `when` excludes the profile never appear; `fusePassages([[a,b],[b,c]])` returns `[b, a, c]` order.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement** (two `$queryRaw` calls with the C10 replacer; `Promise.all` with the embedding call).
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): hybrid retrieval with fusion, floor and task boost`
 
 ---
 
@@ -206,11 +206,11 @@
     - URLs: allowed `url`s of `candidates` (dedupe, max 2); if none, `searchUrls` (max 2 allowed). Each page: `LiveSourceCache` hit younger than 24 h used as-is; else fetch (skip if `finalUrl` not allowed, `contentType` not `text/html`, or over 2 MB), upsert cache. On fetch failure, a cache row younger than 7 days is used with its real `fetchedAt`.
     - Split page text into ~800-char passages on paragraph boundaries, embed each and the query, keep the top 3 by cosine; `origin: 'official'`, `checkedAt: fetchedAt` ISO.
     - Whole step bounded by 5,000 ms (`AbortSignal.timeout`); on timeout or no pages → `{ passages: [], unavailable: true }`.
-- [ ] **Step 1: Write failing tests** with fake `deps`: candidate `https://www.ird.govt.nz/x` fetched, `https://example.com` never fetched; redirect to `https://evil.example` skipped; `application/pdf` skipped; 3 MB body skipped; fresh cache (2 h) means no fetch; fetch throws + 3-day cache → passage with that date; fetch throws + 10-day cache → `unavailable: true`; no candidates → `searchUrls` called once; slow fetch (6 s) → `unavailable: true` in ≤ 5.5 s; at most 3 passages returned.
-- [ ] **Step 2: Run** → FAIL.
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS.
-- [ ] **Step 5: Commit** `feat(guide): read allowlisted official pages with cache`
+- [x] **Step 1: Write failing tests** with fake `deps`: candidate `https://www.ird.govt.nz/x` fetched, `https://example.com` never fetched; redirect to `https://evil.example` skipped; `application/pdf` skipped; 3 MB body skipped; fresh cache (2 h) means no fetch; fetch throws + 3-day cache → passage with that date; fetch throws + 10-day cache → `unavailable: true`; no candidates → `searchUrls` called once; slow fetch (6 s) → `unavailable: true` in ≤ 5.5 s; at most 3 passages returned.
+- [x] **Step 2: Run** → FAIL.
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS.
+- [x] **Step 5: Commit** `feat(guide): read allowlisted official pages with cache`
 
 ---
 
