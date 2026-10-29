@@ -47,6 +47,8 @@ for (const [width, height] of SIZES) {
 
   test(`signed-in pages use the type scale at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height })
+    // The reset user has no profile until held answers are saved at sign-in
+    await holdAnswers(page)
     await page.goto('/signin')
     await signIn(page)
     await expect(page).toHaveURL('/app')
