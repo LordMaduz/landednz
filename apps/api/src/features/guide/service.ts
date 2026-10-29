@@ -189,6 +189,8 @@ export async function runTurn(args: {
     }
     if (aborted()) return await finish(aborted()!, replyTextSent());
 
+    // A late Haiku distress before any reply text: crisis text now (spec §6.4)
+    if (lateDistress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
     if (passages.length === 0) {
       logger.info({ searchQuery: understanding.searchQuery }, 'guide knowledge gap');
       say(GUIDE_NOTHING_FOUND_REPLY(understanding.redirectAgency));
@@ -196,7 +198,6 @@ export async function runTurn(args: {
       return await finish('complete', true);
     }
 
-    if (lateDistress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
     const g = createSentenceGate({ passages, taskTitles: ctx.taskTitles, emit });
     gate = g;
     steps.push('answer');

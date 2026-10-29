@@ -51,6 +51,7 @@ import { buildApp } from '../../server.js';
 import { TURN_LIMITS, turnCostCents } from './service.js';
 import { remember } from './remember.js';
 import { retrieve } from './retrieve.js';
+import { liveSources } from './live.js';
 import { understand, type UnderstandResult } from './understand.js';
 import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_CHECKIN, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY } from '../../core/prompts/registry.js';
 
@@ -357,6 +358,15 @@ describe('POST /guide/messages', () => {
     expect(firstAnswer).toBeGreaterThan(crisis);
     expect(ps.filter(isText(GUIDE_CRISIS_TEXT))).toHaveLength(1);
     expect(ps.some(isText(GUIDE_DISTRESS_CHECKIN))).toBe(false);
+  });
+
+  test('late distress with nothing found still sends the crisis text before the reply', async () => {
+    vi.mocked(understand).mockImplementationOnce(async (q) => timedOut(q, Promise.resolve(true)));
+    vi.mocked(retrieve).mockResolvedValueOnce({ passages: [], candidates: [] });
+    vi.mocked(liveSources).mockResolvedValueOnce({ passages: [], unavailable: true, searches: 0, usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } });
+    const texts = parts(parseSse((await ask('How do I get an IRD number?')).body)).flatMap((p) => (p.type === 'text' ? [p.text] : []));
+    expect(texts[0]).toBe(GUIDE_CRISIS_TEXT);
+    expect(texts[1]).toMatch(/^I couldn't find this in checked sources/);
   });
 
   test('late distress after the answer started ends the reply with the 1737 check-in', async () => {
