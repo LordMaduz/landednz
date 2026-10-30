@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { Stamp } from "@/components/route/stamp"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { GuideColumn } from "@/components/guide/guide-column"
 import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
 import { longDay, shortDate, shortDayNZ, weekdayDay } from "@/lib/nz-date"
 import type { RouteView } from "@/lib/route-view"
@@ -255,6 +256,23 @@ export function TaskSheet({
     </p>
   )
   const stamp = doneOn && <Stamp date={doneOn} />
+  const status = doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"
+  const undoNote = task.state !== "blocked" && !doneOn && <p className="text-small text-muted">You can undo this.</p>
+  // The same actions as the column, flat at the top of the open guide (chat-window D6): same handlers
+  const strip = (
+    <>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-ui font-semibold">{status}</span>
+        {bestBy && <span className="text-small font-semibold text-teal">Best done by {weekdayDay(task.bestBy!)}</span>}
+      </div>
+      <div className="flex gap-2 *:min-h-9 *:flex-1 *:px-3 *:text-ui">
+        {doneControls}
+        {actionLink}
+      </div>
+      {errorNote}
+      {undoNote}
+    </>
+  )
 
   return (
     <article aria-labelledby={titleId}>
@@ -294,7 +312,7 @@ export function TaskSheet({
           </div>
         </nav>
 
-        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1 @max-guide-task/page:grid-cols-1 guide-open:@min-guide-task/page:grid-cols-task-pane">
+        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1 @max-guide-task/page:grid-cols-1">
           <Card as="div" className="gap-8 px-10 py-9">
             <div className="flex max-w-prose flex-col gap-3">
               <div className="flex items-start gap-4">
@@ -323,31 +341,33 @@ export function TaskSheet({
           </Card>
 
           {/* In a page area under 561 px the status card joins the grid and sticks to its bottom (D14) */}
-          <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
-            <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
-              <div className="flex items-baseline justify-between gap-3">
-                <h2 id={`${titleId}-status`} className="text-section">
-                  {doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"}
-                </h2>
-                {bestBy && <span className="text-small font-semibold text-teal">Best done by {weekdayDay(task.bestBy!)}</span>}
-              </div>
-              {errorNote}
-              {doneControls}
-              {task.state !== "blocked" && !doneOn && <p className="text-small text-muted">You can undo this.</p>}
-              {actionLink}
-            </Card>
-            {steps && sources.length > 0 && (
-              <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
+          <GuideColumn strip={strip}>
+            <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
+              <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
                 <div className="flex items-baseline justify-between gap-3">
-                  <h2 id={`${titleId}-sources`} className="text-section">
-                    Sources
+                  <h2 id={`${titleId}-status`} className="text-section">
+                    {status}
                   </h2>
-                  <p className="text-small text-muted">{checkedLabel}</p>
+                  {bestBy && <span className="text-small font-semibold text-teal">Best done by {weekdayDay(task.bestBy!)}</span>}
                 </div>
-                {sourcesList}
+                {errorNote}
+                {doneControls}
+                {undoNote}
+                {actionLink}
               </Card>
-            )}
-          </aside>
+              {steps && sources.length > 0 && (
+                <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h2 id={`${titleId}-sources`} className="text-section">
+                      Sources
+                    </h2>
+                    <p className="text-small text-muted">{checkedLabel}</p>
+                  </div>
+                  {sourcesList}
+                </Card>
+              )}
+            </aside>
+          </GuideColumn>
         </div>
       </div>
 

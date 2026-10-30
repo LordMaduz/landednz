@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef, type ReactNode } from "react"
-import { Maximize2, X } from "lucide-react"
+import { ChevronLeft, Maximize2, X } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
 import { askedOn, type Turn } from "@/lib/guide-turns"
 import { useGuideStore } from "@/lib/stores/guideStore"
 import { cn } from "@/lib/utils"
@@ -91,22 +92,34 @@ export function Conversation({ turns, focus, className }: { turns: Turn[]; focus
 }
 
 // Pane contents (board "The pane on a task"): header, conversation, composer. The sheet reuses it without Expand.
-export function GuidePane({ titles, sheet }: { titles: Record<string, string>; sheet?: boolean }) {
+// In the Task column (chat-window D6, D7) the header is "‹ Back to task" + Expand, and the task's strip sits under it
+export function GuidePane({ titles, sheet, strip, onBack }: { titles: Record<string, string>; sheet?: boolean; strip?: ReactNode; onBack?: () => void }) {
   const { turns, toggleExpanded, close } = useGuideStore()
   return (
     <>
       <div className={cn("flex shrink-0 items-center gap-1.5 pt-3.5 pr-3.5 pb-2.5 pl-5", sheet && "pt-2 pr-2.5 pl-4.5")}>
-        <GuideTitle />
+        {onBack ? (
+          <button type="button" onClick={onBack} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "-ml-2.5 gap-1.5 pr-2.5 pl-1.5")}>
+            <ChevronLeft aria-hidden className="size-3.5" strokeWidth={1.5} />
+            Back to task
+          </button>
+        ) : (
+          <GuideTitle />
+        )}
         <span className="flex-1" />
         {!sheet && (
           <IconButton label="Expand" onClick={toggleExpanded}>
             <Maximize2 className="size-4" aria-hidden />
           </IconButton>
         )}
-        <IconButton label="Close" onClick={close}>
-          <X className="size-4" aria-hidden />
-        </IconButton>
+        {!onBack && (
+          <IconButton label="Close" onClick={close}>
+            <X className="size-4" aria-hidden />
+          </IconButton>
+        )}
       </div>
+      {/* flat, hairline under it: never a box, so the Task page keeps two surfaces (card + chat) */}
+      {strip && <div className="mr-4 mb-2 ml-5 flex shrink-0 flex-col gap-2.5 border-b border-hairline pt-0.5 pb-3.5">{strip}</div>}
       <Conversation turns={turns} className={sheet ? "px-4.5 pt-1" : "px-6 pt-2"} />
       <div className={cn("shrink-0", sheet ? "guide-keyboard-pad px-2.5 pt-2" : "px-3.5 pt-2.5 pb-3.5")}>
         <Composer titles={titles} />

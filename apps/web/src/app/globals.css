@@ -91,7 +91,7 @@
   --grid-template-columns-itin: 32px minmax(0, 1fr) auto;
   --grid-template-columns-home: minmax(0, 1fr) 440px;
   --grid-template-columns-settings: 440px minmax(0, 1fr);
-  --grid-template-columns-task: minmax(0, 1fr) 380px;
+  --grid-template-columns-task: minmax(0, 1fr) 400px; /* 784 card + 400 column at 1200, the same with the guide open (chat-window D4) */
   --grid-template-columns-plan: 72px minmax(0, 1fr);
 
   /* Board container queries: ≤560 phone strip, ≤760 compact header */
@@ -112,21 +112,13 @@
   --shadow-bar: 0 0 0 1px rgba(15, 42, 58, 0.08), 0 2px 4px rgba(15, 42, 58, 0.04), 0 18px 40px -12px rgba(15, 42, 58, 0.28); /* ask bar */
   --shadow-pop: 0 0 0 1px rgba(15, 42, 58, 0.08), 0 16px 40px -8px rgba(15, 42, 58, 0.22); /* source preview */
   --shadow-sheet: 0 -1px 0 rgba(15, 42, 58, 0.06), 0 -24px 48px -12px rgba(15, 42, 58, 0.25); /* phone sheet, lifts upward */
-  /* Pane width by window band (rem, so a larger default text size scales with it): from 1024, 1440, 1680 */
-  --container-pane: 25rem;
-  --container-pane-md: 28.75rem;
-  --container-pane-lg: 32.5rem;
   --container-ask-bar: 640px; /* Material 3 search bar range 360–720 */
   --container-reading: 720px; /* focused view column */
   --breakpoint-pane: 1024px; /* below: the guide is a sheet */
-  --breakpoint-pane-md: 1440px;
-  --breakpoint-pane-lg: 1680px;
   /* Page-area container sizes (@container/page): task two columns, home two columns, narrow task layout */
   --container-guide-narrow: 561px;
   --container-guide-task: 720px;
   --container-guide-home: 900px;
-  /* While the pane is open: the actions column flexes 300–380 and only grows with the window (D14, D17) */
-  --grid-template-columns-task-pane: minmax(0, 1fr) clamp(300px, 34%, 380px);
   --grid-template-columns-focus: 280px minmax(0, 1fr);
   /* Pane and focused view height: the window between the fixed 64 px header and 64 px footer; each adds 24 px top and bottom inside */
   --spacing-guide-pane: calc(100dvh - 8rem);
@@ -171,8 +163,6 @@
   to { opacity: 1; filter: blur(0); }
 }
 
-/* Guide: page-area rules while the pane is open (<main data-guide="open">) */
-@custom-variant guide-open (&:where([data-guide="open"], [data-guide="open"] *));
 
 /* Guide: the conversation fades out above the composer (board .pn-body mask) */
 @utility guide-fade {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useSyncExternalStore, type KeyboardEvent, type ReactNode, type RefObject } from "react"
+import { createContext, useEffect, useRef, useSyncExternalStore, type KeyboardEvent, type ReactNode, type RefObject } from "react"
 import { Drawer } from "@base-ui/react/drawer"
 import type { GuideScreen } from "@landednz/types"
 import { useGuideStore } from "@/lib/stores/guideStore"
@@ -11,7 +11,7 @@ import { GuidePane } from "./guide-pane"
 
 const WIDE = "(width >= 1024px)" // --breakpoint-pane: below it the guide is a sheet (D11)
 
-function useWide() {
+export function useWide() {
   return useSyncExternalStore(
     cb => {
       const mq = window.matchMedia?.(WIDE)
@@ -28,6 +28,9 @@ function isTyping(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false
   return target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)
 }
+
+// Task titles for the guide's labels, for guide surfaces rendered inside the page (the Task column)
+export const GuideTitles = createContext<Record<string, string>>({})
 
 const composer = () => document.getElementById("guide-composer")
 
@@ -61,8 +64,9 @@ function GuideSheet({ titles, barRef }: { titles: Record<string, string>; barRef
   )
 }
 
-// Wraps the page area of Home, Roadmap and Task: <main> is the @container/page; the ask bar when closed,
-// the pane beside the page from 1024 px (D11, D12), a sheet below, the focused view when expanded (D8)
+// Wraps the page area of Home, Roadmap and Task: <main> is the @container/page; the ask bar when closed.
+// From 1024 px nothing sits beside the page: Home and Roadmap open the full view (D8, chat-window D3), Task opens
+// the chat in its own right column (GuideColumn, D5). Below 1024 the guide is a sheet (D11)
 export function GuideShell({
   page,
   titles,
@@ -116,28 +120,18 @@ export function GuideShell({
   const full = beside && (expanded || kind !== "task")
 
   return (
-    <>
-      {/* page and pane centre as one group, so wide windows put the spare space outside, not between them */}
-      <div className="flex w-full justify-center">
-        <main
-          data-guide={beside ? "open" : "closed"}
-          hidden={full}
-          // the ask bar sits in the flow after the page (D19), so a small gap is enough
-          className={cn("@container/page min-w-0 flex-1", className, "pb-6", beside && "mx-0!")}
-        >
-          {children}
-        </main>
-        {full && <FocusedView page={page} titles={titles} onKeyDown={onKeyDown} />}
-        {beside && !full && (
-          <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="sticky top-16 flex h-guide-pane shrink-0 self-start px-3 py-6">
-            <div className="flex w-pane min-h-0 flex-col overflow-hidden rounded-pane bg-white shadow-pane pane-md:w-pane-md pane-lg:w-pane-lg motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4">
-              <GuidePane titles={titles} />
-            </div>
-          </aside>
-        )}
-      </div>
+    <GuideTitles value={titles}>
+      <main
+        data-guide={beside ? "open" : "closed"}
+        hidden={full}
+        // the ask bar sits in the flow after the page (D19), so a small gap is enough
+        className={cn("@container/page min-w-0", className, "pb-6")}
+      >
+        {children}
+      </main>
+      {full && <FocusedView page={page} titles={titles} onKeyDown={onKeyDown} />}
       {!wide && <GuideSheet titles={titles} barRef={barRef} />}
       {current && <AskBar ref={barRef} page={current} open={open} unseen={unseen} wide={wide} onOpen={() => void openPane()} />}
-    </>
+    </GuideTitles>
   )
 }
