@@ -80,11 +80,11 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
               send();
             }}
             // 16 px below 1024 so iOS does not zoom into the field
-            className="field-sizing-content max-h-40 min-h-6 w-full resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed max-pane:text-reading"
+            className="field-sizing-content max-h-40 min-h-6 w-full resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed"
           />
           <div data-row className="flex min-w-0 flex-nowrap items-center gap-2">
             {label && (
-              <span className="inline-flex h-7 min-w-0 items-center gap-1.5 rounded-control bg-wash pr-1.5 pl-2.5 text-citation font-medium text-ink">
+              <span className="inline-flex h-7 min-w-0 items-center gap-1.5 rounded-control bg-wash pr-1.5 pl-2.5 text-small font-medium text-ink">
                 <Route className="size-3.5 shrink-0 text-muted" aria-hidden />
                 <span title={label} className="truncate">
                   {label}
@@ -105,7 +105,7 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
             <div className="ml-auto flex shrink-0 items-center gap-3">
               {opening && (
                 // D9: no count on the phone composer
-                <span className="shrink-0 text-citation whitespace-nowrap text-muted max-narrow:hidden">
+                <span className="shrink-0 text-small whitespace-nowrap text-muted max-narrow:hidden">
                   {banner?.kind === "cap" ? 0 : opening.leftToday} left today
                 </span>
               )}

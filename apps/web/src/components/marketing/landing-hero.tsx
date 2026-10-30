@@ -26,7 +26,7 @@ export function LandingHero() {
       <div className="container-page relative grid grid-cols-hero items-center gap-16 py-24 max-stack:grid-cols-1 max-stack:gap-12 max-stack:pt-12 max-stack:pb-16">
         <div className="flex flex-col items-start gap-6">
           <h1 id="hero-title" className="max-w-hero-title text-hero max-compact:text-title">Know what to do next in New Zealand</h1>
-          <p className="max-w-hero-lede text-section leading-normal font-normal tracking-normal text-muted max-narrow:text-body">
+          <p className="max-w-hero-lede text-body text-muted">
             Answer five questions and get a settling-in roadmap built for your visa, your city and the people moving with you.
           </p>
           <div className="flex flex-wrap items-center gap-4 max-narrow:w-full max-narrow:flex-col max-narrow:items-stretch max-narrow:gap-4">

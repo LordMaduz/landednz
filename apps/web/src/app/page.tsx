@@ -43,7 +43,7 @@ export default function Landing() {
         <section aria-label="What you get" className="container-page grid grid-cols-3 gap-12 pt-16 pb-24 max-stack:grid-cols-1 max-stack:gap-8 max-stack:pt-12 max-stack:pb-16">
           {FEATURES.map(([heading, text]) => (
             <div key={heading} className="flex flex-col gap-2 border-t border-ink pt-6">
-              <h2 className="text-body font-semibold">{heading}</h2>
+              <h2 className="text-section">{heading}</h2>
               <p className="text-muted">{text}</p>
             </div>
           ))}

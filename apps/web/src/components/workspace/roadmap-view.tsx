@@ -91,7 +91,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
             <WhenParts when={done.when} />
             <span className={DOT}><Waypoint state="done" /></span>
             <div className={cn(BODY, "text-muted")}>
-              <h2 className="inline text-body font-semibold text-ink">Done so far</h2> ·{" "}
+              <h2 className="inline text-ui font-semibold text-ink">Done so far</h2> ·{" "}
               <Wide>{done.summary}{done.topics && `: ${done.topics}`}</Wide>
               <Phone>{plural(done.count, "task")}</Phone>
             </div>
@@ -112,7 +112,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <Wide>{today.meta}</Wide>
                 <Phone>Today · {today.meta.replace("You're here · ", "").replace(/^Up next/, "up next")}</Phone>
               </p>
-              <h2 className="text-section">{today.task.title}</h2>
+              <h2 className="text-featured">{today.task.title}</h2>
               {today.task.why && <p className="max-w-lede text-muted max-narrow:hidden">{today.task.why}</p>}
               {today.unlocks.length > 0 && (
                 <p className="text-small text-muted">
@@ -146,7 +146,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
             <span className={cn(DOT, "self-start pt-1.5")}><Waypoint state="leg-now" /></span>
             <div className={cn(BODY, "itin-wide")}>
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-body font-semibold max-narrow:text-section">
+                <h2 className="text-section">
                   {current.name} · {plural(current.count, "task")}
                   {current.carried.map(c => <span key={c.stage} className="text-small font-normal text-muted max-narrow:block"><span className="max-narrow:hidden">,</span> {c.count} still open from {c.stage}</span>)}
                 </h2>
@@ -165,7 +165,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
             <span className={WHEN}>{l.when}</span>
             <span className={DOT}><Waypoint state="available" /></span>
             <div className={cn(BODY, "text-muted")}>
-              <h2 className="inline text-body font-semibold text-ink">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
+              <h2 className="inline text-ui font-semibold text-ink">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
             </div>
             <Show open={laterOpen === l.name} onClick={() => setLaterOpen(o => (o === l.name ? null : l.name))} label="" hidden={`${l.name} tasks`} />
             {laterOpen === l.name && (
@@ -197,7 +197,7 @@ export function RoadmapView({
     <div className="flex min-w-0 flex-col gap-4">
       <section aria-labelledby="rm-title" className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h1 id="rm-title" className="text-title">Your roadmap</h1>
-        <p className="text-muted max-narrow:w-full max-narrow:text-small">
+        <p className="text-muted max-narrow:w-full">
           <Phone>{homeSubline(view, arrivalDate, now, true)}</Phone>
           <Wide>{homeSubline(view, arrivalDate, now, false)}</Wide>
         </p>

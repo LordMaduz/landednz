@@ -14,7 +14,7 @@ const TABS = [
 ] as const
 
 const tab =
-  "flex flex-col items-center justify-center gap-0.5 text-citation font-medium text-muted no-underline hover:no-underline aria-[current=page]:text-ink aria-[current=page]:[&_svg]:text-teal"
+  "flex flex-col items-center justify-center gap-0.5 text-small font-medium text-muted no-underline hover:no-underline aria-[current=page]:text-ink aria-[current=page]:[&_svg]:text-teal"
 const menuItem =
   "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-ink no-underline outline-none hover:no-underline data-highlighted:bg-wash"
 

@@ -28,7 +28,7 @@ export function IconButton({ label, onClick, children }: { label: string; onClic
 
 export function GuideTitle() {
   return (
-    <span className="flex items-center gap-2 text-body font-semibold text-ink">
+    <span className="flex items-center gap-2 text-section text-ink">
       <GuideMark />
       Guide
     </span>

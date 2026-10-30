@@ -121,7 +121,7 @@ export function TaskSheet({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
-          className="-mx-2 px-2.5 py-1.5 align-super text-citation leading-none font-medium text-teal-text"
+          className="-mx-2 px-2.5 py-1.5 align-super text-small leading-none font-medium text-teal-text"
         >
           {cited.findIndex(c => c.url === s.url) + 1}
         </a>
@@ -133,7 +133,7 @@ export function TaskSheet({
         <h2 id={id} className="text-section">
           {title}
         </h2>
-        <ul className="flex list-disc flex-col gap-2 pl-6">
+        <ul className="flex list-disc flex-col gap-2 pl-6 text-body">
           {items.map(l => (
             <li key={l.text}>
               {phones(l.text)}
@@ -181,7 +181,7 @@ export function TaskSheet({
         <h2 id={id} className={headClass}>
           Steps
         </h2>
-        <ol role="list" className="m-0 flex list-none flex-col gap-2.5 p-0 tabular-nums">
+        <ol role="list" className="m-0 flex list-none flex-col gap-2.5 p-0 text-body tabular-nums">
           {stepLines.map((l, n) => {
             const { lead, items } = stepParts(l.text)
             return (
@@ -326,7 +326,7 @@ export function TaskSheet({
           <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
             <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
               <div className="flex items-baseline justify-between gap-3">
-                <h2 id={`${titleId}-status`} className="text-body font-semibold">
+                <h2 id={`${titleId}-status`} className="text-section">
                   {doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"}
                 </h2>
                 {bestBy && <span className="text-small font-semibold text-teal">Best done by {weekdayDay(task.bestBy!)}</span>}
@@ -359,7 +359,7 @@ export function TaskSheet({
                 {leg.name} · {task.state === "blocked" ? task.meta : task.time}
                 {bestBy && ` · ${bestBy}`}
               </span>
-              <h1 ref={phoneTitleRef} tabIndex={-1} className="text-section focus-visible:outline-none">
+              <h1 ref={phoneTitleRef} tabIndex={-1} className="text-title focus-visible:outline-none">
                 {task.title}
               </h1>
             </div>

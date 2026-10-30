@@ -34,7 +34,7 @@ export function FocusedView({
 
   const row = (on: boolean) =>
     cn(
-      "flex min-h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-control px-2.5 py-2 text-left text-body text-ink hover:bg-white",
+      "flex min-h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-control px-2.5 py-2 text-left text-ui text-ink hover:bg-white",
       on && "bg-white font-medium ring-1 ring-hairline",
     )
 
@@ -45,16 +45,16 @@ export function FocusedView({
           <ArrowLeft className="size-3.5" aria-hidden />
           {BACK[page.kind]}
         </Button>
-        <h2 className="px-2.5 text-citation font-semibold text-muted">This conversation, by task</h2>
+        <h2 className="px-2.5 text-small font-semibold text-muted">This conversation, by task</h2>
         <nav aria-label="This conversation, by task" className="flex min-h-0 flex-col gap-0.5 overflow-y-auto">
           {[...counts].map(([key, n]) => (
             <button key={key} type="button" aria-pressed={group === key} onClick={() => setGroup(key)} className={row(group === key)}>
               <span className="truncate">{titles[key] ?? TASK_COPY[key]?.title ?? key}</span>
-              <small className="text-citation text-muted">{n}</small>
+              <small className="text-small text-muted">{n}</small>
             </button>
           ))}
           <button type="button" aria-pressed={group === null} onClick={everything} className={row(group === null)}>
-            Everything <small className="text-citation text-muted">{turns.length}</small>
+            Everything <small className="text-small text-muted">{turns.length}</small>
           </button>
         </nav>
         <p className="mt-auto px-2.5 text-small text-muted">One conversation, on every device.</p>

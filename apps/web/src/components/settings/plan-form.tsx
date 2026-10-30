@@ -30,7 +30,7 @@ export function AnswersCard({ children, joined }: { children: ReactNode; joined?
   return (
     <Card className={cn("flex-1 gap-0 border-ink bg-ink p-8 text-white max-narrow:p-4 max-narrow:pb-1", joined && "rounded-b-none max-narrow:rounded-b-surface")}>
       <h1 className="text-title">Settings</h1>
-      <p className="mt-1 text-rail-text max-narrow:text-small">
+      <p className="mt-1 text-rail-text">
         Your answers build your roadmap.<span className="max-narrow:hidden"> Change one and it&apos;s rebuilt; done tasks stay done.</span>
       </p>
       {children}

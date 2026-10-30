@@ -50,7 +50,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
     <div className="flex flex-col gap-4">
       <section aria-labelledby="hello" className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h1 id="hello" className="text-title">{home.greeting}</h1>
-        <p className="text-muted max-narrow:w-full max-narrow:text-small">
+        <p className="text-muted max-narrow:w-full">
           <Phone>{home.sublineShort}</Phone>
           <Wide>{home.subline}</Wide>
         </p>
@@ -72,7 +72,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 <Wide>{home.nextMeta}</Wide>
               </h2>
               <div className="flex flex-col gap-1.5">
-                <h3 className="text-section">{top.title}</h3>
+                <h3 className="text-featured">{top.title}</h3>
                 {top.why && <p className="max-w-lede text-body text-muted">{top.why}</p>}
                 {home.unlocks.length > 0 && (
                   <p className="text-small text-muted max-narrow:hidden">Unlocks: {home.unlocks.join(" · ")}</p>

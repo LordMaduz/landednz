@@ -61,7 +61,7 @@ const FollowUp = ({ text, onFollowUp }: { text: string; onFollowUp: (text: strin
   <button
     type="button"
     onClick={() => onFollowUp(text)}
-    className="flex min-h-11 cursor-pointer items-center gap-2.5 border-t border-hairline py-2.5 text-left text-body text-ink"
+    className="flex min-h-11 cursor-pointer items-center gap-2.5 border-t border-hairline py-2.5 text-left text-ui text-ink"
   >
     <CornerUpLeft className="size-4 shrink-0 text-teal" aria-hidden />
     {text}
@@ -150,7 +150,7 @@ export function Reply({
     <div data-turn={turn.key} className="flex flex-col gap-3.5">
       <div className="flex flex-col gap-1">
         <h3 className={cn("text-balance", focus ? "text-title" : "text-section", stoppedEarly ? "text-muted" : "text-ink")}>{turn.question}</h3>
-        {meta && <p className="text-citation text-muted">{meta}</p>}
+        {meta && <p className="text-small text-muted">{meta}</p>}
       </div>
 
       {notices.has("official_unavailable") && <Cut>Official sites didn&apos;t respond. Answering from the checked guide only.</Cut>}
@@ -165,7 +165,7 @@ export function Reply({
         </p>
       )}
 
-      <div aria-live="polite" aria-busy={streaming} className={cn("flex flex-col gap-3 text-ink", focus ? "text-reading-focus" : "text-reading")}>
+      <div aria-live="polite" aria-busy={streaming} className={cn("flex flex-col gap-3 text-ink", "text-reading")}>
         {groupBlocks(parts).map((b, i) => {
           if (b.kind === "crisis") return <CrisisCard key={i} />
           if (b.kind === "steps")
@@ -173,7 +173,7 @@ export function Reply({
               <ol key={i} aria-label="Steps" className="flex flex-col gap-2">
                 {b.items.map((item, j) => (
                   <li key={j} className="flex gap-1.5">
-                    <span aria-hidden className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-wash text-citation font-semibold">
+                    <span aria-hidden className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-wash text-small font-semibold">
                       {item[0].step}
                     </span>
                     <span>{item.map(sentence)}</span>
@@ -230,8 +230,8 @@ export function Reply({
           <i aria-hidden className="size-3 shrink-0 rounded-full border-2 border-teal bg-white" />
           <span className="flex flex-1 flex-col leading-tight">
             {/* The card links to a page, so it carries that page's title (owner 2026-10-30) */}
-            <b className="text-body font-semibold">{TASK_COPY[taskLink.taskKey]?.title ?? taskLink.title}</b>
-            <small className="text-citation text-muted">Your task</small>
+            <b className="text-ui font-semibold">{TASK_COPY[taskLink.taskKey]?.title ?? taskLink.title}</b>
+            <small className="text-small text-muted">Your task</small>
           </span>
           <ArrowRight className="size-4" aria-hidden />
         </Link>
@@ -247,11 +247,11 @@ export function Reply({
                 rel="noreferrer"
                 className="flex items-center gap-2 rounded-control px-2 py-1.5 text-small text-ink no-underline hover:bg-white hover:text-ink"
               >
-                <span aria-hidden className="grid size-4.5 shrink-0 place-items-center rounded-md bg-white text-citation font-semibold text-teal-text">
+                <span aria-hidden className="grid size-4.5 shrink-0 place-items-center rounded-md bg-white text-small font-semibold text-teal-text">
                   {s.index}
                 </span>
                 <span className="flex-1">{s.title}</span>
-                <small className="text-citation text-muted">{domainOf(s.url)}</small>
+                <small className="text-small text-muted">{domainOf(s.url)}</small>
               </a>
             </li>
           ))}
@@ -265,7 +265,7 @@ export function Reply({
           <button
             type="button"
             onClick={() => onUndoMemory(m.memoryId)}
-            className="relative cursor-pointer rounded-full bg-white px-2.5 py-0.5 text-citation font-medium text-ink ring-1 ring-tint-border ring-inset after:absolute after:-inset-2"
+            className="relative cursor-pointer rounded-full bg-white px-2.5 py-0.5 text-small font-medium text-ink ring-1 ring-tint-border ring-inset after:absolute after:-inset-2"
           >
             Undo
           </button>

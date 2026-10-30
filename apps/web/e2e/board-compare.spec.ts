@@ -181,7 +181,7 @@ function report(board: Map<string, Styles | null>, app: Map<string, Styles | nul
 
 // Round px to 0.5 so sub-pixel rounding is not a difference
 // Differences the owner already ruled on stay in the table, marked
-const TYPE_SCALE = 'r1-final type scale (13/15, 12, title 24); board 14/11/26 are off-scale (triage E)'
+const TYPE_SCALE = 'type roles 2026-10-30 (24/20/16/14/12, docs/design/type); board sizes off that scale are not used'
 const RADIUS_SCALE = 'radius scale (control 8, surface 12, pane 18) kept for consistency (triage F)'
 const RULED: Record<string, string> = {
   'Check note|color': 'owner 2026-10-30, no new colours (S2)',

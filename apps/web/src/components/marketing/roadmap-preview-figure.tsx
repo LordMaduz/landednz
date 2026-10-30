@@ -28,7 +28,7 @@ export function RoadmapPreviewFigure() {
           {ROWS.map(row => (
             <div key={row.name} className="preview-row">
               <Waypoint state={row.state} />
-              <span className={cn("text-body", row.state === "current" && "font-medium", row.state === "done" && "text-muted")}>{row.name}</span>
+              <span className={cn("text-ui", row.state === "current" && "font-medium", row.state === "done" && "text-muted")}>{row.name}</span>
               <span className="text-small text-muted">{row.meta}</span>
             </div>
           ))}

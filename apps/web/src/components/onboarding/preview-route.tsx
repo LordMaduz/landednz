@@ -80,14 +80,14 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
       <ol className="m-0 list-none p-0">
         <li className="grid min-h-11 grid-cols-itin items-center gap-3">
           <Waypoint state="available" />
-          <h2 className="text-body"><b className="font-semibold">{lead.name}</b> <span className="text-small font-normal text-muted">· {count(lead.tasks.length)}</span></h2>
+          <h2 className="text-ui"><b className="font-semibold">{lead.name}</b> <span className="text-small font-normal text-muted">· {count(lead.tasks.length)}</span></h2>
         </li>
         <li className="my-1 mb-2">
           <section className="grid grid-cols-itin gap-3 rounded-surface border border-avatar bg-wash py-4 pr-4">
             <span className="mt-1 justify-self-center"><Waypoint state="current" /></span>
             <div className="flex flex-col gap-1">
               <p className="m-0 text-small font-semibold text-teal-text">Start here{PREVIEW_META[first.taskId] && ` · ${PREVIEW_META[first.taskId].replace(/^./, c => c.toLowerCase())}`}</p>
-              <p className="m-0 text-section">{previewTitle(first.taskId, first.name)}</p>
+              <p className="m-0 text-featured">{previewTitle(first.taskId, first.name)}</p>
               {hasDependants(first, tasks) && <p className="m-0 text-small text-muted">The next task waits on this one.</p>}
             </div>
           </section>
@@ -107,7 +107,7 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
               <div className="grid min-h-15 grid-cols-itin items-center gap-3">
                 <span aria-hidden="true" className="size-3 justify-self-center rounded-full border-2 border-control" />
                 <div className="leading-snug">
-                  <h2 className="text-body"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-muted">· {count(f.tasks.length)}</span></h2>
+                  <h2 className="text-ui"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-muted">· {count(f.tasks.length)}</span></h2>
                   <p className="m-0 text-small text-muted">{topics.slice(0, 3).join(", ")}{topics.length > 3 && " and more"}</p>
                 </div>
                 <ShowBtn open={isOpen} label="" name={f.name} controls={`fold-${f.id}`} onClick={() => toggle(f.name)} />

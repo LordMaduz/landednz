@@ -21,7 +21,7 @@ export function Opening({ opening, onAsk }: { opening: GuideOpeningResponse | nu
               key={s}
               type="button"
               onClick={() => onAsk(s)}
-              className="flex min-h-11 cursor-pointer items-center gap-3 border-t border-hairline px-1 py-3 text-left text-body text-ink last:border-b hover:bg-wash"
+              className="flex min-h-11 cursor-pointer items-center gap-3 border-t border-hairline px-1 py-3 text-left text-ui text-ink last:border-b hover:bg-wash"
             >
               {s}
               <ArrowRight className="ml-auto size-4 shrink-0 text-muted" aria-hidden />

@@ -20,7 +20,7 @@ export function CrisisCard() {
           <Phone className="size-4 text-mark" aria-hidden />
           <span className="flex flex-1 flex-col">
             <b className="text-section font-semibold tabular-nums">{r.label}</b>
-            <small className="text-citation text-rail-text">{r.note}</small>
+            <small className="text-small text-rail-text">{r.note}</small>
           </span>
           <ChevronRight className="size-4 text-mark" aria-hidden />
         </a>
