@@ -1,0 +1,2758 @@
+{
+ "landing": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Sign in",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Build my roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "onboarding-1": [
+  {
+   "label": "Accredited Employer Work Visa (AEWV)",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Straight to Residence Visa (Green List T",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Skilled Migrant Category Resident Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Partner work visa (your partner is worki",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Post-Study Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Specific Purpose Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Working holiday visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Another visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Continue",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "onboarding-5": [
+  {
+   "label": "Accredited Employer Work Visa (AEWV)",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Straight to Residence Visa (Green List T",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Skilled Migrant Category Resident Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Partner work visa (your partner is worki",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Post-Study Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Specific Purpose Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Working holiday visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Another visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Continue",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "preview": [
+  {
+   "label": "Change\nVisa",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWhere you'll live",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWho's moving",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nYour work",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWhen you land",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change my answers",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show 3 more Before you fly tasks",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show Arrival",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show Week 1",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show Month 1 and later",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Save my roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "save": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Your roadmap preview",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Continue with Google",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(31, 31, 31)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(248, 250, 255)",
+    "color": "rgb(31, 31, 31)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Save and sign in",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "privacy policy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "home": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Settings",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Account, e2e-auth@example.com",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Start task\n: Choose where to live",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Ask about this",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Get an NZ SIM card\n15–30 minutes",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open a bank account\n45–90 minutes",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Apply for your IRD number\n20–30 minutes",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "1 more in Arrival",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Already done some? Tick them off",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Send",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "roadmap": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Settings",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Account, e2e-auth@example.com",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Start task\n: Choose where to live",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Ask about this",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Book temporary accommodation",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Check your public health eligibility and",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Gather and carry your key documents",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show 7 more",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show\nWeek 1 tasks",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show\nMonth 1 tasks",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Show\nLater tasks",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Send",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "task": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Settings",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Account, e2e-auth@example.com",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Previous task: Open a bank account",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Next task: Check your visa conditions in",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Tax code declaration (IR330), ch",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Register for a myIR account, che",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Work or study in New Zealand, ch",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Tax code declaration (IR330), ch",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Using the right RWT tax rate, ch",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: New arrival to New Zealand: IRD ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Find my IRD number, checked 25 O",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: When you need an IRD number, che",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: I cannot get my IRD number onlin",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "0800 227 774",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Phone numbers, checked 25 Octobe",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Source: Living in New Zealand and not a ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Mark as done",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(15, 42, 58)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(36, 70, 90)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open the IRD application\n(opens in a new",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Tax code declaration (IR330) \n(opens in ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "New arrival to New Zealand: IRD number a",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Register for a myIR account \n(opens in a",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Work or study in New Zealand \n(opens in ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Using the right RWT tax rate \n(opens in ",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "5 more sources",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Send",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(213, 223, 226)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "settings": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Settings",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Account, e2e-auth@example.com",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nCity",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWho's moving",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWork",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nArrival date",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Manage\nmemory",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Sign out",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Delete account",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(242, 184, 181)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Accredited Employer Work Visa (AEWV)",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(14, 124, 123) 0px 0px 0px 1px inset"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(14, 124, 123) 0px 0px 0px 1px inset"
+   }
+  },
+  {
+   "label": "Straight to Residence Visa (Green List T",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Skilled Migrant Category Resident Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Partner work visa (your partner is worki",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Post-Study Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Specific Purpose Work Visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Working holiday visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Another visa",
+   "tag": "LABEL",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Cancel",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Save and rebuild",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ],
+ "settings-edit": [
+  {
+   "label": "LandedNZ home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Home",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Roadmap",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Settings",
+   "tag": "A",
+   "rest": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(227, 232, 234)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Account, e2e-auth@example.com",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nVisa",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nCity",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWho's moving",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Change\nWork",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Manage\nmemory",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Sign out",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(127, 224, 211)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Delete account",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(242, 184, 181)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(255, 255, 255)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Previous month",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Next month",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Cancel",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(15, 42, 58)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Save and rebuild",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgb(246, 248, 248)",
+    "color": "rgb(75, 97, 112)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Privacy",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Terms",
+   "tag": "A",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(10, 100, 99)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(7, 75, 74)",
+    "deco": "underline",
+    "shadow": "none"
+   }
+  },
+  {
+   "label": "Open Next.js Dev Tools",
+   "tag": "BUTTON",
+   "rest": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   },
+   "hov": {
+    "bg": "rgba(255, 255, 255, 0.118)",
+    "color": "rgb(0, 0, 0)",
+    "deco": "none",
+    "shadow": "none"
+   }
+  }
+ ]
+}
