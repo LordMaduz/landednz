@@ -7,13 +7,15 @@ import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
+import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardFoot, CardHead } from "@/components/ui/card"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildHomeView, type HomeView as Home } from "@/lib/home-view"
-import { buildRouteView, type RouteView } from "@/lib/route-view"
+import { buildRouteView, taskTitles, type RouteView } from "@/lib/route-view"
+import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
@@ -61,7 +63,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
         <RouteTrack route={route} arrivalDate={arrivalDate} now={now} variant="compact" />
       </Card>
 
-      <div className="grid grid-cols-home gap-4 max-split:grid-cols-1">
+      <div className="grid grid-cols-home gap-4 max-split:grid-cols-1 @max-guide-home/page:grid-cols-1">
         <Card aria-labelledby="next">
           {top ? (
             <>
@@ -80,10 +82,14 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "min-h-11 max-narrow:flex-1" })}>
                   Start task<span className="sr-only">: {top.title}</span>
                 </Link>
-                <Link href={`${taskHref(top.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet", className: "min-h-11" })}>
+                <button
+                  type="button"
+                  onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: top.taskId })}
+                  className={buttonVariants({ variant: "quiet", className: "min-h-11 cursor-pointer" })}
+                >
                   <Wide>Ask about this</Wide>
                   <Phone>Ask</Phone>
-                </Link>
+                </button>
               </CardFoot>
             </>
           ) : (
@@ -208,19 +214,22 @@ export function HomeScreen({ user }: { user: { name: string; initials: string } 
     load()
   }, [load])
 
-  const current = typeof state === "object" ? state.route.current : null
-  const ask = current ? () => router.push(`${taskHref(current.taskId)}&ask=1`) : undefined
-
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader active="home" user={user} onAsk={ask} askDisabled={state === "down"} />
+      <AppHeader active="home" user={user} />
       {state === "loading" ? (
         <Loading />
       ) : (
         <>
-          <main className="container-page container-app py-6">
-            {state === "down" ? <ApiDown onRetry={load} /> : <HomeView {...state} />}
-          </main>
+          {state === "down" ? (
+            <main className="container-page container-app py-6">
+              <ApiDown onRetry={load} />
+            </main>
+          ) : (
+            <GuideShell page={{ kind: "home" }} titles={taskTitles(state.route)} className="container-page container-app py-6">
+              <HomeView {...state} />
+            </GuideShell>
+          )}
           <PublicFooter app />
         </>
       )}

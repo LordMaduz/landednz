@@ -41,7 +41,8 @@ export interface OnboardingPreviewResponse {
 // Settlement guide — one finished reply piece, sent as an SSE `part` event and stored in GuideMessage.parts
 export type ReplyPart =
   | { type: 'notice'; kind: 'checking_guide' | 'checking_official' | 'official_unavailable' | 'interrupted' | 'truncated' }
-  | { type: 'text'; text: string; citations: number[] }           // one finished sentence; indexes into the reply's sources
+  // one finished sentence; citations index into the reply's sources. block: answer shape for layout (none = prose); step: the step number
+  | { type: 'text'; text: string; citations: number[]; block?: 'step' | 'limits' | 'crisis'; step?: number }
   | { type: 'source'; index: number; title: string; url: string; origin: 'guide' | 'official'; checkedAt: string }
   | { type: 'task_link'; taskKey: string; title: string }          // taskKey for routing only; UI renders the title
   | { type: 'unverified'; text: string }
@@ -74,6 +75,7 @@ export type GuideMessageDto = {
 
 export type GuideConversationPage = { messages: GuideMessageDto[]; nextBefore: string | null };
 
-export type GuideOpeningResponse = { whereYouAre: string; starters: string[] };
+// leftToday: questions left before the daily cap (never below 0)
+export type GuideOpeningResponse = { whereYouAre: string; starters: string[]; leftToday: number; dailyCap: number };
 
 export type GuideMemoryDto = { id: string; text: string; createdAt: string; updatedAt: string };

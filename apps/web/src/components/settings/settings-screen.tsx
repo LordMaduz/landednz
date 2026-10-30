@@ -6,6 +6,7 @@ import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
 import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api"
+import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
 import { AnswersCard, PlanForm } from "./plan-form"
@@ -32,6 +33,13 @@ export function SettingsScreen({ user }: { user: User }) {
     }
   }, [router])
 
+  // No guide on Settings (D21): the pane closes and the ask bar goes; the conversation is kept
+  useEffect(() => {
+    const { setPage, close } = useGuideStore.getState()
+    setPage(null)
+    close()
+  }, [])
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch on mount; load sets state after awaiting
     load()
@@ -39,7 +47,7 @@ export function SettingsScreen({ user }: { user: User }) {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader active="settings" back={editing ? { href: "/settings", label: "Settings" } : undefined} user={user} onAsk={() => router.push("/app/roadmap?ask=1")} />
+      <AppHeader active="settings" back={editing ? { href: "/settings", label: "Settings" } : undefined} user={user} />
       <main className="container-page container-app py-6 max-narrow:py-4">
         <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-2.5">
           {profile === "loading" || profile === "down" ? (

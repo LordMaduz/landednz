@@ -1,9 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
 import Link from "next/link"
 import { Menu } from "@base-ui/react/menu"
-import { Button } from "@/components/ui/button"
 import { signOutAndLeave } from "@/lib/sign-out"
 import { Brand } from "./logo"
 
@@ -20,36 +18,15 @@ const tab =
 const menuItem =
   "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-ink no-underline outline-none hover:no-underline data-highlighted:bg-wash"
 
-// "/" opens Ask, except while the user is typing somewhere
-function isTyping(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false
-  return target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)
-}
-
 export function AppHeader({
   active,
   back,
-  onAsk,
-  askDisabled,
   user,
 }: {
   active: "home" | "roadmap" | "settings" | null
   back?: { href: string; label: string }
-  onAsk?: () => void
-  askDisabled?: boolean
   user: { name: string; initials: string }
 }) {
-  useEffect(() => {
-    if (!onAsk || askDisabled) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target)) return
-      e.preventDefault()
-      onAsk()
-    }
-    document.addEventListener("keydown", onKey)
-    return () => document.removeEventListener("keydown", onKey)
-  }, [onAsk, askDisabled])
-
   return (
     <>
     <header className="border-b border-hairline">
@@ -70,15 +47,6 @@ export function AppHeader({
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="quiet" aria-keyshortcuts="/" onClick={onAsk} disabled={askDisabled || !onAsk}>
-            Ask
-            <span
-              aria-hidden="true"
-              className="rounded-sm border border-hairline px-1 text-small leading-5 text-muted max-compact:hidden"
-            >
-              /
-            </span>
-          </Button>
           <Menu.Root>
             <Menu.Trigger
               aria-label={`Account, ${user.name}`}

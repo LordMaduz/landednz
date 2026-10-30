@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppHeader } from './app-header'
 
@@ -42,27 +42,12 @@ describe('AppHeader', () => {
     expect(screen.getByText('LandedNZ').className).not.toMatch(/hidden/)
   })
 
-  it('"/" on the page opens Ask; not while typing in a field', () => {
-    const onAsk = vi.fn()
-    render(
-      <>
-        <AppHeader active="home" user={user} onAsk={onAsk} />
-        <input aria-label="Other field" />
-      </>,
-    )
-    fireEvent.keyDown(document.body, { key: '/' })
-    expect(onAsk).toHaveBeenCalledTimes(1)
-    fireEvent.keyDown(screen.getByLabelText('Other field'), { key: '/' })
-    expect(onAsk).toHaveBeenCalledTimes(1)
-    expect(screen.getByRole('button', { name: /^Ask/ })).toHaveAttribute('aria-keyshortcuts', '/')
-  })
-
-  it('askDisabled disables Ask and the shortcut', () => {
-    const onAsk = vi.fn()
-    render(<AppHeader active="roadmap" user={user} onAsk={onAsk} askDisabled />)
-    expect(screen.getByRole('button', { name: /^Ask/ })).toBeDisabled()
-    fireEvent.keyDown(document.body, { key: '/' })
-    expect(onAsk).not.toHaveBeenCalled()
+  it('has no Ask button in any state (D20)', () => {
+    for (const active of ['home', 'roadmap', 'settings', null] as const) {
+      const { unmount } = render(<AppHeader active={active} user={user} />)
+      expect(screen.queryByRole('button', { name: /^Ask/ })).toBeNull()
+      unmount()
+    }
   })
 
   it('names the account button after the user', () => {

@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { Fragment, useId } from 'react'
 import Link from 'next/link'
 import { phoneStages, routeProgress, stageLabels, taskDots, terrainY, TRACK_FLAGS } from '@/lib/route-progress'
 import { nzCalendarDate, weekdayDay } from '@/lib/nz-date'
@@ -79,7 +79,8 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
           <li key={s.id} className={`track-stage${s.now ? "" : " track-stage-off"}`}>
             <span className="track-stage-name">{s.name}{s.now ? " · now" : s.open ? " · still open" : ""}</span>
             <span className="text-muted">
-              {s.state.split(" · ").map((part, i, all) => <span key={part} className="whitespace-nowrap">{part}{i < all.length - 1 && " · "} </span>)}
+              {/* the space between parts stays outside the no-wrap span: a narrow stage wraps instead of running into the next */}
+              {s.state.split(" · ").map((part, i, all) => <Fragment key={part}><span className="whitespace-nowrap">{part}{i < all.length - 1 && " ·"}</span> </Fragment>)}
             </span>
           </li>
         ))}

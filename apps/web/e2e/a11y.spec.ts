@@ -41,5 +41,14 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     await signIn(page)
     await expect(page).toHaveURL('/app')
     for (const path of SIGNED_IN) await expectNoViolations(page, path)
+
+    // The guide open on a task: the pane from 1024, the sheet on a phone (its Ask is in the task's action bar)
+    await page.goto('/app/roadmap?task=T08')
+    if (width >= 1024) await page.getByRole('button', { name: /^Ask about your / }).click()
+    else await page.getByRole('group', { name: 'Task actions' }).getByRole('button', { name: 'Ask', exact: true }).click()
+    await expect(page.getByRole(width >= 1024 ? 'complementary' : 'dialog', { name: 'Guide' })).toBeVisible()
+    // axe reads colours mid fade-in as low contrast; scan once the pane has settled
+    await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'))
+    await expectAxe(page, '/app/roadmap?task=T08 + guide')
   })
 }

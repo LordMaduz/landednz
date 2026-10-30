@@ -94,7 +94,9 @@ export async function runTurn(args: {
     sent.push(part);
     sse.send({ event: 'part', data: part });
   };
-  const say = (text: string): void => emit({ type: 'text', text, citations: [] });
+  // The fixed crisis text is tagged so the UI draws the crisis card without reading text (spec §4.1)
+  const say = (text: string): void =>
+    emit({ type: 'text', text, citations: [], ...(text === GUIDE_CRISIS_TEXT && { block: 'crisis' as const }) });
   let gate: SentenceGate | null = null;
   const answerTextSent = () => (gate?.sentTextCount() ?? 0) > 0;
 

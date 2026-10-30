@@ -13,6 +13,7 @@ export type SentenceGate = {
 const ABBREVIATIONS = new Set(['e.g', 'i.e', 'etc', 'st', 'mt', 'no']);
 // closers: quotes, brackets and Markdown bold/italic ("**Step one.**")
 const BOUNDARY = /[.!?]["')*_]*(?=\s|$)|\n/g;
+const LIMITS_HEADING = /^what i can['’]t tell you$/i;
 
 export function createSentenceGate(opts: {
   passages: Passage[];
@@ -24,6 +25,10 @@ export function createSentenceGate(opts: {
   const released: ReleasedSentence[] = [];
   const sourceIndex = new Map<number, number>();
   const linked = new Set<string>();
+  // Answer shape for the UI (spec §4.1: the UI never parses text): numbered lines are steps, the "What I can't tell you" heading starts a limits block
+  let lineStart = true;
+  let step: number | null = null;
+  let limits = false;
 
   // End offset of the first finished sentence in buf, or -1. Buffer end only counts once the block is over.
   const nextEnd = (blockOver: boolean): number => {
@@ -42,6 +47,19 @@ export function createSentenceGate(opts: {
   };
 
   const release = (raw: string): void => {
+    const atLineStart = lineStart;
+    lineStart = /\n\s*$/.test(raw);
+    if (atLineStart) {
+      if (LIMITS_HEADING.test(raw.trim().replace(/[*#_]/g, '').replace(/:$/, '').trim())) {
+        limits = true;
+        return;
+      }
+      const marker = /^\s*(\d+)[.)]\s+/.exec(raw);
+      step = marker ? Number(marker[1]) : null;
+      if (marker) raw = raw.slice(marker[0].length);
+    }
+    const lineStep = step;
+    if (lineStart) step = null;
     const links: ReplyPart[] = [];
     const text = raw
       .replace(/\bT\d{2,3}\b/g, (id) => {
@@ -54,6 +72,7 @@ export function createSentenceGate(opts: {
         return title;
       })
       .replace(/CHUNK_\w+/g, '')
+      .replace(/\*\*/g, '') // Markdown bold: the UI shows plain text (spec §4.1)
       .replace(/ {2,}/g, ' ')
       .replace(/ +([.,!?])/g, '$1')
       .trim();
@@ -74,7 +93,8 @@ export function createSentenceGate(opts: {
       }
       if (!indexes.includes(index)) indexes.push(index);
     }
-    opts.emit({ type: 'text', text, citations: indexes });
+    const block = lineStep !== null ? { block: 'step' as const, step: lineStep } : limits ? { block: 'limits' as const } : {};
+    opts.emit({ type: 'text', text, citations: indexes, ...block });
     links.forEach(opts.emit);
     released.push({ text, citations });
   };
@@ -97,6 +117,7 @@ export function createSentenceGate(opts: {
       } else {
         // Only a finished sentence is released here: the next block's citation can arrive before its text
         drain(true);
+        limits = false;
       }
     },
     end() {

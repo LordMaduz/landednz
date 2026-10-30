@@ -18,6 +18,7 @@ vi.mock('@/lib/supabase/client', () => ({
 }))
 
 const { TaskSheet } = await import('./task-sheet')
+const { useGuideStore } = await import('@/lib/stores/guideStore')
 const desk = () => within(screen.getByTestId('task-desktop'))
 
 function detail(over: Partial<TaskDetailApiResponse> = {}): TaskDetailApiResponse {
@@ -159,13 +160,14 @@ describe('TaskSheet', () => {
     expect(within(item).getByRole('link', { name: /^Source: Plunket/ })).toHaveTextContent('1')
   })
 
-  it('Sources sit in the side column, after Ask', async () => {
+  it('Sources sit in the side column, after the status; no Ask box there', async () => {
     sheet('T08')
     await desk().findByRole('region', { name: 'Sources' })
     const side = desk().getByRole('complementary')
     expect(within(side).getByRole('region', { name: 'Sources' })).toBeInTheDocument()
     const heads = within(side).getAllByRole('heading', { level: 2 }).map(h => h.textContent)
-    expect([heads[0], heads[1]?.startsWith('Ask about'), heads[2]]).toEqual(['Not started', true, 'Sources'])
+    expect(heads).toEqual(['Not started', 'Sources'])
+    expect(within(side).queryByRole('textbox')).toBeNull()
   })
 
   it('a step with inline items: lead line and a nested list, no markdown markers', async () => {
@@ -428,18 +430,12 @@ describe('TaskSheet, Task details C', () => {
     expect(phone().getAllByRole('tab').map(t => t.textContent)).toEqual(['Steps', 'Good to know'])
   })
 
-  it('phone Ask focuses the Ask input on every press', () => {
-    const spy = vi.spyOn(HTMLElement.prototype, 'offsetParent', 'get').mockImplementation(function (this: HTMLElement) {
-      return this.closest('[data-testid=task-phone]') ? document.body : null
-    })
+  it('phone Ask opens the guide on this task', () => {
+    const openPane = vi.fn()
+    useGuideStore.setState({ openPane })
     rendered(null)
-    const ask = within(phone().getByRole('group', { name: 'Task actions' })).getByRole('button', { name: 'Ask' })
-    fireEvent.click(ask)
-    const input = phone().getByRole('textbox', { name: /^Ask about/ })
-    expect(input).toHaveFocus()
-    input.blur()
-    fireEvent.click(ask)
-    expect(input).toHaveFocus()
-    spy.mockRestore()
+    fireEvent.click(within(phone().getByRole('group', { name: 'Task actions' })).getByRole('button', { name: 'Ask' }))
+    expect(openPane).toHaveBeenCalledWith({ kind: 'task', taskKey: 'T08' })
+    expect(phone().queryByRole('textbox')).toBeNull()
   })
 })

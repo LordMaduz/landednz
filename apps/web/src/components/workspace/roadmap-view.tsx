@@ -1,12 +1,13 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react"
+import { useCallback, useEffect, useState, useSyncExternalStore, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
+import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -14,7 +15,8 @@ import { Card } from "@/components/ui/card"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { homeSubline } from "@/lib/home-view"
 import { buildItinerary, type Itinerary as ItineraryData } from "@/lib/roadmap-itinerary"
-import { buildRouteView, waitsOn, type RouteTask, type RouteView } from "@/lib/route-view"
+import { buildRouteView, taskTitles, waitsOn, type RouteTask, type RouteView } from "@/lib/route-view"
+import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { TaskSheet } from "./task-sheet"
@@ -123,9 +125,13 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <Link href={taskHref(today.task.taskId)} className={buttonVariants({ className: "max-narrow:w-full" })}>
                   Start task<span className="sr-only">: {today.task.title}</span>
                 </Link>
-                <Link href={`${taskHref(today.task.taskId)}&ask=1`} className={buttonVariants({ variant: "quiet", className: "max-narrow:w-full" })}>
+                <button
+                  type="button"
+                  onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: today.task.taskId })}
+                  className={buttonVariants({ variant: "quiet", className: "cursor-pointer max-narrow:w-full" })}
+                >
                   Ask about this
-                </Link>
+                </button>
               </div>
             </div>
           </li>
@@ -213,14 +219,6 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
   const searchParams = useSearchParams()
   const selectedTaskId = searchParams.get("task") ?? undefined
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
-  // The header's Ask: which sheet's input to focus, and a count so a repeat press focuses again.
-  // Home's Ask lands here with ?ask=1.
-  const [askFor, setAskFor] = useState<{ taskId: string; n: number } | null>(() =>
-    selectedTaskId && searchParams.get("ask") ? { taskId: selectedTaskId, n: 1 } : null,
-  )
-  // Ask from a page with no task in view (Settings) opens the current task once the route loads
-  const askOnLoad = useRef(!selectedTaskId && !!searchParams.get("ask"))
-
   // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
   const load = useCallback(async (refetch = false) => {
     if (!refetch) setState("loading")
@@ -232,11 +230,6 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
       const now = new Date()
       const view = buildRouteView(roadmap, profile.arrivalDate, now)
       setState({ view, arrivalDate: profile.arrivalDate, now, firstUse: view.doneCount === 0 })
-      if (askOnLoad.current && view.current) {
-        askOnLoad.current = false
-        setAskFor({ taskId: view.current.taskId, n: 1 })
-        router.replace(`/app/roadmap?task=${view.current.taskId}&ask=1`, { scroll: false })
-      }
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
       if (!refetch) setState("down")
@@ -248,36 +241,28 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
     load()
   }, [load])
 
-  const open = (taskId: string) => router.push(`/app/roadmap?task=${taskId}`)
-  const askTaskId = typeof state === "object" ? (selectedTaskId ?? state.view.current?.taskId) : undefined
-  const ask = () => {
-    if (!askTaskId) return
-    setAskFor(a => ({ taskId: askTaskId, n: (a?.n ?? 0) + 1 }))
-    if (askTaskId !== selectedTaskId) open(askTaskId)
-  }
   const refetch = useCallback(() => load(true), [load])
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader active="roadmap" back={selectedTaskId ? { href: "/app/roadmap", label: "Roadmap" } : undefined} user={user} onAsk={askTaskId ? ask : undefined} askDisabled={state === "down"} />
+      <AppHeader active="roadmap" back={selectedTaskId ? { href: "/app/roadmap", label: "Roadmap" } : undefined} user={user} />
       {state === "loading" ? (
         <Loading />
       ) : (
         <>
-          <main className={cn("container-page container-app", selectedTaskId ? "pb-24 max-narrow:pb-40" : "py-6")}>
-            {state === "down" ? (
+          {state === "down" ? (
+            <main className="container-page container-app py-6">
               <ApiDown onRetry={() => load()} />
-            ) : selectedTaskId ? (
-              <TaskSheet
-                taskId={selectedTaskId}
-                route={state.view}
-                onChanged={refetch}
-                askFocus={askFor?.taskId === selectedTaskId ? askFor.n : undefined}
-              />
-            ) : (
-              <RoadmapView {...state} />
-            )}
-          </main>
+            </main>
+          ) : (
+            <GuideShell
+              page={selectedTaskId ? { kind: "task", taskKey: selectedTaskId } : { kind: "roadmap" }}
+              titles={taskTitles(state.view)}
+              className={cn("container-page container-app", selectedTaskId ? "max-narrow:pb-40" : "pt-6")}
+            >
+              {selectedTaskId ? <TaskSheet taskId={selectedTaskId} route={state.view} onChanged={refetch} /> : <RoadmapView {...state} />}
+            </GuideShell>
+          )}
           <div className={cn("mt-auto", selectedTaskId && "max-narrow:hidden")}>
             <PublicFooter app />
           </div>

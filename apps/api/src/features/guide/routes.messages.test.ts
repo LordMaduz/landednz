@@ -301,7 +301,7 @@ describe('POST /guide/messages', () => {
     const events = parseSse((await ask('Nothing is working out and I want to end my life')).body);
     expect(parts(events)).toEqual([
       { type: 'notice', kind: 'checking_guide' },
-      { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [] },
+      { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [], block: 'crisis' },
       { type: 'error', code: 'AI_FAILURE', retryable: true },
     ]);
     expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'failed' } });
@@ -326,7 +326,7 @@ describe('POST /guide/messages', () => {
       const events = parseSse((await ask("I feel hopeless since moving and I can't stop crying")).body);
       expect(parts(events)).toEqual([
         { type: 'notice', kind: 'checking_guide' },
-        { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [] },
+        { type: 'text', text: GUIDE_CRISIS_TEXT, citations: [], block: 'crisis' },
         { type: 'text', text: GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY(agency), citations: [] },
       ]);
       expect(events.at(-1)).toMatchObject({ event: 'done', data: { status: 'complete' } });

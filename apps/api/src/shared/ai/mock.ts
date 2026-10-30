@@ -67,7 +67,9 @@ async function defaultAnswerStream(
   onEvent({ type: 'text', text: 'This is a mock reply from LandedNZ. ' });
   const firstDoc = req.documents[0];
   if (firstDoc) onEvent({ type: 'citation', documentIndex: 0, citedText: firstDoc.text.slice(0, 40) });
-  onEvent({ type: 'text', text: 'It has a second sentence.' });
+  onEvent({ type: 'text', text: 'It has a second sentence.\n' });
+  onEvent({ type: 'text', text: '1. Register for myIR first.\n2. Then T08 gets easier.\n' });
+  onEvent({ type: 'text', text: "**What I can't tell you**\nHow long your own application takes.\n" });
   onEvent({ type: 'block_end' });
   return { stopReason: 'end_turn', usage };
 }

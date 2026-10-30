@@ -16,12 +16,13 @@ beforeAll(async () => {
   await db.userProfile.create({
     data: { userId, visaType: 'AEWV', city: 'AUCKLAND', familySituation: 'SOLO', occupation: 'OTHER_PROFESSIONAL', arrivalDate: new Date(Date.now() - 10 * 86_400_000) },
   });
-  const ids = ['T08', 'T01', 'T02'].filter((id) => task(id));
+  const ids = ['T08', 'T01', 'T02', 'T09'].filter((id) => task(id));
   await db.userRoadmapEntry.createMany({
     data: [
       { userId, taskId: ids[0]!, status: 'COMPLETE', priorityScore: 50 },
       { userId, taskId: ids[1]!, status: 'NOT_STARTED', priorityScore: 10 },
       { userId, taskId: ids[2]!, status: 'NOT_STARTED', priorityScore: 90 },
+      { userId, taskId: ids[3]!, status: 'NOT_STARTED', priorityScore: 99 },
     ],
   });
   await db.guideMemory.create({ data: { userId, text: 'Has a dog' } });
@@ -39,13 +40,14 @@ afterAll(async () => {
 }, 60_000);
 
 describe('loadGuideContext', () => {
-  test('builds done, next (by score), memories and titles', async () => {
+  test('builds done, next (Home order: phase, then task id), memories and titles', async () => {
     const ctx = await loadGuideContext(userId, { kind: 'home' });
     expect(ctx.userName).toBe('Aroha');
     expect(ctx.daysSinceArrival).toBe(10);
     expect(ctx.doneTasks).toEqual([{ taskKey: 'T08', title: task('T08')!.name }]);
-    expect(ctx.nextTasks.map((t) => t.taskKey)).toEqual(['T02', 'T01']);
-    expect(ctx.totalTasks).toBe(3);
+    // Same order as the Home/Roadmap pages (route-view.ts), not score, so "Next up" matches the page
+    expect(ctx.nextTasks.map((t) => t.taskKey)).toEqual(['T01', 'T02', 'T09']);
+    expect(ctx.totalTasks).toBe(4);
     expect(ctx.currentTask).toBeNull();
     expect(ctx.memories).toHaveLength(1);
     expect(ctx.memories[0]!.text).toBe('Has a dog');

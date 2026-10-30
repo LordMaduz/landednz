@@ -19,6 +19,7 @@ vi.mock('@/lib/supabase/client', () => ({
 vi.mock('next/navigation', () => ({ useRouter: () => router }))
 
 const { HomeView, HomeScreen } = await import('./home-view')
+const { useGuideStore } = await import('@/lib/stores/guideStore')
 
 const profile = {
   profileId: 'p1',
@@ -62,6 +63,8 @@ describe('HomeView', () => {
   })
 
   it('your next move: name, why, unlocks, the one primary and Ask', () => {
+    const openPane = vi.fn()
+    useGuideStore.setState({ openPane })
     view()
     const next = screen.getByRole('region', { name: /Your next move/ })
     expect(within(next).getByRole('heading', { level: 3 })).toHaveTextContent('Apply for your IRD number')
@@ -69,7 +72,8 @@ describe('HomeView', () => {
     expect(within(next).getByText('Your employer needs it before your first payday.')).toBeInTheDocument()
     expect(within(next).getByText(/^Unlocks:/)).toHaveTextContent('Unlocks: Give your employer a tax code (IR330) · ')
     expect(within(next).getByRole('link', { name: 'Start task: Apply for your IRD number' })).toHaveAttribute('href', '/app/roadmap?task=T08')
-    expect(within(next).getByRole('link', { name: /Ask about this/ })).toHaveAttribute('href', '/app/roadmap?task=T08&ask=1')
+    fireEvent.click(within(next).getByRole('button', { name: /Ask about this/ }))
+    expect(openPane).toHaveBeenCalledWith({ kind: 'task', taskKey: 'T08' })
   })
 
   it('then this week: aside, rows that link to their task, no footer when nothing more', () => {
@@ -118,19 +122,19 @@ describe('HomeScreen', () => {
     await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/onboarding?step=1'))
   })
 
-  it('API down: alert, Try again refetches, Ask disabled', async () => {
+  it('API down: alert, Try again refetches, no Ask', async () => {
     getRoadmap.mockRejectedValueOnce(new Error('down'))
     render(<HomeScreen user={user} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Try again' }))
-    expect(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: /^Ask/ })).toBeNull()
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(/Welcome/)
     expect(getRoadmap).toHaveBeenCalledTimes(2)
   })
 
-  it('header Ask: opens the current task on the Roadmap with its input focused', async () => {
+  it('no header Ask; the ask bar asks about your first 90 days', async () => {
     render(<HomeScreen user={user} />)
     await screen.findByRole('heading', { level: 1 })
-    fireEvent.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08&ask=1')
+    expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()
+    expect(await screen.findByRole('button', { name: /^Ask about your first 90 days/ })).toBeInTheDocument()
   })
 })

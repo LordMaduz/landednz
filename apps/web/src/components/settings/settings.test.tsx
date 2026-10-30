@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { toast } from 'sonner'
 import { Toaster } from '@/components/ui/toaster'
@@ -11,6 +11,7 @@ vi.mock('@/lib/api', () => ({
   updateOnboardingProfile: (p: unknown, t: string) => updateOnboardingProfile(p, t),
   deleteAccount: (t: string) => deleteAccount(t),
   getOnboardingProfile: (t: string) => getOnboardingProfile(t),
+  listMemories: async () => [{ id: 'm1', text: 'You start work on 9 November.', createdAt: '2026-10-30T01:00:00.000Z', updatedAt: '2026-10-30T01:00:00.000Z' }],
 }))
 vi.mock('@/lib/sign-out', () => ({ signOutAndLeave: () => signOutAndLeave() }))
 vi.mock('@/lib/supabase/client', () => ({
@@ -50,6 +51,18 @@ beforeEach(() => {
 describe('PlanForm', () => {
   const saveBtn = () => screen.getByRole('button', { name: 'Save and rebuild' })
   const view = () => render(<><PlanForm profile={profile} account={<AccountSection user={user} />} /><Toaster /></>)
+
+  it('the answers card has a Memory row; ?edit=memory opens the memory editor instead of an answer', async () => {
+    view()
+    expect(await screen.findByText('1 thing the guide remembers')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Manage/ })).toHaveAttribute('href', '/settings?edit=memory')
+    cleanup()
+    search = new URLSearchParams('edit=memory')
+    view()
+    expect(screen.getByRole('heading', { name: 'What the guide remembers' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Save and rebuild' })).toBeNull()
+    expect(screen.queryByText(/changing/)).toBeNull()
+  })
 
   it('lists the five answers with a Change button each; no select remains', () => {
     view()
@@ -328,8 +341,15 @@ describe('SettingsScreen', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Settings')
     expect(await screen.findByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
     expect(getOnboardingProfile).toHaveBeenCalledWith('tok')
-    fireEvent.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap?ask=1')
+    expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()
+  })
+
+  it('mounting closes the guide and clears its page, so there is no ask bar (D21)', async () => {
+    const { useGuideStore } = await import('@/lib/stores/guideStore')
+    useGuideStore.setState({ open: true, page: { kind: 'home' } })
+    render(<SettingsScreen user={user} />)
+    await vi.waitFor(() => expect(useGuideStore.getState()).toMatchObject({ open: false, page: null }))
+    expect(screen.queryByRole('button', { name: /^Ask about/ })).toBeNull()
   })
 
   it('no profile: back to onboarding', async () => {
