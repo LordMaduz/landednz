@@ -8,7 +8,7 @@
 ## INVIOLABLE BOUNDARIES
 
 **[C01] Two AI Jobs Are Always Separate**
-features/roadmap/ and features/chat/ (and features/guide/ alongside chat) NEVER import from each other.
+features/roadmap/ and features/guide/ NEVER import from each other.
 Shared types go in packages/types/ only.
 The AI never touches task sequencing, dependency resolution, or priority scoring.
 *Holds for R0; to be rewritten in R2.*
@@ -61,7 +61,7 @@ Always <=> (cosine). Never <-> (L2/Euclidean) for semantic similarity.
 
 **[C13] Error Type Hierarchy**
 Expected failures: AppError with typed ErrorCode.
-Claude API failures: AIFailureError — caught INSIDE chat service, never reaches global handler.
+Claude API failures: AIFailureError — caught INSIDE the guide service, never reaches global handler.
 The roadmap NEVER fails due to an AI failure.
 
 **[C14] SSE Uses reply.raw**
@@ -105,7 +105,7 @@ Implementation: use `@media (prefers-reduced-motion: reduce)` in CSS or the
 `@landednz/types` — the same package used by `apps/api/` and `apps/mobile/`.
 Web-specific types (component props, UI state, TaskCardState) live in
 `apps/web/src/types/web.ts` and may import from `@landednz/types`.
-VIOLATION: Redefining `VisaType`, `TaskStatus`, `ChatEntryPoint`, or any shared enum
+VIOLATION: Redefining `VisaType`, `TaskStatus`, or any shared enum
 inside `apps/web/src/`. These already exist in `packages/types/index.ts`.
 
 **[CW05] Mock Data Shape Matches API Response**

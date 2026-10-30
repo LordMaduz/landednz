@@ -23,7 +23,7 @@ Source of truth for the API names: `apps/api/src/shared/config.ts`; for the web 
 ## Railway: production API (`railway.json`)
 
 Same names as Render. Differences: set every value in the Railway dashboard, with `NODE_ENV=production`, `AI_MODE=live`, `ANTHROPIC_MODEL=claude-sonnet-5-5`, `TRUST_PROXY=true`, `BETA_MODE=true`.
-Values come from the production side: `landednz-prod` Supabase project, the `landednz-prod` Anthropic key, the same OpenAI key, `CORS_ORIGIN` = the production web origin, `CHAT_DAILY_CAP` as decided for production.
+Values come from the production side: `landednz-prod` Supabase project, the `landednz-prod` Anthropic key, the same OpenAI key, `CORS_ORIGIN` = the production web origin, `GUIDE_DAILY_CAP` if production should differ from the default 20.
 `PORT` is set by Railway.
 
 ## Vercel: Preview scope (= staging)
