@@ -139,14 +139,16 @@ Rule: every interactive element is a kit component from `components/ui`. A hand-
 
 ## 8. Guard tests
 
-One design-roles test, extending the `type-roles.test.ts` pattern, fails the build on:
+Extend the existing `apps/web/src/cw01.test.ts` (already fails on raw hex, `[13px]`-style arbitrary values and inline colour styles) so it also fails the build on:
 
-- hex / rgb values, palette names or Tailwind default colours in components and pages
-- spacing outside the allowed steps, and arbitrary values (`p-[13px]`)
+- palette names or Tailwind default colours in components and pages
+- spacing outside the allowed steps
 - radius and shadow other than the roles
 - hand-written `<button>` outside `components/ui`
 
 `type-roles.test.ts` stays as is.
+
+Docs updated in the same branch: constitution CW01 wording (roles, not raw tokens) and `.claude/skills/landednz-design-system/SKILL.md` (role names, state layer, Button variants).
 
 ## 9. Board (before any code)
 
