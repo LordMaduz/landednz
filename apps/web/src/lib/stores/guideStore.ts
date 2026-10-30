@@ -66,6 +66,17 @@ export const useGuideStore = create<GuideStore>((set, get) => {
     } catch { /* the old opening stays */ }
   }
 
+  // The cap lifts at resetAt (NZ midnight): unlock the composer then, even in a tab left open
+  const clearCapAt = (resetAt: string) => {
+    const ms = Date.parse(resetAt) - Date.now()
+    if (Number.isNaN(ms)) return
+    setTimeout(() => {
+      if (get().banner?.kind !== 'cap') return
+      set({ banner: null })
+      void refreshOpening()
+    }, Math.max(ms, 0))
+  }
+
   // Another window is answering: check every 5 s until its row finishes, then show it
   const pollBusy = () => {
     if (poll) return
@@ -105,6 +116,7 @@ export const useGuideStore = create<GuideStore>((set, get) => {
         undo()
         set({ banner: err.kind === 'cap' ? { kind: 'cap', resetAt: (err as { resetAt: string }).resetAt } : { kind: 'busy' } })
         if (err.kind === 'busy') pollBusy()
+        else clearCapAt((err as { resetAt: string }).resetAt)
       } else {
         updateTurn(key, t => ({ ...t, status: 'failed' }))
       }
@@ -197,7 +209,9 @@ export const useGuideStore = create<GuideStore>((set, get) => {
       live = null
       // spec §7: Stop before any answer text gives the question back and does not count it
       if (isNew && textCount(turn) === 0) {
-        removeTurn(key)
+        // a crisis card already on screen stays (C08)
+        if (turn.parts.length) updateTurn(key, t => ({ ...t, status: 'cancelled' }))
+        else removeTurn(key)
         set({ draft: turn.question, note: STOPPED_NOTE, streaming: false })
       } else {
         updateTurn(key, t => ({ ...t, status: 'cancelled' }))
@@ -206,6 +220,7 @@ export const useGuideStore = create<GuideStore>((set, get) => {
       // cancel before aborting, so the server records `cancelled`, not a disconnect
       if (turn.assistantId) await cancelGuide(turn.assistantId, await getToken()).catch(() => {})
       ctl.abort()
+      void refreshOpening()
     },
 
     retry: async turnKey => {

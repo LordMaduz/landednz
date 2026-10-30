@@ -82,6 +82,21 @@ describe('ask', () => {
     expect(st).toMatchObject({ draft: 'Too soon', note: "Stopped. This question wasn't counted.", streaming: false })
   })
 
+  it('stop with only the crisis card keeps the card (C08), gives the question back', async () => {
+    const s = fakeStream()
+    const done = useGuideStore.getState().ask('Help')
+    await flush()
+    s.emit(start)
+    const crisis = { ...text('Call 1737.'), block: 'crisis' as const }
+    s.emit({ event: 'part', data: crisis })
+    await useGuideStore.getState().stop()
+    await done
+    const st = useGuideStore.getState()
+    expect(m.cancelGuide).toHaveBeenCalledWith('a1', 'tok')
+    expect(st.turns[0]).toMatchObject({ status: 'cancelled', parts: [crisis] })
+    expect(st).toMatchObject({ draft: 'Help', note: "Stopped. This question wasn't counted.", streaming: false })
+  })
+
   it('stop after text calls cancelGuide, keeps the parts, status cancelled', async () => {
     const s = fakeStream()
     const done = useGuideStore.getState().ask('Q')
@@ -93,6 +108,29 @@ describe('ask', () => {
     expect(m.cancelGuide).toHaveBeenCalledWith('a1', 'tok')
     expect(useGuideStore.getState().turns[0]).toMatchObject({ status: 'cancelled', parts: [text('One.')] })
     expect(useGuideStore.getState().streaming).toBe(false)
+  })
+
+  it('stop after text refreshes "left today" (the question counted)', async () => {
+    const s = fakeStream()
+    const done = useGuideStore.getState().ask('Q')
+    await flush()
+    s.emit(start)
+    s.emit({ event: 'part', data: text('One.') })
+    m.getGuideOpening.mockResolvedValue(opening(19))
+    await useGuideStore.getState().stop()
+    await done
+    await flush()
+    expect(useGuideStore.getState().opening?.leftToday).toBe(19)
+  })
+
+  it('the cap banner clears itself at resetAt and the opening reloads', async () => {
+    vi.useFakeTimers({ now: new Date('2026-10-30T10:00:00.000Z'), toFake: ['setTimeout', 'Date'] })
+    m.askGuide.mockRejectedValue(Object.assign(new Error('cap'), { kind: 'cap', resetAt: '2026-10-30T11:00:00.000Z' }))
+    await useGuideStore.getState().ask('Q')
+    expect(useGuideStore.getState().banner).toMatchObject({ kind: 'cap' })
+    await vi.advanceTimersByTimeAsync(3_600_000)
+    expect(useGuideStore.getState().banner).toBeNull()
+    expect(m.getGuideOpening).toHaveBeenCalled()
   })
 
   it('cap error sets the cap banner and keeps earlier turns', async () => {

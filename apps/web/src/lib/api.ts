@@ -291,8 +291,10 @@ async function streamGuide(path: string, body: unknown, token: string, onEvent: 
       signal,
     })
     if (res.status === 429) {
-      const cap = await res.json().catch(() => null) as { resetAt?: string } | null
-      throw guideError({ kind: 'cap', resetAt: cap?.resetAt ?? '' })
+      const cap = await res.json().catch(() => null) as { error?: string; resetAt?: string } | null
+      // a per-minute rate limit is also a 429; only the daily cap carries this code
+      if (cap?.error === 'CHAT_DAILY_CAP_REACHED') throw guideError({ kind: 'cap', resetAt: cap.resetAt ?? '' })
+      throw guideError({ kind: 'failed', status: 429 })
     }
     if (res.status === 409) throw guideError({ kind: 'busy' })
     if (!res.ok || !res.body) throw guideError({ kind: 'failed', status: res.status })

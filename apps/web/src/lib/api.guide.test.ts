@@ -52,6 +52,11 @@ describe('askGuide', () => {
     await expect(ask().run()).rejects.toMatchObject({ kind: 'cap', resetAt: '2026-10-31T11:00:00.000Z' })
   })
 
+  it('a 429 that is not the daily cap (rate limit) throws kind failed', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ error: 'RATE_LIMITED', message: 'm' }), { status: 429 })))
+    await expect(ask().run()).rejects.toMatchObject({ kind: 'failed', status: 429 })
+  })
+
   it('409 throws kind busy', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ error: 'GUIDE_BUSY' }), { status: 409 })))
     await expect(ask().run()).rejects.toMatchObject({ kind: 'busy' })
