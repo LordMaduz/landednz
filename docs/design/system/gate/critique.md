@@ -25,3 +25,7 @@ Board: https://claude.ai/artifact/JDm4bkdqbTXmXjhnxsqjNv (source `src/gen.py` â†
 3. Fold avatar into surface-selected (recommended yes).
 4. Citation chip: state layer (recommended) or solid teal.
 5. Pressed feedback everywhere on phones (recommended yes).
+
+## Owner decisions (2026-10-31)
+
+1. A 6/10 %. 2. Floating radius 16. 3. Avatar merge deferred (avatar has its own redesign in another session). 4. Citation chip = state layer. 5. Pressed feedback everywhere on phones: yes.
