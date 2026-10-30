@@ -52,11 +52,17 @@ describe('AskBar (wide)', () => {
     expect(askFromBar).not.toHaveBeenCalled()
   })
 
-  it('limit reached disables the bar', () => {
+  it('limit reached: the bar stays focusable, says why, and sends nothing', () => {
     useGuideStore.setState({ opening: { whereYouAre: 'w', starters: [], leftToday: 0, dailyCap: 20 } })
     bar()
-    expect(box()).toBeDisabled()
+    expect(box()).toHaveAttribute('aria-disabled', 'true')
+    expect(box()).toHaveAttribute('readonly')
+    expect(box()).not.toBeDisabled()
     expect(box()).toHaveAttribute('placeholder', 'No questions left today. You can ask again after midnight, NZ time.')
+    expect(box()).toHaveAccessibleDescription('No questions left today. You can ask again after midnight, NZ time.')
+    fireEvent.keyDown(box(), { key: 'Enter' })
+    expect(askFromBar).not.toHaveBeenCalled()
+    expect(screen.queryByRole('status')).toBeEmptyDOMElement()
   })
 
   it('Open conversation shows only with a conversation', () => {

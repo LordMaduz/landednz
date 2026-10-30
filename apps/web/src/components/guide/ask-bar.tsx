@@ -90,6 +90,7 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
   const label = askLabel(page)
 
   const send = () => {
+    if (limited) return
     if (!typed) return setEmpty(true)
     void askFromBar(draft)
   }
@@ -128,7 +129,10 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
         aria-keyshortcuts="/"
         rows={1}
         value={draft}
-        disabled={limited}
+        // read-only, not disabled: it stays in the tab order, so keyboard and screen-reader users hear why
+        readOnly={limited}
+        aria-disabled={limited || undefined}
+        aria-describedby={limited ? "guide-ask-limit" : undefined}
         placeholder={limited ? LIMIT_COPY : label}
         onChange={e => {
           setDraft(e.target.value)
@@ -139,8 +143,13 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
           e.preventDefault()
           send()
         }}
-        className={cn("field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed")}
+        className={cn("field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted aria-disabled:cursor-not-allowed")}
       />
+      {limited && (
+        <span id="guide-ask-limit" className="sr-only">
+          {LIMIT_COPY}
+        </span>
+      )}
       {!typed && !limited && (
         <kbd aria-hidden className="self-center rounded border border-border px-1.25 font-sans text-small text-muted">
           /
