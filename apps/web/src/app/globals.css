@@ -31,7 +31,7 @@
      The only place type sizes live. Same sizes at every width. Components use these roles only (type-roles.test.ts).
      hero      48  landing hero only
      title     24  page title, one per page
-     featured  20  the one main item in a card ("Book temporary accommodation")
+     featured  18  the one main item in a card ("Book temporary accommodation")
      section   16  card and section headings, 600, ink
      body      16  paragraphs (also form fields: under 16 px iOS zooms on focus)
      ui        14  list rows, buttons, nav: the inherited default
@@ -45,9 +45,9 @@
   --text-title--line-height: 1.25;
   --text-title--letter-spacing: -0.015em;
   --text-title--font-weight: 600;
-  --text-featured: 20px;
-  --text-featured--line-height: 1.3;
-  --text-featured--letter-spacing: -0.012em;
+  --text-featured: 18px;
+  --text-featured--line-height: 1.35;
+  --text-featured--letter-spacing: -0.01em;
   --text-featured--font-weight: 600;
   --text-section: 16px;
   --text-section--line-height: 1.35;
