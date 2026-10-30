@@ -96,6 +96,7 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
 
   return (
     <div
+      data-ask-bar
       className={cn(
         "pointer-events-auto relative flex w-ask-bar gap-3 rounded-bar py-2.5 pr-2.5 pl-3.5 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
         typed ? "items-end" : "items-center",
@@ -138,7 +139,7 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
           e.preventDefault()
           send()
         }}
-        className="field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed"
+        className={cn("field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed")}
       />
       {!typed && !limited && (
         <kbd aria-hidden className="self-center rounded border border-border px-1.25 font-sans text-small text-muted">

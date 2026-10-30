@@ -97,7 +97,8 @@ export function GuideShell({
       const s = useGuideStore.getState()
       if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target) || s.open || !s.page) return
       e.preventDefault()
-      if (wide) barRef.current?.focus()
+      // the sticky bar is always on screen; a plain focus() scrolls the page to its place in the flow
+      if (wide) barRef.current?.focus({ preventScroll: true })
       else void openPane()
     }
     document.addEventListener("keydown", onKey)
@@ -106,8 +107,9 @@ export function GuideShell({
 
   // B1: focus to the composer on open, back to the ask bar on close (the sheet does this through Drawer)
   useEffect(() => {
-    if (open && wide) composer()?.focus()
-    else if (!open && wasOpen.current) barRef.current?.focus()
+    // the composer is always on screen when the guide opens; scrolling to it would move the task card (D5)
+    if (open && wide) composer()?.focus({ preventScroll: true })
+    else if (!open && wasOpen.current) barRef.current?.focus({ preventScroll: wide })
     wasOpen.current = open
   }, [open, wide, expanded])
 

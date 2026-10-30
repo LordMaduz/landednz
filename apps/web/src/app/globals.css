@@ -448,6 +448,10 @@
   html {
     @apply font-sans pane:scroll-pb-ask-bar-clear;
   }
+  /* ...except while focus is in the bar itself: it is always on screen, and the padding would scroll the page to its place in the flow */
+  html:has([data-ask-bar] :focus) {
+    scroll-padding-bottom: 0;
+  }
   body {
     @apply bg-white text-ui text-ink antialiased;
     font-feature-settings: 'tnum' 1;

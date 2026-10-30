@@ -22,11 +22,20 @@ const CASES: Case[] = [
 
 // The conversation exists (asked once in the test), so the bar's mark opens it without spending a question (D9)
 async function openGuide(page: Page, wide: boolean) {
-  if (wide) await page.getByRole('button', { name: 'Open conversation' }).click()
+  if (wide) {
+    // a real mouse click: locator.click() first scrolls the sticky bar's flow position into view, which no user does
+    const b = (await page.getByRole('button', { name: 'Open conversation' }).boundingBox())!
+    await page.mouse.click(b.x + b.width / 2, b.y + b.height / 2)
+  }
   else await page.getByRole('button', { name: /^Ask about your / }).click()
 }
 
-const cardLeft = (page: Page) => page.evaluate(() => Math.round(document.querySelector('main .grid > div')!.getBoundingClientRect().left))
+// The card's position on screen: it must not move, sideways or up, when the chat opens (D5)
+const cardAt = (page: Page) =>
+  page.evaluate(() => {
+    const r = document.querySelector('main .grid > div')!.getBoundingClientRect()
+    return { left: Math.round(r.left), top: Math.round(r.top) }
+  })
 
 // Text cut off: wider than a box that hides overflow, or running past the page area into the pane.
 // Deliberate ellipsis (.truncate) and sr-only are skipped.
@@ -63,7 +72,7 @@ async function check(page: Page, path: string, c: Case) {
   await page.goto(path)
   if (c.rootPx) await page.addStyleTag({ content: `html { font-size: ${c.rootPx}px }` })
   await expect(page.locator('main h1').first()).toBeVisible()
-  const closedLeft = task && window >= 1024 ? await cardLeft(page) : 0
+  const closed = task && window >= 1024 ? await cardAt(page) : null
   await openGuide(page, window >= 1024)
 
   expect.soft(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: sideways scroll`).toBe(true)
@@ -83,7 +92,8 @@ async function check(page: Page, path: string, c: Case) {
     return
   }
 
-  expect.soft(await cardLeft(page), `${label}: card moved`).toBe(closedLeft)
+  await expect(page.locator('#guide-composer')).toBeFocused()
+  expect.soft(await cardAt(page), `${label}: card moved`).toEqual(closed)
   expect.soft(Math.round((await guide.boundingBox())!.width), `${label}: column width`).toBe(COLUMN)
   const done = guide.getByRole('button', { name: 'Mark as done' })
   const box = (await done.boundingBox())!
