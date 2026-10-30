@@ -1,4 +1,6 @@
-# Design system: progress ledger
+# SDD ledger — plan: docs/superpowers/plans/2026-10-31-design-system.md
+
+Design system: progress ledger
 
 Spec: docs/superpowers/specs/2026-10-31-design-system-design.md
 Plan: docs/superpowers/plans/2026-10-31-design-system.md
@@ -21,3 +23,17 @@ Board: https://claude.ai/artifact/JDm4bkdqbTXmXjhnxsqjNv
 5. Pressed feedback on all phone controls: **yes** (owner picked recommended).
 
 Spacing role values and renames: no changes requested, so the board values stand.
+
+Task 0: complete (worktree, baseline 416/416)
+Task 1: complete (commit 9de09de, owner decisions above)
+
+Pre-flight: Task 2 produces role classes + aliases consumed by Tasks 3–8; Task 3 `state` consumed by Task 4 Button, Task 4 variants by Tasks 6–7; Task 8 removes aliases after 5–7. No conflicts found.
+
+E2E setup: owner dev servers own 3000/3001, so e2e runs on a ds web 3100 + ds API 3101 (`PORT=3101 CORS_ORIGIN=http://localhost:3100`, env only; AI_MODE=mock) with a scratchpad Playwright config.
+Pre-existing (feat/type-system baseline, not this branch): a11y at 390 fails `/app/roadmap: target-size (.-ml-3)` (roadmap-view "N more" Show button). Fix lands with Task 7 (roadmap-view → Button, tap area). A one-off `/app` guide-ask color-contrast hit in one full run did not reproduce (2 reruns clean).
+
+Task 2: Ruling: outline effects are `shadow-*` roles (`shadow-chosen`, `shadow-error`, `shadow-today`, `shadow-rail`, `shadow-pin`), not `ring-*` — `ring-focus` etc. would collide with Tailwind's ring-colour utilities for the `focus` colour role; focus stays the base `outline` from `--color-focus` — cost if wrong: a rename.
+Task 2: Ruling: spacing role values (board gave none): page-gutter 16/24 (container-page), card-padding 16/20 (Card p-4/p-5), section-gap 24/32 (gap-6/gap-8), stack-gap 12/16 (gap-3/gap-4); desktop from 561 px (narrow breakpoint). Unused until piece 3, which checks them — cost if wrong: four values.
+Task 2: Ruling: elevation merges as on the board: lift→raised, frame-top=raised, bar+pop→floating, pane→overlay, sheet→overlay-up; radius pane 18 + bar 16 → floating 16 (decision 2). Visible: pane radius 18→16, source-preview popover takes the ask-bar shadow — cost if wrong: re-point two aliases.
+Task 2: Ruling: palette lives in a plain `:root` block (not @theme) so no `bg-palette-*` utilities exist; `ink-hover` keeps a palette value until the state layer replaces it (Task 8 removes it); `avatar` kept as its own role (decision 3 deferred).
+Task 2: Ruling: cn registers roles through `extend.theme` (radius, shadow, spacing scales) instead of per-group lists, so `rounded-t-card`, `px-page-gutter` etc. merge too; colour roles need no registration (tested) — cost if wrong: one config line.

@@ -2,30 +2,94 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Precise design tokens (docs/design/r0-boards/ui_parts.py). The only place raw values live (CW01). */
+/* palette */
+/* Raw values, named by hue and step: the only place they live (CW01). Components never use these; they use the roles in @theme.
+   A new look changes this block (docs/superpowers/specs/2026-10-31-design-system-design.md §4). */
+:root {
+  --palette-white: #FFFFFF;
+  --palette-ink-900: #0F2A3A;
+  --palette-ink-700: #24465A;
+  --palette-slate-600: #4B6170;
+  --palette-slate-500: #7A8F99;
+  --palette-slate-400: #93AAB5;
+  --palette-slate-300: #A9BDC7;
+  --palette-slate-250: #C9D3D7;
+  --palette-slate-200: #D5DFE2;
+  --palette-slate-100: #E3E8EA;
+  --palette-slate-50: #F6F8F8;
+  --palette-teal-900: #074B4A;
+  --palette-teal-700: #0A6463;
+  --palette-teal-600: #0E7C7B;
+  --palette-teal-400: #3FC9B7;
+  --palette-teal-300: #7FE0D3;
+  --palette-teal-200: #CFE5E3;
+  --palette-teal-100: #E8F2F1;
+  --palette-teal-50: #F3F9F8;
+  --palette-red-700: #A3292B;
+  --palette-red-200: #F2B8B5;
+  /* aurora hairline (AI-generated elements) */
+  --palette-green-400: #3FC79A;
+  --palette-blue-400: #5AAED6;
+  --palette-violet-400: #8B78F0;
+  /* ink and white at fixed alphas: shadows and state layers */
+  --palette-ink-a04: rgba(15, 42, 58, 0.04);
+  --palette-ink-a06: rgba(15, 42, 58, 0.06);
+  --palette-ink-a08: rgba(15, 42, 58, 0.08);
+  --palette-ink-a18: rgba(15, 42, 58, 0.18);
+  --palette-ink-a22: rgba(15, 42, 58, 0.22);
+  --palette-ink-a25: rgba(15, 42, 58, 0.25);
+  --palette-ink-a28: rgba(15, 42, 58, 0.28);
+  --palette-teal-400-a18: rgba(63, 201, 183, 0.18);
+  --palette-font: var(--font-geist), system-ui, -apple-system, sans-serif;
+}
+/* end palette */
+
+/* Roles: what a value is for (spec §6). Components and pages use these names only. */
 @theme {
-  --color-ink: #0F2A3A;
-  --color-muted: #4B6170;
-  --color-control: #7A8F99;
-  --color-border: #D5DFE2;
-  --color-hairline: #E3E8EA;
-  --color-wash: #F6F8F8;
-  --color-teal: #0E7C7B;
-  --color-teal-text: #0A6463;
-  --color-teal-hover: #074B4A;
-  --color-ink-hover: #24465A;
-  --color-avatar: #E8F2F1;
-  --color-tint: #F3F9F8;
-  --color-tint-border: #CFE5E3;
-  --color-mark: #3FC9B7;
-  --color-white: #FFFFFF;
-  --color-track: #C9D3D7;
-  --color-danger: #A3292B;
-  --color-toast-action: #7FE0D3;
-  /* text on the ink rail */
-  --color-rail-text: #A9BDC7;
-  --color-rail-label: #93AAB5;
-  --color-danger-on-ink: #F2B8B5;
+  --color-fg: var(--palette-ink-900);
+  --color-fg-muted: var(--palette-slate-600);
+  --color-fg-subtle: var(--palette-slate-500);
+  --color-fg-on-action: var(--palette-white);
+  --color-fg-on-inverse: var(--palette-slate-300);
+  --color-fg-on-inverse-muted: var(--palette-slate-400);
+  --color-link: var(--palette-teal-700);
+  --color-link-hover: var(--palette-teal-900);
+  --color-link-on-inverse: var(--palette-teal-300);
+  --color-danger: var(--palette-red-700);
+  --color-danger-on-inverse: var(--palette-red-200);
+  --color-surface: var(--palette-white);
+  --color-surface-sunken: var(--palette-slate-50);
+  --color-surface-selected: var(--palette-teal-50);
+  --color-surface-inverse: var(--palette-ink-900);
+  --color-action: var(--palette-ink-900);
+  --color-accent: var(--palette-teal-600);
+  --color-accent-bright: var(--palette-teal-400);
+  --color-border: var(--palette-slate-200);
+  --color-border-subtle: var(--palette-slate-100);
+  --color-border-selected: var(--palette-teal-200);
+  --color-track: var(--palette-slate-250);
+  --color-focus: var(--palette-teal-600);
+  /* avatar keeps its own role: its redesign runs separately (owner, 2026-10-31) */
+  --color-avatar: var(--palette-teal-100);
+
+  /* Old names: aliases of the roles until every use is sorted (removed in plan Task 8) */
+  --color-ink: var(--color-fg);
+  --color-muted: var(--color-fg-muted);
+  --color-control: var(--color-fg-subtle);
+  --color-hairline: var(--color-border-subtle);
+  --color-wash: var(--color-surface-sunken);
+  --color-teal: var(--color-accent);
+  --color-teal-text: var(--color-link);
+  --color-teal-hover: var(--color-link-hover);
+  --color-ink-hover: var(--palette-ink-700);
+  --color-tint: var(--color-surface-selected);
+  --color-tint-border: var(--color-border-selected);
+  --color-mark: var(--color-accent-bright);
+  --color-white: var(--color-surface);
+  --color-toast-action: var(--color-link-on-inverse);
+  --color-rail-text: var(--color-fg-on-inverse);
+  --color-rail-label: var(--color-fg-on-inverse-muted);
+  --color-danger-on-ink: var(--color-danger-on-inverse);
 
   /* Type roles (owner-approved 2026-10-30, docs/design/type/type-board.html; sources in docs/design/type/standards.md).
      The only place type sizes live. Same sizes at every width. Components use these roles only (type-roles.test.ts).
@@ -62,20 +126,45 @@
 
   --tracking-brand: -0.01em;
 
+  /* Radius: control 8, card 12, floating 16 (ask bar, pane, sheet; owner decision 2, 2026-10-31), full */
   --radius-control: 8px;
-  --radius-surface: 12px;
+  --radius-card: 12px;
+  --radius-floating: 16px;
 
-  --shadow-lift: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
-  /* fixed header and footer (from 1024 px): the Home card's shadow-lift, cast down from the header and up from the footer */
-  --shadow-frame-top: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
-  --shadow-frame-bottom: 0 -1px 2px rgba(15, 42, 58, 0.04), 0 -16px 48px rgba(15, 42, 58, 0.08);
-  /* chosen option row: inset teal hairline beside the teal border (a 2 px edge, not elevation) */
-  --shadow-pin-halo: 0 0 0 6px rgba(15, 42, 58, 0.08);
-  --shadow-field-error: 0 0 0 1px #A3292B;
+  /* Elevation: raised (cards), floating (ask bar, popovers), overlay (pane; -up for the phone sheet), and the fixed frame */
+  --shadow-raised: 0 1px 2px var(--palette-ink-a04), 0 16px 48px var(--palette-ink-a08);
+  --shadow-floating: 0 0 0 1px var(--palette-ink-a08), 0 2px 4px var(--palette-ink-a04), 0 18px 40px -12px var(--palette-ink-a28);
+  --shadow-overlay: 0 0 0 1px var(--palette-ink-a06), 0 2px 4px var(--palette-ink-a04), 0 24px 64px -12px var(--palette-ink-a18);
+  --shadow-overlay-up: 0 -1px 0 var(--palette-ink-a06), 0 -24px 48px -12px var(--palette-ink-a25);
+  /* fixed header and footer (from 1024 px): the raised shadow, cast down from the header and up from the footer */
+  --shadow-frame-top: var(--shadow-raised);
+  --shadow-frame-bottom: 0 -1px 2px var(--palette-ink-a04), 0 -16px 48px var(--palette-ink-a08);
+  /* Outline rings (an edge, not elevation), built from colour roles */
+  --shadow-chosen: inset 0 0 0 1px var(--color-accent);
+  --shadow-error: 0 0 0 1px var(--color-danger);
   /* today in the calendar: a thin grey outline */
-  --shadow-today: inset 0 0 0 1px #D5DFE2;
-  --shadow-rail-ring: 0 0 0 5px rgba(63, 201, 183, 0.18);
-  --shadow-chosen: inset 0 0 0 1px #0E7C7B;
+  --shadow-today: inset 0 0 0 1px var(--color-border);
+  --shadow-rail: 0 0 0 5px var(--palette-teal-400-a18);
+  --shadow-pin: 0 0 0 6px var(--palette-ink-a08);
+
+  /* Layout spacing roles: phone values here, desktop in the :root media query below (piece 3 puts them to use) */
+  --spacing-page-gutter: 16px;
+  --spacing-card-padding: 16px;
+  --spacing-section-gap: 24px;
+  --spacing-stack-gap: 12px;
+
+  /* Old names: aliases (removed in plan Task 8) */
+  --radius-surface: var(--radius-card);
+  --radius-pane: var(--radius-floating);
+  --radius-bar: var(--radius-floating);
+  --shadow-lift: var(--shadow-raised);
+  --shadow-pane: var(--shadow-overlay);
+  --shadow-bar: var(--shadow-floating);
+  --shadow-pop: var(--shadow-floating);
+  --shadow-sheet: var(--shadow-overlay-up);
+  --shadow-field-error: var(--shadow-error);
+  --shadow-rail-ring: var(--shadow-rail);
+  --shadow-pin-halo: var(--shadow-pin);
 
   --container-app: 1248px; /* signed-in shell: 1200 content, edge at 120 px at 1440 */
   --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
@@ -104,14 +193,8 @@
   --breakpoint-split: 861px;
 
   /* Guide (board D, docs/design/guide/direction-d.html; owner-approved values, ledger S2). No new colours. */
-  --radius-pane: 18px; /* pane and composer */
-  --radius-bar: 16px; /* ask bar and crisis card */
   --text-reading: 16px;
   --text-reading--line-height: 1.65;
-  --shadow-pane: 0 0 0 1px rgba(15, 42, 58, 0.06), 0 2px 4px rgba(15, 42, 58, 0.04), 0 24px 64px -12px rgba(15, 42, 58, 0.18);
-  --shadow-bar: 0 0 0 1px rgba(15, 42, 58, 0.08), 0 2px 4px rgba(15, 42, 58, 0.04), 0 18px 40px -12px rgba(15, 42, 58, 0.28); /* ask bar */
-  --shadow-pop: 0 0 0 1px rgba(15, 42, 58, 0.08), 0 16px 40px -8px rgba(15, 42, 58, 0.22); /* source preview */
-  --shadow-sheet: 0 -1px 0 rgba(15, 42, 58, 0.06), 0 -24px 48px -12px rgba(15, 42, 58, 0.25); /* phone sheet, lifts upward */
   --container-ask-bar: 640px; /* Material 3 search bar range 360–720 */
   --container-reading: 720px; /* focused view column */
   --breakpoint-pane: 1024px; /* below: the guide is a sheet */
@@ -127,14 +210,23 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--palette-font);
+}
+
+@media (width >= 561px) {
+  :root {
+    --spacing-page-gutter: 24px;
+    --spacing-card-padding: 20px;
+    --spacing-section-gap: 32px;
+    --spacing-stack-gap: 16px;
+  }
 }
 
 /* Aurora hairline: AI-generated elements only */
 @utility ai {
   padding: 1px;
   border-radius: var(--radius-surface);
-  background: linear-gradient(90deg, #3FC79A, #5AAED6, #8B78F0, #5AAED6, #3FC79A);
+  background: linear-gradient(90deg, var(--palette-green-400), var(--palette-blue-400), var(--palette-violet-400), var(--palette-blue-400), var(--palette-green-400));
 }
 
 @utility ai-streaming {
@@ -209,7 +301,7 @@
     width: 12px;
     height: 12px;
     border-radius: 9999px;
-    background: #FFFFFF;
+    background: var(--color-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -297,7 +389,7 @@
   /* Inside an aurora hairline: the white surface, 1 px inside the 10 px radius */
   .ai > * {
     border-radius: calc(var(--radius-surface) - 1px);
-    background: #FFFFFF;
+    background: var(--color-surface);
   }
 
   /* Loading blocks: invisible for 300 ms so quick loads never flash; pulse only when motion is welcome */
