@@ -5,13 +5,13 @@ import Link from "next/link"
 import { Tabs } from "@base-ui/react/tabs"
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react"
 import { toast } from "sonner"
-import { AskPanel } from "@/components/assistant/ask-panel"
 import { Stamp } from "@/components/route/stamp"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
 import { longDay, shortDate, shortDayNZ, weekdayDay } from "@/lib/nz-date"
 import type { RouteView } from "@/lib/route-view"
+import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { TASK_COPY } from "@/lib/task-copy"
 import { stepParts } from "@/lib/task-steps"
@@ -50,25 +50,21 @@ const phones = (text: string) =>
   )
 
 // The open task (?task=<id>): a page in place of the route (Task and TaskPhone boards). Desktop: the steps read on the
-// left; Status, Ask and Sources stay beside them (one column under 861 px). Phone: one card with tabs and an action bar.
+// left; Status and Sources stay beside them (one column under 861 px, or in a page area under 720 px while the guide is
+// open). Phone: one card with tabs and an action bar whose Ask opens the guide sheet.
 // Both layouts render from the same data; CSS hides one.
 export function TaskSheet({
   taskId,
   route,
   onChanged,
-  askFocus,
 }: {
   taskId: string
   route: RouteView
   onChanged(): void
-  askFocus?: number // changes each time the header's Ask asks for this page's input
 }) {
   const titleId = useId()
   const titleRef = useRef<HTMLHeadingElement>(null)
   const phoneTitleRef = useRef<HTMLHeadingElement>(null)
-  const askRef = useRef<HTMLInputElement>(null)
-  const phoneAskRef = useRef<HTMLInputElement>(null)
-  const [askPress, setAskPress] = useState(0) // each press of the phone Ask button
   const [allSources, setAllSources] = useState(false)
   const [shown, setShown] = useState(taskId)
   const [detail, setDetail] = useState<TaskDetailApiResponse | null>(null)
@@ -92,12 +88,6 @@ export function TaskSheet({
       live = false
     }
   }, [taskId])
-
-  // On a phone the Ask card is hidden until Ask is pressed
-  const askShown = askPress > 0 || !!askFocus
-  useEffect(() => {
-    if (askFocus || askPress) visible(askRef.current, phoneAskRef.current)?.focus()
-  }, [askFocus, askPress])
 
   const tasks = route.legs.flatMap(l => l.tasks)
   const at = tasks.findIndex(t => t.taskId === taskId)
@@ -304,7 +294,7 @@ export function TaskSheet({
           </div>
         </nav>
 
-        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1">
+        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1 @max-guide-task/page:grid-cols-1 guide-open:@min-guide-task/page:grid-cols-task-pane">
           <Card as="div" className="gap-8 px-10 py-9">
             <div className="flex max-w-prose flex-col gap-3">
               <div className="flex items-start gap-4">
@@ -332,8 +322,9 @@ export function TaskSheet({
             </div>
           </Card>
 
-          <aside aria-label="Task actions" className="flex flex-col gap-4">
-            <Card aria-labelledby={`${titleId}-status`}>
+          {/* In a page area under 561 px the status card joins the grid and sticks to its bottom (D14) */}
+          <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
+            <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
               <div className="flex items-baseline justify-between gap-3">
                 <h2 id={`${titleId}-status`} className="text-body font-semibold">
                   {doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"}
@@ -344,9 +335,6 @@ export function TaskSheet({
               {doneControls}
               {task.state !== "blocked" && !doneOn && <p className="text-small text-muted">You can undo this.</p>}
               {actionLink}
-            </Card>
-            <Card as="div">
-              <AskPanel key={taskId} taskId={taskId} topic={task.topic} detail={steps} inputRef={askRef} />
             </Card>
             {steps && sources.length > 0 && (
               <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
@@ -413,11 +401,6 @@ export function TaskSheet({
             )}
           </Tabs.Root>
         </Card>
-        {askShown && (
-          <Card as="div">
-            <AskPanel key={taskId} taskId={taskId} topic={task.topic} detail={steps} inputRef={phoneAskRef} />
-          </Card>
-        )}
         <div
           role="group"
           aria-label="Task actions"
@@ -427,7 +410,7 @@ export function TaskSheet({
             {errorNote}
             {doneControls}
           </div>
-          <Button variant="quiet" onClick={() => setAskPress(n => n + 1)}>
+          <Button variant="quiet" onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: taskId })}>
             Ask
           </Button>
         </div>

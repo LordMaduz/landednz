@@ -121,3 +121,7 @@ export function buildRouteView(roadmap: RoadmapApiResponse, arrivalDate: string,
 // Tasks that wait on taskId, in leg order then route order
 export const unlocksOf = (route: RouteView, taskId: string): RouteTask[] =>
   route.legs.flatMap(l => l.tasks).filter(t => t.blockedBy.includes(taskId))
+
+// taskId → title, for the guide's context chip and focused-view rail
+export const taskTitles = (route: RouteView): Record<string, string> =>
+  Object.fromEntries(route.legs.flatMap(l => l.tasks).map(t => [t.taskId, t.title]))

@@ -1,7 +1,10 @@
 // Typed API client for the LandedNZ Fastify backend.
 // All fetch calls to NEXT_PUBLIC_API_URL live here — flat exported functions, no class.
 
-import type { VisaType, City, FamilySituation, Occupation, ChatEntryPoint, OnboardingPreviewRequest, OnboardingPreviewResponse } from '@landednz/types'
+import type {
+  VisaType, City, FamilySituation, Occupation, OnboardingPreviewRequest, OnboardingPreviewResponse,
+  GuideScreen, GuideSseEvent, GuideConversationPage, GuideMessageDto, GuideOpeningResponse, GuideMemoryDto,
+} from '@landednz/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -243,95 +246,103 @@ export interface UserProfile {
   provider: string
 }
 
-// ─── Chat ─────────────────────────────────────────────────────────────────────
+// ─── Settlement guide ────────────────────────────────────────────────────────
 
-// Mirrors backend CreateSessionResponse from apps/api/src/features/chat/chat.types.ts
-export interface CreateChatSessionResponse {
-  sessionId: string
-  openingMessage: string
-}
+export type GuideRequestError = Error & ({ kind: 'cap'; resetAt: string } | { kind: 'busy' } | { kind: 'failed'; status: number })
 
-export async function createChatSession(
-  entryPoint: ChatEntryPoint,
-  token: string,
-  taskContext?: string,
-): Promise<CreateChatSessionResponse> {
-  const res = await fetch(`${API_URL}/chat/sessions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ entryPoint, taskContext }),
+const guideError = (info: { kind: 'cap'; resetAt: string } | { kind: 'busy' } | { kind: 'failed'; status: number }): GuideRequestError =>
+  Object.assign(new Error(`Guide request ${info.kind}`), info)
+
+async function guideJson<T>(path: string, token: string, init: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    ...init,
+    headers: { ...(init.body ? { 'Content-Type': 'application/json' } : {}), Authorization: `Bearer ${token}` },
   })
-  if (!res.ok) throw Object.assign(new Error('Chat session creation failed'), { status: res.status })
-  return res.json()
+  if (!res.ok) throw guideError({ kind: 'failed', status: res.status })
+  return res.status === 204 ? (undefined as T) : res.json()
 }
 
-export interface ChatStreamError {
-  code?: string
-  message: string
-}
-
-// SSE streaming — must use fetch + ReadableStream, NOT EventSource (no auth header support).
-// Calls onChunk for each text token, onDone when stream ends, onError on failure.
-// A non-OK response reports the API's { error, message } body (e.g. 429 CHAT_DAILY_CAP_REACHED);
-// aborting through `signal` (Stop) ends quietly.
-export async function streamChat(
-  sessionId: string,
-  content: string,
-  token: string,
-  onChunk: (text: string) => void,
-  onDone: () => void,
-  onError: (error: ChatStreamError) => void,
-  signal?: AbortSignal,
-): Promise<void> {
-  let res: Response
-  try {
-    res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ content }),
-      signal,
-    })
-  } catch (error) {
-    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Failed to connect to chat service' })
-    return
-  }
-
-  if (!res.ok || !res.body) {
-    const body = await res.json().catch(() => null) as { error?: string; message?: string } | null
-    onError({ code: body?.error, message: body?.message ?? 'Failed to connect to chat service' })
-    return
-  }
-
-  const reader = res.body.getReader()
+// SSE frames are `event: <name>\ndata: <json>\n\n`; a frame may span chunks
+async function readSse(res: Response, onEvent: (e: GuideSseEvent) => void): Promise<void> {
+  const reader = res.body!.getReader()
   const decoder = new TextDecoder()
   let buffer = ''
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-
-      buffer += decoder.decode(value, { stream: true })
-      const lines = buffer.split('\n')
-      buffer = lines.pop() || ''
-
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue
-        try {
-          const event = JSON.parse(line.slice(6))
-          if (event.type === 'chunk') onChunk(event.text)
-          else if (event.type === 'done') { onDone(); return }
-          else if (event.type === 'error') { onError({ code: event.code, message: event.message }); return }
-        } catch { /* skip malformed SSE lines */ }
-      }
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) return
+    buffer += decoder.decode(value, { stream: true })
+    const frames = buffer.split('\n\n')
+    buffer = frames.pop() ?? ''
+    for (const frame of frames) {
+      const event = frame.match(/^event: (.*)$/m)?.[1]
+      const data = frame.match(/^data: (.*)$/m)?.[1]
+      if (event && data) onEvent({ event, data: JSON.parse(data) } as GuideSseEvent)
     }
-  } catch (error) {
-    if (!signal?.aborted) onError({ message: error instanceof Error ? error.message : 'Stream failed' })
   }
+}
+
+// SSE via fetch + ReadableStream (EventSource cannot send Authorization). Aborting through `signal` ends quietly.
+async function streamGuide(path: string, body: unknown, token: string, onEvent: (e: GuideSseEvent) => void, signal: AbortSignal): Promise<void> {
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      method: 'POST',
+      headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), Authorization: `Bearer ${token}` },
+      body: body ? JSON.stringify(body) : undefined,
+      signal,
+    })
+    if (res.status === 429) {
+      const cap = await res.json().catch(() => null) as { error?: string; resetAt?: string } | null
+      // a per-minute rate limit is also a 429; only the daily cap carries this code
+      if (cap?.error === 'CHAT_DAILY_CAP_REACHED') throw guideError({ kind: 'cap', resetAt: cap.resetAt ?? '' })
+      throw guideError({ kind: 'failed', status: 429 })
+    }
+    if (res.status === 409) throw guideError({ kind: 'busy' })
+    if (!res.ok || !res.body) throw guideError({ kind: 'failed', status: res.status })
+    await readSse(res, onEvent)
+  } catch (error) {
+    if (signal.aborted) return
+    throw error instanceof Error && 'kind' in error ? error : guideError({ kind: 'failed', status: 0 })
+  }
+}
+
+export function askGuide(
+  body: { text: string; screen: GuideScreen },
+  token: string,
+  onEvent: (e: GuideSseEvent) => void,
+  signal: AbortSignal,
+): Promise<void> {
+  return streamGuide('/guide/messages', body, token, onEvent, signal)
+}
+
+export function retryGuide(assistantId: string, token: string, onEvent: (e: GuideSseEvent) => void, signal: AbortSignal): Promise<void> {
+  return streamGuide(`/guide/messages/${assistantId}/retry`, null, token, onEvent, signal)
+}
+
+export function cancelGuide(assistantId: string, token: string): Promise<void> {
+  return guideJson(`/guide/messages/${assistantId}/cancel`, token, { method: 'POST' })
+}
+
+export function getGuideConversation(token: string, before?: string): Promise<GuideConversationPage> {
+  return guideJson(`/guide/conversation${before ? `?before=${encodeURIComponent(before)}` : ''}`, token)
+}
+
+export function getGuideTaskMessages(taskKey: string, token: string): Promise<GuideMessageDto[]> {
+  return guideJson(`/guide/conversation/task/${encodeURIComponent(taskKey)}`, token)
+}
+
+export function getGuideOpening(screen: GuideScreen, token: string): Promise<GuideOpeningResponse> {
+  const q = new URLSearchParams({ screen: screen.kind, ...(screen.taskKey ? { taskKey: screen.taskKey } : {}) })
+  return guideJson(`/guide/opening?${q}`, token)
+}
+
+export function listMemories(token: string): Promise<GuideMemoryDto[]> {
+  return guideJson('/guide/memories', token)
+}
+
+export function updateMemory(id: string, text: string, token: string): Promise<GuideMemoryDto> {
+  return guideJson(`/guide/memories/${id}`, token, { method: 'PATCH', body: JSON.stringify({ text }) })
+}
+
+export function deleteMemory(id: string, token: string): Promise<void> {
+  return guideJson(`/guide/memories/${id}`, token, { method: 'DELETE' })
 }

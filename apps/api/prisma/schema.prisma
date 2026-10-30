@@ -13,7 +13,6 @@ model User {
   name           String?
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
-  chatSessions   ChatSession[]
   subscription   Subscription?
   profile        UserProfile?
   roadmapEntries UserRoadmapEntry[]
@@ -75,31 +74,6 @@ model KnowledgeBaseChunk {
   // ivfflat (vector_cosine_ops) is created by scripts/create-vector-index.ts; declared so migrate diff keeps it
   @@index([embedding], map: "kb_chunk_embedding_ivfflat")
   @@index([searchText], map: "kb_chunk_search_text_gin", type: Gin)
-}
-
-model ChatSession {
-  id          String         @id @default(uuid())
-  userId      String
-  entryPoint  ChatEntryPoint
-  taskContext String?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  messages    ChatMessage[]
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model ChatMessage {
-  id              String      @id @default(uuid())
-  sessionId       String
-  role            MessageRole
-  content         String
-  retrievedChunks String?
-  guardrailFlags  String?
-  level2Flags     String?
-  contentVersion  String?
-  usedItemIds     String? // JSON array of content item ids
-  createdAt       DateTime    @default(now())
-  session         ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
 // Each content bundle the API has served
@@ -172,18 +146,6 @@ enum ChunkType {
   TASK_CONTENT
   SETTLEMENT_CONTEXT
   POLICY_REFERENCE
-}
-
-enum ChatEntryPoint {
-  TASK_CARD
-  ROADMAP
-  EMAIL_DEEPLINK
-  NAVIGATION
-}
-
-enum MessageRole {
-  USER
-  ASSISTANT
 }
 
 enum SubscriptionPlan {

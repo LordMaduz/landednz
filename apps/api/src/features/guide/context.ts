@@ -37,10 +37,10 @@ export async function loadGuideContext(userId: string, screen: GuideScreen): Pro
     daysSinceArrival: Math.floor((Date.now() - profile.arrivalDate.getTime()) / MS_PER_DAY),
     today: new Date().toLocaleDateString('en-NZ', { timeZone: 'Pacific/Auckland', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
     doneTasks: live.filter(({ e }) => e.status === 'COMPLETE').map(({ r }) => r),
-    // Array sort is stable, so score order from the query holds within each blocked group
+    // Home's order (web route-view.ts: phase, then task id), unblocked first, so "Next up" names the page's next task
     nextTasks: live
       .filter(({ e }) => e.status !== 'COMPLETE' && e.status !== 'SKIPPED')
-      .sort((a, b) => Number(a.e.isBlocked) - Number(b.e.isBlocked))
+      .sort((a, b) => Number(a.e.isBlocked) - Number(b.e.isBlocked) || task(a.e.taskId)!.phase - task(b.e.taskId)!.phase || a.e.taskId.localeCompare(b.e.taskId))
       .slice(0, 5)
       .map(({ r }) => r),
     totalTasks: live.length,

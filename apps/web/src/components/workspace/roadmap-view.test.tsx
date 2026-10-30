@@ -37,6 +37,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 const { RoadmapView, RoadmapScreen } = await import('./roadmap-view')
+const { useGuideStore } = await import('@/lib/stores/guideStore')
 
 function priyaWithWhy() {
   const r = priya()
@@ -93,14 +94,17 @@ describe('RoadmapView', () => {
     expect(rows[4]).toMatch(/Later.*1 task/)
   })
 
-  it('Today: why, unlocks with stages, ink Start task, Ask keeps ask=1', () => {
+  it('Today: why, unlocks with stages, ink Start task, Ask about this opens the guide on the task', () => {
+    const openPane = vi.fn()
+    useGuideStore.setState({ openPane })
     renderBoard()
     const today = within(itinerary()).getByRole('heading', { level: 2, name: 'Apply for your IRD number' })
     expect(today).toBeInTheDocument()
     expect(itinerary().textContent).toContain('Unlocks 3 tasks:')
     expect(itinerary().textContent).toContain('Give your employer a tax code (IR330) (Week 1)')
     expect(screen.getByRole('link', { name: /Start task/ })).toHaveAttribute('href', '/app/roadmap?task=T08')
-    expect(screen.getByRole('link', { name: 'Ask about this' })).toHaveAttribute('href', '/app/roadmap?task=T08&ask=1')
+    fireEvent.click(screen.getByRole('button', { name: 'Ask about this' }))
+    expect(openPane).toHaveBeenCalledWith({ kind: 'task', taskKey: 'T08' })
     expect(document.querySelectorAll('.bg-ink')).toHaveLength(1)
   })
 
@@ -146,7 +150,7 @@ describe('RoadmapView', () => {
     params = new URLSearchParams('done=1')
     renderBoard()
     expect(within(itinerary()).getByRole('button', { name: 'Hide done tasks' })).toHaveAttribute('aria-expanded', 'true')
-    expect(within(itinerary()).getAllByRole('link', { name: /./ }).filter(a => a.getAttribute('href')?.startsWith('/app/roadmap?task='))).toHaveLength(2 + 9 + 3)
+    expect(within(itinerary()).getAllByRole('link', { name: /./ }).filter(a => a.getAttribute('href')?.startsWith('/app/roadmap?task='))).toHaveLength(13) // Ask about this is a button now, no longer a ?task= link
   })
 
   it('first use: the hint', () => {
@@ -162,13 +166,13 @@ describe('RoadmapScreen', () => {
     expect(getRoadmap).toHaveBeenCalledWith('tok')
   })
 
-  it('API down: alert, Try again refetches, Ask disabled, no route', async () => {
+  it('API down: alert, Try again refetches, no Ask, no route', async () => {
     getRoadmap.mockRejectedValueOnce(Object.assign(new Error('down'), { status: 503 }))
     render(<RoadmapScreen user={user} />)
     const alert = await screen.findByRole('alert')
     expect(within(alert).getByRole('heading', { level: 1 })).toHaveTextContent("Can't reach LandedNZ")
     expect(alert).toHaveTextContent('Your progress is saved. Check your connection, then try again.')
-    expect(screen.getByRole('button', { name: /^Ask/ })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: /^Ask/ })).toBeNull()
     expect(screen.queryByRole('region', { name: 'Itinerary' })).toBeNull()
     fireEvent.click(within(alert).getByRole('button', { name: 'Try again' }))
     expect(await screen.findByRole('region', { name: 'Itinerary' })).toBeInTheDocument()
@@ -214,31 +218,15 @@ describe('RoadmapScreen', () => {
     expect(screen.getByRole('article', { name: 'Apply for your IRD number' })).toBeInTheDocument()
   })
 
-  it('header Ask with no task open: opens the current task', async () => {
-    render(<RoadmapScreen user={user} />)
+  it('the ask bar replaces the header Ask: about the roadmap, or the open task', async () => {
+    const { unmount } = render(<RoadmapScreen user={user} />)
     await screen.findByRole('region', { name: 'Itinerary' })
-    fireEvent.click(screen.getByRole('button', { name: /^Ask/ }))
-    expect(push).toHaveBeenCalledWith('/app/roadmap?task=T08')
-  })
-
-  it('header Ask with a task open: focuses the ask input', async () => {
+    expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()
+    expect(await screen.findByRole('button', { name: /^Ask about your roadmap/ })).toHaveAttribute('aria-expanded', 'false')
+    unmount()
     params = new URLSearchParams('task=T08')
     render(<RoadmapScreen user={user} />)
-    const box = await screen.findByRole('textbox', { name: 'Ask about your IRD number' })
-    fireEvent.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Ask/ }))
-    expect(box).toHaveFocus()
-  })
-
-  it('?ask=1 with no task (Ask from Settings): opens the current task', async () => {
-    params = new URLSearchParams('ask=1')
-    render(<RoadmapScreen user={user} />)
-    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/app/roadmap?task=T08&ask=1', { scroll: false }))
-  })
-
-  it('?task=T08&ask=1 (Ask from Home): the ask input is focused', async () => {
-    params = new URLSearchParams('task=T08&ask=1')
-    render(<RoadmapScreen user={user} />)
-    const box = (await screen.findAllByRole('textbox', { name: 'Ask about your IRD number' }))[0]
-    await vi.waitFor(() => expect(box).toHaveFocus())
+    expect(await screen.findByRole('button', { name: /^Ask about your IRD number/ })).toBeInTheDocument()
+    expect(screen.queryByRole('textbox', { name: /^Ask about/ })).toBeNull()
   })
 })

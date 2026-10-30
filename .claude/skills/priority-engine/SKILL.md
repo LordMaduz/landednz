@@ -143,7 +143,7 @@ All three fields must pass — it's AND logic, not OR.
 // T09 final score = basePriority + 10 + 28 - 50 = negative or very low
 ```
 
-Run: `npm test -- golden-examples/priority-scoring.ts`
+Run: `npm test -w @landednz/api -- src/core/priority/scoring.test.ts` (the `Golden examples` block)
 These must pass alongside unit tests. A passing test suite with failing golden examples = wrong product.
 
 ---

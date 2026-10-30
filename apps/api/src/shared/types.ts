@@ -8,7 +8,6 @@ export type {
   Occupation,
   TaskStatus,
   DependencyType,
-  ChatEntryPoint,
   ApiError,
   AuthVerifyResponse,
 } from '@landednz/types'

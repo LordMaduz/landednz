@@ -6,7 +6,6 @@ const MOCK_ENV = {
   SUPABASE_URL: 'http://127.0.0.1:54321',
   SUPABASE_SECRET_KEY: 'sb_secret_test',
   AI_MODE: 'mock',
-  CHAT_DAILY_CAP: '50',
 };
 
 const LIVE_ENV = {
@@ -27,14 +26,6 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...MOCK_ENV, AI_MODE: 'Mock' })).toThrow('AI_MODE must be live or mock');
   });
 
-  test('config throws for CHAT_DAILY_CAP that is not a positive integer', () => {
-    for (const value of ['0', '-3', '1.5', 'fifty']) {
-      expect(() => loadConfig({ ...MOCK_ENV, CHAT_DAILY_CAP: value })).toThrow(
-        'CHAT_DAILY_CAP must be a positive integer',
-      );
-    }
-  });
-
   test('guide settings default and validate', () => {
     const c = loadConfig(MOCK_ENV);
     expect(c.guideDailyCap).toBe(20);
@@ -48,11 +39,6 @@ describe('loadConfig', () => {
     );
   });
 
-  test('config throws "Missing required environment variable: CHAT_DAILY_CAP" when unset', () => {
-    const { CHAT_DAILY_CAP: _unset, ...env } = MOCK_ENV;
-    expect(() => loadConfig(env)).toThrow('Missing required environment variable: CHAT_DAILY_CAP');
-  });
-
   test('config throws "Missing required environment variable: SUPABASE_SECRET_KEY" when unset', () => {
     const { SUPABASE_SECRET_KEY: _unset, ...env } = MOCK_ENV;
     expect(() => loadConfig(env)).toThrow('Missing required environment variable: SUPABASE_SECRET_KEY');
@@ -61,7 +47,6 @@ describe('loadConfig', () => {
   test('mock mode does not require AI keys', () => {
     const config = loadConfig(MOCK_ENV);
     expect(config.aiMode).toBe('mock');
-    expect(config.chatDailyCap).toBe(50);
   });
 
   test('per-IP rate limit is 120 a minute unless RATE_LIMIT_PER_MINUTE says otherwise', () => {

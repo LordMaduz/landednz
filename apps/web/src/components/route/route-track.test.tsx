@@ -82,3 +82,14 @@ describe('RouteTrack', () => {
     expect(row.querySelector('a')).toBeNull()
   })
 })
+
+describe('stage labels', () => {
+  it('can wrap between parts, so a narrow stage never runs into the next one', () => {
+    const { container } = draw('compact')
+    const state = container.querySelector('.track-stage .text-muted')!
+    const nowrap = [...state.querySelectorAll('.whitespace-nowrap')]
+    expect(nowrap.length).toBeGreaterThan(1)
+    // the space between parts sits outside the no-wrap spans, where the line may break
+    for (const span of nowrap) expect(span.textContent).not.toMatch(/\s$/)
+  })
+})

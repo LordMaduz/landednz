@@ -6,9 +6,9 @@ import { config } from '../../shared/config.js';
 import { logger } from '../../shared/logger.js';
 import { AppError, AIFailureError } from '../../shared/errors.js';
 import { noUsage, streamGuideAnswer, type AnswerResult, type TokenUsage } from '../../shared/ai/claude.client.js';
-import { GUIDE_CRISIS_TEXT, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
+import { GUIDE_CRISIS_TEXT, GUIDE_DISTRESS_CHECKIN, GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY, GUIDE_NOTHING_FOUND_REPLY, GUIDE_OUT_OF_SCOPE_REPLY, GUIDE_REFUSAL_REPLY } from '../../core/prompts/registry.js';
 import { loadGuideContext } from './context.js';
-import { understand, type HistoryTurn } from './understand.js';
+import { hasCrisisSignal, understand, type HistoryTurn } from './understand.js';
 import { fusePassages, retrieve } from './retrieve.js';
 import { liveSources } from './live.js';
 import { createSentenceGate, type SentenceGate } from './sentences.js';
@@ -27,8 +27,8 @@ const RATES = {
   searchCents: 1,
 } as const;
 const HISTORY_TURNS = 6;
-// Well past a normal answer; stops a stalled stream outliving the sweeper's streaming threshold
-const ANSWER_TIMEOUT_MS = 90_000;
+// Whole-turn limit, under the sweeper's 2-minute streaming threshold; mutable so a test can shorten it
+export const TURN_LIMITS = { turnMs: 100_000 };
 
 // shortcut: in-memory abort map assumes one API instance, move to a DB flag polled by the stream when scaling out
 const running = new Map<string, AbortController>();
@@ -72,6 +72,7 @@ export async function runTurn(args: {
 }): Promise<void> {
   const { userId, question, ids } = args;
   const t0 = Date.now();
+  const deadline = AbortSignal.timeout(TURN_LIMITS.turnMs);
   const ms = { understand: 0, retrieve: 0, live: 0, firstText: 0, total: 0 };
   const steps: string[] = [];
   const sent: ReplyPart[] = [];
@@ -80,6 +81,7 @@ export async function runTurn(args: {
   // released sentences with the text they cited; stored for the accuracy judge (Task 15)
   let claims: { text: string; cited: string[] }[] = [];
   let finished = false;
+  let lateDistress = false;
 
   const sse = openSse(args.reply);
   const ctl = new AbortController();
@@ -92,13 +94,16 @@ export async function runTurn(args: {
     sent.push(part);
     sse.send({ event: 'part', data: part });
   };
-  const say = (text: string): void => emit({ type: 'text', text, citations: [] });
+  // The fixed crisis text is tagged so the UI draws the crisis card without reading text (spec §4.1)
+  const say = (text: string): void =>
+    emit({ type: 'text', text, citations: [], ...(text === GUIDE_CRISIS_TEXT && { block: 'crisis' as const }) });
   let gate: SentenceGate | null = null;
   const answerTextSent = () => (gate?.sentTextCount() ?? 0) > 0;
 
   const finish = async (status: Exclude<GuideMessageStatus, 'streaming'>, textSent: boolean): Promise<void> => {
     finished = true;
-    running.delete(ids.assistantMessageId);
+    // A retry may have replaced this turn's entry; only remove our own
+    if (running.get(ids.assistantMessageId) === ctl) running.delete(ids.assistantMessageId);
     ms.total = Date.now() - t0;
     const meta = {
       ms,
@@ -115,17 +120,32 @@ export async function runTurn(args: {
   };
   // A question counts once answer or fixed-reply text was sent; crisis text alone never costs one
   const replyTextSent = () => sent.some((p) => p.type === 'text' && p.text !== GUIDE_CRISIS_TEXT);
+  const crisisSent = () => sent.some((p) => p.type === 'text' && p.text === GUIDE_CRISIS_TEXT);
+  // A late Haiku distress (spec §6.4): full crisis text before any answer text, the 1737 check-in after it
+  const sayLateDistress = (): void => {
+    if (lateDistress && !crisisSent()) say(answerTextSent() ? GUIDE_DISTRESS_CHECKIN : GUIDE_CRISIS_TEXT);
+  };
   const aborted = () => (ctl.signal.aborted ? (ctl.signal.reason as AbortStatus) : null);
 
   sse.send({ event: 'start', data: ids });
   try {
     emit({ type: 'notice', kind: 'checking_guide' });
+    // C08: the keyword check needs no model, so its crisis text goes out before anything can fail
+    if (hasCrisisSignal(question)) say(GUIDE_CRISIS_TEXT);
     const [ctx, history] = await Promise.all([loadGuideContext(userId, args.screen), loadHistory(ids.userMessageId)]);
     const retrieveOpts = { profile: ctx.profile, taskKey: ctx.currentTask?.taskKey ?? null };
 
     const timed = async <T>(key: 'understand' | 'retrieve' | 'live', p: Promise<T>): Promise<T> => {
       const start = Date.now();
-      const out = await p;
+      let onDeadline = () => {};
+      const out = await Promise.race([
+        p,
+        new Promise<never>((_, reject) => {
+          onDeadline = () => reject(new Error('turn deadline'));
+          if (deadline.aborted) onDeadline();
+          else deadline.addEventListener('abort', onDeadline, { once: true });
+        }),
+      ]).finally(() => deadline.removeEventListener('abort', onDeadline));
       ms[key] += Date.now() - start;
       steps.push(key);
       return out;
@@ -135,6 +155,10 @@ export async function runTurn(args: {
       timed('retrieve', retrieve(question, retrieveOpts)),
     ]);
     spend.understand = understanding.usage;
+    // Haiku timed out but keeps running: its distress can still arrive (spec §6.4)
+    understanding.lateDistress?.then((d) => {
+      lateDistress = d;
+    });
     let found = first;
     if (understanding.searchQuery !== question) {
       const again = await timed('retrieve', retrieve(understanding.searchQuery, retrieveOpts));
@@ -143,7 +167,7 @@ export async function runTurn(args: {
     if (aborted()) return await finish(aborted()!, false);
 
     // C08: crisis text before any settlement information
-    if (understanding.distress) say(GUIDE_CRISIS_TEXT);
+    if (understanding.distress && !crisisSent()) say(GUIDE_CRISIS_TEXT);
     const skipMemory = args.isRetry || understanding.scope === 'out' || understanding.distress;
     const rememberParts = async (): Promise<ReplyPart[]> => {
       if (!skipMemory) steps.push('remember');
@@ -154,9 +178,9 @@ export async function runTurn(args: {
       });
     };
 
-    // Distress goes to the answer, which acknowledges feelings first (spec §6.4); a bare redirect reads as a brush-off
-    if (understanding.scope === 'out' && !understanding.distress) {
-      say(understanding.redirectAgency ? GUIDE_OUT_OF_SCOPE_REPLY(understanding.redirectAgency) : GUIDE_REFUSAL_REPLY);
+    if (understanding.scope === 'out') {
+      if (understanding.distress) say(GUIDE_DISTRESS_OUT_OF_SCOPE_REPLY(understanding.redirectAgency));
+      else say(understanding.redirectAgency ? GUIDE_OUT_OF_SCOPE_REPLY(understanding.redirectAgency) : GUIDE_REFUSAL_REPLY);
       return await finish('complete', true);
     }
 
@@ -171,6 +195,7 @@ export async function runTurn(args: {
     }
     if (aborted()) return await finish(aborted()!, replyTextSent());
 
+    sayLateDistress();
     if (passages.length === 0) {
       logger.info({ searchQuery: understanding.searchQuery }, 'guide knowledge gap');
       say(GUIDE_NOTHING_FOUND_REPLY(understanding.redirectAgency));
@@ -183,7 +208,7 @@ export async function runTurn(args: {
     steps.push('answer');
     let result: AnswerResult;
     try {
-      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), AbortSignal.any([ctl.signal, AbortSignal.timeout(ANSWER_TIMEOUT_MS)]));
+      result = await streamGuideAnswer(buildAnswerRequest(ctx, history, passages, question), (e) => g.push(e), AbortSignal.any([ctl.signal, deadline]));
     } catch (error) {
       if (!(error instanceof AIFailureError)) throw error;
       logger.error({ err: error, assistantMessageId: ids.assistantMessageId }, 'guide answer failed');
@@ -202,6 +227,7 @@ export async function runTurn(args: {
       logger.warn({ assistantMessageId: ids.assistantMessageId }, 'guide answer refused');
       say(GUIDE_REFUSAL_REPLY);
     }
+    sayLateDistress();
     if (aborted()) return await finish(aborted()!, replyTextSent());
 
     steps.push('verify');
@@ -220,6 +246,7 @@ export async function runTurn(args: {
 
   // Before any answer text: error + Retry, question stops counting. After: keep the text, mark interrupted.
   async function failed(): Promise<void> {
+    sayLateDistress();
     if (answerTextSent()) {
       emit({ type: 'notice', kind: 'interrupted' });
       return finish('interrupted', true);

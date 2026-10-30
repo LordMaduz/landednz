@@ -25,18 +25,5 @@
       "Bash(npx prisma migrate reset*)",
       "Bash(curl*)"
     ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"const f = process.env.CLAUDE_TOOL_INPUT_FILE_PATH || ''; if(f.includes('core/priority/scoring') || f.includes('core/priority/filter') || f.includes('core/dependencies/resolver')) { console.log('⚡ GOLDEN EXAMPLES: Running after scoring/resolver change'); require('child_process').execSync('npm test -- golden-examples/priority-scoring.ts', {stdio: 'inherit', cwd: 'apps/api'}); }\""
-          }
-        ]
-      }
-    ]
   }
 }

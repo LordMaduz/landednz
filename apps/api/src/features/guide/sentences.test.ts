@@ -28,6 +28,31 @@ const t = (text: string): AnswerEvent => ({ type: 'text', text });
 const texts = (parts: ReplyPart[]) => parts.filter((p) => p.type === 'text').map((p) => (p as { text: string }).text);
 
 describe('sentence gate', () => {
+  const textParts = (parts: ReplyPart[]) => parts.filter((p) => p.type === 'text');
+
+  it('marks numbered lines as steps', () => {
+    const { parts } = run([t("Yes.\n1. Register for myIR. You don't need a number.\n2. Apply as a new arrival.\n")]);
+    expect(textParts(parts)).toEqual([
+      { type: 'text', text: 'Yes.', citations: [] },
+      { type: 'text', text: 'Register for myIR.', citations: [], block: 'step', step: 1 },
+      { type: 'text', text: "You don't need a number.", citations: [], block: 'step', step: 1 },
+      { type: 'text', text: 'Apply as a new arrival.', citations: [], block: 'step', step: 2 },
+    ]);
+  });
+
+  it('turns the limits heading into a block', () => {
+    const { parts } = run([t("**What I can’t tell you**\nHow long it takes. Inland Revenue can, on 0800 227 774.\n")]);
+    expect(textParts(parts)).toEqual([
+      { type: 'text', text: 'How long it takes.', citations: [], block: 'limits' },
+      { type: 'text', text: 'Inland Revenue can, on 0800 227 774.', citations: [], block: 'limits' },
+    ]);
+  });
+
+  it('limits mode ends with the block', () => {
+    const { parts } = run([t("What I can't tell you:\nYour own timing.\n"), { type: 'block_end' }, t('Next part. ')]);
+    expect(textParts(parts).at(-1)).toEqual({ type: 'text', text: 'Next part.', citations: [] });
+  });
+
   it('drops an unfinished tail', () => {
     expect(texts(run([t('Hello there. How are')], 'drop').parts)).toEqual(['Hello there.']);
   });
@@ -50,7 +75,7 @@ describe('sentence gate', () => {
   });
 
   it('splits after a bold list heading that ends ".**"', () => {
-    expect(texts(run([t('1. **Book a test.** Allow plenty of time. ')]).parts)).toEqual(['1. **Book a test.**', 'Allow plenty of time.']);
+    expect(texts(run([t('1. **Book a test.** Allow plenty of time. ')]).parts)).toEqual(['Book a test.', 'Allow plenty of time.']);
   });
 
   it('does not split after abbreviations', () => {
@@ -58,8 +83,8 @@ describe('sentence gate', () => {
   });
 
   it('splits list lines and holds an unfinished last line', () => {
-    expect(texts(run([t('1. Apply online\n2. Wait')]).parts)).toEqual(['1. Apply online']);
-    expect(texts(run([t('1. Apply online\n2. Wait.')]).parts)).toEqual(['1. Apply online', '2. Wait.']);
+    expect(texts(run([t('1. Apply online\n2. Wait')]).parts)).toEqual(['Apply online']);
+    expect(texts(run([t('1. Apply online\n2. Wait.')]).parts)).toEqual(['Apply online', 'Wait.']);
   });
 
   it('emits a source before the cited sentence, once per passage', () => {
@@ -132,7 +157,7 @@ describe('sentence gate', () => {
   });
 
   it('still holds a bare list marker at end()', () => {
-    expect(texts(run([t('1. Apply online\n2.')]).parts)).toEqual(['1. Apply online']);
+    expect(texts(run([t('1. Apply online\n2.')]).parts)).toEqual(['Apply online']);
   });
 
   it('keeps pending citations across a whitespace-only segment', () => {

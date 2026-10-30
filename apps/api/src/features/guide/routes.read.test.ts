@@ -1,4 +1,5 @@
 // Guide read routes: history paging, task view, opening, memories. Real Supabase users, real DB, AI_MODE=mock.
+import { config } from '../../shared/config.js';
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import type { GuideConversationPage, GuideMemoryDto, GuideMessageDto, GuideOpeningResponse } from '@landednz/types';
@@ -127,6 +128,13 @@ describe('GET /guide/opening', () => {
 
   test('bad screen → 400', async () => {
     expect((await get('/guide/opening?screen=chat')).statusCode).toBe(400);
+  });
+
+  test("leftToday counts today's counting questions; dailyCap from config", async () => {
+    expect((await get('/guide/opening?screen=home')).json<GuideOpeningResponse>()).toMatchObject({ leftToday: config.guideDailyCap, dailyCap: config.guideDailyCap });
+    await seedTurns(3, null, Date.now() - 10_000);
+    await seedTurns(2, null, Date.UTC(2026, 0, 1)); // an old day: not counted
+    expect((await get('/guide/opening?screen=home')).json<GuideOpeningResponse>().leftToday).toBe(config.guideDailyCap - 3);
   });
 });
 

@@ -2,6 +2,7 @@
 // Accuracy set for the settlement guide (spec §9.3): asks every question in accuracy/guide-questions.yaml
 // through POST /guide/messages, scores the answers with a Haiku judge and prints the release bar.
 // Without BASE_URL it starts a local live API with --thinking / --floor; with BASE_URL (staging) it uses that API.
+// --only=id,id and --category=name run part of the set.
 // --probe-fetch instead measures how often each allowlisted host blocks a plain fetch of the bundle's source pages.
 
 import { spawn, type ChildProcess } from 'node:child_process';
@@ -35,6 +36,7 @@ export type AccuracyScore = {
   declineOk: boolean;
   inventedProfileFact: boolean;
   crisisOk: boolean;
+  falseAlarm: boolean; // crisis text on a question that expects none
 };
 
 const DECLINE = /couldn't find this in checked sources|outside what I can help with|can't help with that one|don't have (that|this|information)|I can't (advise|recommend|give advice)/i;
@@ -65,9 +67,11 @@ export async function scoreAnswer(
     grounded: cited.length ? verdicts.filter(Boolean).length / cited.length : 1,
     judged: cited.length,
     unsupported: cited.flatMap((c, i) => (verdicts[i] ? [] : [{ claim: c.text, cited: c.cited.join('\n') }])),
-    declineOk: declined === q.expect.decline,
+    // distress: answering and the warm out-of-scope redirect are both right (spec §6.4)
+    declineOk: q.expect.distress || declined === q.expect.decline,
     inventedProfileFact: inventsProfileFact(q, run.text),
     crisisOk: !q.expect.distress || run.text.includes(GUIDE_CRISIS_TEXT),
+    falseAlarm: !q.expect.distress && run.text.includes(GUIDE_CRISIS_TEXT),
   };
 }
 
@@ -204,6 +208,7 @@ function report(outcomes: Outcome[]): boolean {
       !s.declineOk && 'decline',
       s.inventedProfileFact && 'invented',
       !s.crisisOk && 'crisis',
+      s.falseAlarm && 'false alarm',
       o.status !== 'complete' && o.status,
     ].filter(Boolean);
     const steps = Object.entries(o.steps).map(([k, v]) => `${k} ${v}`).join(' ');
@@ -231,6 +236,11 @@ function report(outcomes: Outcome[]): boolean {
   const declinesOk = pct(outcomes.filter((o) => o.q.expect.decline).map((o) => o.score.declineOk));
   const answered = outcomes.filter((o) => !o.q.expect.decline && !['out_of_scope', 'distress'].includes(o.q.category));
   const live = (o: Outcome) => o.q.category === 'live';
+  const distressed = outcomes.filter((o) => o.q.expect.distress);
+  const missed = distressed.filter((o) => !o.score.crisisOk).map((o) => o.q.id);
+  const alarms = outcomes.filter((o) => o.score.falseAlarm).map((o) => o.q.id);
+  console.log(`  info  distress catches ${distressed.length - missed.length}/${distressed.length}${missed.length ? ` (missed: ${missed.join(', ')})` : ''}`);
+  console.log(`  info  false alarms ${alarms.length}${alarms.length ? ` (${alarms.join(', ')})` : ''}`);
   console.log(`  info  all expected declines (incl. uncovered) ${(declinesOk * 100).toFixed(1)}%`);
   console.log(`  info  p75 first text / total, guide:    ${p75(answered.filter((o) => !live(o)).flatMap((o) => (o.firstText === null ? [] : [o.firstText])))} / ${p75(answered.filter((o) => !live(o)).map((o) => o.total))} ms`);
   console.log(`  info  p75 first text / total, official: ${p75(answered.filter(live).flatMap((o) => (o.firstText === null ? [] : [o.firstText])))} / ${p75(answered.filter(live).map((o) => o.total))} ms`);
@@ -268,6 +278,7 @@ async function main(): Promise<void> {
   if (base && (arg('thinking') || arg('floor'))) throw new Error('--thinking/--floor only apply to the local API; set GUIDE_* on the staging service instead');
   const questions = parse(readFileSync(resolve(API_ROOT, 'accuracy/guide-questions.yaml'), 'utf8')) as AccuracyQuestion[];
   const only = arg('only')?.split(',');
+  const category = arg('category');
   const { structuredHaiku } = await import('../src/shared/ai/claude.client.js');
   // reason before the verdict: the judge decides after explaining, and misses print why
   const verdict = z.object({ reason: z.string(), supported: z.boolean() });
@@ -282,7 +293,7 @@ async function main(): Promise<void> {
   const api = base ? null : await startLocalApi();
   try {
     const outcomes: Outcome[] = [];
-    for (const q of questions.filter((x) => !only || only.includes(x.id))) {
+    for (const q of questions.filter((x) => (!only || only.includes(x.id)) && (!category || x.category === category))) {
       try {
         outcomes.push(await runQuestion(base ?? 'http://localhost:3001', q, judge));
       } catch (err) {

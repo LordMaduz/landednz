@@ -40,11 +40,13 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await source.click()
   await (await popup).close()
 
-  const ask = page.getByRole('textbox', { name: /^Ask about / })
+  // The ask bar opens the guide beside the task; the answer names where it was checked
+  await page.getByRole('button', { name: /^Ask about your IRD number/ }).click()
+  const guide = page.getByRole('complementary', { name: 'Guide' })
+  const ask = guide.getByRole('textbox', { name: 'Question' })
   await ask.fill('What documents do I need?')
   await ask.press('Enter')
-  // A live reply cites domains ("Checked ...") instead of the knowledge base line
-  await expect(page.getByText(/^(Answered from the LandedNZ knowledge base|Checked )/)).toBeVisible()
+  await expect(guide.getByText(/^(LandedNZ's checked guide|Official sites, checked today)$/)).toBeVisible()
 
   const today = new Intl.DateTimeFormat('en-NZ', { day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' }).format(new Date())
   await page.getByRole('button', { name: 'Mark as done' }).click()

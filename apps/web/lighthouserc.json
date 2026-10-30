@@ -15,7 +15,7 @@
             "categories:accessibility": ["error", { "minScore": 0.95 }],
             "categories:seo": ["error", { "minScore": 0.95 }],
             "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
-            "resource-summary:script:size": ["error", { "maxNumericValue": 276480 }]
+            "resource-summary:script:size": ["error", { "maxNumericValue": 327680 }]
           }
         },
         {

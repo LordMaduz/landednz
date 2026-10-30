@@ -6,7 +6,7 @@ Current work: R0 rebuild — spec `docs/superpowers/specs/2026-10-24-r0-foundati
 ## Stack
 
 - Node 24 everywhere (`.nvmrc`), npm workspaces, TypeScript 7.
-- API: Fastify 5, Prisma 7 (`prisma-client` generator + `@prisma/adapter-pg`, client generated into `apps/api/src/generated/prisma`, gitignored), Postgres + pgvector, Anthropic SDK (chat), OpenAI `text-embedding-3-small` 1536-d (RAG), Vitest 5.
+- API: Fastify 5, Prisma 7 (`prisma-client` generator + `@prisma/adapter-pg`, client generated into `apps/api/src/generated/prisma`, gitignored), Postgres + pgvector, Anthropic SDK (settlement guide), OpenAI `text-embedding-3-small` 1536-d (RAG), Vitest 5.
 - Web: Next 16.4 App Router (`src/proxy.ts`, not middleware), React 19.3, Tailwind 4, shadcn/ui, Zustand, `@supabase/ssr`, Vitest 5 + Playwright.
 - Local DB + auth: Supabase CLI stack (`supabase/config.toml`). No docker-compose.
 
@@ -20,11 +20,11 @@ superpowers: spec → design board approved (impeccable critique, no P0/P1) → 
 
 Rules: `.claude/constitution.md` (C01–C16, CW01–CW08) is non-negotiable. Domain skills in `.claude/skills/`.
 
-Commits: Conventional Commits with scope — `feat(chat):`, `fix(web):`, `chore(deps):`, `chore(repo):`, `test(core):`, `docs:`, `ci:`. Never commit `.env.local`.
+Commits: Conventional Commits with scope — `feat(guide):`, `fix(web):`, `chore(deps):`, `chore(repo):`, `test(core):`, `docs:`, `ci:`. Never commit `.env.local`.
 
 ## AI_MODE
 
-`AI_MODE` is required (`live` | `mock`, no default). `mock` = deterministic replies and embeddings, used by tests and CI; semantic golden examples skip in mock. `live` additionally requires `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `OPENAI_API_KEY`. Local/test model: `claude-haiku-5-5`; staging/production: `claude-sonnet-5-5`.
+`AI_MODE` is required (`live` | `mock`, no default). `mock` = deterministic replies and embeddings, used by tests and CI. `live` additionally requires `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `OPENAI_API_KEY`. Local/test model: `claude-haiku-5-5`; staging/production: `claude-sonnet-5-5`.
 
 ## Gotchas
 

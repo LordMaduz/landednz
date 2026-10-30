@@ -26,7 +26,7 @@ async function userWithData(prefix: string) {
   const user = await createTestUser(prefix);
   await db.user.create({ data: { id: user.userId, email: user.email } });
   await createProfile(user.userId, ANSWERS);
-  await db.chatSession.create({ data: { userId: user.userId, entryPoint: 'TASK_CARD', taskContext: 'T08' } });
+  await db.guideConversation.create({ data: { userId: user.userId } });
   return user;
 }
 
@@ -35,7 +35,7 @@ async function rowsFor(userId: string) {
     user: await db.user.count({ where: { id: userId } }),
     profile: await db.userProfile.count({ where: { userId } }),
     roadmap: await db.userRoadmapEntry.count({ where: { userId } }),
-    chat: await db.chatSession.count({ where: { userId } }),
+    guide: await db.guideConversation.count({ where: { userId } }),
   };
 }
 
@@ -59,11 +59,11 @@ describe('deleteAccount()', () => {
   test('removes every row for the user and their Supabase auth user', async () => {
     const { userId } = await userWithData('test-account-svc');
     created.push(userId);
-    expect(await rowsFor(userId)).toMatchObject({ user: 1, profile: 1, chat: 1 });
+    expect(await rowsFor(userId)).toMatchObject({ user: 1, profile: 1, guide: 1 });
 
     await deleteAccount(userId);
 
-    expect(await rowsFor(userId)).toEqual({ user: 0, profile: 0, roadmap: 0, chat: 0 });
+    expect(await rowsFor(userId)).toEqual({ user: 0, profile: 0, roadmap: 0, guide: 0 });
     expect(await authUserExists(userId)).toBe(false);
   });
 });
@@ -81,7 +81,7 @@ describe('DELETE /account', () => {
 
     const first = await app.inject({ method: 'DELETE', url: '/account', headers });
     expect(first.statusCode).toBe(204);
-    expect(await rowsFor(userId)).toEqual({ user: 0, profile: 0, roadmap: 0, chat: 0 });
+    expect(await rowsFor(userId)).toEqual({ user: 0, profile: 0, roadmap: 0, guide: 0 });
 
     const second = await app.inject({ method: 'DELETE', url: '/account', headers });
     expect(second.statusCode).toBe(401);

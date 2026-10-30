@@ -10,7 +10,6 @@ import { registerHealthRoutes } from './features/health/health.route.js'
 import { registerAuthRoutes } from './features/auth/auth.route.js'
 import { registerOnboardingRoutes } from './features/onboarding/onboarding.route.js'
 import { registerRoadmapRoutes } from './features/roadmap/roadmap.route.js'
-import { registerChatRoutes } from './features/chat/routes.js'
 import { registerGuideRoutes } from './features/guide/routes.js'
 import { startSweeper } from './features/guide/sweeper.js'
 import { warmUnderstand } from './features/guide/understand.js'
@@ -45,7 +44,6 @@ export async function buildApp() {
   registerAuthRoutes(app)
   registerOnboardingRoutes(app)
   registerRoadmapRoutes(app)
-  registerChatRoutes(app)
   registerGuideRoutes(app)
   registerAccountRoutes(app)
 

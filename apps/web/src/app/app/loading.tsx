@@ -6,10 +6,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function Loading() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <main aria-busy="true" className="container-page container-app flex flex-col gap-4 py-6">
+      <main aria-busy="true" className="@container/page container-page container-app flex flex-col gap-4 py-6">
         <span className="sr-only">Loading</span>
         <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1">
+        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 @max-guide-home/page:grid-cols-1">
           <Card aria-hidden="true">
             <Skeleton className="h-4 w-2/5" />
             <Skeleton className="h-3 w-full" />

@@ -14,7 +14,8 @@ let client: OpenAI | undefined;
 export async function generateEmbedding(text: string): Promise<number[]> {
   if (config.aiMode === 'mock') return mockEmbedding(text);
 
-  client ??= new OpenAI({ apiKey: config.openaiApiKey });
+  // SDK default timeout is 10 minutes, which outlives the guide turn
+  client ??= new OpenAI({ apiKey: config.openaiApiKey, timeout: 10_000, maxRetries: 1 });
   const response = await client.embeddings.create({
     model: 'text-embedding-3-small',
     input: text,

@@ -12,6 +12,7 @@ import { answerLabel, QUESTIONS, type Answers } from "@/lib/answers"
 import { nzCalendarDate, weekdayDay } from "@/lib/nz-date"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
+import { MemoryRow, MemorySection } from "./memory-section"
 
 type Key = keyof Answers
 // label: the answers list; ask: the editor's h2; noun: "Your roadmap is rebuilt for the new {noun}."
@@ -44,6 +45,7 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
   const router = useRouter()
   const param = useSearchParams().get("edit")
   const editing: Key = KEYS.find(k => k === param) ?? "visaType"
+  const memoryOpen = param === "memory"
   const [saved, setSaved] = useState<Answers>({
     visaType: profile.visaType,
     city: profile.city,
@@ -130,61 +132,66 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
             {KEYS.map(k => (
               <li key={k} className="flex min-h-14 items-center gap-3 border-t border-white/15 py-3 max-narrow:py-1">
                 <span className="flex flex-1 flex-col leading-snug">
-                  <span className={cn("text-small font-medium", k !== editing ? "text-rail-label" : param ? "text-toast-action" : "text-toast-action max-narrow:text-rail-label")}>
-                    {COPY[k].label}{k === editing && <span className="max-narrow:hidden"> · changing</span>}
+                  <span className={cn("text-small font-medium", k !== editing || memoryOpen ? "text-rail-label" : param ? "text-toast-action" : "text-toast-action max-narrow:text-rail-label")}>
+                    {COPY[k].label}{k === editing && !memoryOpen && <span className="max-narrow:hidden"> · changing</span>}
                   </span>
                   <span>{display(k, saved[k])}</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => router.push(`/settings?edit=${k}`)}
-                  className={cn("flex min-h-11 cursor-pointer items-center border-0 bg-transparent p-0 text-small font-medium text-toast-action hover:text-white", k === editing && "narrow:hidden")}
+                  className={cn("flex min-h-11 cursor-pointer items-center border-0 bg-transparent p-0 text-small font-medium text-toast-action hover:text-white", k === editing && !memoryOpen && "narrow:hidden")}
                 >
                   Change{" "}<span className="sr-only">{COPY[k].label}</span>
                 </button>
               </li>
             ))}
           </ol>
+          <MemoryRow open={memoryOpen} />
         </AnswersCard>
         {account}
       </div>
 
-      <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-14 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
-        <form onSubmit={save} noValidate className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-small text-muted">{copy.label}</span>
-            <h2 id={titleId} className="text-section">{copy.ask}</h2>
-            <p className="m-0 text-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
-          </div>
-          {editQuestion ? (
-            <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-2.5">
-              {editQuestion.options.map(([value, label]) => (
-                <OptionRow
-                  key={`${editing}-${value}`}
-                  name={editing}
-                  value={value}
-                  label={label}
-                  checked={draft === value}
-                  className="min-h-15"
-                  onChange={() => setDraft(value)}
-                />
-              ))}
+      {memoryOpen ? (
+        <MemorySection />
+      ) : (
+        <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-14 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
+          <form onSubmit={save} noValidate className="flex flex-col gap-5">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-small text-muted">{copy.label}</span>
+              <h2 id={titleId} className="text-section">{copy.ask}</h2>
+              <p className="m-0 text-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
             </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <Calendar key={session} value={draft} onChange={v => { setDateError(null); setDraft(v) }} today={today} labelledBy={titleId} />
-              {dateError && <p role="alert" className="text-small text-danger">{dateError}</p>}
+            {editQuestion ? (
+              <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-2.5">
+                {editQuestion.options.map(([value, label]) => (
+                  <OptionRow
+                    key={`${editing}-${value}`}
+                    name={editing}
+                    value={value}
+                    label={label}
+                    checked={draft === value}
+                    className="min-h-15"
+                    onChange={() => setDraft(value)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <Calendar key={session} value={draft} onChange={v => { setDateError(null); setDraft(v) }} today={today} labelledBy={titleId} />
+                {dateError && <p role="alert" className="text-small text-danger">{dateError}</p>}
+              </div>
+            )}
+            {error && <p role="alert" className="text-ink">{error}</p>}
+            <div className="flex gap-3 max-narrow:[&>*]:flex-1">
+              <Button type="button" variant="quiet" onClick={cancel}>Cancel</Button>
+              <Button type="submit" disabled={!dirty} aria-busy={saving} className={cn(saving && "bg-ink-hover")}>
+                {saving ? "Saving…" : "Save and rebuild"}
+              </Button>
             </div>
-          )}
-          {error && <p role="alert" className="text-ink">{error}</p>}
-          <div className="flex gap-3 max-narrow:[&>*]:flex-1">
-            <Button type="button" variant="quiet" onClick={cancel}>Cancel</Button>
-            <Button type="submit" disabled={!dirty} aria-busy={saving} className={cn(saving && "bg-ink-hover")}>
-              {saving ? "Saving…" : "Save and rebuild"}
-            </Button>
-          </div>
-        </form>
-      </Card>
+          </form>
+        </Card>
+      )}
     </>
   )
 }

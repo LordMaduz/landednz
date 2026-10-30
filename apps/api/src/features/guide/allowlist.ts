@@ -5,10 +5,15 @@ export const OFFICIAL_ALLOWLIST: readonly string[] = [
   'nzqa.govt.nz', 'education.govt.nz', 'kiwisaver.govt.nz',
 ];
 
+// Blocks plain fetch (403, 2026-10-30); its guide chunks still answer. Release 2: ask NEMA to allow the bot.
+export const GUIDE_ONLY_HOSTS: readonly string[] = ['getready.govt.nz'];
+
+const onList = (host: string, list: readonly string[]) => list.some((d) => host === d || host.endsWith(`.${d}`));
+
 export function isAllowedHost(url: string): boolean {
   try {
     const u = new URL(url);
-    return u.protocol === 'https:' && OFFICIAL_ALLOWLIST.some((d) => u.hostname === d || u.hostname.endsWith(`.${d}`));
+    return u.protocol === 'https:' && onList(u.hostname, OFFICIAL_ALLOWLIST) && !onList(u.hostname, GUIDE_ONLY_HOSTS);
   } catch {
     return false;
   }

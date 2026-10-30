@@ -35,6 +35,12 @@ describe('allowlist and htmlToText', () => {
     expect(isAllowedHost('not a url')).toBe(false);
   });
 
+  it('excludes guide-only hosts such as getready.govt.nz', () => {
+    expect(isAllowedHost('https://www.getready.govt.nz/en/prepare/')).toBe(false);
+    expect(isAllowedHost('https://getready.govt.nz/x')).toBe(false);
+    expect(isAllowedHost('https://www.ird.govt.nz/x')).toBe(true);
+  });
+
   it('drops chrome, decodes entities, collapses whitespace', () => {
     const r = htmlToText('<title>A &amp; B</title><nav>menu</nav><script>x()</script><p>Tom &amp;\n  Jerry</p><footer>f</footer>');
     expect(r.title).toBe('A & B');
@@ -49,6 +55,12 @@ describe('liveSources', () => {
     expect(d.fetchPage).toHaveBeenCalledTimes(1);
     expect(r.unavailable).toBe(false);
     expect(r.passages[0]).toMatchObject({ origin: 'official', url: u('a'), title: 'IRD' });
+  });
+
+  it('never fetches a getready.govt.nz candidate, reads the next one instead', async () => {
+    const d = deps();
+    await liveSources('emergency plan', [cand('https://www.getready.govt.nz/en/prepare/'), cand(u('next'))], d);
+    expect(d.fetchPage.mock.calls.map((c) => c[0])).toEqual([u('next')]);
   });
 
   it('skips off-allowlist redirect, non-HTML and oversize pages', async () => {

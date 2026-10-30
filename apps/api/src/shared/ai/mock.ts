@@ -3,14 +3,9 @@
 
 import { createHash } from 'crypto';
 import type { z } from 'zod';
-import type { AnswerEvent, AnswerResult, ChatMessage, GuideAnswerRequest } from './claude.client.js';
+import type { AnswerEvent, AnswerResult, GuideAnswerRequest } from './claude.client.js';
 
-const MOCK_REPLY_CHUNKS = ['This is a mock ', 'reply from ', 'LandedNZ.'];
 const EMBEDDING_DIMENSIONS = 1536;
-
-export async function mockStream(_messages: ChatMessage[], onChunk: (text: string) => void): Promise<void> {
-  for (const chunk of MOCK_REPLY_CHUNKS) onChunk(chunk);
-}
 
 // Unit-length vector seeded from a hash of the text: same text → same vector. Carries no meaning.
 export function mockEmbedding(text: string): number[] {
@@ -26,7 +21,7 @@ export function mockEmbedding(text: string): number[] {
   return vector.map(n => n / norm);
 }
 
-// Tests pick the structured fixture; the default throws so callers exercise their fallback path.
+// Tests pick the structured fixture (a value or a promise); the default throws so callers exercise their fallback path.
 type StructuredFixture = (system: string, user: string) => unknown;
 const throwingFixture: StructuredFixture = () => {
   throw new Error('No mock structured fixture set');
@@ -38,7 +33,7 @@ export function setMockStructured(fn: StructuredFixture | null): void {
 }
 
 export async function mockStructured<T>(system: string, user: string, schema: z.ZodType<T>): Promise<T> {
-  return schema.parse(structuredFixture(system, user));
+  return schema.parse(await structuredFixture(system, user));
 }
 
 // Tests can swap the answer stream (e.g. to throw AIFailureError); null restores the default.
@@ -67,7 +62,9 @@ async function defaultAnswerStream(
   onEvent({ type: 'text', text: 'This is a mock reply from LandedNZ. ' });
   const firstDoc = req.documents[0];
   if (firstDoc) onEvent({ type: 'citation', documentIndex: 0, citedText: firstDoc.text.slice(0, 40) });
-  onEvent({ type: 'text', text: 'It has a second sentence.' });
+  onEvent({ type: 'text', text: 'It has a second sentence.\n' });
+  onEvent({ type: 'text', text: '1. Register for myIR first.\n2. Then T08 gets easier.\n' });
+  onEvent({ type: 'text', text: "**What I can't tell you**\nHow long your own application takes.\n" });
   onEvent({ type: 'block_end' });
   return { stopReason: 'end_turn', usage };
 }

@@ -18,8 +18,6 @@ services:
         value: live
       - key: ANTHROPIC_MODEL
         value: claude-sonnet-5-5
-      - key: CHAT_DAILY_CAP
-        value: "10"
       - key: TRUST_PROXY
         value: "true"
       - key: BETA_MODE
