@@ -1,14 +1,15 @@
 import { test, expect, type Browser, type BrowserContext, type Page } from '@playwright/test'
-import { holdAnswers, resetTestUser, signIn } from './test-user'
+import { askFromBar, holdAnswers, resetTestUser, signIn } from './test-user'
 
-// Plan B Task 9.7 / ledger B2: the pane open beside Task, Home and Roadmap at every width band.
-// No sideways scroll, no clipped text, Mark as done never under the pane, task steps ≥45 characters a line.
+// Chat window (2026-10-31): the guide open on Task, Home and Roadmap at every width band. Task: the chat takes the
+// 400 px right column and the card never moves; Home and Roadmap: the full view. No sideways scroll, no clipped text,
+// Mark as done in view, task steps ≥45 characters a line.
 test.beforeAll(resetTestUser)
 
 const PAGES = ['/app/roadmap?task=T08', '/app', '/app/roadmap']
 const WIDTHS = [1024, 1180, 1280, 1366, 1440, 1536, 1600, 1680, 1920]
-// Pane width by window band at a 16 px root (D12): 25 / 28.75 / 32.5 rem
-const paneRem = (w: number) => (w >= 1680 ? 32.5 : w >= 1440 ? 28.75 : 25)
+const COLUMN = 400 // --grid-template-columns-task, px at every width and root size
+const BACK: Record<string, string> = { '/app': 'Back to Home', '/app/roadmap': 'Back to your roadmap' }
 
 type Case = { width: number; height: number; rootPx?: number; zoom?: number }
 const CASES: Case[] = [
@@ -19,11 +20,13 @@ const CASES: Case[] = [
   { width: 1440, height: 900, zoom: 2 },
 ]
 
-async function openGuide(page: Page, path: string, rootPx?: number) {
-  await page.goto(path)
-  if (rootPx) await page.addStyleTag({ content: `html { font-size: ${rootPx}px }` })
-  await page.getByRole('button', { name: /^Ask about your / }).click()
+// The conversation exists (asked once in the test), so the bar's mark opens it without spending a question (D9)
+async function openGuide(page: Page, wide: boolean) {
+  if (wide) await page.getByRole('button', { name: 'Open conversation' }).click()
+  else await page.getByRole('button', { name: /^Ask about your / }).click()
 }
+
+const cardLeft = (page: Page) => page.evaluate(() => Math.round(document.querySelector('main .grid > div')!.getBoundingClientRect().left))
 
 // Text cut off: wider than a box that hides overflow, or running past the page area into the pane.
 // Deliberate ellipsis (.truncate) and sr-only are skipped.
@@ -56,25 +59,34 @@ const stepCharsPerLine = (page: Page) =>
 async function check(page: Page, path: string, c: Case) {
   const label = `${path} @ ${c.width}×${c.height}${c.rootPx ? ` root ${c.rootPx}px` : ''}${c.zoom ? ` zoom ${c.zoom * 100}%` : ''}`
   const window = c.zoom ? Math.round(c.width / c.zoom) : c.width
-  await openGuide(page, path, c.rootPx)
+  const task = path.includes('task=')
+  await page.goto(path)
+  if (c.rootPx) await page.addStyleTag({ content: `html { font-size: ${c.rootPx}px }` })
+  await expect(page.locator('main h1').first()).toBeVisible()
+  const closedLeft = task && window >= 1024 ? await cardLeft(page) : 0
+  await openGuide(page, window >= 1024)
 
   expect.soft(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: sideways scroll`).toBe(true)
   if (window < 1024) {
     await expect(page.getByRole('dialog', { name: 'Guide' }), `${label}: sheet`).toBeVisible()
     return
   }
-
-  const paneBox = (await page.locator('#guide-pane > div').boundingBox())!
-  expect.soft(Math.round(paneBox.width), `${label}: pane width`).toBe(paneRem(window) * (c.rootPx ?? 16))
+  const guide = page.locator('#guide-pane')
+  await expect(guide).toBeVisible()
   expect.soft(await clipped(page), `${label}: clipped text`).toEqual([])
 
-  if (!path.includes('task=')) return
-  const done = page.locator('main').getByRole('button', { name: 'Mark as done' }).locator('visible=true')
-  await done.scrollIntoViewIfNeeded()
+  if (!task) {
+    await expect.soft(page.getByRole('button', { name: BACK[path] }), `${label}: full view`).toBeVisible()
+    const composer = (await page.locator('#guide-composer').boundingBox())!
+    const footer = (await page.locator('footer').boundingBox())!
+    expect.soft(composer.y + composer.height <= footer.y, `${label}: composer above the footer`).toBe(true)
+    return
+  }
+
+  expect.soft(await cardLeft(page), `${label}: card moved`).toBe(closedLeft)
+  expect.soft(Math.round((await guide.boundingBox())!.width), `${label}: column width`).toBe(COLUMN)
+  const done = guide.getByRole('button', { name: 'Mark as done' })
   const box = (await done.boundingBox())!
-  const pane = (await page.locator('#guide-pane > div').boundingBox())!
-  const overlaps = box.x < pane.x + pane.width && box.x + box.width > pane.x && box.y < pane.y + pane.height && box.y + box.height > pane.y
-  expect.soft(overlaps, `${label}: Mark as done under the pane`).toBe(false)
   const vh = page.viewportSize()!.height
   expect.soft(box.y >= 0 && box.y + box.height <= vh, `${label}: Mark as done in view`).toBe(true)
   expect.soft(await stepCharsPerLine(page), `${label}: step characters per line`).toBeGreaterThanOrEqual(45)
@@ -89,12 +101,15 @@ async function contextFor(browser: Browser, state: Awaited<ReturnType<BrowserCon
   return { ctx, page: await ctx.newPage() }
 }
 
-test('pane open on Task, Home and Roadmap across the width matrix', async ({ page, browser }) => {
+test('guide open on Task, Home and Roadmap across the width matrix', async ({ page, browser }) => {
   test.setTimeout(300_000)
   await holdAnswers(page)
   await page.goto('/signin')
   await signIn(page)
   await expect(page).toHaveURL('/app')
+  // one question, so every case below can reopen the conversation for free
+  await askFromBar(page, 'Can I apply before I have a bank account?')
+  await expect(page.getByText("What I can't tell you").first()).toBeVisible({ timeout: 20_000 })
   const state = await page.context().storageState()
 
   for (const c of CASES) {

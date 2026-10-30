@@ -1,8 +1,8 @@
 import { test, expect, type Page } from '@playwright/test'
-import { holdAnswers, resetTestUser, signIn } from './test-user'
+import { askFromBar, holdAnswers, resetTestUser, signIn } from './test-user'
 
 // Signed-in pages from 1024 px: the header and footer stay on screen and only the content between them scrolls.
-// The Guide pane on Task fits between them at every scroll position.
+// The Guide chat in Task's right column fits between them at every scroll position.
 test.beforeAll(resetTestUser)
 
 const box = (page: Page, sel: string) =>
@@ -32,11 +32,11 @@ test('header and footer stay on screen; the Task pane fits between them', async 
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
       await expectFrame(page, `${path} at ${width}`)
     }
-    // Pane open on Task, scrolled to the end: its header row (Expand, Close) is between the page header and footer
+    // Chat open on Task, scrolled to the end: its header row (Back to task, Expand) is between the page header and footer
     await page.evaluate(() => scrollTo(0, 0))
-    await page.getByRole('button', { name: /^Ask about your / }).click()
-    // let the pane's slide-in finish (and the composer take focus) before measuring
-    await page.locator('#guide-pane > div').evaluate(e => Promise.all(e.getAnimations().map(a => a.finished)))
+    await askFromBar(page, 'What do I need?')
+    // let the column's fade-in finish (and the composer take focus) before measuring
+    await page.locator('#guide-pane').evaluate(e => Promise.all(e.getAnimations().map(a => a.finished)))
     await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
     await page.waitForTimeout(100)
     const header = await box(page, 'header')
@@ -46,6 +46,6 @@ test('header and footer stay on screen; the Task pane fits between them', async 
     expect(expand.top, `pane top row at ${width}`).toBeGreaterThanOrEqual(header.bottom)
     expect(composer.bottom, `composer at ${width}`).toBeLessThanOrEqual(footer.top)
     await expectFrame(page, `task pane at ${width}`)
-    await page.getByRole('button', { name: 'Close' }).first().click()
+    await page.getByRole('button', { name: 'Back to task' }).click()
   }
 })

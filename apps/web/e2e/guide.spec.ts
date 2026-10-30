@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
-import { holdAnswers, resetTestUser, signIn } from './test-user'
+import { askFromBar, holdAnswers, resetTestUser, signIn } from './test-user'
 
 // Plan B Task 9.7: the settlement guide in the real app (AI_MODE=mock, real local auth)
 test.beforeAll(resetTestUser)
@@ -12,8 +12,8 @@ async function signedIn(page: Page) {
   await expect(page).toHaveURL('/app')
 }
 
-// The bar's label always starts "Ask about your"; "Ask about this" on Home and Roadmap is a different button
-const askBar = (page: Page) => page.getByRole('button', { name: /^Ask about your / })
+// The bar is a box you type into from 1024 px; its label always starts "Ask about your" ("Ask about this" on Home and Roadmap is a button)
+const askBar = (page: Page) => page.getByRole('textbox', { name: /^Ask about your / })
 const pane = (page: Page) => page.getByRole('complementary', { name: 'Guide' })
 const composer = (page: Page) => pane(page).getByRole('textbox', { name: 'Question' })
 
@@ -21,10 +21,8 @@ test('ask on a task: steps, limits, a source preview and the task card', async (
   await signedIn(page)
   await page.goto('/app/roadmap?task=T08')
   await expect(askBar(page)).toHaveAccessibleName(/^Ask about your IRD number/)
-  await askBar(page).click()
+  await askFromBar(page, 'Can I start work?')
   await expect(composer(page)).toBeFocused()
-  await composer(page).fill('Can I start work?')
-  await composer(page).press('Enter')
 
   const steps = pane(page).getByRole('list', { name: 'Steps' })
   await expect(steps.getByRole('listitem').first()).toContainText('Register for myIR first.')
@@ -56,16 +54,21 @@ test('the ask bar is on Home, Roadmap and Task only; no header Ask anywhere', as
   await expect(page.getByRole('banner').getByRole('button', { name: /^Ask/ })).toHaveCount(0)
 })
 
-test('"/" opens the pane and focuses the composer; Escape returns focus to the bar', async ({ page }) => {
+test('"/" focuses the bar; Enter on an empty bar only shows a note; Escape returns focus to the bar', async ({ page }) => {
   await signedIn(page)
-  await page.goto('/app/roadmap')
-  await expect(askBar(page)).toHaveAttribute('aria-expanded', 'false')
+  await page.goto('/app/roadmap?task=T08')
+  await expect(page.getByRole('heading', { level: 1, name: 'Apply for your IRD number' })).toBeFocused()
   await page.keyboard.press('/')
+  await expect(askBar(page)).toBeFocused()
+  await askBar(page).press('Enter')
+  await expect(page.getByRole('status').filter({ hasText: 'Type a question to start chatting.' })).toBeVisible()
+  await expect(pane(page)).toHaveCount(0)
+  await askFromBar(page, 'What do I need?')
   await expect(composer(page)).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(pane(page)).toHaveCount(0)
   await expect(askBar(page)).toBeFocused()
-  await expect(askBar(page)).toHaveAttribute('aria-expanded', 'false')
+  await expect(page.getByRole('complementary', { name: 'Task actions' })).toBeVisible()
 })
 
 // The mock never remembers anything, so the memory API is stood in for here; its real behaviour is covered by the API tests
@@ -104,9 +107,7 @@ test('daily cap: the limit message and a disabled composer', async ({ page }) =>
       : route.continue(),
   )
   await page.goto('/app/roadmap')
-  await askBar(page).click()
-  await composer(page).fill('What next?')
-  await composer(page).press('Enter')
+  await askFromBar(page, 'What next?')
   await expect(pane(page).getByText("That's the 20 questions for today. You can ask again after midnight.")).toBeVisible()
   await expect(composer(page)).toBeDisabled()
 })
@@ -114,9 +115,7 @@ test('daily cap: the limit message and a disabled composer', async ({ page }) =>
 test('distress: the crisis card comes first with three tel: links', async ({ page }) => {
   await signedIn(page)
   await page.goto('/app')
-  await askBar(page).click()
-  await composer(page).fill("I can't go on like this")
-  await composer(page).press('Enter')
+  await askFromBar(page, "I can't go on like this")
   const card = pane(page).getByRole('region', { name: 'Support' })
   await expect(card).toBeVisible()
   await expect(card.getByRole('link')).toHaveCount(3)
