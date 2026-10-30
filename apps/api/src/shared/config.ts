@@ -47,8 +47,6 @@ export function loadConfig(env: Env = process.env) {
       z.coerce.number().int().positive(),
       'RATE_LIMIT_PER_MINUTE must be a positive integer',
     ),
-    // Per-user chat messages per NZ day
-    chatDailyCap: parseEnv(env, 'CHAT_DAILY_CAP', z.coerce.number().int().positive(), 'CHAT_DAILY_CAP must be a positive integer'),
     // Settlement guide: questions per NZ day, retrieval relevance floor, answer thinking mode
     guideDailyCap: parseEnv(
       { GUIDE_DAILY_CAP: '20', ...env },
@@ -68,7 +66,7 @@ export function loadConfig(env: Env = process.env) {
       z.enum(['between_tools', 'adaptive']),
       'GUIDE_ANSWER_THINKING must be between_tools or adaptive',
     ),
-    // Anthropic API — required for chat advisor (Job B) in live mode
+    // Anthropic API — required for the guide in live mode
     anthropicApiKey: requireLive('ANTHROPIC_API_KEY'),
     anthropicModel: requireLive('ANTHROPIC_MODEL'),
     // OpenAI API — required for RAG embeddings (text-embedding-3-small, 1536 dims) in live mode

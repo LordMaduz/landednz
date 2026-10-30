@@ -18,7 +18,7 @@ export async function deleteAccount(userId: string): Promise<void> {
     throw new Error(`Supabase user lookup failed: ${existing.status}`);
   }
 
-  // Profile, roadmap, chat sessions (and their messages) and subscription cascade from User
+  // Profile, roadmap, guide conversation and memories, and subscription cascade from User
   await db.user.deleteMany({ where: { id: userId } });
 
   const res = await fetch(authAdminUser(userId), { method: 'DELETE', headers: adminHeaders });

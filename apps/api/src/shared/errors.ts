@@ -40,7 +40,7 @@ export class AppError extends Error {
 }
 
 // AIFailureError: for Claude API failures.
-// Caught INSIDE chat service, never reaches global handler (C13).
+// Caught INSIDE the guide service, never reaches global handler (C13).
 export class AIFailureError extends Error {
   constructor(message: string) {
     super(message)

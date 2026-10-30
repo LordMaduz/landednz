@@ -7,7 +7,7 @@ Source of truth for the API names: `apps/api/src/shared/config.ts`; for the web 
 
 | Name | Set | Value comes from |
 | --- | --- | --- |
-| `NODE_ENV`, `AI_MODE`, `ANTHROPIC_MODEL`, `CHAT_DAILY_CAP`, `TRUST_PROXY`, `BETA_MODE` | in `render.yaml` | fixed by the plan (`production`, `live`, `claude-sonnet-5-5`, `10`, `true`, `true`) |
+| `NODE_ENV`, `AI_MODE`, `ANTHROPIC_MODEL`, `TRUST_PROXY`, `BETA_MODE` | in `render.yaml` | fixed by the plan (`production`, `live`, `claude-sonnet-5-5`, `true`, `true`) |
 | `DATABASE_URL` | dashboard | Supabase checklist item, staging session pooler URL |
 | `SUPABASE_URL` | dashboard | Supabase item, staging project URL |
 | `SUPABASE_PUBLISHABLE_KEY` | dashboard | Supabase item, staging publishable key |

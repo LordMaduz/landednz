@@ -8,7 +8,6 @@ export * from "@landednz/types/dimensions";
 
 export type TaskStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETE" | "SKIPPED";
 export type DependencyType = "HARD" | "SOFT";
-export type ChatEntryPoint = "TASK_CARD" | "ROADMAP" | "EMAIL_DEEPLINK" | "NAVIGATION";
 
 // AppError shape — returned by all API error responses
 export interface ApiError {

@@ -7,7 +7,6 @@ import type {
   City,
   FamilySituation,
   Occupation,
-  ChatEntryPoint,
 } from '@landednz/types';
 
 export type TaskCardState =
@@ -77,7 +76,5 @@ export interface OnboardingState {
   };
   isComplete: boolean;
 }
-
-export type DetailPanelMode = 'empty' | 'task' | 'chat';
 
 export type PremiumGateState = 'full' | 'banner' | 'dismissed';

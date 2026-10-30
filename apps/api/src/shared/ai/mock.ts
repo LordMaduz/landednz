@@ -3,14 +3,9 @@
 
 import { createHash } from 'crypto';
 import type { z } from 'zod';
-import type { AnswerEvent, AnswerResult, ChatMessage, GuideAnswerRequest } from './claude.client.js';
+import type { AnswerEvent, AnswerResult, GuideAnswerRequest } from './claude.client.js';
 
-const MOCK_REPLY_CHUNKS = ['This is a mock ', 'reply from ', 'LandedNZ.'];
 const EMBEDDING_DIMENSIONS = 1536;
-
-export async function mockStream(_messages: ChatMessage[], onChunk: (text: string) => void): Promise<void> {
-  for (const chunk of MOCK_REPLY_CHUNKS) onChunk(chunk);
-}
 
 // Unit-length vector seeded from a hash of the text: same text → same vector. Carries no meaning.
 export function mockEmbedding(text: string): number[] {

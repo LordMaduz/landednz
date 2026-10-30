@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { mockAnswerStream, mockEmbedding, mockSearchUrls, mockStream } from './mock.js';
+import { mockAnswerStream, mockEmbedding, mockSearchUrls } from './mock.js';
 import type { AnswerEvent } from './claude.client.js';
 
 describe('mockEmbedding', () => {
@@ -14,15 +14,6 @@ describe('mockEmbedding', () => {
   test('mockEmbedding is deterministic', () => {
     expect(mockEmbedding('bond refund')).toEqual(mockEmbedding('bond refund'));
     expect(mockEmbedding('bond refund')).not.toEqual(mockEmbedding('GP enrolment'));
-  });
-});
-
-describe('mockStream', () => {
-  test('mockStream emits the fixed reply across 3 chunks', async () => {
-    const chunks: string[] = [];
-    await mockStream([{ role: 'user', content: 'Hello' }], chunk => chunks.push(chunk));
-    expect(chunks).toHaveLength(3);
-    expect(chunks.join('')).toBe('This is a mock reply from LandedNZ.');
   });
 });
 

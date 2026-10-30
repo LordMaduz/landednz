@@ -160,27 +160,9 @@ Critical: persona pre-filter runs as SQL — never as post-search filter.
 
 ---
 
-## RAG golden examples (Phase 5 — must pass)
+## Retrieval checks
 
-```
-GOLDEN 1: constrained_couple asks "how do I get my IRD number"
-Expected: CHUNK_T08_constrained_couple in top 3
-NOT: CHUNK_T08_solo_aewv (wrong persona)
-
-GOLDEN 2: constrained_couple asks about bond
-Expected: CHUNK_T11_constrained_couple in results
-NOT: CHUNK_T14_constrained_couple (similar words, different task)
-
-GOLDEN 3: general question about Auckland suburbs
-Expected: CHUNK_CONTEXT_suburbs in results (null personaKey — no filter)
-AND: CHUNK_T01_constrained_couple (suburb research task)
-
-GOLDEN 4: out-of-scope medical question
-Expected: fewer than 3 relevant chunks (low similarity scores)
-Level 1 guardrail fires before retrieval matters
-```
-
-Run: `npm test -- golden-examples/rag-retrieval.ts`
+The old chat's RAG golden examples were removed with the old chat (Plan B Task 10). Guide retrieval is covered by `apps/api/src/features/guide/retrieve.test.ts` and, on live models, the guide accuracy set: `make guide-accuracy` (after `make kb-sync-live`).
 
 ---
 
