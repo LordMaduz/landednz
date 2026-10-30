@@ -38,35 +38,52 @@ const shell = (page = { kind: 'home' } as const) =>
     </GuideShell>,
   )
 const bar = (name: RegExp | string = /^Ask about/) => screen.getByRole('button', { name })
+const box = (name: RegExp | string = /^Ask about/) => screen.getByRole('textbox', { name })
+const openGuide = () => act(() => useGuideStore.getState().openPane())
+const askInBar = (text: string) => {
+  fireEvent.change(box(), { target: { value: text } })
+  fireEvent.keyDown(box(), { key: 'Enter' })
+}
 
 describe('GuideShell', () => {
-  it('/ opens the pane and focuses the composer; / typed in a field does nothing (D22)', async () => {
+  it('"/" focuses the bar and does not open the guide', () => {
+    shell()
+    fireEvent.keyDown(document.body, { key: '/' })
+    expect(document.activeElement?.id).toBe('guide-ask')
+    expect(useGuideStore.getState().open).toBe(false)
+  })
+
+  it('below 1024 the bar is still a button that opens the sheet', async () => {
+    window.matchMedia = (q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList
+    shell()
+    expect(screen.queryByRole('textbox', { name: /^Ask about/ })).toBeNull()
+    fireEvent.click(bar())
+    expect(await screen.findByRole('dialog', { name: 'Guide' })).toBeInTheDocument()
+  })
+
+  it('/ typed in a field does nothing (D22); opening focuses the composer', async () => {
     shell()
     fireEvent.keyDown(screen.getByLabelText('Other field'), { key: '/' })
-    expect(screen.queryByRole('complementary', { name: 'Guide' })).toBeNull()
-    fireEvent.keyDown(document.body, { key: '/' })
+    expect(box()).not.toHaveFocus()
+    await openGuide()
     await screen.findByRole('complementary', { name: 'Guide' })
     await waitFor(() => expect(screen.getByRole('textbox', { name: 'Question' })).toHaveFocus())
   })
 
-  it('the bar reports the pane state; Close returns focus to the bar (B1)', async () => {
+  it('Enter in the bar opens the guide; Close returns focus to the bar (B1)', async () => {
     shell()
-    expect(bar()).toHaveAttribute('aria-expanded', 'false')
-    expect(bar()).toHaveAttribute('aria-controls', 'guide-pane')
-    fireEvent.click(bar())
+    askInBar('Can I apply?')
     const pane = await screen.findByRole('complementary', { name: 'Guide' })
     expect(pane).toHaveAttribute('id', 'guide-pane')
     expect(screen.getByRole('main')).toHaveAttribute('data-guide', 'open')
-    expect(document.querySelector('[aria-controls="guide-pane"]')).toHaveAttribute('aria-expanded', 'true')
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
-    await waitFor(() => expect(bar()).toHaveFocus())
-    expect(bar()).toHaveAttribute('aria-expanded', 'false')
+    await waitFor(() => expect(box()).toHaveFocus())
     expect(screen.getByRole('main')).toHaveAttribute('data-guide', 'closed')
   })
 
   it('Escape closes the pane', async () => {
     shell()
-    fireEvent.click(bar())
+    await openGuide()
     await screen.findByRole('complementary', { name: 'Guide' })
     fireEvent.keyDown(screen.getByRole('textbox', { name: 'Question' }), { key: 'Escape' })
     expect(screen.queryByRole('complementary', { name: 'Guide' })).toBeNull()
@@ -83,12 +100,12 @@ describe('GuideShell', () => {
 
   it('on a task the bar reads "Ask about your IRD number"', () => {
     shell({ kind: 'task', taskKey: 'T08' } as never)
-    expect(bar('Ask about your IRD number')).toBeInTheDocument()
+    expect(box('Ask about your IRD number')).toBeInTheDocument()
   })
 
   it('the opening shows the where-you-are line and starters', async () => {
     shell()
-    fireEvent.click(bar())
+    await openGuide()
     expect(await screen.findByRole('heading', { name: "You've done 1 of 4 tasks." })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'What do I need to open a bank account?' })).toBeInTheDocument()
   })
@@ -96,11 +113,11 @@ describe('GuideShell', () => {
   it('unseen shows the dot; opening clears it', async () => {
     useGuideStore.setState({ unseen: true })
     shell()
-    expect(bar(/new answer/)).toBeInTheDocument()
-    fireEvent.click(bar())
+    expect(box(/new answer/)).toBeInTheDocument()
+    await openGuide()
     await screen.findByRole('complementary', { name: 'Guide' })
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
-    expect(bar('Ask about your first 90 days')).toBeInTheDocument()
+    expect(box('Ask about your first 90 days')).toBeInTheDocument()
   })
 
   it('RF1: leaving for Settings mid-stream keeps the stream; back on Home the answer is there with the dot', async () => {
@@ -108,9 +125,9 @@ describe('GuideShell', () => {
     let finish = () => {}
     m.askGuide.mockImplementation((_b, _t, onEvent) => new Promise<void>(resolve => { emit = onEvent; finish = resolve }))
     shell()
-    fireEvent.click(bar())
+    await openGuide()
     await screen.findByRole('complementary', { name: 'Guide' })
-    const asked = act(() => useGuideStore.getState().ask('Do I need a bank account?'))
+    const asked = useGuideStore.getState().ask('Do I need a bank account?')
     await act(async () => { await new Promise(r => setTimeout(r, 0)) })
     emit({ event: 'start', data: { userMessageId: 'u1', assistantMessageId: 'a1' } })
     // Settings: no page, pane closed
@@ -118,13 +135,13 @@ describe('GuideShell', () => {
       useGuideStore.getState().setPage(null)
       useGuideStore.getState().close()
     })
-    expect(screen.queryByRole('button', { name: /^Ask about/ })).toBeNull()
+    expect(screen.queryByRole('textbox', { name: /^Ask about/ })).toBeNull()
     emit({ event: 'part', data: { type: 'text', text: 'Yes.', citations: [] } })
     emit({ event: 'done', data: { assistantMessageId: 'a1', status: 'complete' } })
     finish()
     await asked
     expect(useGuideStore.getState().turns).toMatchObject([{ question: 'Do I need a bank account?', status: 'complete' }])
     act(() => useGuideStore.getState().setPage({ kind: 'home' }))
-    expect(bar(/new answer/)).toBeInTheDocument()
+    expect(box(/new answer/)).toBeInTheDocument()
   })
 })

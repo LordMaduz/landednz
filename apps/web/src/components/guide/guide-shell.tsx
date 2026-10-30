@@ -23,7 +23,7 @@ function useWide() {
   )
 }
 
-// "/" opens the guide, except while the user is typing somewhere (D22)
+// "/" moves into the ask bar (opens the sheet below 1024), except while the user is typing somewhere (D22)
 function isTyping(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false
   return target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)
@@ -32,7 +32,7 @@ function isTyping(target: EventTarget | null): boolean {
 const composer = () => document.getElementById("guide-composer")
 
 // Phone and tablet (D9): the pane as a bottom sheet, sized to the opening (at most 5/6 high), full height once there is a conversation
-function GuideSheet({ titles, barRef }: { titles: Record<string, string>; barRef: RefObject<HTMLButtonElement | null> }) {
+function GuideSheet({ titles, barRef }: { titles: Record<string, string>; barRef: RefObject<HTMLButtonElement | HTMLTextAreaElement | null> }) {
   const { open, turns, close } = useGuideStore()
   const full = turns.length > 0
   return (
@@ -74,9 +74,9 @@ export function GuideShell({
   className?: string
   children: ReactNode
 }) {
-  const { open, expanded, unseen, page: current, setPage, openPane, close } = useGuideStore()
+  const { open, expanded, unseen, page: current, setPage, openPane, close, prime } = useGuideStore()
   const wide = useWide()
-  const barRef = useRef<HTMLButtonElement>(null)
+  const barRef = useRef<HTMLButtonElement | HTMLTextAreaElement>(null)
   const wasOpen = useRef(open)
   const { kind, taskKey } = page
 
@@ -85,15 +85,20 @@ export function GuideShell({
   }, [kind, taskKey, setPage])
 
   useEffect(() => {
+    if (wide) void prime()
+  }, [wide, prime])
+
+  useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => {
       const s = useGuideStore.getState()
       if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target) || s.open || !s.page) return
       e.preventDefault()
-      void openPane()
+      if (wide) barRef.current?.focus()
+      else void openPane()
     }
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)
-  }, [openPane])
+  }, [openPane, wide])
 
   // B1: focus to the composer on open, back to the ask bar on close (the sheet does this through Drawer)
   useEffect(() => {
@@ -130,7 +135,7 @@ export function GuideShell({
         )}
       </div>
       {!wide && <GuideSheet titles={titles} barRef={barRef} />}
-      {current && <AskBar ref={barRef} page={current} open={open} unseen={unseen} onOpen={() => void openPane()} />}
+      {current && <AskBar ref={barRef} page={current} open={open} unseen={unseen} wide={wide} onOpen={() => void openPane()} />}
     </>
   )
 }
