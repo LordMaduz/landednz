@@ -6,7 +6,7 @@ import { signOutAndLeave } from "@/lib/sign-out"
 import { Brand } from "./logo"
 
 const navLink =
-  "rounded-control px-4 py-2 font-medium text-muted no-underline hover:bg-wash hover:text-ink hover:no-underline aria-[current=page]:bg-wash aria-[current=page]:text-ink max-compact:px-2"
+  "rounded-control px-4 py-2 font-medium text-muted no-underline hover:bg-wash hover:text-ink hover:no-underline aria-[current=page]:bg-hairline aria-[current=page]:text-ink max-compact:px-2"
 const TABS = [
   { key: "home", href: "/app", label: "Home", icon: "M4 11 12 4l8 7M6 10v9h12v-9" },
   { key: "roadmap", href: "/app/roadmap", label: "Roadmap", icon: "M6 19a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM18 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM8.5 16.5H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5" },
@@ -16,7 +16,7 @@ const TABS = [
 const tab =
   "flex flex-col items-center justify-center gap-0.5 text-small font-medium text-muted no-underline hover:no-underline aria-[current=page]:text-ink aria-[current=page]:[&_svg]:text-teal"
 const menuItem =
-  "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-ink no-underline outline-none hover:no-underline data-highlighted:bg-wash"
+  "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-ink no-underline outline-none hover:no-underline data-highlighted:bg-hairline"
 
 export function AppHeader({
   active,
@@ -29,7 +29,8 @@ export function AppHeader({
 }) {
   return (
     <>
-    <header className="border-b border-hairline">
+    {/* from 1024 px the header stays on screen while the page scrolls */}
+    <header className="border-b border-hairline bg-white pane:sticky pane:top-0 pane:z-40 pane:shadow-frame-top">
       <div className="container-page container-app flex h-16 items-center gap-8 max-compact:gap-2 max-narrow:h-14">
         {back && (
           <Link href={back.href} className="hidden min-h-11 items-center gap-1 font-medium text-ink no-underline hover:no-underline max-narrow:flex">

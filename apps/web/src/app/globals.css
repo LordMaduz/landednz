@@ -66,6 +66,9 @@
   --radius-surface: 12px;
 
   --shadow-lift: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
+  /* fixed header and footer (from 1024 px): the Home card's shadow-lift, cast down from the header and up from the footer */
+  --shadow-frame-top: 0 1px 2px rgba(15, 42, 58, 0.04), 0 16px 48px rgba(15, 42, 58, 0.08);
+  --shadow-frame-bottom: 0 -1px 2px rgba(15, 42, 58, 0.04), 0 -16px 48px rgba(15, 42, 58, 0.08);
   /* chosen option row: inset teal hairline beside the teal border (a 2 px edge, not elevation) */
   --shadow-pin-halo: 0 0 0 6px rgba(15, 42, 58, 0.08);
   --shadow-field-error: 0 0 0 1px #A3292B;
@@ -113,7 +116,7 @@
   --container-pane: 25rem;
   --container-pane-md: 28.75rem;
   --container-pane-lg: 32.5rem;
-  --container-ask-bar: 440px;
+  --container-ask-bar: 640px; /* Material 3 search bar range 360–720 */
   --container-reading: 720px; /* focused view column */
   --breakpoint-pane: 1024px; /* below: the guide is a sheet */
   --breakpoint-pane-md: 1440px;
@@ -125,8 +128,8 @@
   /* While the pane is open: the actions column flexes 300–380 and only grows with the window (D14, D17) */
   --grid-template-columns-task-pane: minmax(0, 1fr) clamp(300px, 34%, 380px);
   --grid-template-columns-focus: 280px minmax(0, 1fr);
-  /* Pane and focused view height: the window below the 64 px header */
-  --spacing-guide-pane: calc(100dvh - 4rem);
+  /* Pane and focused view height: the window between the fixed 64 px header and 64 px footer; each adds 24 px top and bottom inside */
+  --spacing-guide-pane: calc(100dvh - 8rem);
 }
 
 @theme inline {

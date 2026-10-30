@@ -115,14 +115,14 @@ export function GuideShell({
         <main
           data-guide={beside ? "open" : "closed"}
           hidden={beside && expanded}
-          // pages keep space at the bottom so the ask bar never covers the last item (D19)
-          className={cn("@container/page min-w-0 flex-1", className, "pb-28", kind !== "task" && "max-narrow:pb-36", beside && "mx-0!")}
+          // the ask bar sits in the flow after the page (D19), so a small gap is enough
+          className={cn("@container/page min-w-0 flex-1", className, "pb-6", beside && "mx-0!")}
         >
           {children}
         </main>
         {beside && expanded && <FocusedView page={page} titles={titles} onKeyDown={onKeyDown} />}
         {beside && !expanded && (
-          <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="sticky bottom-0 flex h-guide-pane shrink-0 self-end p-3">
+          <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="sticky top-16 flex h-guide-pane shrink-0 self-start px-3 py-6">
             <div className="flex w-pane min-h-0 flex-col overflow-hidden rounded-pane bg-white shadow-pane pane-md:w-pane-md pane-lg:w-pane-lg motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4">
               <GuidePane titles={titles} />
             </div>

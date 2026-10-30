@@ -1,7 +1,10 @@
-// On phones the footer is one 36 px line; with `app` (signed-in pages) it also clears the 56 px tab bar
+// On phones the footer is one 36 px line; with `app` (signed-in pages) it also clears the 56 px tab bar.
+// Signed-in from 1024 px it stays at the window bottom; the spacer keeps its 65 px so no content sits under it.
 export function PublicFooter({ app }: { app?: boolean }) {
   return (
-    <footer className="mt-auto border-t border-hairline">
+    <>
+    {app && <div aria-hidden className="mt-auto hidden h-16 shrink-0 border-t border-transparent pane:block" />}
+    <footer className={`mt-auto border-t border-hairline ${app ? "bg-white pane:fixed pane:inset-x-0 pane:bottom-0 pane:z-40 pane:shadow-frame-bottom" : ""}`}>
       <div className={`container-page ${app ? "container-app max-narrow:mb-14" : ""} flex min-h-16 flex-wrap max-narrow:flex-nowrap items-center justify-between gap-x-6 gap-y-2 py-4 max-narrow:min-h-9 max-narrow:py-0`}>
         <span className="text-small text-muted">
           <span className="max-narrow:hidden">General information, not legal or tax advice.</span>
@@ -14,5 +17,6 @@ export function PublicFooter({ app }: { app?: boolean }) {
         </nav>
       </div>
     </footer>
+    </>
   )
 }

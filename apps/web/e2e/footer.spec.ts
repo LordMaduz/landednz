@@ -5,10 +5,17 @@ import { holdAnswers, resetTestUser, signIn } from './test-user'
 const SIZES = [[1440, 1600], [1440, 900], [390, 1200], [390, 844]]
 
 // The footer is one fixed height and ends at the bottom of the page, however tall the window
-// Signed-in footers on phones also hold 56 px of room for the tab bar
+// Signed-in footers on phones also hold 56 px of room for the tab bar; from 1024 px they stay at the window bottom (see app-frame.spec)
 async function expectFooterAtBottom(page: Page, path: string, width: number, app = false) {
   await page.goto(path)
   await page.waitForLoadState('networkidle')
+  if (app && width >= 1024) {
+    // the in-flow spacer stands in for the fixed footer at the end of the page
+    await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
+    const bottom = await page.evaluate(() => Math.round(document.querySelector('footer')!.getBoundingClientRect().bottom - innerHeight))
+    expect(bottom, `${path} at ${width}`).toBe(0)
+    return
+  }
   const m = await page.evaluate(() => {
     const top = document.querySelector("footer")!.getBoundingClientRect().top + scrollY
     // From the footer line to the end of the page: the footer itself, nothing under it
