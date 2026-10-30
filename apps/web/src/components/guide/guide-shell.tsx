@@ -110,12 +110,13 @@ export function GuideShell({
 
   return (
     <>
-      <div className="flex w-full">
+      {/* page and pane centre as one group, so wide windows put the spare space outside, not between them */}
+      <div className="flex w-full justify-center">
         <main
           data-guide={beside ? "open" : "closed"}
           hidden={beside && expanded}
           // pages keep space at the bottom so the ask bar never covers the last item (D19)
-          className={cn("@container/page min-w-0 flex-1", className, "pb-28", kind !== "task" && "max-narrow:pb-36")}
+          className={cn("@container/page min-w-0 flex-1", className, "pb-28", kind !== "task" && "max-narrow:pb-36", beside && "mx-0!")}
         >
           {children}
         </main>

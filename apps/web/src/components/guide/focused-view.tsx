@@ -39,7 +39,7 @@ export function FocusedView({
     )
 
   return (
-    <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="sticky bottom-0 grid h-guide-pane w-full flex-1 grid-cols-focus self-end bg-white">
+    <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="container-page container-app sticky bottom-0 grid h-guide-pane grid-cols-focus self-end bg-white">
       <div className="flex min-h-0 flex-col gap-4.5 border-r border-hairline bg-wash px-4 py-5">
         <Button variant="quiet" size="sm" className="self-start" onClick={toggleExpanded}>
           <ArrowLeft className="size-3.5" aria-hidden />
