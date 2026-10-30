@@ -138,7 +138,7 @@ Rule: every interactive element is a kit component from `components/ui`. A hand-
 - **Selectable rows** (OptionRow, nav items, calendar days): selected style + state layer.
 - **Header / nav**: current page uses the selected style.
 - **Calendar, AlertDialog, Skeleton, Toast**: move to roles; Calendar's day buttons stay hand-written inside `components/ui`.
-- **CSS components in `globals.css` `@layer components`** (`.radio`, `.wp*`, `.stamp`, `.progress`, `.track*`, `.ask-q`, sheet grab handle): colours, radii and sizes move to roles; their raw px values become tokens.
+- **CSS components in `globals.css` `@layer components`** (`.radio`, `.wp*`, `.stamp`, `.progress`, `.track*`, `.ask-q`, sheet grab handle): colours, radii and shadows move to roles. Drawn sizes (dots, marks, track widths) stay as px inside their one CSS class: that is already one place, and a new look does not need them.
 - **Citation chip**: suggestion to use the state layer instead of a solid teal fill on hover; decided on the board.
 
 ### 7.3 No behaviour change
@@ -155,7 +155,7 @@ Extend the existing `apps/web/src/cw01.test.ts` (already fails on raw hex, `[13p
 - spacing outside the allowed steps
 - radius and shadow other than the roles
 - hand-written `<button>` outside `components/ui`
-- raw px / hex in `globals.css` outside the palette block (the guard also reads `globals.css`)
+- hex / `rgb()` in `globals.css` outside the palette block (the guard also reads `globals.css`; `.gsi` excepted)
 
 The spacing check is a regex over utility prefixes, incl. sizes (`size-*`, `w-*`, `h-*`); class names built at runtime are not caught.
 
@@ -188,7 +188,7 @@ Docs updated in the same branch: constitution CW01 wording (roles, not raw token
 
 ## 11. Order of work
 
-1. Housekeeping: commit the uncommitted ask-bar and guide-shell changes, drop the debug specs `e2e/zz-*.spec.ts`, cut `feat/design-system` from `feat/type-system`.
+1. Housekeeping: build in a new worktree on `feat/design-system`, cut from `feat/type-system` HEAD. Uncommitted guide work in `landednz-r0cloud` (another session's) is not touched; it is merged in when that work is committed.
 2. Board (§9) → owner approval.
 3. Palette + roles in `globals.css`, old names as aliases.
 4. Kit upgrade (§7), then move the 23 hand-written buttons and stray styles onto it.
