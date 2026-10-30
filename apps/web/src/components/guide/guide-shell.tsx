@@ -112,6 +112,8 @@ export function GuideShell({
     if (e.key === "Escape" && e.currentTarget.contains(e.target as Node)) close()
   }
   const beside = open && wide
+  // Home and Roadmap have no side pane: the guide always opens in the full view there (chat-window D3)
+  const full = beside && (expanded || kind !== "task")
 
   return (
     <>
@@ -119,14 +121,14 @@ export function GuideShell({
       <div className="flex w-full justify-center">
         <main
           data-guide={beside ? "open" : "closed"}
-          hidden={beside && expanded}
+          hidden={full}
           // the ask bar sits in the flow after the page (D19), so a small gap is enough
           className={cn("@container/page min-w-0 flex-1", className, "pb-6", beside && "mx-0!")}
         >
           {children}
         </main>
-        {beside && expanded && <FocusedView page={page} titles={titles} onKeyDown={onKeyDown} />}
-        {beside && !expanded && (
+        {full && <FocusedView page={page} titles={titles} onKeyDown={onKeyDown} />}
+        {beside && !full && (
           <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="sticky top-16 flex h-guide-pane shrink-0 self-start px-3 py-6">
             <div className="flex w-pane min-h-0 flex-col overflow-hidden rounded-pane bg-white shadow-pane pane-md:w-pane-md pane-lg:w-pane-lg motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4">
               <GuidePane titles={titles} />

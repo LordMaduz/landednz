@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, type KeyboardEvent } from "react"
-import { ArrowLeft, Minimize2, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Minimize2, X } from "lucide-react"
 import type { GuideScreen } from "@landednz/types"
 import { Button } from "@/components/ui/button"
 import { useGuideStore } from "@/lib/stores/guideStore"
@@ -22,7 +22,11 @@ export function FocusedView({
   titles: Record<string, string>
   onKeyDown: (e: KeyboardEvent<HTMLElement>) => void
 }) {
-  const { turns, context, historyLoaded, toggleExpanded, close, showAll } = useGuideStore()
+  const { turns, context, historyLoaded, opening, toggleExpanded, close, showAll, ask } = useGuideStore()
+  const onTask = page.kind === "task"
+  // Try asking (D8): the opening's starters, minus the one the latest answer already offers as its follow-up
+  const followUp = turns.at(-1)?.parts.find(p => p.type === "follow_up")?.text
+  const starters = turns.length ? (opening?.starters ?? []).slice(0, 3).filter(s => s !== followUp) : []
   const [group, setGroup] = useState<string | null>(context.kind === "task" ? (context.taskKey ?? null) : null)
   const counts = new Map<string, number>()
   for (const t of turns) if (t.screen.taskKey) counts.set(t.screen.taskKey, (counts.get(t.screen.taskKey) ?? 0) + 1)
@@ -41,7 +45,8 @@ export function FocusedView({
   return (
     <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="container-page container-app sticky top-16 grid h-guide-pane grid-cols-focus self-start bg-white py-6">
       <div className="flex min-h-0 flex-col gap-4.5 border-r border-hairline bg-wash px-4 py-5">
-        <Button variant="quiet" size="sm" className="self-start" onClick={toggleExpanded}>
+        {/* Home and Roadmap have no side pane to go back to: Back closes the guide */}
+        <Button variant="quiet" size="sm" className="self-start" onClick={onTask ? toggleExpanded : close}>
           <ArrowLeft className="size-3.5" aria-hidden />
           {BACK[page.kind]}
         </Button>
@@ -57,15 +62,36 @@ export function FocusedView({
             Everything <small className="text-small text-muted">{turns.length}</small>
           </button>
         </nav>
+        {starters.length > 0 && (
+          <div className="mt-2.5 flex flex-col">
+            <h2 id="guide-try-asking" className="px-2.5 pb-2 text-small text-muted">Try asking</h2>
+            <ul aria-labelledby="guide-try-asking" className="flex flex-col">
+              {starters.map(s => (
+                <li key={s}>
+                  <button
+                    type="button"
+                    onClick={() => void ask(s)}
+                    className="flex w-full cursor-pointer items-center gap-2.5 border-t border-hairline p-2.5 text-left text-ui text-ink hover:bg-white"
+                  >
+                    {s}
+                    <ArrowRight className="ml-auto size-4 shrink-0 text-muted" aria-hidden />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <p className="mt-auto px-2.5 text-small text-muted">One conversation, on every device.</p>
       </div>
       <div className="flex min-h-0 flex-col">
         <div className="flex shrink-0 items-center gap-2 px-5 py-3.5">
           <GuideTitle />
           <span className="flex-1" />
-          <IconButton label="Collapse" onClick={toggleExpanded}>
-            <Minimize2 className="size-4" aria-hidden />
-          </IconButton>
+          {onTask && (
+            <IconButton label="Collapse" onClick={toggleExpanded}>
+              <Minimize2 className="size-4" aria-hidden />
+            </IconButton>
+          )}
           <IconButton label="Close" onClick={close}>
             <X className="size-4" aria-hidden />
           </IconButton>

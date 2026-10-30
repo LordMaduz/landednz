@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { GuideSseEvent } from '@landednz/types'
 import * as api from '@/lib/api'
@@ -75,7 +75,7 @@ describe('GuideShell', () => {
     askInBar('Can I apply?')
     const pane = await screen.findByRole('complementary', { name: 'Guide' })
     expect(pane).toHaveAttribute('id', 'guide-pane')
-    expect(screen.getByRole('main')).toHaveAttribute('data-guide', 'open')
+    expect(screen.getByRole('main', { hidden: true })).toHaveAttribute('data-guide', 'open')
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
     await waitFor(() => expect(box()).toHaveFocus())
     expect(screen.getByRole('main')).toHaveAttribute('data-guide', 'closed')
@@ -143,5 +143,72 @@ describe('GuideShell', () => {
     expect(useGuideStore.getState().turns).toMatchObject([{ question: 'Do I need a bank account?', status: 'complete' }])
     act(() => useGuideStore.getState().setPage({ kind: 'home' }))
     expect(box(/new answer/)).toBeInTheDocument()
+  })
+})
+
+describe('full view on Home and Roadmap', () => {
+  const turn = (followUp?: string) => ({
+    key: 't1', question: 'Q1', screen: { kind: 'home' as const }, assistantId: 'a1', status: 'complete' as const, createdAt: '2026-10-31T00:00:00.000Z',
+    parts: followUp ? [{ type: 'follow_up' as const, text: followUp }] : [],
+  })
+  const starters = ['What do I need to open a bank account?', 'How do I get an IRD number?', 'Where should I live?']
+  const withStarters = () =>
+    m.getGuideOpening.mockResolvedValue({ whereYouAre: 'w', starters, leftToday: 14, dailyCap: 20 })
+
+  it('Enter on Home opens the full view, not a side pane', async () => {
+    shell()
+    askInBar('Can I apply?')
+    expect(await screen.findByRole('button', { name: 'Back to Home' })).toBeVisible()
+    expect(document.querySelector('.w-pane')).toBeNull()
+  })
+
+  it('"Ask about this" on Home opens the full view (D10)', async () => {
+    shell()
+    await act(() => useGuideStore.getState().openPane({ kind: 'task', taskKey: 'T08' }))
+    expect(await screen.findByRole('button', { name: 'Back to Home' })).toBeVisible()
+  })
+
+  it('Back to Home closes the guide', async () => {
+    shell()
+    await openGuide()
+    fireEvent.click(await screen.findByRole('button', { name: 'Back to Home' }))
+    expect(useGuideStore.getState().open).toBe(false)
+  })
+
+  it('Try asking sends a starter', async () => {
+    withStarters()
+    useGuideStore.setState({ turns: [turn()] })
+    shell()
+    await openGuide()
+    const list = await screen.findByRole('list', { name: 'Try asking' })
+    fireEvent.click(within(list).getByRole('button', { name: 'What do I need to open a bank account?' }))
+    await waitFor(() => expect(m.askGuide.mock.calls[0][0]).toMatchObject({ text: 'What do I need to open a bank account?' }))
+  })
+
+  it('Try asking skips the current follow-up', async () => {
+    withStarters()
+    useGuideStore.setState({ turns: [turn(starters[0])] })
+    shell()
+    await openGuide()
+    const list = await screen.findByRole('list', { name: 'Try asking' })
+    expect(within(list).queryByRole('button', { name: starters[0] })).toBeNull()
+    expect(within(list).getAllByRole('button')).toHaveLength(2)
+  })
+
+  it('no Collapse on Home and Roadmap; present on a task when expanded', async () => {
+    const { unmount } = shell()
+    await openGuide()
+    expect(screen.queryByRole('button', { name: 'Collapse' })).toBeNull()
+    unmount()
+    act(() => useGuideStore.setState({ open: false }))
+    const r = shell({ kind: 'roadmap' } as never)
+    await openGuide()
+    expect(await screen.findByRole('button', { name: 'Back to your roadmap' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Collapse' })).toBeNull()
+    r.unmount()
+    act(() => useGuideStore.setState({ open: false, expanded: true }))
+    shell({ kind: 'task', taskKey: 'T08' } as never)
+    await openGuide()
+    expect(await screen.findByRole('button', { name: 'Collapse' })).toBeInTheDocument()
   })
 })

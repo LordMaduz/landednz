@@ -31,7 +31,7 @@ Every claim is cited. Answers come from LandedNZ's checked guide first, then a f
 
 - Answer parts: direct answer, steps, "What I can't tell you", source chips with origin label, task links, `unverified` note, at most one follow-up, "Checking…" notices, truncated notice.
 - States: streaming with Stop, interrupted, failed with Retry, busy in another window, daily cap reached, nothing found (points to the right agency), official sites unavailable, empty first visit, distress reply with fixed crisis text (1737, Lifeline 0800 543 354, 111).
-- Opening: one "where you are" line and at most 3 starter questions, hidden once the conversation starts.
+- Opening: one 'where you are' line and at most 3 starter questions. In the full view the starters stay under 'Try asking' after the conversation starts.
 - Memory: only facts the user stated; shown in-chat as "Remembered: …" with undo; listed in Settings → Memory with edit and delete; at most 50; deletes are hard.
 - Internal IDs are never shown. English only, no voice. No pop-ups, badges or nudges outside the guide.
 - Light theme only; design tokens only; reduced motion respected. The UI never parses reply text; it renders typed parts.
