@@ -17,6 +17,7 @@ export function PublicFooter() {
 export function LegalLinks({ className = "" }: { className?: string }) {
   return (
     <nav aria-label="Legal" className={`flex gap-6 text-small ${className}`}>
+      <a href="/about" className="link-subtle relative inline-flex min-h-target items-center max-narrow:min-h-footer max-narrow:after:absolute max-narrow:after:-inset-x-2 max-narrow:after:-top-2 max-narrow:after:bottom-0">About</a>
       <a href="/privacy" className="link-subtle relative inline-flex min-h-target items-center max-narrow:min-h-footer max-narrow:after:absolute max-narrow:after:-inset-x-2 max-narrow:after:-top-2 max-narrow:after:bottom-0">Privacy</a>
       <a href="/terms" className="link-subtle relative inline-flex min-h-target items-center max-narrow:min-h-footer max-narrow:after:absolute max-narrow:after:-inset-x-2 max-narrow:after:-top-2 max-narrow:after:bottom-0">Terms</a>
     </nav>
