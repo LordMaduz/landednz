@@ -43,6 +43,7 @@ Browser ──> PostHog (page views, free tier)
 - [x] 8. Privacy page wording for analytics: A chosen 2026-10-31, wording approved and applied (plus OpenAI, Sentry, hosting and contact filled in; Terms operator + contact filled in)
 - [x] 9. Email forwarding for `privacy@` and `hello@landednz.co.nz` (section 9)
 - [x] 10. Paste the production secrets into Railway and Vercel (section 10)
+- [ ] 11. Release prep today, DNS on release day (section 11)
 
 Already done, nothing to do: OpenAI budget (staging guide §4), Sentry projects + token (§5), Vercel Branch Tracking = `production` (§6), CLI logins (`railway`, `vercel`, `supabase`, `gh` all checked 2026-10-31).
 
@@ -266,6 +267,61 @@ The agent has already set every value that is not a secret, in Railway and in Ve
 3. Reports back with the API URL and the result.
 
 **Send back:** "secrets done".
+
+---
+
+## 11. Release: prep today, DNS on release day
+
+Release: **Monday 2 November 2026**, with the LinkedIn post scheduled for **7:30 NZ time**. Everything except DNS is done before then, so release morning is only section 11b.
+
+Run each command by typing it into this Claude Code prompt with the `!` in front, so the output lands in the chat and the agent can read it. None of these commands print secrets.
+
+### 11a. Today (about 15 minutes; nothing public changes)
+
+1. **Merge PR #19** once its CI is green: <https://github.com/LordMaduz/landednz/pull/19> → **Merge pull request**. Then wait for the **Staging** workflow on `main` to go green (about 10 minutes): <https://github.com/LordMaduz/landednz/actions/workflows/staging.yml>.
+2. **Add the domains to Vercel and Railway** (this only tells each platform which name to expect; nothing changes until DNS points there):
+
+   ```
+   ! cd apps/web && vercel domains add landednz.co.nz landednz && vercel domains add www.landednz.co.nz landednz
+   ! railway domain api.landednz.co.nz --service api
+   ```
+
+   Each prints the DNS records it needs. The agent copies them into 11b with the exact values.
+3. **Point the GitHub health check at the production API:**
+
+   ```
+   ! gh variable set PROD_API_URL --body "https://api.landednz.co.nz"
+   ```
+
+   Until DNS exists, the 6-hourly **Health** workflow fails and emails you. Ignore those emails until release day.
+4. **Supabase sign-in addresses**: <https://supabase.com/dashboard/project/cauaowrnsivggivsopad/auth/url-configuration>
+   - **Site URL** → `https://landednz.co.nz` → **Save**.
+   - **Redirect URLs** → **Add URL** → `https://landednz.co.nz/**` → **Save**. Add `https://www.landednz.co.nz/**` the same way.
+5. **Vercel: send `www` to the main name.** <https://vercel.com/lordmaduzs-projects/landednz/settings/domains> → **www.landednz.co.nz** → **Edit** → **Redirect to** `landednz.co.nz` (308) → **Save**.
+6. **Ship the code to production** (from the main checkout, on `main`, after step 1):
+
+   ```
+   ! git switch main && git pull && scripts/release.sh 0
+   ```
+
+   This pushes `main` to `production` and tags `r0`. Railway and Vercel build the production site. The agent then checks both builds and the API.
+
+**Send back:** "11a done".
+
+### 11b. Release day: DNS (Cloudflare, about 5 minutes + up to 30 minutes waiting)
+
+Do this by **6:30** Monday at the latest, so there is an hour before the post goes out.
+
+1. Cloudflare → **landednz.co.nz** → **DNS** → **Records** → **Add record**, once per row. Set **Proxy status** to **DNS only** (grey cloud) on every row: Vercel and Railway issue their own HTTPS certificates and need to reach the domain directly.
+
+   | Type | Name | Content |
+   | --- | --- | --- |
+   | *(the agent fills these in from the 11a step 2 output)* | | |
+
+2. Don't touch the existing MX and TXT rows (email forwarding, section 9).
+3. Tell the agent "DNS added". It checks HTTPS on `landednz.co.nz`, `www` and `api`, signs in with Google, asks the Guide one question, and records the result in `deploy-runbook.md`.
+
+**Recommended:** do 11b on **Sunday**. Nobody knows the address before the post, so the site going live a day early is invisible. In return, the agent can check the real sign-in and Guide a day ahead, instead of finding a DNS or certificate problem at 7:00 with the post already scheduled.
 
 ---
 
