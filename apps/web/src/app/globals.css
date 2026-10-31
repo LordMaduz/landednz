@@ -519,6 +519,7 @@
   .legal > :first-child { margin-top: 0; }
   .legal h2 { margin-top: 32px; font-size: var(--text-section); line-height: var(--text-section--line-height); letter-spacing: var(--text-section--letter-spacing); font-weight: 600; }
   .legal p, .legal li { font-size: var(--text-body); line-height: 1.6; }
+  .legal a { text-decoration-line: underline; } /* WCAG 1.4.1: links in running text need more than colour */
   .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
   .ph { background: var(--color-surface-sunken); border-radius: 4px; padding: 0 4px; }
 

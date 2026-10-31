@@ -123,3 +123,6 @@ apps/api/content-review/
 # Generated tool output
 .vitest/
 .impeccable/
+
+# owner-only ops guide, kept local
+docs/setup/prod-owner-guide.md

@@ -9,9 +9,15 @@
 
 To build your roadmap, keep your progress, and answer your questions about it. LandedNZ does not sell your information or use it for advertising.
 
+LandedNZ also counts page visits through PostHog: the page address, your browser and device type, and a rough location worked out from your internet address. This shows which parts of the app help people. It sets no cookies and is not linked to your name or email.
+
 ## Who else handles it
 
-Your questions and the parts of your roadmap they need are sent to Anthropic to write the assistant's answers. Your account and roadmap are stored with `[hosting provider and region]`.
+- Anthropic: your questions and the parts of your roadmap they need, to write the assistant's answers.
+- OpenAI: the text of your question, to find the guide sections that match it.
+- Supabase (Sydney, Australia): stores your account and roadmap.
+- Vercel and Railway (Singapore): run the app.
+- Sentry: error reports, without your name, email or questions.
 
 ## Your rights
 
@@ -19,4 +25,4 @@ Under the Privacy Act 2020 you can ask to see the information LandedNZ holds abo
 
 ## Contact
 
-Questions about your information: `[privacy contact email]`.
+Questions about your information: [privacy@landednz.co.nz](mailto:privacy@landednz.co.nz).
