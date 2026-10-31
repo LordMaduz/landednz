@@ -247,15 +247,15 @@ The agent has already set every value that is not a secret, in Railway and in Ve
 ### 10b. Vercel: 2 variables
 
 1. Open <https://vercel.com/lordmaduzs-projects/landednz/settings/environment-variables>.
-2. For each row below: **Add Environment Variable** → **Key** → **Value** → **Environments**: tick **Production only** (untick Preview and Development) → set **Sensitive** as shown → **Save**.
+2. For each row below: **Add Environment Variable** → **Key** → **Value** → **Environments**: tick **Production only** (untick Preview and Development) → set **Type** as shown → **Save**.
 
-   | Key | Value | Sensitive |
+   | Key | Value | Type |
    | --- | --- | --- |
-   | `SENTRY_AUTH_TOKEN` | the `vercel-sourcemaps` token (starts `sntrys_`, staging guide §5c). Lost it? See below. | **on** |
-   | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog `landednz-prod` **Project API key** (starts `phc_`, §6) | off (it is public by design) |
+   | `SENTRY_AUTH_TOKEN` | the `vercel-sourcemaps` token (starts `sntrys_`, staging guide §5c). Lost it? See below. | **Secret** |
+   | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog `landednz-prod` **Project API key** (starts `phc_`, §6) | **Config** (every `NEXT_PUBLIC_` value ships to browsers, so it is public anyway) |
 
 **No Sentry token?** Sentry shows a token only once, so make a new one:
-<https://landednz.sentry.io/settings/auth-tokens/> → **Create New Token** → name `vercel-sourcemaps-prod` → **Create** → copy it (starts `sntrys_`) into your password manager, then paste it into Vercel as above. It is optional: without it the site works the same and still reports errors, but the stack traces show minified code instead of our real lines. You can add it any time before release.
+<https://landednz.sentry.io/settings/auth-tokens/> → **Create New Token** → name `vercel-sourcemaps-prod` → **Create** → copy it (starts `sntrys_`) into your password manager, then paste it into Vercel as above (type **Secret**). It is optional: without it the site works the same and still reports errors, but the stack traces show minified code instead of our real lines. You can add it any time before release.
 
 3. Ignore Vercel's "Redeploy" prompt. The next production deploy picks the values up.
 
