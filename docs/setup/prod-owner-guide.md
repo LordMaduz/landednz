@@ -42,7 +42,7 @@ Browser ──> PostHog (page views, free tier)
 - [x] 7. `ADMIN_API_KEY` generated
 - [x] 8. Privacy page wording for analytics: A chosen 2026-10-31, wording approved and applied (plus OpenAI, Sentry, hosting and contact filled in; Terms operator + contact filled in)
 - [x] 9. Email forwarding for `privacy@` and `hello@landednz.co.nz` (section 9)
-- [ ] 10. Paste the production secrets into Railway and Vercel (section 10)
+- [x] 10. Paste the production secrets into Railway and Vercel (section 10)
 
 Already done, nothing to do: OpenAI budget (staging guide §4), Sentry projects + token (§5), Vercel Branch Tracking = `production` (§6), CLI logins (`railway`, `vercel`, `supabase`, `gh` all checked 2026-10-31).
 
