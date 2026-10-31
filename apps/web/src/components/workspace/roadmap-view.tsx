@@ -111,7 +111,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <Wide>{today.meta}</Wide>
                 <Phone>Today · {today.meta.replace("You're here · ", "").replace(/^Up next/, "up next")}</Phone>
               </p>
-              <h2 className="text-featured">{today.task.title}</h2>
+              <h2 className="text-section">{today.task.title}</h2>
               {today.task.why && <p className="max-w-lede text-ui text-fg-muted max-narrow:hidden">{today.task.why}</p>}
               {today.unlocks.length > 0 && (
                 <p className="text-small text-fg-muted">
