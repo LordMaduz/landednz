@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,11 +40,12 @@ export function DeleteAccount() {
 
   return (
     <AlertDialog onOpenChange={open => !open && setError(null)}>
-      <AlertDialogTrigger
-        render={<button type="button" className="min-h-11 cursor-pointer border-0 bg-transparent p-0 font-medium text-danger-on-ink hover:text-white max-narrow:basis-full max-narrow:text-left max-narrow:border-t max-narrow:border-hairline max-narrow:text-danger max-narrow:hover:text-danger" />}
-      >
-        Delete account<span className="hidden max-narrow:inline">…</span>
-      </AlertDialogTrigger>
+      <Card variant="plain" aria-label="Delete account" className="flex-row items-center gap-4 max-narrow:flex-col max-narrow:items-stretch max-narrow:gap-3">
+        <p className="m-0 flex-1 text-ui text-fg-muted">{WHAT_GOES}</p>
+        <AlertDialogTrigger render={<Button type="button" variant="secondary" className="min-h-10 text-danger hover:text-danger max-narrow:min-h-12" />}>
+          Delete account…
+        </AlertDialogTrigger>
+      </Card>
       <AlertDialogContent initialFocus={keep}>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete your account?</AlertDialogTitle>
@@ -55,7 +57,7 @@ export function DeleteAccount() {
           <AlertDialogAction
             onClick={confirm}
             disabled={deleting}
-            className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
+            className="border-danger bg-danger text-fg-on-action hover:bg-danger hover:text-fg-on-action"
           >
             Delete account
           </AlertDialogAction>

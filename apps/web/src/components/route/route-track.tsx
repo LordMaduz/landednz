@@ -78,7 +78,7 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
         {stageLabels(route, arrivalDate, now).map(s => (
           <li key={s.id} className={`track-stage${s.now ? "" : " track-stage-off"}`}>
             <span className="track-stage-name">{s.name}{s.now ? " · now" : s.open ? " · still open" : ""}</span>
-            <span className="text-muted">
+            <span className="text-fg-muted">
               {/* the space between parts stays outside the no-wrap span: a narrow stage wraps instead of running into the next */}
               {s.state.split(" · ").map((part, i, all) => <Fragment key={part}><span className="whitespace-nowrap">{part}{i < all.length - 1 && " ·"}</span> </Fragment>)}
             </span>
@@ -86,13 +86,13 @@ export function RouteTrack({ route, arrivalDate, now, variant }: { route: RouteV
         ))}
       </ol>
       <div className="track-phone">
-        <span className="text-muted">{phone.prev && <>{phone.prev.name} <span>{phone.prev.state}</span></>}</span>
-        <span className="font-semibold text-teal-text">
+        <span className="text-fg-muted">{phone.prev && <>{phone.prev.name} <span>{phone.prev.state}</span></>}</span>
+        <span className="font-semibold text-fg-accent">
           {phone.cur.name} · {variant === 'compact' || !phone.cur.daysLeft ? 'now' : `${phone.cur.daysLeft} ${phone.cur.daysLeft === 1 ? 'day' : 'days'} left`}
         </span>
         {variant === 'compact'
           ? <Link href="/app/roadmap" className="inline-flex min-h-6 items-center font-semibold">Roadmap</Link>
-          : <span className="text-muted">{phone.next}</span>}
+          : <span className="text-fg-muted">{phone.next}</span>}
       </div>
       <p className="track-sum sr-only"><b className="font-semibold">{stage}</b> <span>· {more.join(" · ")}</span></p>
     </div>

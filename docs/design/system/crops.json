@@ -1,0 +1,302 @@
+[
+ {
+  "page": "landing",
+  "w": 1440,
+  "j": 0,
+  "label": "Build my roadmap"
+ },
+ {
+  "page": "landing",
+  "w": 1440,
+  "j": 1,
+  "label": "Sign in"
+ },
+ {
+  "page": "landing",
+  "w": 1440,
+  "j": 2,
+  "label": "Privacy"
+ },
+ {
+  "page": "onboarding-1",
+  "w": 1440,
+  "j": 0,
+  "label": "Accredited Employer Work Visa (AEWV)"
+ },
+ {
+  "page": "onboarding-1",
+  "w": 1440,
+  "j": 1,
+  "label": "Home"
+ },
+ {
+  "page": "onboarding-5",
+  "w": 1440,
+  "j": 0,
+  "label": "Continue"
+ },
+ {
+  "page": "preview",
+  "w": 1440,
+  "j": 0,
+  "label": "Save my roadmap"
+ },
+ {
+  "page": "save",
+  "w": 1440,
+  "j": 0,
+  "label": "Save and sign in"
+ },
+ {
+  "page": "save",
+  "w": 1440,
+  "j": 1,
+  "label": "Your roadmap preview"
+ },
+ {
+  "page": "save",
+  "w": 1440,
+  "j": 2,
+  "label": "terms"
+ },
+ {
+  "page": "home",
+  "w": 1440,
+  "j": 0,
+  "label": "Roadmap"
+ },
+ {
+  "page": "home",
+  "w": 1440,
+  "j": 1,
+  "label": "Start task"
+ },
+ {
+  "page": "home",
+  "w": 1440,
+  "j": 2,
+  "label": "Ask about this"
+ },
+ {
+  "page": "home",
+  "w": 1440,
+  "j": 3,
+  "label": "Get an NZ SIM card"
+ },
+ {
+  "page": "home",
+  "w": 1440,
+  "j": 4,
+  "label": "Open roadmap"
+ },
+ {
+  "page": "roadmap",
+  "w": 1440,
+  "j": 0,
+  "label": "Book temporary accommodation"
+ },
+ {
+  "page": "roadmap",
+  "w": 1440,
+  "j": 1,
+  "label": "Show 7 more"
+ },
+ {
+  "page": "roadmap",
+  "w": 1440,
+  "j": 2,
+  "label": "Start task"
+ },
+ {
+  "page": "task",
+  "w": 1440,
+  "j": 0,
+  "label": "Mark as done"
+ },
+ {
+  "page": "task",
+  "w": 1440,
+  "j": 1,
+  "label": "Open the IRD application"
+ },
+ {
+  "page": "task",
+  "w": 1440,
+  "j": 3,
+  "label": "Next task"
+ },
+ {
+  "page": "settings",
+  "w": 1440,
+  "j": 0,
+  "label": "Change"
+ },
+ {
+  "page": "settings",
+  "w": 1440,
+  "j": 1,
+  "label": "Manage"
+ },
+ {
+  "page": "settings",
+  "w": 1440,
+  "j": 2,
+  "label": "Sign out"
+ },
+ {
+  "page": "settings",
+  "w": 1440,
+  "j": 3,
+  "label": "Delete account"
+ },
+ {
+  "page": "settings-edit",
+  "w": 1440,
+  "j": 0,
+  "label": "Save and rebuild"
+ },
+ {
+  "page": "settings-edit",
+  "w": 1440,
+  "j": 1,
+  "label": "Cancel"
+ },
+ {
+  "page": "landing",
+  "w": 390,
+  "j": 0,
+  "label": "Build my roadmap"
+ },
+ {
+  "page": "landing",
+  "w": 390,
+  "j": 1,
+  "label": "Sign in"
+ },
+ {
+  "page": "landing",
+  "w": 390,
+  "j": 2,
+  "label": "Privacy"
+ },
+ {
+  "page": "onboarding-1",
+  "w": 390,
+  "j": 0,
+  "label": "Accredited Employer Work Visa (AEWV)"
+ },
+ {
+  "page": "onboarding-5",
+  "w": 390,
+  "j": 0,
+  "label": "Continue"
+ },
+ {
+  "page": "preview",
+  "w": 390,
+  "j": 0,
+  "label": "Save my roadmap"
+ },
+ {
+  "page": "save",
+  "w": 390,
+  "j": 0,
+  "label": "Save and sign in"
+ },
+ {
+  "page": "save",
+  "w": 390,
+  "j": 1,
+  "label": "Your roadmap preview"
+ },
+ {
+  "page": "save",
+  "w": 390,
+  "j": 2,
+  "label": "terms"
+ },
+ {
+  "page": "home",
+  "w": 390,
+  "j": 0,
+  "label": "Roadmap"
+ },
+ {
+  "page": "home",
+  "w": 390,
+  "j": 1,
+  "label": "Start task"
+ },
+ {
+  "page": "home",
+  "w": 390,
+  "j": 2,
+  "label": "Ask about this"
+ },
+ {
+  "page": "home",
+  "w": 390,
+  "j": 3,
+  "label": "Get an NZ SIM card"
+ },
+ {
+  "page": "roadmap",
+  "w": 390,
+  "j": 0,
+  "label": "Book temporary accommodation"
+ },
+ {
+  "page": "roadmap",
+  "w": 390,
+  "j": 2,
+  "label": "Start task"
+ },
+ {
+  "page": "task",
+  "w": 390,
+  "j": 0,
+  "label": "Mark as done"
+ },
+ {
+  "page": "task",
+  "w": 390,
+  "j": 1,
+  "label": "Open the IRD application"
+ },
+ {
+  "page": "settings",
+  "w": 390,
+  "j": 0,
+  "label": "Change"
+ },
+ {
+  "page": "settings",
+  "w": 390,
+  "j": 1,
+  "label": "Manage"
+ },
+ {
+  "page": "settings",
+  "w": 390,
+  "j": 2,
+  "label": "Sign out"
+ },
+ {
+  "page": "settings",
+  "w": 390,
+  "j": 3,
+  "label": "Delete account"
+ },
+ {
+  "page": "settings-edit",
+  "w": 390,
+  "j": 0,
+  "label": "Save and rebuild"
+ },
+ {
+  "page": "settings-edit",
+  "w": 390,
+  "j": 1,
+  "label": "Cancel"
+ }
+]

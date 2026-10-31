@@ -6,6 +6,7 @@ import { ArrowRight, Check, CircleAlert, Copy, CornerUpLeft, Info, RotateCcw, Sh
 import type { ReplyPart } from "@landednz/types"
 import { groupBlocks, provenance, textCount, type TextPart, type Turn } from "@/lib/guide-turns"
 import { linkPhones } from "@/lib/tel-links"
+import { Button } from "@/components/ui/button"
 import { TASK_COPY } from "@/lib/task-copy"
 import type { GuideBanner } from "@/lib/stores/guideStore"
 import { cn } from "@/lib/utils"
@@ -29,15 +30,15 @@ const phones = (text: string): ReactNode =>
 
 // A quiet line with a rule after it ("This answer was cut short.")
 const Cut = ({ children }: { children: ReactNode }) => (
-  <p className="flex items-center gap-2 text-small text-muted after:h-px after:flex-1 after:bg-hairline">{children}</p>
+  <p className="flex items-center gap-2 text-small text-fg-muted after:h-px after:flex-1 after:bg-border-subtle">{children}</p>
 )
 
 // Icon + message, optionally with actions underneath (board "gnote")
 function Note({ error, children, action }: { error?: boolean; children: ReactNode; action?: ReactNode }) {
   const Icon = error ? CircleAlert : Info
   return (
-    <div className="flex gap-2.5 text-body">
-      <Icon className={cn("mt-1 size-4 shrink-0", error ? "text-danger" : "text-muted")} aria-hidden />
+    <div className="flex gap-3 text-body">
+      <Icon className={cn("mt-1 size-4 shrink-0", error ? "text-danger" : "text-fg-muted")} aria-hidden />
       <div className="flex flex-col gap-2">
         <p>{children}</p>
         {action}
@@ -47,25 +48,22 @@ function Note({ error, children, action }: { error?: boolean; children: ReactNod
 }
 
 const RetryButton = ({ onRetry }: { onRetry: () => void }) => (
-  <button
-    type="button"
-    onClick={onRetry}
-    className="inline-flex min-h-8 cursor-pointer items-center gap-1.5 self-start rounded-control bg-ink px-3 text-small font-medium text-white hover:bg-ink-hover max-narrow:min-h-11"
-  >
+  <Button type="button" size="sm" onClick={onRetry} className="gap-2 self-start text-small">
     <RotateCcw className="size-3.5" aria-hidden />
     Retry
-  </button>
+  </Button>
 )
 
 const FollowUp = ({ text, onFollowUp }: { text: string; onFollowUp: (text: string) => void }) => (
-  <button
+  <Button
     type="button"
+    variant="ghost"
     onClick={() => onFollowUp(text)}
-    className="flex min-h-11 cursor-pointer items-center gap-2.5 border-t border-hairline py-2.5 text-left text-body text-ink"
+    className="h-auto min-h-11 justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-0 py-3 text-left font-normal whitespace-normal text-ui"
   >
-    <CornerUpLeft className="size-4 shrink-0 text-teal" aria-hidden />
+    <CornerUpLeft className="size-4 shrink-0 text-accent" aria-hidden />
     {text}
-  </button>
+  </Button>
 )
 
 export function Banner({ banner, dailyCap }: { banner: BannerState; dailyCap: number }) {
@@ -74,7 +72,7 @@ export function Banner({ banner, dailyCap }: { banner: BannerState; dailyCap: nu
       action={
         // O1 (owner 2026-10-30): a capped question gets no model call, so the crisis line is always here
         banner.kind === "cap" && (
-          <p className="text-small text-muted">
+          <p className="text-small text-fg-muted">
             Need to talk? Free call or text{" "}
             <a href="tel:1737" className="underline">
               1737
@@ -147,33 +145,33 @@ export function Reply({
   )
 
   return (
-    <div data-turn={turn.key} className="flex flex-col gap-3.5">
+    <div data-turn={turn.key} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h3 className={cn("text-balance", focus ? "text-title" : "text-section", stoppedEarly ? "text-muted" : "text-ink")}>{turn.question}</h3>
-        {meta && <p className="text-citation text-muted">{meta}</p>}
+        <h3 className={cn("text-balance", focus ? "text-title" : "text-section", stoppedEarly ? "text-fg-muted" : "text-fg")}>{turn.question}</h3>
+        {meta && <p className="text-small text-fg-muted">{meta}</p>}
       </div>
 
       {notices.has("official_unavailable") && <Cut>Official sites didn&apos;t respond. Answering from the checked guide only.</Cut>}
 
       {prov && (
-        <p className="flex items-center gap-2.5 text-small font-medium text-teal-text">
+        <p className="flex items-center gap-3 text-small font-medium text-fg-accent">
           <ShieldCheck className="size-4 shrink-0" aria-hidden />
           <span>{prov.label}</span>
-          <span className="font-normal text-muted">
+          <span className="font-normal text-fg-muted">
             {prov.domain} · {prov.count} {prov.count === 1 ? "source" : "sources"}
           </span>
         </p>
       )}
 
-      <div aria-live="polite" aria-busy={streaming} className={cn("flex flex-col gap-3 text-ink", focus ? "text-reading-focus" : "text-reading")}>
+      <div aria-live="polite" aria-busy={streaming} className={cn("flex flex-col gap-3 text-fg", "text-reading")}>
         {groupBlocks(parts).map((b, i) => {
           if (b.kind === "crisis") return <CrisisCard key={i} />
           if (b.kind === "steps")
             return (
               <ol key={i} aria-label="Steps" className="flex flex-col gap-2">
                 {b.items.map((item, j) => (
-                  <li key={j} className="flex gap-1.5">
-                    <span aria-hidden className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-wash text-citation font-semibold">
+                  <li key={j} className="flex gap-2">
+                    <span aria-hidden className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-surface-sunken text-small font-semibold">
                       {item[0].step}
                     </span>
                     <span>{item.map(sentence)}</span>
@@ -183,10 +181,10 @@ export function Reply({
             )
           if (b.kind === "limits")
             return (
-              <div key={i} className="flex gap-2 text-body text-muted">
+              <div key={i} className="flex gap-2 text-body text-fg-muted">
                 <Info className="mt-1 size-4 shrink-0" aria-hidden />
                 <p>
-                  <b className="block font-semibold text-ink">What I can&apos;t tell you</b>
+                  <b className="block font-semibold text-fg">What I can&apos;t tell you</b>
                   {b.parts.map(sentence)}
                 </p>
               </div>
@@ -200,8 +198,8 @@ export function Reply({
       </div>
 
       {streaming && (
-        <p className="flex items-center gap-2 text-small text-muted">
-          <span aria-hidden className="size-3.5 rounded-full border-2 border-tint-border border-t-teal motion-safe:animate-spin" />
+        <p className="flex items-center gap-2 text-small text-fg-muted">
+          <span aria-hidden className="size-3.5 rounded-full border-2 border-border-selected border-t-teal motion-safe:animate-spin" />
           {!hasText && lastCheck?.type === "notice" ? CHECKING[lastCheck.kind] : "Writing the answer…"}
         </p>
       )}
@@ -216,8 +214,8 @@ export function Reply({
       {status === "cancelled" && hasText && <Cut>You stopped this answer.</Cut>}
 
       {unverified.map((u, i) => (
-        <p key={i} className="flex gap-2 rounded-surface bg-wash px-3 py-2.5 text-small text-ink">
-          <CircleAlert className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
+        <p key={i} className="flex gap-2 rounded-card bg-surface-sunken px-3 py-3 text-small text-fg">
+          <CircleAlert className="mt-0.5 size-4 shrink-0 text-fg-muted" aria-hidden />
           <span>{u.text}</span>
         </p>
       ))}
@@ -225,33 +223,33 @@ export function Reply({
       {taskLink && (
         <Link
           href={`/app/roadmap?task=${taskLink.taskKey}`}
-          className="flex items-center gap-3 rounded-surface bg-wash px-3.5 py-3 text-ink no-underline transition-colors hover:bg-tint hover:text-ink"
+          className="flex items-center gap-3 rounded-card bg-surface-sunken px-4 py-3 text-fg no-underline transition-colors hover:bg-surface-selected hover:text-fg"
         >
-          <i aria-hidden className="size-3 shrink-0 rounded-full border-2 border-teal bg-white" />
+          <i aria-hidden className="size-3 shrink-0 rounded-full border-2 border-accent bg-surface" />
           <span className="flex flex-1 flex-col leading-tight">
             {/* The card links to a page, so it carries that page's title (owner 2026-10-30) */}
-            <b className="text-body font-semibold">{TASK_COPY[taskLink.taskKey]?.title ?? taskLink.title}</b>
-            <small className="text-citation text-muted">Your task</small>
+            <b className="text-ui font-semibold">{TASK_COPY[taskLink.taskKey]?.title ?? taskLink.title}</b>
+            <small className="text-small text-fg-muted">Your task</small>
           </span>
           <ArrowRight className="size-4" aria-hidden />
         </Link>
       )}
 
       {showSources && sources.length > 0 && (
-        <ul className="flex flex-col gap-0.5 rounded-surface bg-wash p-1.5">
+        <ul className="flex flex-col gap-0.5 rounded-card bg-surface-sunken p-2">
           {sources.map(s => (
             <li key={s.index}>
               <a
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 rounded-control px-2 py-1.5 text-small text-ink no-underline hover:bg-white hover:text-ink"
+                className="flex items-center gap-2 rounded-control px-2 py-2 text-small text-fg no-underline hover:bg-surface hover:text-fg"
               >
-                <span aria-hidden className="grid size-4.5 shrink-0 place-items-center rounded-md bg-white text-citation font-semibold text-teal-text">
+                <span aria-hidden className="grid size-4.5 shrink-0 place-items-center rounded-control bg-surface text-small font-semibold text-fg-accent">
                   {s.index}
                 </span>
                 <span className="flex-1">{s.title}</span>
-                <small className="text-citation text-muted">{domainOf(s.url)}</small>
+                <small className="text-small text-fg-muted">{domainOf(s.url)}</small>
               </a>
             </li>
           ))}
@@ -259,29 +257,31 @@ export function Reply({
       )}
 
       {memories.map(m => (
-        <span key={m.memoryId} className="inline-flex items-center gap-2 self-start rounded-full bg-tint py-1.25 pr-1.5 pl-3 text-small text-teal-text">
+        <span key={m.memoryId} className="inline-flex items-center gap-2 self-start rounded-full bg-surface-selected py-1 pr-2 pl-3 text-small text-fg-accent">
           <Check className="size-3.5" aria-hidden />
           Remembered: {m.text}
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={() => onUndoMemory(m.memoryId)}
-            className="relative cursor-pointer rounded-full bg-white px-2.5 py-0.5 text-citation font-medium text-ink ring-1 ring-tint-border ring-inset after:absolute after:-inset-2"
+            className="relative min-h-0 rounded-full border-0 px-3 py-0.5 text-small ring-1 ring-border-selected ring-inset after:absolute after:-inset-2 max-narrow:min-h-0"
           >
             Undo
-          </button>
+          </Button>
         </span>
       ))}
 
       {!streaming && hasText && (
-        <div className="flex items-center gap-1 text-small text-muted">
-          <button type="button" onClick={() => navigator.clipboard.writeText(copyText(parts))} className={chipButton}>
+        <div className="flex items-center gap-1 text-small text-fg-muted">
+          <Button type="button" variant="ghost" size="sm" onClick={() => navigator.clipboard.writeText(copyText(parts))} className={chipButton}>
             <Copy className="size-3.5" aria-hidden />
             Copy
-          </button>
+          </Button>
           {sources.length > 0 && (
-            <button type="button" aria-expanded={showSources} onClick={() => setShowSources(v => !v)} className={chipButton}>
+            <Button type="button" variant="ghost" size="sm" aria-expanded={showSources} onClick={() => setShowSources(v => !v)} className={chipButton}>
               {showSources ? "Hide sources" : `${sources.length} ${sources.length === 1 ? "source" : "sources"}`}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -299,4 +299,4 @@ export function Reply({
 }
 
 const chipButton =
-  "inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-control px-2.5 text-small text-muted hover:bg-wash hover:text-ink max-narrow:min-h-11"
+  "gap-2 border-0 px-3 font-normal text-small text-fg-muted hover:text-fg"

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LandedNZ design system: proposed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0F2A3A; --muted:#4B6170; --control:#7A8F99; --border:#D5DFE2; --hairline:#E3E8EA; --wash:#F6F8F8;
+  --teal:#0E7C7B; --teal-text:#0A6463; --teal-hover:#074B4A; --tint:#F3F9F8; --tint-border:#CFE5E3; --danger:#A3292B;
+  --rail-text:#A9BDC7; --toast-action:#7FE0D3; --danger-on-ink:#F2B8B5;
+  --h-light:6%; --p-light:10%; --h-dark:8%; --p-dark:12%; --floating:16px;
+  --lift:0 1px 2px rgba(15,42,58,.04),0 16px 48px rgba(15,42,58,.08);
+  --bar:0 0 0 1px rgba(15,42,58,.08),0 2px 4px rgba(15,42,58,.04),0 18px 40px -12px rgba(15,42,58,.28);
+  --pane:0 0 0 1px rgba(15,42,58,.06),0 2px 4px rgba(15,42,58,.04),0 24px 64px -12px rgba(15,42,58,.18);
+}
+:root[data-strength=b] { --h-light:8%; --p-light:12%; --h-dark:10%; --p-dark:16%; }
+:root[data-radius=r18] { --floating:18px; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:72px; }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+body { margin:0; font:14px/1.45 Geist, system-ui, sans-serif; color:var(--ink); background:#fff; font-feature-settings:'tnum' 1; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--tint-border); }
+:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+a { color:var(--teal-text); } a:hover { color:var(--teal-hover); }
+code { font:12px/1.4 'Geist Mono', ui-monospace, monospace; color:var(--muted); }
+@media (max-width:860px) { .top { position:static !important; } .ctl { margin-left:0; } }
+.top { position:sticky; top:0; z-index:5; background:rgba(255,255,255,.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--hairline); }
+.top .in { max-width:1248px; margin:0 auto; padding:12px 24px; display:flex; gap:24px; align-items:center; flex-wrap:wrap; }
+.top b { font-weight:600; }
+.ctl { display:flex; gap:16px; margin-left:auto; flex-wrap:wrap; }
+.seg { display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.seg button { font:inherit; font-size:12px; border:0; background:#fff; color:var(--muted); padding:6px 12px; min-height:32px; cursor:pointer; }
+.seg button[aria-pressed=true] { background:var(--ink); color:#fff; }
+.seg span { font-size:12px; color:var(--muted); padding:6px 8px 6px 12px; align-self:center; }
+main { max-width:1248px; margin:0 auto; padding:0 24px 96px; }
+h1 { font-size:24px; line-height:1.25; letter-spacing:-.015em; font-weight:600; margin:48px 0 8px; }
+h2 { font-size:18px; line-height:1.35; letter-spacing:-.01em; font-weight:600; margin:64px 0 8px; }
+h3 { font-size:16px; line-height:1.35; font-weight:600; margin:0; }
+p { font-size:16px; line-height:1.5; margin:0 0 12px; max-width:72ch; }
+.lede { color:var(--muted); }
+.facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:24px 0; }
+.fact { border:1px solid var(--hairline); border-radius:12px; padding:16px; }
+.fact strong { display:block; font-size:16px; font-weight:600; margin-bottom:4px; }
+.fact span { color:var(--muted); }
+table { border-collapse:collapse; width:100%; }
+th, td { text-align:left; padding:8px 12px 8px 0; border-bottom:1px solid var(--hairline); vertical-align:middle; }
+thead th { font-size:12px; font-weight:500; color:var(--muted); }
+td.num { font-weight:600; width:48px; }
+.sw { display:inline-block; width:14px; height:14px; border-radius:4px; border:1px solid rgba(15,42,58,.15); vertical-align:-2px; }
+.sw.lg { width:28px; height:28px; border-radius:6px; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+@media (max-width:860px) { .grid2 { grid-template-columns:1fr; } }
+.panel { border:1px solid var(--hairline); border-radius:12px; padding:24px; }
+.panel.dark { background:var(--ink); border-color:var(--ink); color:#fff; }
+.panel h3 { margin-bottom:16px; }
+.row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:16px; }
+.lbl { font-size:12px; color:var(--muted); width:100%; margin:16px 0 8px; }
+.dark .lbl { color:var(--rail-text); }
+
+/* the proposed state layer: one rule for every control */
+.st { --sb:transparent; --sl:var(--ink); --sh:var(--h-light); --sp:var(--p-light); background-color:var(--sb); cursor:pointer; }
+.st.inv { --sl:#fff; --sh:var(--h-dark); --sp:var(--p-dark); }
+@media (hover:hover) { .st:hover:not(:disabled) { background-color:color-mix(in oklab, var(--sb), var(--sl) var(--sh)); } }
+.st:active:not(:disabled), .st.f-press { background-color:color-mix(in oklab, var(--sb), var(--sl) var(--sp)); }
+.st.f-hover { background-color:color-mix(in oklab, var(--sb), var(--sl) var(--sh)); }
+.st.f-focus { outline:2px solid var(--teal); outline-offset:2px; }
+.b { font:inherit; font-weight:500; display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:40px; padding:0 16px; border-radius:8px; border:1px solid transparent; color:var(--ink); }
+@media (max-width:560px) { .b { min-height:44px; } }
+.b.primary { --sb:var(--ink); border-color:var(--ink); color:#fff; }
+.b.secondary { --sb:#fff; border-color:var(--border); }
+.b.ghost { --sb:transparent; }
+.b.danger { --sb:var(--danger); border-color:var(--danger); color:#fff; }
+.b.danger-ghost { --sb:transparent; color:var(--danger); }
+.b.inverse { --sb:transparent; color:#fff; border-color:rgba(255,255,255,.24); }
+.b.inverse-danger { --sb:transparent; color:var(--danger-on-ink); }
+.b.icon { width:40px; padding:0; }
+.b:disabled { --sb:var(--wash); background:var(--wash); border-color:var(--wash); color:var(--muted); cursor:default; }
+.t { font:inherit; font-weight:500; background:none; border:0; padding:0; color:var(--teal-text); cursor:pointer; text-underline-offset:3px; }
+@media (hover:hover) { .t:hover { color:var(--teal-hover); text-decoration:underline; } }
+.t:active { color:var(--teal-hover); text-decoration:underline; }
+.dark .t { color:var(--toast-action); } .dark .t:hover, .dark .t:active { color:#fff; }
+.field { font:inherit; font-size:16px; width:100%; min-height:44px; padding:0 12px; border:1px solid var(--border); border-radius:8px; color:var(--ink); background:#fff; }
+.field:focus, .field.f-focus { outline:2px solid var(--teal); outline-offset:2px; }
+.field.err { border-color:var(--danger); box-shadow:0 0 0 1px var(--danger); }
+.err-msg { color:var(--danger); font-size:12px; margin-top:4px; }
+.list { border:1px solid var(--hairline); border-radius:12px; overflow:hidden; }
+.li { display:flex; align-items:center; gap:12px; width:100%; font:inherit; font-size:14px; text-align:left; min-height:44px; padding:10px 16px; border:0; border-bottom:1px solid var(--hairline); color:var(--ink); }
+.li:last-child { border-bottom:0; }
+.li .ring { width:20px; height:20px; border-radius:50%; border:1.5px solid var(--control); flex:none; }
+.li small { margin-left:auto; color:var(--muted); font-size:12px; }
+.li.sel { --sb:var(--tint); box-shadow:inset 0 0 0 1px var(--teal); }
+.li.sel .ring { border:6px solid var(--teal); }
+.nav { display:flex; gap:4px; }
+.nav .b { min-height:36px; padding:0 12px; font-weight:500; color:var(--muted); }
+.nav .b[aria-current] { --sb:var(--tint); color:var(--ink); }
+.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+@media (max-width:860px) { .cards { grid-template-columns:1fr; } }
+.card { border-radius:12px; padding:20px; background:#fff; min-height:96px; }
+.card.plain { border:1px solid var(--hairline); }
+.card.raised { border:1px solid var(--hairline); box-shadow:var(--lift); }
+.card.floating { border-radius:var(--floating); box-shadow:var(--bar); }
+.card.overlay { border-radius:var(--floating); box-shadow:var(--pane); }
+.card small { color:var(--muted); font-size:12px; display:block; margin-top:4px; }
+.ask { display:flex; align-items:center; gap:12px; max-width:640px; padding:8px 8px 8px 16px; border-radius:var(--floating); box-shadow:var(--bar); background:#fff; color:var(--muted); font-size:16px; }
+.ask .b { margin-left:auto; }
+.space { display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+.space div { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:12px; color:var(--muted); }
+.space i { display:block; background:var(--tint-border); border-radius:2px; }
+.decide li { margin-bottom:12px; font-size:16px; line-height:1.5; max-width:80ch; }
+.decide b { font-weight:600; }
+.rec { display:inline-block; font-size:12px; font-weight:500; color:var(--teal-text); background:var(--tint); border:1px solid var(--tint-border); border-radius:999px; padding:0 8px; margin-left:4px; }
+.pnav { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 0; }
+.pnav a { font-size:12px; border:1px solid var(--hairline); border-radius:999px; padding:4px 10px; text-decoration:none; color:var(--ink); }
+.page { border-top:1px solid var(--hairline); padding:32px 0 8px; margin-top:32px; }
+.page header { display:flex; gap:12px; align-items:baseline; margin-bottom:16px; }
+.shots { display:flex; gap:24px; align-items:flex-start; overflow-x:auto; }
+.shots figure { margin:0; }
+.shots .full { display:block; border:1px solid var(--hairline); border-radius:8px; height:auto; }
+.shots .d { width:640px; max-width:70vw; } .shots .m { width:200px; }
+figcaption { font-size:12px; color:var(--muted); margin-top:8px; }
+.tables { display:grid; grid-template-columns:3fr 2fr; gap:32px; margin-top:24px; align-items:start; }
+@media (max-width:1100px) { .tables { grid-template-columns:1fr; } }
+h4 { margin:0; font-size:14px; font-weight:600; }
+h4.cap { margin-bottom:12px; }
+.ctrl { border-top:1px solid var(--hairline); padding:12px 0 16px; }
+.ctrl h4 { font-weight:500; color:var(--muted); font-size:12px; margin-bottom:8px; }
+.figs { display:flex; flex-wrap:wrap; gap:12px 16px; align-items:flex-end; }
+.figs figure { margin:0; max-width:100%; }
+.figs img { max-width:100%; height:auto; display:block; border-radius:4px; border:1px solid var(--hairline); }
+.figs figcaption { margin-top:4px; }
+.na { font-size:12px; color:var(--control); }
+.note { border-left:2px solid var(--teal); padding:4px 0 4px 16px; margin:24px 0; }
+</style></head>
+<body>
+<div class="top"><div class="in">
+  <b>LandedNZ · design system</b>
+  <a href="#system">System</a><a href="#pages">Every page</a><a href="#decide">Your decisions</a>
+  <div class="ctl">
+    <div class="seg" role="group" aria-label="State strength"><span>State strength</span>
+      <button aria-pressed="true" data-k="strength" data-v="a">A · 6 / 10 %</button><button aria-pressed="false" data-k="strength" data-v="b">B · 8 / 12 %</button></div>
+    <div class="seg" role="group" aria-label="Floating radius"><span>Floating radius</span>
+      <button aria-pressed="true" data-k="radius" data-v="r16">16</button><button aria-pressed="false" data-k="radius" data-v="r18">18</button></div>
+  </div>
+</div></div>
+<main>
+<h1>One design system for the whole app</h1>
+<p class="lede">Proposed for pieces 1 and 2 of the spec (<code>2026-10-31-design-system-design.md</code>). Everything on this page is live: hover and press the controls, and open this page on your phone to feel the tap feedback. Appearance only, no behaviour changes.</p>
+<div class="facts">
+  <div class="fact"><strong>10 hover reactions → 1 rule</strong><span>Measured on every page of the running app: 9 different hover changes, plus controls that do not react at all.</span></div>
+  <div class="fact"><strong>18 of 21 phone controls: no tap feedback</strong><span>Enabled controls tested at 390 with a finger held down. Proposed: all 21 show a pressed state.</span></div>
+  <div class="fact"><strong>At rest, pages look the same</strong><span>This organises the current look. The changes are in states, the merged radius and shadows, and one place for every value.</span></div>
+</div>
+
+<h2 id="system">Today: how controls react to the mouse</h2>
+<p class="lede">Every visible control on the 10 pages at 1440, hovered by Playwright. Count, what changes, from, to.</p>
+<table><thead><tr><th>Count</th><th>Change</th><th>From</th><th>To</th></tr></thead><tbody><tr><td class=num>35</td><td>background</td><td><i class="sw" style="background:rgb(255, 255, 255)"></i> rgb(255, 255, 255)</td><td><i class="sw" style="background:rgb(246, 248, 248)"></i> rgb(246, 248, 248)</td></tr><tr><td class=num>32</td><td>text colour</td><td><i class="sw" style="background:rgb(10, 100, 99)"></i> rgb(10, 100, 99)</td><td><i class="sw" style="background:rgb(7, 75, 74)"></i> rgb(7, 75, 74)</td></tr><tr><td class=num>25</td><td>none</td><td></td><td></td></tr><tr><td class=num>23</td><td>background</td><td><i class="sw" style="background:rgba(0, 0, 0, 0)"></i> rgba(0, 0, 0, 0)</td><td><i class="sw" style="background:rgb(246, 248, 248)"></i> rgb(246, 248, 248)</td></tr><tr><td class=num>19</td><td>underline or shadow only</td><td></td><td></td></tr><tr><td class=num>17</td><td>text colour</td><td><i class="sw" style="background:rgb(127, 224, 211)"></i> rgb(127, 224, 211)</td><td><i class="sw" style="background:rgb(255, 255, 255)"></i> rgb(255, 255, 255)</td></tr><tr><td class=num>6</td><td>background</td><td><i class="sw" style="background:rgb(15, 42, 58)"></i> rgb(15, 42, 58)</td><td><i class="sw" style="background:rgb(36, 70, 90)"></i> rgb(36, 70, 90)</td></tr><tr><td class=num>2</td><td>text colour</td><td><i class="sw" style="background:rgb(242, 184, 181)"></i> rgb(242, 184, 181)</td><td><i class="sw" style="background:rgb(255, 255, 255)"></i> rgb(255, 255, 255)</td></tr><tr><td class=num>1</td><td>text colour</td><td><i class="sw" style="background:rgb(75, 97, 112)"></i> rgb(75, 97, 112)</td><td><i class="sw" style="background:rgb(15, 42, 58)"></i> rgb(15, 42, 58)</td></tr><tr><td class=num>1</td><td>background</td><td><i class="sw" style="background:rgb(255, 255, 255)"></i> rgb(255, 255, 255)</td><td><i class="sw" style="background:rgb(248, 250, 255)"></i> rgb(248, 250, 255)</td></tr></tbody></table>
+<p class="note">Rows with "none" include disabled Continue / Send (correct), the current nav item and the account avatar (no reaction today).</p>
+
+<h2>Proposed: one state layer</h2>
+<p>Hover and press lay a thin see-through layer over whatever the control already is. On light surfaces it is ink, so it always darkens; on dark surfaces it is white, so it always lightens. Model: Material 3 state layers (hover 8 %, pressed 10 %) and Carbon's translucent hover tokens. Switch strength A / B in the top bar.</p>
+<div class="grid2">
+  <div class="panel"><h3>Buttons on light surfaces</h3>
+    <div class="lbl">Live: hover, press, Tab to focus</div>
+    <div class="row"><button class="b st primary">Start task</button><button class="b st secondary">Ask about this</button><button class="b st ghost">Show 7 more</button><button class="b st danger">Delete account</button><button class="b st danger-ghost">Remove</button><button class="b st secondary icon" aria-label="Previous month">‹</button><button class="t">Open roadmap</button></div>
+    <div class="lbl">Forced: rest · hover · pressed · focus · disabled</div>
+    <div class="row"><button class="b st primary" tabindex="-1">Rest</button><button class="b st primary f-hover" tabindex="-1">Hover</button><button class="b st primary f-press" tabindex="-1">Pressed</button><button class="b st primary f-focus" tabindex="-1">Focus</button><button class="b st primary" disabled>Disabled</button></div>
+    <div class="row"><button class="b st secondary" tabindex="-1">Rest</button><button class="b st secondary f-hover" tabindex="-1">Hover</button><button class="b st secondary f-press" tabindex="-1">Pressed</button><button class="b st secondary f-focus" tabindex="-1">Focus</button><button class="b st secondary" disabled>Disabled</button></div>
+    <div class="row"><button class="b st ghost" tabindex="-1">Rest</button><button class="b st ghost f-hover" tabindex="-1">Hover</button><button class="b st ghost f-press" tabindex="-1">Pressed</button><button class="b st ghost f-focus" tabindex="-1">Focus</button><button class="b st ghost" disabled>Disabled</button></div>
+  </div>
+  <div class="panel dark"><h3>Buttons on dark surfaces (rail, crisis card, toast)</h3>
+    <div class="lbl">Live</div>
+    <div class="row"><button class="b st inv inverse">Change answers</button><button class="b st inv inverse-danger">Delete account…</button><button class="t">Change</button><button class="t">Manage</button></div>
+    <div class="lbl">Forced: rest · hover · pressed · focus</div>
+    <div class="row"><button class="b st inv inverse" tabindex="-1">Rest</button><button class="b st inv inverse f-hover" tabindex="-1">Hover</button><button class="b st inv inverse f-press" tabindex="-1">Pressed</button><button class="b st inv inverse f-focus" tabindex="-1">Focus</button></div>
+  </div>
+</div>
+
+<h2>Selected rows, nav, inputs</h2>
+<div class="grid2">
+  <div class="panel"><h3>Rows: one hover, one "chosen" look</h3>
+    <div class="list">
+      <button class="li st"><span class="ring"></span>Get an NZ SIM card<small>15–30 minutes</small></button>
+      <button class="li st sel"><span class="ring"></span>Open a bank account<small>chosen</small></button>
+      <button class="li st"><span class="ring"></span>Apply for your IRD number<small>20–30 minutes</small></button>
+    </div>
+    <div class="lbl" style="margin-top:16px">Header nav: current page uses the selected surface; others get the layer</div>
+    <div class="nav" style="margin-top:12px"><button class="b st" aria-current="page">Home</button><button class="b st">Roadmap</button><button class="b st">Settings</button></div>
+  </div>
+  <div class="panel"><h3>Inputs</h3>
+    <div class="lbl">Rest</div><input class="field" value="Sat 31 Oct 2026" aria-label="Rest example">
+    <div class="lbl" style="margin-top:12px">Focus (2 px teal ring, 2 px gap)</div><input class="field f-focus" value="Auckland" aria-label="Focus example">
+    <div class="lbl" style="margin-top:12px">Error (ring from the danger role)</div><input class="field err" value="31/13/2026" aria-label="Error example"><div class="err-msg">Enter a real date, like 31 Oct 2026.</div>
+    <p class="lede" style="font-size:12px;margin-top:12px">16 px text in fields at every width, so iPhones do not zoom in.</p>
+  </div>
+</div>
+
+<h2>Surfaces, radius and elevation</h2>
+<p class="lede">Four radius roles: control 8 · card 12 · floating · full. Three elevation levels instead of 13 shadows (lift and frame-top were the same shadow).</p>
+<div class="cards">
+  <div class="card plain"><b>Plain</b><small>hairline, no shadow · lists, settings</small></div>
+  <div class="card raised"><b>Raised</b><small>card 12 · shadow-raised · Home cards</small></div>
+  <div class="card overlay"><b>Overlay</b><small>floating radius · guide pane, phone sheet</small></div>
+</div>
+<div style="margin-top:24px" class="ask"><span>Ask about your first 90 days</span><button class="b st inv primary icon" aria-label="Send">↑</button></div>
+<p class="lede" style="font-size:12px;margin-top:8px">Ask bar: floating radius + shadow-floating. Switch 16 / 18 in the top bar.</p>
+
+<h2>Colour roles</h2>
+<p class="lede">Pages use only these names. A new look later changes the palette values once; every page follows. Same colours as today.</p>
+<table><thead><tr><th></th><th>Role</th><th>Value</th><th>Today's name</th><th>Used for</th></tr></thead><tbody><tr><td><i class='sw lg' style='background:#0F2A3A'></i></td><td><code>fg</code></td><td>#0F2A3A</td><td>ink</td><td>normal text</td></tr><tr><td><i class='sw lg' style='background:#4B6170'></i></td><td><code>fg-muted</code></td><td>#4B6170</td><td>muted</td><td>secondary text</td></tr><tr><td><i class='sw lg' style='background:#7A8F99'></i></td><td><code>fg-subtle</code></td><td>#7A8F99</td><td>control</td><td>quietest text, radio rings</td></tr><tr><td><i class='sw lg' style='background:#FFFFFF'></i></td><td><code>surface</code></td><td>#FFFFFF</td><td>white</td><td>page and cards</td></tr><tr><td><i class='sw lg' style='background:#F6F8F8'></i></td><td><code>surface-sunken</code></td><td>#F6F8F8</td><td>wash</td><td>grey wells, disabled</td></tr><tr><td><i class='sw lg' style='background:#F3F9F8'></i></td><td><code>surface-selected</code></td><td>#F3F9F8</td><td>tint (+ avatar)</td><td>chosen rows, current nav</td></tr><tr><td><i class='sw lg' style='background:#CFE5E3'></i></td><td><code>border-selected</code></td><td>#CFE5E3</td><td>tint-border</td><td>chosen row edge</td></tr><tr><td><i class='sw lg' style='background:#0F2A3A'></i></td><td><code>surface-inverse</code></td><td>#0F2A3A</td><td>ink</td><td>dark rail, toast, crisis card</td></tr><tr><td><i class='sw lg' style='background:#A9BDC7'></i></td><td><code>fg-on-inverse</code></td><td>#A9BDC7</td><td>rail-text</td><td>text on dark</td></tr><tr><td><i class='sw lg' style='background:#0F2A3A'></i></td><td><code>action</code></td><td>#0F2A3A</td><td>ink</td><td>primary button</td></tr><tr><td><i class='sw lg' style='background:#0E7C7B'></i></td><td><code>accent</code></td><td>#0E7C7B</td><td>teal</td><td>brand, progress, focus ring</td></tr><tr><td><i class='sw lg' style='background:#3FC9B7'></i></td><td><code>accent-bright</code></td><td>#3FC9B7</td><td>mark</td><td>decorative marks</td></tr><tr><td><i class='sw lg' style='background:#0A6463'></i></td><td><code>link</code></td><td>#0A6463</td><td>teal-text</td><td>links</td></tr><tr><td><i class='sw lg' style='background:#074B4A'></i></td><td><code>link-hover</code></td><td>#074B4A</td><td>teal-hover</td><td>links on hover</td></tr><tr><td><i class='sw lg' style='background:#7FE0D3'></i></td><td><code>link-on-inverse</code></td><td>#7FE0D3</td><td>toast-action</td><td>links on dark</td></tr><tr><td><i class='sw lg' style='background:#A3292B'></i></td><td><code>danger</code></td><td>#A3292B</td><td>danger</td><td>errors, delete</td></tr><tr><td><i class='sw lg' style='background:#F2B8B5'></i></td><td><code>danger-on-inverse</code></td><td>#F2B8B5</td><td>danger-on-ink</td><td>delete on dark</td></tr><tr><td><i class='sw lg' style='background:#D5DFE2'></i></td><td><code>border</code></td><td>#D5DFE2</td><td>border</td><td>control edges</td></tr><tr><td><i class='sw lg' style='background:#E3E8EA'></i></td><td><code>border-subtle</code></td><td>#E3E8EA</td><td>hairline</td><td>dividers, card edges</td></tr><tr><td><i class='sw lg' style='background:#C9D3D7'></i></td><td><code>track</code></td><td>#C9D3D7</td><td>track</td><td>progress track</td></tr></tbody></table>
+
+<h2>Spacing</h2>
+<p class="lede">Today: 24 different spacing steps, many half steps (6, 10, 14 px). Proposed: one 4 px grid. Layout roles (page gutter, card padding, section gap, stack gap) get phone and desktop values; piece 3 uses them for the pages that feel empty on phones.</p>
+<div class="space"><div><i style="width:2px;height:2px"></i>2</div><div><i style="width:4px;height:4px"></i>4</div><div><i style="width:8px;height:8px"></i>8</div><div><i style="width:12px;height:12px"></i>12</div><div><i style="width:16px;height:16px"></i>16</div><div><i style="width:20px;height:20px"></i>20</div><div><i style="width:24px;height:24px"></i>24</div><div><i style="width:32px;height:32px"></i>32</div><div><i style="width:40px;height:40px"></i>40</div><div><i style="width:48px;height:48px"></i>48</div><div><i style="width:64px;height:64px"></i>64</div><div><i style="width:96px;height:96px"></i>96</div></div>
+
+<h2 id="pages">Every page: today vs proposed</h2>
+<p class="lede">Real screenshots of the running app (test user, Auckland, AEWV). The proposed column is the state layer injected into the real page as a throwaway preview, at strength A. Phone column: finger held down on the control.</p>
+<p class="note">Not captured: the guide pane and its answers (needs a live AI question), the delete dialog and toasts. They take the same rules; they get their own before/after in Task 9.</p>
+<nav class="pnav" aria-label="Pages"><a href="#p-landing">Landing</a><a href="#p-onboarding-1">Onboarding · question 1</a><a href="#p-onboarding-5">Onboarding · question 5</a><a href="#p-preview">Roadmap preview</a><a href="#p-save">Save your roadmap (sign in)</a><a href="#p-home">Home</a><a href="#p-roadmap">Roadmap</a><a href="#p-task">Task</a><a href="#p-settings">Settings</a><a href="#p-settings-edit">Settings · edit arrival date</a></nav>
+
+<section class="page" id="p-landing">
+  <header><h3>Landing</h3><code>/</code></header>
+  <div class="shots">
+    <figure><img src="img/page-landing-1440.webp" alt="Landing at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-landing-390.webp" alt="Landing at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Build my roadmap</h4><div class=figs><figure><img src="img/landing-1440-0-today-hover.webp" width="224" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/landing-1440-0-new-hover.webp" width="224" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/landing-1440-0-new-press.webp" width="224" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Sign in</h4><div class=figs><figure><img src="img/landing-1440-1-today-hover.webp" width="110" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/landing-1440-1-new-hover.webp" width="110" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/landing-1440-1-new-press.webp" width="110" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Privacy</h4><div class=figs><figure><img src="img/landing-1440-2-today-hover.webp" width="72" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/landing-1440-2-new-hover.webp" width="72" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/landing-1440-2-new-press.webp" width="72" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Build my roadmap</h4><div class=figs><figure><img src="img/landing-390-0-today-press.webp" width="390" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/landing-390-0-new-press.webp" width="390" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Sign in</h4><div class=figs><figure><img src="img/landing-390-1-today-press.webp" width="110" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/landing-390-1-new-press.webp" width="110" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Privacy</h4><div class=figs><figure><img src="img/landing-390-2-today-press.webp" width="72" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/landing-390-2-new-press.webp" width="72" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-onboarding-1">
+  <header><h3>Onboarding · question 1</h3><code>/onboarding?step=1</code></header>
+  <div class="shots">
+    <figure><img src="img/page-onboarding-1-1440.webp" alt="Onboarding · question 1 at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-onboarding-1-390.webp" alt="Onboarding · question 1 at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Accredited Employer Work Visa (AEWV)</h4><div class=figs><figure><img src="img/onboarding-1-1440-0-today-hover.webp" width="632" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/onboarding-1-1440-0-new-hover.webp" width="632" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/onboarding-1-1440-0-new-press.webp" width="632" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Home</h4><div class=figs><figure><img src="img/onboarding-1-1440-1-today-hover.webp" width="144" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/onboarding-1-1440-1-new-hover.webp" width="144" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/onboarding-1-1440-1-new-press.webp" width="144" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Accredited Employer Work Visa (AEWV)</h4><div class=figs><figure><img src="img/onboarding-1-390-0-today-press.webp" width="390" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/onboarding-1-390-0-new-press.webp" width="390" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-onboarding-5">
+  <header><h3>Onboarding · question 5</h3><code>/onboarding?step=5</code></header>
+  <div class="shots">
+    <figure><img src="img/page-onboarding-5-1440.webp" alt="Onboarding · question 5 at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-onboarding-5-390.webp" alt="Onboarding · question 5 at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Continue</h4><div class=figs><figure><img src="img/onboarding-5-1440-0-today-hover.webp" width="141" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/onboarding-5-1440-0-new-hover.webp" width="141" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/onboarding-5-1440-0-new-press.webp" width="141" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Continue</h4><div class=figs><figure><img src="img/onboarding-5-390-0-today-press.webp" width="390" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/onboarding-5-390-0-new-press.webp" width="390" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-preview">
+  <header><h3>Roadmap preview</h3><code>/onboarding/preview</code></header>
+  <div class="shots">
+    <figure><img src="img/page-preview-1440.webp" alt="Roadmap preview at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-preview-390.webp" alt="Roadmap preview at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Save my roadmap</h4><div class=figs><figure><img src="img/preview-1440-0-today-hover.webp" width="199" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/preview-1440-0-new-hover.webp" width="199" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/preview-1440-0-new-press.webp" width="199" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Save my roadmap</h4><div class=figs><figure><img src="img/preview-390-0-today-press.webp" width="356" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/preview-390-0-new-press.webp" width="356" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-save">
+  <header><h3>Save your roadmap (sign in)</h3><code>/signin</code></header>
+  <div class="shots">
+    <figure><img src="img/page-save-1440.webp" alt="Save your roadmap (sign in) at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-save-390.webp" alt="Save your roadmap (sign in) at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Save and sign in</h4><div class=figs><figure><img src="img/save-1440-0-today-hover.webp" width="426" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/save-1440-0-new-hover.webp" width="426" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/save-1440-0-new-press.webp" width="426" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Your roadmap preview</h4><div class=figs><figure><img src="img/save-1440-1-today-hover.webp" width="199" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/save-1440-1-new-hover.webp" width="199" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/save-1440-1-new-press.webp" width="199" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>terms</h4><div class=figs><figure><img src="img/save-1440-2-today-hover.webp" width="63" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/save-1440-2-new-hover.webp" width="63" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/save-1440-2-new-press.webp" width="63" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Save and sign in</h4><div class=figs><figure><img src="img/save-390-0-today-press.webp" width="348" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/save-390-0-new-press.webp" width="348" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Your roadmap preview</h4><div class=figs><figure><img src="img/save-390-1-today-press.webp" width="199" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/save-390-1-new-press.webp" width="199" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>terms</h4><div class=figs><figure><img src="img/save-390-2-today-press.webp" width="63" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/save-390-2-new-press.webp" width="63" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-home">
+  <header><h3>Home</h3><code>/app</code></header>
+  <div class="shots">
+    <figure><img src="img/page-home-1440.webp" alt="Home at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-home-390.webp" alt="Home at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Roadmap</h4><div class=figs><figure><img src="img/home-1440-0-today-hover.webp" width="126" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/home-1440-0-new-hover.webp" width="126" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/home-1440-0-new-press.webp" width="126" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Start task</h4><div class=figs><figure><img src="img/home-1440-1-today-hover.webp" width="131" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/home-1440-1-new-hover.webp" width="131" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/home-1440-1-new-press.webp" width="131" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Ask about this</h4><div class=figs><figure><img src="img/home-1440-2-today-hover.webp" width="160" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/home-1440-2-new-hover.webp" width="160" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/home-1440-2-new-press.webp" width="160" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Get an NZ SIM card</h4><div class=figs><figure><img src="img/home-1440-3-today-hover.webp" width="470" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/home-1440-3-new-hover.webp" width="470" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/home-1440-3-new-press.webp" width="470" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Open roadmap</h4><div class=figs><figure><img src="img/home-1440-4-today-hover.webp" width="114" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/home-1440-4-new-hover.webp" width="114" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/home-1440-4-new-press.webp" width="114" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Roadmap</h4><div class=figs><figure><img src="img/home-390-0-today-press.webp" width="162" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/home-390-0-new-press.webp" width="162" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Start task</h4><div class=figs><figure><img src="img/home-390-1-today-press.webp" width="288" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/home-390-1-new-press.webp" width="288" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Ask about this</h4><div class=figs><figure><img src="img/home-390-2-today-press.webp" width="91" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/home-390-2-new-press.webp" width="91" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Get an NZ SIM card</h4><div class=figs><figure><img src="img/home-390-3-today-press.webp" width="388" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/home-390-3-new-press.webp" width="388" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-roadmap">
+  <header><h3>Roadmap</h3><code>/app/roadmap</code></header>
+  <div class="shots">
+    <figure><img src="img/page-roadmap-1440.webp" alt="Roadmap at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-roadmap-390.webp" alt="Roadmap at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Book temporary accommodation</h4><div class=figs><figure><img src="img/roadmap-1440-0-today-hover.webp" width="876" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/roadmap-1440-0-new-hover.webp" width="876" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/roadmap-1440-0-new-press.webp" width="876" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Show 7 more</h4><div class=figs><figure><img src="img/roadmap-1440-1-today-hover.webp" width="144" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/roadmap-1440-1-new-hover.webp" width="144" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/roadmap-1440-1-new-press.webp" width="144" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Start task</h4><div class=figs><figure><img src="img/roadmap-1440-2-today-hover.webp" width="131" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/roadmap-1440-2-new-hover.webp" width="131" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/roadmap-1440-2-new-press.webp" width="131" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Book temporary accommodation</h4><div class=figs><figure><img src="img/roadmap-390-0-today-press.webp" width="194" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/roadmap-390-0-new-press.webp" width="194" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Start task</h4><div class=figs><figure><img src="img/roadmap-390-2-today-press.webp" width="356" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/roadmap-390-2-new-press.webp" width="356" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-task">
+  <header><h3>Task</h3><code>/app/roadmap?task=T08</code></header>
+  <div class="shots">
+    <figure><img src="img/page-task-1440.webp" alt="Task at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-task-390.webp" alt="Task at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Mark as done</h4><div class=figs><figure><img src="img/task-1440-0-today-hover.webp" width="390" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/task-1440-0-new-hover.webp" width="390" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/task-1440-0-new-press.webp" width="390" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Open the IRD application</h4><div class=figs><figure><img src="img/task-1440-1-today-hover.webp" width="390" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/task-1440-1-new-hover.webp" width="390" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/task-1440-1-new-press.webp" width="390" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Next task</h4><div class=figs><figure><img src="img/task-1440-3-today-hover.webp" width="151" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/task-1440-3-new-hover.webp" width="151" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/task-1440-3-new-press.webp" width="151" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Mark as done</h4><div class=figs><figure><img src="img/task-390-0-today-press.webp" width="322" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/task-390-0-new-press.webp" width="322" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Open the IRD application</h4><div class=figs><figure><img src="img/task-390-1-today-press.webp" width="356" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/task-390-1-new-press.webp" width="356" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-settings">
+  <header><h3>Settings</h3><code>/settings</code></header>
+  <div class="shots">
+    <figure><img src="img/page-settings-1440.webp" alt="Settings at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-settings-390.webp" alt="Settings at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Change</h4><div class=figs><figure><img src="img/settings-1440-0-today-hover.webp" width="75" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-1440-0-new-hover.webp" width="75" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-1440-0-new-press.webp" width="75" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Manage</h4><div class=figs><figure><img src="img/settings-1440-1-today-hover.webp" width="77" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-1440-1-new-hover.webp" width="77" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-1440-1-new-press.webp" width="77" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Sign out</h4><div class=figs><figure><img src="img/settings-1440-2-today-hover.webp" width="86" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-1440-2-new-hover.webp" width="86" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-1440-2-new-press.webp" width="86" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Delete account</h4><div class=figs><figure><img src="img/settings-1440-3-today-hover.webp" width="131" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-1440-3-new-hover.webp" width="131" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-1440-3-new-press.webp" width="131" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Change</h4><div class=figs><figure><img src="img/settings-390-0-today-press.webp" width="75" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-390-0-new-press.webp" width="75" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Manage</h4><div class=figs><figure><img src="img/settings-390-1-today-press.webp" width="77" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-390-1-new-press.webp" width="77" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Sign out</h4><div class=figs><figure><img src="img/settings-390-2-today-press.webp" width="120" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-390-2-new-press.webp" width="120" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Delete account</h4><div class=figs><figure><img src="img/settings-390-3-today-press.webp" width="356" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-390-3-new-press.webp" width="356" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+<section class="page" id="p-settings-edit">
+  <header><h3>Settings · edit arrival date</h3><code>/settings?edit=arrivalDate</code></header>
+  <div class="shots">
+    <figure><img src="img/page-settings-edit-1440.webp" alt="Settings · edit arrival date at 1440" loading="lazy" class="full d"><figcaption>1440 · today (at rest the proposed system draws the same)</figcaption></figure>
+    <figure><img src="img/page-settings-edit-390.webp" alt="Settings · edit arrival date at 390" loading="lazy" class="full m"><figcaption>390 · today</figcaption></figure>
+  </div>
+  <div class="tables">
+    <div><h4 class="cap">Desktop: mouse over and press</h4><div class=ctrl><h4>Save and rebuild</h4><div class=figs><figure><img src="img/settings-edit-1440-0-today-hover.webp" width="174" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-edit-1440-0-new-hover.webp" width="174" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-edit-1440-0-new-press.webp" width="174" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div><div class=ctrl><h4>Cancel</h4><div class=figs><figure><img src="img/settings-edit-1440-1-today-hover.webp" width="111" alt="today hover" loading="lazy"><figcaption>Today · hover</figcaption></figure><figure><img src="img/settings-edit-1440-1-new-hover.webp" width="111" alt="proposed hover" loading="lazy"><figcaption>Proposed · hover</figcaption></figure><figure><img src="img/settings-edit-1440-1-new-press.webp" width="111" alt="proposed pressed" loading="lazy"><figcaption>Proposed · pressed</figcaption></figure></div></div></div>
+    <div><h4 class="cap">Phone: finger held down (phones have no hover)</h4><div class=ctrl><h4>Save and rebuild</h4><div class=figs><figure><img src="img/settings-edit-390-0-today-press.webp" width="188" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-edit-390-0-new-press.webp" width="188" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div><div class=ctrl><h4>Cancel</h4><div class=figs><figure><img src="img/settings-edit-390-1-today-press.webp" width="188" alt="today tap" loading="lazy"><figcaption>Today · tap</figcaption></figure><figure><img src="img/settings-edit-390-1-new-press.webp" width="188" alt="proposed tap" loading="lazy"><figcaption>Proposed · tap</figcaption></figure></div></div></div>
+  </div>
+</section>
+
+<h2 id="decide">Your decisions</h2>
+<ol class="decide">
+  <li><b>State strength.</b> A: 6 % hover / 10 % pressed <span class="rec">recommended</span> (calm, close to today's wash shade) · B: 8 / 12 % (Material 3's values, more visible on phones).</li>
+  <li><b>Floating radius</b> for ask bar, guide pane and phone sheet: 16 <span class="rec">recommended</span> (inside the 12–16 card range) · 18 (today's pane).</li>
+  <li><b>Fold "avatar" into the selected surface</b> (#E8F2F1 → #F3F9F8): yes <span class="rec">recommended</span> · keep separate.</li>
+  <li><b>Citation chip hover:</b> state layer like everything else <span class="rec">recommended</span> · keep today's solid teal fill.</li>
+  <li><b>Pressed feedback everywhere on phones</b> (rows, nav, buttons, chips): yes <span class="rec">recommended</span>.</li>
+</ol>
+<p class="lede">Standards: Material 3 state layers m3.material.io/foundations/interaction/states/state-layers · Carbon colour tokens carbondesignsystem.com/elements/color/tokens · Apple HIG 44 pt targets · WCAG 2.2 SC 2.5.8. Full list with checked links goes in standards.md before build.</p>
+</main>
+<script>
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.k
+  document.documentElement.dataset[k] = b.dataset.v
+  b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)))
+}))
+</script>
+</body></html>

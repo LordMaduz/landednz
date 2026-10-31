@@ -1,31 +1,31 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
+import { Avatar, type HeaderUser } from "@/components/chrome/app-header"
+import { Button } from "@/components/ui/button"
+import { Card, CardHead } from "@/components/ui/card"
 import { signOutAndLeave } from "@/lib/sign-out"
-import { cn } from "@/lib/utils"
 import { DeleteAccount } from "./delete-account"
 
-// Desktop: the lower half of the navy answers card (joined). Phone: its own white card, email + Sign out, then Delete account…
-export function AccountSection({ user, joined }: { user: { email: string; google: boolean }; joined?: boolean }) {
+// Desktop: an Account card under Guide. Phone: the same card leads the page as the identity card (big avatar, centred)
+export function AccountSection({ user }: { user: HeaderUser & { email: string; google: boolean } }) {
   return (
-    <Card
-      aria-label="Account"
-      className={cn(
-        "flex-row flex-wrap items-center gap-x-5 gap-y-1.5 border-ink bg-ink px-8 pt-4 pb-8 text-white max-narrow:gap-x-3 max-narrow:gap-y-0 max-narrow:border-hairline max-narrow:bg-white max-narrow:px-4 max-narrow:py-0 max-narrow:text-ink",
-        joined && "rounded-t-none border-t-0 max-narrow:rounded-t-surface max-narrow:border-t",
-      )}
-    >
-      <span className={cn("basis-full break-words text-rail-text max-narrow:min-w-0 max-narrow:flex-1 max-narrow:basis-0 max-narrow:py-2 max-narrow:text-ink", joined && "border-t border-white/15 pt-4 max-narrow:border-0 max-narrow:pt-2")}>
-        {user.email}<span className="max-narrow:hidden"> · signs in with {user.google ? "Google" : "email"}</span>
-      </span>
-      <button
-        type="button"
-        onClick={signOutAndLeave}
-        className="min-h-11 cursor-pointer rounded-control border-0 bg-transparent p-0 font-medium text-toast-action hover:text-white max-narrow:border max-narrow:border-border max-narrow:bg-white max-narrow:px-4 max-narrow:text-ink max-narrow:hover:bg-wash max-narrow:hover:text-ink"
-      >
-        Sign out
-      </button>
+    <>
+      <Card aria-labelledby="account" className="gap-1 max-narrow:order-first max-narrow:items-center max-narrow:gap-0 max-narrow:pt-8 max-narrow:text-center">
+        <div className="max-narrow:sr-only">
+          <CardHead title="Account" titleId="account" />
+        </div>
+        <div className="flex items-center gap-3 max-narrow:flex-col max-narrow:gap-0">
+          <Avatar user={user} className="size-10 text-featured max-narrow:size-18" />
+          <span className="flex min-w-0 flex-1 flex-col leading-snug">
+            <span className="break-words max-narrow:mt-3 max-narrow:font-semibold">{user.email}</span>
+            <span className="text-ui text-fg-muted">Signs in with {user.google ? "Google" : "email"}</span>
+          </span>
+          <Button type="button" variant="secondary" onClick={signOutAndLeave} className="min-h-10 max-narrow:mt-5 max-narrow:min-h-12 max-narrow:w-full">
+            Sign out
+          </Button>
+        </div>
+      </Card>
       <DeleteAccount />
-    </Card>
+    </>
   )
 }

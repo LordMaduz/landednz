@@ -217,3 +217,36 @@ describe('history', () => {
     expect(useGuideStore.getState().turns[0].parts).toEqual([text('x')])
   })
 })
+
+describe('ask bar', () => {
+  it('prime loads the opening and knows a conversation exists', async () => {
+    m.getGuideOpening.mockResolvedValue(opening(0))
+    m.getGuideConversation.mockResolvedValue({ messages: [row({ id: 'a1', role: 'assistant', text: 'Hi' })], nextBefore: null })
+    await useGuideStore.getState().prime()
+    expect(useGuideStore.getState()).toMatchObject({ opening: { leftToday: 0 }, hasConversation: true, open: false })
+  })
+
+  it('prime runs once', async () => {
+    await useGuideStore.getState().prime()
+    await useGuideStore.getState().prime()
+    expect(m.getGuideOpening).toHaveBeenCalledTimes(1)
+  })
+
+  it('askFromBar opens and asks', async () => {
+    const s = fakeStream()
+    const done = useGuideStore.getState().askFromBar('Q')
+    await flush()
+    await flush()
+    expect(useGuideStore.getState().open).toBe(true)
+    expect(m.askGuide.mock.calls[0][0]).toEqual({ text: 'Q', screen: { kind: 'home' } })
+    s.finish()
+    await done
+  })
+
+  it('askFromBar while streaming keeps the text', async () => {
+    useGuideStore.setState({ streaming: true })
+    await useGuideStore.getState().askFromBar('Q')
+    expect(useGuideStore.getState()).toMatchObject({ open: true, draft: 'Q' })
+    expect(m.askGuide).not.toHaveBeenCalled()
+  })
+})

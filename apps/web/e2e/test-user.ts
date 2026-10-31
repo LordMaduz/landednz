@@ -64,3 +64,9 @@ export async function signIn(page: Page) {
   await page.getByLabel('Password').fill(TEST_USER.password)
   await page.getByRole('button', { name: 'Sign in' }).click()
 }
+
+// The ask bar from 1024 px: type into it and press Enter (chat-window D1)
+export async function askFromBar(page: Page, text: string) {
+  await page.locator('#guide-ask').fill(text)
+  await page.locator('#guide-ask').press('Enter')
+}

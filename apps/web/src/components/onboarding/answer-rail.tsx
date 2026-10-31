@@ -17,7 +17,7 @@ function answerText(i: number, answers: Partial<Answers>): string {
 }
 
 const Wordmark = () => (
-  <span translate="no" className="flex min-h-11 items-center gap-2 font-semibold tracking-brand text-white">
+  <span translate="no" className="flex min-h-11 items-center gap-2 font-semibold tracking-brand text-fg-on-action">
     <Logo onInk />
     LandedNZ
   </span>
@@ -30,31 +30,31 @@ export function AnswerRail({ title, intro, answers, current }: { title: string; 
 
   return (
     <>
-      <aside className="flex flex-col gap-14 bg-ink px-12 py-8 text-white max-split:hidden">
+      <aside className="flex flex-col gap-16 bg-surface-inverse px-12 py-8 text-fg-on-action max-split:hidden">
         <Wordmark />
         <div className="flex flex-col gap-2">
           <h2 className="text-section">{title}</h2>
-          <p className="m-0 text-rail-text">{intro}</p>
+          <p className="m-0 text-fg-on-inverse">{intro}</p>
         </div>
         <ol aria-label="Your answers" className="m-0 list-none p-0">
           {STEPS.map((q, i) => {
             const state = stateOf(i)
             return (
-              <li key={q.key} aria-current={state === "now" ? "step" : undefined} className="relative flex items-start gap-4 pb-7">
+              <li key={q.key} aria-current={state === "now" ? "step" : undefined} className="relative flex items-start gap-4 pb-8">
                 {i < STEPS.length - 1 && (
-                  <span aria-hidden="true" className={cn("absolute top-7 -bottom-1 left-2.75 w-0.5", stateOf(i + 1) === "next" ? "bg-white/15" : "bg-mark")} />
+                  <span aria-hidden="true" className={cn("absolute top-7 -bottom-1 left-2.75 w-0.5", stateOf(i + 1) === "next" ? "bg-fg-on-action/15" : "bg-accent-bright")} />
                 )}
                 {state === "done" ? (
-                  <span aria-hidden="true" className="grid size-6 flex-none place-items-center rounded-full bg-mark text-ink">
+                  <span aria-hidden="true" className="grid size-6 flex-none place-items-center rounded-full bg-accent-bright text-fg">
                     <Check size={12} strokeWidth={2.5} />
                   </span>
                 ) : state === "now" ? (
-                  <span aria-hidden="true" className="size-6 flex-none rounded-full border-5 border-mark bg-ink shadow-rail-ring" />
+                  <span aria-hidden="true" className="size-6 flex-none rounded-full border-5 border-accent-bright bg-surface-inverse shadow-rail" />
                 ) : (
-                  <span aria-hidden="true" className="size-6 flex-none rounded-full border-2 border-muted" />
+                  <span aria-hidden="true" className="size-6 flex-none rounded-full border-2 border-fg-muted" />
                 )}
                 <span className="flex flex-col pt-0.5 leading-snug">
-                  <span className={cn("text-small", state === "now" ? "font-semibold text-toast-action" : "font-medium text-rail-label")}>
+                  <span className={cn("text-small", state === "now" ? "font-semibold text-link-on-inverse" : "font-medium text-fg-on-inverse-muted")}>
                     {state === "now" ? "Answering now" : NAMES[i]}
                   </span>
                   {state !== "next" && (
@@ -62,7 +62,7 @@ export function AnswerRail({ title, intro, answers, current }: { title: string; 
                   )}
                 </span>
                 {state === "done" && (
-                  <Link href={stepUrl(i + 1)} className="ml-auto flex min-h-11 items-center text-small text-toast-action no-underline hover:text-white">
+                  <Link href={stepUrl(i + 1)} className="ml-auto flex min-h-11 items-center text-small text-link-on-inverse no-underline hover:text-fg-on-action">
                     Change<span className="sr-only"> {NAMES[i]}</span>
                   </Link>
                 )}
@@ -72,26 +72,26 @@ export function AnswerRail({ title, intro, answers, current }: { title: string; 
         </ol>
       </aside>
 
-      <header className="hidden flex-col gap-3.5 bg-ink px-4 pt-2 pb-4 text-small text-white max-split:flex">
+      <header className="hidden flex-col gap-4 bg-surface-inverse px-4 pt-2 pb-4 text-small text-fg-on-action max-split:flex">
         <div className="flex items-center justify-between">
           <Wordmark />
-          <span className="text-rail-text">{current ? `${current} of ${STEPS.length}` : title}</span>
+          <span className="text-fg-on-inverse">{current ? `${current} of ${STEPS.length}` : title}</span>
         </div>
         <div aria-hidden="true" className="flex items-center">
           {STEPS.map((q, i) => {
             const state = stateOf(i)
             return (
               <span key={q.key} className="contents">
-                {i > 0 && <span className={cn("h-0.5 flex-1", state === "next" ? "bg-white/15" : "bg-mark")} />}
-                <span className={cn("flex-none rounded-full", state === "done" && "size-3 bg-mark", state === "now" && "size-4.5 border-4 border-mark bg-ink", state === "next" && "size-3 border-2 border-muted")} />
+                {i > 0 && <span className={cn("h-0.5 flex-1", state === "next" ? "bg-fg-on-action/15" : "bg-accent-bright")} />}
+                <span className={cn("flex-none rounded-full", state === "done" && "size-3 bg-accent-bright", state === "now" && "size-4.5 border-4 border-accent-bright bg-surface-inverse", state === "next" && "size-3 border-2 border-fg-muted")} />
               </span>
             )
           })}
         </div>
         {prev !== null && (
           <div className="flex items-center justify-between">
-            <span className="text-rail-text">{NAMES[prev]}: <span className="text-white">{answerText(prev, answers)}</span></span>
-            <Link href={stepUrl(prev + 1)} className="flex min-h-11 items-center text-toast-action no-underline hover:text-white">
+            <span className="text-fg-on-inverse">{NAMES[prev]}: <span className="text-fg-on-action">{answerText(prev, answers)}</span></span>
+            <Link href={stepUrl(prev + 1)} className="flex min-h-11 items-center text-link-on-inverse no-underline hover:text-fg-on-action">
               Change<span className="sr-only"> {NAMES[prev]}</span>
             </Link>
           </div>

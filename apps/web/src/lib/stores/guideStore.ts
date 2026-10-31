@@ -23,6 +23,8 @@ interface GuideStore {
   banner: GuideBanner
   unseen: boolean
   historyLoaded: 'none' | 'task' | 'all'
+  hasConversation: boolean
+  primed: boolean
   setPage: (page: GuideScreen | null) => void
   setDraft: (draft: string) => void
   openPane: (context?: GuideScreen) => Promise<void>
@@ -34,6 +36,8 @@ interface GuideStore {
   retry: (turnKey: string) => Promise<void>
   undoMemory: (memoryId: string) => Promise<void>
   showAll: () => Promise<void>
+  prime: () => Promise<void>
+  askFromBar: (text: string) => Promise<void>
 }
 
 const HOME: GuideScreen = { kind: 'home' }
@@ -168,6 +172,8 @@ export const useGuideStore = create<GuideStore>((set, get) => {
     banner: null,
     unseen: false,
     historyLoaded: 'none',
+    hasConversation: false,
+    primed: false,
 
     setDraft: draft => set({ draft }),
 
@@ -195,7 +201,7 @@ export const useGuideStore = create<GuideStore>((set, get) => {
       const turn: Turn = {
         key: `local-${++seq}`, question: text, screen: context, assistantId: null, parts: [], status: 'sending', createdAt: new Date().toISOString(),
       }
-      set({ turns: [...turns, turn], draft: '', note: null })
+      set({ turns: [...turns, turn], draft: '', note: null, hasConversation: true })
       await run(turn.key, true, (token, onEvent, signal) => askGuide({ text, screen: context }, token, onEvent, signal), () => {
         removeTurn(turn.key)
         set({ draft: text })
@@ -244,5 +250,23 @@ export const useGuideStore = create<GuideStore>((set, get) => {
     },
 
     showAll: async () => loadHistory(HOME, await getToken(), true),
+
+    // The bar needs "left today" and "has a conversation" before the guide is ever opened
+    prime: async () => {
+      if (get().primed) return
+      set({ primed: true })
+      try {
+        const token = await getToken()
+        const [opening, page] = await Promise.all([getGuideOpening(get().page ?? HOME, token), getGuideConversation(token)])
+        set(s => ({ opening: s.opening ?? opening, hasConversation: s.hasConversation || page.messages.length > 0 }))
+      } catch { /* the bar stays usable */ }
+    },
+
+    // draft is set first so an ask that returns early (streaming, banner) keeps the question in the composer
+    askFromBar: async text => {
+      set({ draft: text })
+      await get().openPane()
+      await get().ask(text.trim())
+    },
   }
 })

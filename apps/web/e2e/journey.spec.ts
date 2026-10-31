@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { ANSWERS, resetTestUser, signIn } from './test-user'
+import { ANSWERS, askFromBar, resetTestUser, signIn } from './test-user'
 
 test.beforeAll(resetTestUser)
 
@@ -41,11 +41,8 @@ test('journey: onboarding, save, sign in, ask, done and undo', async ({ page }) 
   await (await popup).close()
 
   // The ask bar opens the guide beside the task; the answer names where it was checked
-  await page.getByRole('button', { name: /^Ask about your IRD number/ }).click()
+  await askFromBar(page, 'What documents do I need?')
   const guide = page.getByRole('complementary', { name: 'Guide' })
-  const ask = guide.getByRole('textbox', { name: 'Question' })
-  await ask.fill('What documents do I need?')
-  await ask.press('Enter')
   await expect(guide.getByText(/^(LandedNZ's checked guide|Official sites, checked today)$/)).toBeVisible()
 
   const today = new Intl.DateTimeFormat('en-NZ', { day: 'numeric', month: 'short', timeZone: 'Pacific/Auckland' }).format(new Date())

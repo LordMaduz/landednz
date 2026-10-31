@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppHeader } from './app-header'
 
@@ -7,22 +7,47 @@ vi.mock('@/lib/supabase/client', () => ({ createClient: () => ({ auth: { signOut
 const user = { name: 'Priya Sharma', initials: 'PS' }
 
 describe('AppHeader', () => {
-  it('desktop nav: Home, Roadmap, Settings; the active one is current', () => {
+  it('desktop nav: Home and Roadmap; the active one is current', () => {
     render(<AppHeader active="roadmap" user={user} />)
     const nav = screen.getAllByRole('navigation', { name: 'Main' })[0]
-    expect(within(nav).getAllByRole('link').map(l => l.textContent)).toEqual(['Home', 'Roadmap', 'Settings'])
+    expect(within(nav).getAllByRole('link').map(l => l.textContent)).toEqual(['Home', 'Roadmap'])
     expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('aria-current', 'page')
     expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
+    // current page: a 2 px ink line, no fill; every link takes the state layer
+    expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveClass("aria-[current=page]:after:bg-fg", "state")
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveClass('state')
   })
 
-  it('Settings is current in both the header and the phone tab bar', () => {
+  it('phone tab bar: Home, Roadmap, You; You is current on Your details', () => {
     render(<AppHeader active="settings" user={user} />)
-    const navs = screen.getAllByRole('navigation', { name: 'Main' })
-    expect(navs).toHaveLength(2)
-    for (const nav of navs) {
-      expect(within(nav).getByRole('link', { name: 'Settings' })).toHaveAttribute('aria-current', 'page')
-      expect(within(nav).getAllByRole('link')).toHaveLength(3)
-    }
+    const bar = screen.getAllByRole('navigation', { name: 'Main' })[1]
+    expect(within(bar).getAllByRole('link').map(l => l.textContent)).toEqual(['Home', 'Roadmap', 'PSYou'])
+    expect(within(bar).getByRole('link', { name: 'You' })).toHaveAttribute('href', '/settings')
+    expect(within(bar).getByRole('link', { name: 'You' })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('account menu: who you are, Your details, Memory, then Sign out', async () => {
+    render(<AppHeader active="home" user={{ ...user, email: 'priya@example.com' }} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Account, Priya Sharma' }))
+    const menu = await screen.findByRole('menu')
+    expect(within(menu).getByText('priya@example.com')).toBeInTheDocument()
+    expect(within(menu).getAllByRole('menuitem').map(i => i.textContent)).toEqual(['Your details', 'Memory', 'Privacy', 'Terms', 'Sign out'])
+    expect(within(menu).getByRole('menuitem', { name: 'Memory' })).toHaveAttribute('href', '/settings?edit=memory')
+    expect(within(menu).getAllByRole('separator')).toHaveLength(3)
+  })
+
+  it('an email-only account shows its email once', async () => {
+    render(<AppHeader active="home" user={{ name: 'e@example.com', initials: 'E', email: 'e@example.com' }} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Account, e@example.com' }))
+    expect(within(await screen.findByRole('menu')).getAllByText('e@example.com')).toHaveLength(1)
+  })
+
+  it('shows the Google photo, and initials when it fails to load', () => {
+    const { container } = render(<AppHeader active="home" user={{ ...user, avatar: 'https://lh3.googleusercontent.com/a/x' }} />)
+    const imgs = container.querySelectorAll('img')
+    expect(imgs.length).toBeGreaterThan(0)
+    fireEvent.error(imgs[0])
+    expect(within(screen.getByRole('button', { name: 'Account, Priya Sharma' })).getByText('PS')).toBeInTheDocument()
   })
 
   it('back replaces the brand on phones', () => {

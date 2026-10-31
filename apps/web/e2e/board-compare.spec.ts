@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import type { ReplyPart } from '@landednz/types'
-import { holdAnswers, resetTestUser, signIn } from './test-user'
+import { askFromBar, holdAnswers, resetTestUser, signIn } from './test-user'
 
 // Board-vs-build comparison (owner 2026-10-30: automate it instead of a manual screenshot review).
 // For each board element, read its computed style on the approved board (direction-d.html, zoom removed)
@@ -33,11 +33,13 @@ const pane = (p: Page) => p.locator('#guide-pane')
 const turn = (p: Page, i = 0) => p.locator('[data-turn]').nth(i)
 
 const DESKTOP: Item[] = [
-  { name: 'Pane', board: '.d .pane', app: p => p.locator('#guide-pane > div').first(), props: [...BOX, 'boxShadow'] },
+  // On Task the chat is the right column itself (chat-window D5): the <aside> is the pane box
+  { name: 'Pane', board: '.d .pane', app: p => p.locator('#guide-pane'), props: [...BOX, 'boxShadow'] },
   { name: 'Pane title', board: '.d .pn-hd .who', app: p => pane(p).getByText('Guide', { exact: true }).first(), props: TYPE },
   { name: 'Icon button', board: '.d .pn-hd .ib', app: p => pane(p).getByRole('button', { name: 'Expand' }), props: [...SIZE, 'borderTopLeftRadius', 'color'] },
-  { name: 'Ask bar', board: '.d .abar', app: p => p.getByRole('button', { name: /^Ask about your / }), props: [...TYPE, ...BOX, ...SIZE, 'boxShadow'] },
-  { name: 'Ask bar go button', board: '.d .abar .go2', app: p => p.getByRole('button', { name: /^Ask about your / }).locator('> :last-child'), props: [...SIZE, 'backgroundColor', 'borderTopLeftRadius'] },
+  // The ask bar is a box you type into from 1024 px (chat-window board); the old board's bar is a button, so expect differences
+  { name: 'Ask bar', board: '.d .abar', app: p => p.locator('#guide-ask').locator('..'), props: [...TYPE, ...BOX, ...SIZE, 'boxShadow'] },
+  { name: 'Ask bar go button', board: '.d .abar .go2', app: p => p.locator('#guide-ask ~ button[aria-label="Send"]'), props: [...SIZE, 'backgroundColor', 'borderTopLeftRadius'] },
   { name: 'Opening line', board: '.d .hello h3', app: p => pane(p).locator('h3').first(), props: TYPE },
   { name: 'Starter', board: '.d .starts button', app: p => pane(p).locator('h3 ~ div > button').first(), props: [...TYPE, ...BOX] },
   // The composer has focus when the pane opens, so it is compared with the board's focused composer
@@ -181,7 +183,7 @@ function report(board: Map<string, Styles | null>, app: Map<string, Styles | nul
 
 // Round px to 0.5 so sub-pixel rounding is not a difference
 // Differences the owner already ruled on stay in the table, marked
-const TYPE_SCALE = 'r1-final type scale (13/15, 12, title 24); board 14/11/26 are off-scale (triage E)'
+const TYPE_SCALE = 'type roles 2026-10-30 (24/18/16/14/12, docs/design/type); board sizes off that scale are not used'
 const RADIUS_SCALE = 'radius scale (control 8, surface 12, pane 18) kept for consistency (triage F)'
 const RULED: Record<string, string> = {
   'Check note|color': 'owner 2026-10-30, no new colours (S2)',
@@ -233,18 +235,17 @@ test('board vs build', async ({ browser }) => {
   await settle(page)
   await shot(page, 'build-1440-task-closed')
   await appStyles(page, DESKTOP.filter(i => i.name.startsWith('Ask bar')), app)
-  await page.getByRole('button', { name: /^Ask about your / }).click()
-  await settle(page)
-  await shot(page, 'build-1440-opening')
-  await appStyles(page, DESKTOP.filter(i => ['Pane', 'Pane title', 'Icon button', 'Opening line', 'Starter', 'Composer', 'Composer text', 'Context chip', 'N left today'].includes(i.name)), app)
-
-  await page.locator('#guide-composer').fill('Can I start work?')
-  await appStyles(page, DESKTOP.filter(i => i.name === 'Send'), app)
-  await page.locator('#guide-composer').press('Enter')
+  // Enter in the bar always asks, so the Task column has no opening state (its title, opening line and starters
+  // are not measured here: the column header is "Back to task", and the opening shows only in the sheet and full view)
+  await askFromBar(page, 'Can I start work?')
   await turn(page).getByText('What I can\'t tell you').waitFor()
   await settle(page)
   await shot(page, 'build-1440-answer')
-  await appStyles(page, DESKTOP.filter(i => !i.name.startsWith('Ask bar') && !i.name.startsWith('Crisis') && !['Cap note', 'Source preview'].includes(i.name) && !app.has(i.name)), app)
+  await appStyles(page, DESKTOP.filter(i => ['Pane', 'Icon button', 'Composer', 'Composer text', 'Context chip', 'N left today'].includes(i.name)), app)
+  await page.locator('#guide-composer').fill('Can I start work?')
+  await appStyles(page, DESKTOP.filter(i => i.name === 'Send'), app)
+  await page.locator('#guide-composer').fill('')
+  await appStyles(page, DESKTOP.filter(i => !i.name.startsWith('Ask bar') && !i.name.startsWith('Crisis') && !['Cap note', 'Source preview', 'Pane title', 'Opening line', 'Starter'].includes(i.name) && !app.has(i.name)), app)
   await turn(page).getByRole('button', { name: 'Source 1' }).first().click()
   await settle(page)
   await shot(page, 'build-1440-source-preview')

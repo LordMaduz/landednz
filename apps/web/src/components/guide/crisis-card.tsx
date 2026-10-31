@@ -9,20 +9,20 @@ const ROWS = [
 
 export function CrisisCard() {
   return (
-    <section aria-label="Support" className="flex flex-col gap-3 rounded-bar bg-ink p-4.5 text-white">
-      <p className="text-body text-white/85">If you&apos;re struggling, you don&apos;t have to carry it alone.</p>
+    <section aria-label="Support" className="flex flex-col gap-3 rounded-floating bg-surface-inverse p-5 text-fg-on-action">
+      <p className="text-body text-fg-on-action/85">If you&apos;re struggling, you don&apos;t have to carry it alone.</p>
       {ROWS.map(r => (
         <a
           key={r.tel}
           href={`tel:${r.tel}`}
-          className="flex min-h-11 items-center gap-3 rounded-surface bg-white/7 px-3 py-2.5 text-white no-underline hover:bg-white/12 hover:text-white"
+          className="flex min-h-11 items-center gap-3 rounded-card bg-fg-on-action/7 px-3 py-3 text-fg-on-action no-underline hover:bg-fg-on-action/12 hover:text-fg-on-action active:bg-fg-on-action/16"
         >
-          <Phone className="size-4 text-mark" aria-hidden />
+          <Phone className="size-4 text-accent-bright" aria-hidden />
           <span className="flex flex-1 flex-col">
             <b className="text-section font-semibold tabular-nums">{r.label}</b>
-            <small className="text-citation text-rail-text">{r.note}</small>
+            <small className="text-small text-fg-on-inverse">{r.note}</small>
           </span>
-          <ChevronRight className="size-4 text-mark" aria-hidden />
+          <ChevronRight className="size-4 text-accent-bright" aria-hidden />
         </a>
       ))}
     </section>

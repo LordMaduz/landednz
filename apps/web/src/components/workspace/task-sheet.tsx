@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { Stamp } from "@/components/route/stamp"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { GuideColumn } from "@/components/guide/guide-column"
 import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
 import { longDay, shortDate, shortDayNZ, weekdayDay } from "@/lib/nz-date"
 import type { RouteView } from "@/lib/route-view"
@@ -28,7 +29,7 @@ async function sessionToken(): Promise<string> {
 
 const SOURCES_SHOWN = 5
 const tabClass =
-  "min-h-11 cursor-pointer border-b-2 border-transparent bg-transparent px-0 font-medium text-muted data-active:border-ink data-active:text-ink"
+  "min-h-11 cursor-pointer border-b-2 border-transparent bg-transparent px-0 font-medium text-fg-muted data-active:border-fg data-active:text-fg"
 
 // The visible one of two copies of an element (desktop and phone layouts); the first when none is laid out
 const visible = <T extends HTMLElement>(...els: (T | null)[]) => els.find(e => e?.offsetParent) ?? els[0]
@@ -121,7 +122,7 @@ export function TaskSheet({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Source: ${s.title}, checked ${longDay(s.checked)}`}
-          className="-mx-2 px-2.5 py-1.5 align-super text-citation leading-none font-medium text-teal-text"
+          className="-mx-2 px-3 py-2 align-super text-small leading-none font-medium text-fg-accent"
         >
           {cited.findIndex(c => c.url === s.url) + 1}
         </a>
@@ -133,7 +134,7 @@ export function TaskSheet({
         <h2 id={id} className="text-section">
           {title}
         </h2>
-        <ul className="flex list-disc flex-col gap-2 pl-6">
+        <ul className="flex list-disc flex-col gap-2 pl-6 text-body">
           {items.map(l => (
             <li key={l.text}>
               {phones(l.text)}
@@ -181,12 +182,12 @@ export function TaskSheet({
         <h2 id={id} className={headClass}>
           Steps
         </h2>
-        <ol role="list" className="m-0 flex list-none flex-col gap-2.5 p-0 tabular-nums">
+        <ol role="list" className="m-0 flex list-none flex-col gap-3 p-0 text-body tabular-nums">
           {stepLines.map((l, n) => {
             const { lead, items } = stepParts(l.text)
             return (
               <li key={l.text} className="flex gap-3">
-                <span aria-hidden="true" className="w-6 flex-none font-semibold text-teal-text">
+                <span aria-hidden="true" className="w-6 flex-none font-semibold text-fg-accent">
                   {n + 1}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -210,33 +211,33 @@ export function TaskSheet({
     <>
       <ol role="list" className="m-0 flex list-none flex-col p-0 text-small tabular-nums">
         {sourcesShown.map((s, n) => (
-          <li key={s.url} className="flex gap-2.5 border-t border-hairline py-2 first:border-t-0 first:pt-0">
-            <span aria-hidden="true" className="w-3.5 flex-none py-0.5 text-muted max-narrow:py-3">{n + 1}</span>
+          <li key={s.url} className="flex gap-3 border-t border-border-subtle py-2 first:border-t-0 first:pt-0">
+            <span aria-hidden="true" className="w-3.5 flex-none py-0.5 text-fg-muted max-narrow:py-3">{n + 1}</span>
             <span className="flex flex-col">
               <a href={s.url} target="_blank" rel="noopener noreferrer" className="py-0.5 font-medium max-narrow:py-3">
                 {s.title} <span className="sr-only">(opens in a new tab)</span>
                 <ExternalLink aria-hidden="true" size={12} strokeWidth={1.5} className="ml-1 inline" />
               </a>
-              <span className="text-muted">{domainOf(s.url)}</span>
+              <span className="text-fg-muted">{domainOf(s.url)}</span>
             </span>
           </li>
         ))}
       </ol>
       {moreCount > 0 && (
-        <Button variant="ghost" size="sm" aria-expanded={allSources} onClick={() => setAllSources(v => !v)} className="self-start px-0 font-semibold text-teal-text">
+        <Button variant="ghost" size="sm" aria-expanded={allSources} onClick={() => setAllSources(v => !v)} className="self-start px-0 font-semibold text-fg-accent">
           {allSources ? "Show fewer sources" : `${moreCount} more sources`}
         </Button>
       )}
     </>
   )
   const actionLink = steps?.governmentSourceUrl && actionLabel && !doneOn && (
-    <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className={buttonVariants({ variant: "quiet" })}>
+    <a href={steps.governmentSourceUrl} target="_blank" rel="noopener" className={buttonVariants({ variant: "secondary" })}>
       {actionLabel} <span className="sr-only">(opens in a new tab)</span>
       <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} className="shrink-0" />
     </a>
   )
   const doneControls = doneOn ? (
-    <Button variant="quiet" onClick={() => reopen(taskId)}>
+    <Button variant="secondary" onClick={() => reopen(taskId)}>
       Mark as not done
     </Button>
   ) : task.state !== "blocked" ? (
@@ -255,6 +256,23 @@ export function TaskSheet({
     </p>
   )
   const stamp = doneOn && <Stamp date={doneOn} />
+  const status = doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"
+  const undoNote = task.state !== "blocked" && !doneOn && <p className="text-small text-fg-muted">You can undo this.</p>
+  // The same actions as the column, flat at the top of the open guide (chat-window D6): same handlers
+  const strip = (
+    <>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-ui font-semibold">{status}</span>
+        {bestBy && <span className="text-small font-semibold text-accent">Best done by {weekdayDay(task.bestBy!)}</span>}
+      </div>
+      <div className="flex gap-2 *:min-h-9 *:flex-1 *:px-3 *:text-ui">
+        {doneControls}
+        {actionLink}
+      </div>
+      {errorNote}
+      {undoNote}
+    </>
+  )
 
   return (
     <article aria-labelledby={titleId}>
@@ -264,10 +282,10 @@ export function TaskSheet({
             <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
             Roadmap
           </Link>
-          <span aria-hidden="true" className="text-small text-muted">
+          <span aria-hidden="true" className="text-small text-fg-muted">
             /
           </span>
-          <span className="text-small text-muted">
+          <span className="text-small text-fg-muted">
             {leg.name} · task {leg.tasks.indexOf(task) + 1} of {leg.tasks.length}
           </span>
           <div className="ml-auto flex gap-2">
@@ -275,7 +293,7 @@ export function TaskSheet({
               <Link
                 href={taskHref(previous.taskId)}
                 aria-label={`Previous task: ${previous.title}`}
-                className={buttonVariants({ variant: "quiet" })}
+                className={buttonVariants({ variant: "secondary" })}
               >
                 <ChevronLeft aria-hidden="true" size={14} strokeWidth={1.5} />
                 Previous
@@ -285,7 +303,7 @@ export function TaskSheet({
               <Link
                 href={taskHref(next.taskId)}
                 aria-label={`Next task: ${next.title}`}
-                className={buttonVariants({ variant: "quiet" })}
+                className={buttonVariants({ variant: "secondary" })}
               >
                 Next task
                 <ChevronRight aria-hidden="true" size={14} strokeWidth={1.5} />
@@ -294,12 +312,12 @@ export function TaskSheet({
           </div>
         </nav>
 
-        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1 @max-guide-task/page:grid-cols-1 guide-open:@min-guide-task/page:grid-cols-task-pane">
-          <Card as="div" className="gap-8 px-10 py-9">
+        <div className="grid grid-cols-task items-start gap-4 max-split:grid-cols-1 @max-guide-task/page:grid-cols-1">
+          <Card as="div" className="gap-8 px-10 py-10">
             <div className="flex max-w-prose flex-col gap-3">
               <div className="flex items-start gap-4">
                 <div className="flex flex-1 flex-col gap-2">
-                  <span className="text-small text-muted">
+                  <span className="text-small text-fg-muted">
                     {leg.name} · {task.state === "blocked" ? task.meta : task.time}
                   </span>
                   <h1 id={titleId} ref={titleRef} tabIndex={-1} className="text-title focus-visible:outline-none">
@@ -309,7 +327,7 @@ export function TaskSheet({
                 {stamp}
               </div>
               {task.why && (
-                <p className="text-muted">
+                <p className="text-fg-muted">
                   {task.why}
                   {ref(whySource)}
                 </p>
@@ -323,31 +341,33 @@ export function TaskSheet({
           </Card>
 
           {/* In a page area under 561 px the status card joins the grid and sticks to its bottom (D14) */}
-          <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
-            <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
-              <div className="flex items-baseline justify-between gap-3">
-                <h2 id={`${titleId}-status`} className="text-body font-semibold">
-                  {doneOn ? "Done" : task.state === "blocked" ? "Blocked" : "Not started"}
-                </h2>
-                {bestBy && <span className="text-small font-semibold text-teal">Best done by {weekdayDay(task.bestBy!)}</span>}
-              </div>
-              {errorNote}
-              {doneControls}
-              {task.state !== "blocked" && !doneOn && <p className="text-small text-muted">You can undo this.</p>}
-              {actionLink}
-            </Card>
-            {steps && sources.length > 0 && (
-              <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
+          <GuideColumn strip={strip}>
+            <aside aria-label="Task actions" className="flex flex-col gap-4 @max-guide-narrow/page:contents">
+              <Card aria-labelledby={`${titleId}-status`} className="@max-guide-narrow/page:sticky @max-guide-narrow/page:bottom-0 @max-guide-narrow/page:z-10">
                 <div className="flex items-baseline justify-between gap-3">
-                  <h2 id={`${titleId}-sources`} className="text-section">
-                    Sources
+                  <h2 id={`${titleId}-status`} className="text-section">
+                    {status}
                   </h2>
-                  <p className="text-small text-muted">{checkedLabel}</p>
+                  {bestBy && <span className="text-small font-semibold text-accent">Best done by {weekdayDay(task.bestBy!)}</span>}
                 </div>
-                {sourcesList}
+                {errorNote}
+                {doneControls}
+                {undoNote}
+                {actionLink}
               </Card>
-            )}
-          </aside>
+              {steps && sources.length > 0 && (
+                <Card aria-labelledby={`${titleId}-sources`} className="gap-3">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h2 id={`${titleId}-sources`} className="text-section">
+                      Sources
+                    </h2>
+                    <p className="text-small text-fg-muted">{checkedLabel}</p>
+                  </div>
+                  {sourcesList}
+                </Card>
+              )}
+            </aside>
+          </GuideColumn>
         </div>
       </div>
 
@@ -355,24 +375,24 @@ export function TaskSheet({
         <Card as="div" className="gap-2">
           <div className="flex items-start gap-4">
             <div className="flex flex-1 flex-col gap-1">
-              <span className="text-small text-muted">
+              <span className="text-small text-fg-muted">
                 {leg.name} · {task.state === "blocked" ? task.meta : task.time}
                 {bestBy && ` · ${bestBy}`}
               </span>
-              <h1 ref={phoneTitleRef} tabIndex={-1} className="text-section focus-visible:outline-none">
+              <h1 ref={phoneTitleRef} tabIndex={-1} className="text-title focus-visible:outline-none">
                 {task.title}
               </h1>
             </div>
             {stamp}
           </div>
           {task.why && (
-            <p className="text-muted">
+            <p className="text-fg-muted">
               {task.why}
               {ref(whySource)}
             </p>
           )}
           <Tabs.Root defaultValue="steps">
-            <Tabs.List aria-label="Task sections" className="flex gap-4 border-b border-hairline">
+            <Tabs.List aria-label="Task sections" className="flex gap-4 border-b border-border-subtle">
               <Tabs.Tab value="steps" className={tabClass}>
                 Steps
               </Tabs.Tab>
@@ -391,11 +411,11 @@ export function TaskSheet({
               {actionLink}
             </Tabs.Panel>
             <Tabs.Panel value="know" className="flex flex-col gap-6 pt-3">
-              {list(`${titleId}-p-know`, "Good to know", know) || <p className="text-muted">Nothing extra to know for this task.</p>}
+              {list(`${titleId}-p-know`, "Good to know", know) || <p className="text-fg-muted">Nothing extra to know for this task.</p>}
             </Tabs.Panel>
             {sources.length > 0 && (
               <Tabs.Panel value="sources" className="flex flex-col gap-3 pt-3">
-                <p className="text-small text-muted">{checkedLabel}</p>
+                <p className="text-small text-fg-muted">{checkedLabel}</p>
                 {sourcesList}
               </Tabs.Panel>
             )}
@@ -404,13 +424,13 @@ export function TaskSheet({
         <div
           role="group"
           aria-label="Task actions"
-          className="fixed inset-x-0 bottom-14 z-30 flex items-center gap-2 border-t border-hairline bg-white px-4 py-3"
+          className="fixed inset-x-0 bottom-14 z-30 flex items-center gap-2 border-t border-border-subtle bg-surface px-4 py-3"
         >
           <div className="flex min-w-0 flex-1 flex-col [&>button]:w-full">
             {errorNote}
             {doneControls}
           </div>
-          <Button variant="quiet" onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: taskId })}>
+          <Button variant="secondary" onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: taskId })}>
             Ask
           </Button>
         </div>
