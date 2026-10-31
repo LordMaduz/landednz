@@ -40,12 +40,14 @@ export function LegalLayout({ title, updated, file, user }: Props & { user: Head
       <div className="flex min-h-dvh flex-col">
         <AppHeader active="settings" user={user} />
         <main className="container-page container-app py-6 max-narrow:py-4">
-          <div className="mb-5 flex flex-col gap-1">
+          {/* the title row of Home and Settings: title left, its line right */}
+          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
             <h1 className="text-title">{title}</h1>
             <p className="text-fg-muted">Last updated {updated}</p>
           </div>
-          <Card as="div" className="legal max-w-reading max-narrow:border-0 max-narrow:bg-transparent max-narrow:p-0 max-narrow:shadow-none">
-            {markdown}
+          {/* the card spans the container like Home's; the text inside keeps reading width */}
+          <Card as="div" className="max-narrow:border-0 max-narrow:bg-transparent max-narrow:p-0 max-narrow:shadow-none">
+            <div className="legal max-w-reading">{markdown}</div>
           </Card>
         </main>
         <TabBarSpace />
