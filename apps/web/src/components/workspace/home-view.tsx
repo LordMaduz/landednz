@@ -116,23 +116,23 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
           />
           {home.week.length > 0 && (
             <Rows>
-              {home.week.map(({ task: t, meta }, i) => (
-                <li key={t.taskId} className={cn(i > 1 && "max-narrow:hidden")}>
-                  <Link href={taskHref(t.taskId)} className={ROW}>
+              {home.week.map(({ task: t, meta }) => (
+                <li key={t.taskId}>
+                  {/* Title wraps (2 lines max) with the time under it, so long titles read in full */}
+                  <Link href={taskHref(t.taskId)} className={cn(ROW, "items-start py-2.5 [&>.wp]:mt-0.5 max-narrow:items-center max-narrow:[&>.wp]:mt-0")}>
                     <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
-                    <span title={t.title} className="min-w-0 flex-1 truncate font-medium max-narrow:whitespace-normal">{t.title}</span>
-                    <span className="max-w-2/5 shrink-0 text-right text-small text-fg-muted max-narrow:hidden">{meta}</span>
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span title={t.title} className="line-clamp-2 font-medium">{t.title}</span>
+                      <span className="text-small text-fg-muted max-narrow:hidden">{meta}</span>
+                    </span>
                   </Link>
                 </li>
               ))}
             </Rows>
           )}
           {home.weekEmpty && <p className="text-fg-muted">{home.weekEmpty}</p>}
-          {home.nextLine ? (
-            <p className="mt-auto text-small text-fg-muted">{home.nextLine}</p>
-          ) : (
-            home.weekFoot && <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start max-narrow:hidden")}>{home.weekFoot}</Link>
-          )}
+          {home.weekFoot && <Link href="/app/roadmap" className={cn(LINK, "self-start max-narrow:hidden")}>{home.weekFoot}</Link>}
+          {home.nextLine && <p className="mt-auto text-small text-fg-muted">{home.nextLine}</p>}
         </Card>
       </div>
 

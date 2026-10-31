@@ -146,11 +146,10 @@ describe('buildHomeView — Home C', () => {
     expect(view.week.map(w => [w.task.taskId, w.meta])).toEqual([
       ['T11', 'Waits on your IRD number'],
       ['T12', '1 hour'],
-      ['T13', '1 hour'],
     ])
-    expect(view.weekFoot).toBe('4 more in Week 1')
+    expect(view.weekFoot).toBe('5 more in Week 1')
     expect(view.weekTotal).toBe(7)
-    const small = boardHome(boardRoute(id => (Number(id.slice(1)) > 13 && Number(id.slice(1)) < 18 ? { status: 'COMPLETE', completedAt: '2026-11-05T01:00:00.000Z' } : {})))
+    const small = boardHome(boardRoute(id => (Number(id.slice(1)) > 12 && Number(id.slice(1)) < 18 ? { status: 'COMPLETE', completedAt: '2026-11-05T01:00:00.000Z' } : {})))
     expect(small.weekFoot).toBeNull()
   })
 
