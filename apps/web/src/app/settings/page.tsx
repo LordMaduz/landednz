@@ -7,7 +7,7 @@ import { SettingsScreen } from "@/components/settings/settings-screen"
 import { createClient } from "@/lib/supabase/server"
 import { userBadge } from "@/lib/user-badge"
 
-export const metadata: Metadata = { title: "Settings" }
+export const metadata: Metadata = { title: "Your details" }
 
 async function Settings() {
   await connection()

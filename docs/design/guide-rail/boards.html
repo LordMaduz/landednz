@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LandedNZ Guide rail — three variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F2A3A;--muted:#4B6170;--control:#7A8F99;--border:#D5DFE2;--hairline:#E3E8EA;--wash:#F6F8F8;--teal:#0E7C7B;--teal-text:#0A6463;--avatar:#E8F2F1;--tint:#F3F9F8;--tint-border:#CFE5E3;
+--lift:0 1px 2px rgba(15,42,58,.04),0 16px 48px rgba(15,42,58,.08)}
+*{box-sizing:border-box}
+html{background:#EEF2F3;color:var(--ink);font:16px/1.5 Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{margin:0;padding:48px 40px 96px}
+.doc{max-width:1180px;margin:0 auto}
+h1{font-size:24px;line-height:1.25;letter-spacing:-.015em;font-weight:600;margin:0 0 8px}
+h2{font-size:18px;line-height:1.35;letter-spacing:-.01em;font-weight:600;margin:64px 0 6px}
+h3{font-size:14px;font-weight:600;margin:28px 0 10px}
+p.lede{color:var(--muted);margin:0 0 4px;max-width:76ch}
+.note{font-size:14px;line-height:1.5;color:var(--muted);max-width:80ch;margin:6px 0 14px}
+.note b{color:var(--ink);font-weight:600}
+.flag{display:inline-block;font-size:12px;font-weight:600;color:#7A4B00;background:#FFF4DC;border:1px solid #F0D9A8;border-radius:6px;padding:1px 6px;margin-right:6px}
+ul.why{margin:6px 0 0;padding-left:18px;font-size:14px;color:var(--muted);max-width:80ch}
+ul.why li{margin:3px 0}
+table.chk{border-collapse:collapse;font-size:14px;margin:10px 0 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:var(--lift)}
+table.chk th,table.chk td{text-align:left;padding:8px 14px;border-bottom:1px solid var(--hairline);vertical-align:top}
+table.chk th{font-size:12px;color:var(--muted);font-weight:600;background:var(--wash)}
+.cap{font-size:12px;color:var(--muted);margin:8px 0 0}
+.row2{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+
+/* frames: real pixel widths, scaled for the page */
+.frame{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--lift);height:900px;display:flex;flex-direction:column}
+.f1440{width:1440px;zoom:.78}
+.f1024{width:1024px;zoom:.62}
+.hdr{height:64px;flex-shrink:0;border-bottom:1px solid var(--hairline);background:#fff}
+.hdr .in{margin:0 auto;height:64px;display:flex;align-items:center;gap:40px}
+.f1440 .in,.f1440 .page{width:1200px}
+.f1024 .in,.f1024 .page{width:976px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:-.01em;font-size:16px}
+.logo{width:24px;height:24px;border-radius:6px;background:var(--ink);display:grid;place-items:center}
+.tabs{display:flex;gap:4px;height:64px;align-items:stretch}
+.tab{position:relative;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;font-weight:500;color:var(--muted)}
+.tab.mode{color:var(--ink);padding-right:6px}
+.tab.mode::after{content:"";position:absolute;left:12px;right:6px;bottom:-1px;height:2px;border-radius:2px;background:var(--teal)}
+.tab .x{display:grid;place-items:center;width:24px;height:24px;color:var(--muted)}
+.sep{width:1px;height:20px;background:var(--hairline);align-self:center;margin:0 6px}
+.av{margin-left:auto;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--avatar);color:var(--teal-text);font-size:12px;font-weight:600}
+.ftr{height:64px;flex-shrink:0;border-top:1px solid var(--hairline);font-size:12px;color:var(--muted)}
+.ftr .in{height:64px}
+.ftr .in span:last-child{margin-left:auto;color:var(--teal-text)}
+.page{margin:0 auto;flex:1;min-height:0;padding:24px 0;display:grid}
+.f1440 .page{grid-template-columns:320px minmax(0,1fr)}
+.f1024 .page{grid-template-columns:280px minmax(0,1fr)}
+svg{flex-shrink:0}
+
+/* reading column (context only, unchanged) */
+.col{display:flex;flex-direction:column;min-height:0}
+.colhd{display:flex;align-items:center;gap:8px;padding:14px 20px;font-weight:600;font-size:16px}
+.colhd .sp{flex:1}
+.colhd .ib{width:32px;height:32px;display:grid;place-items:center;color:var(--muted)}
+.read{max-width:720px;width:100%;margin:0 auto;padding:12px 24px 0;flex:1}
+.read .q{font-size:24px;font-weight:600;letter-spacing:-.015em;margin:0 0 10px}
+.read .org{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.read .org b{color:var(--teal-text);font-weight:500}
+.read p{font-size:16px;line-height:1.65;margin:0 0 10px}
+.read ol{margin:0 0 12px;padding:0;list-style:none}
+.read ol li{display:flex;gap:12px;margin:6px 0;font-size:16px}
+.read ol li span{font-size:12px;font-weight:600;color:var(--muted);width:16px;text-align:center;padding-top:3px}
+.comp{max-width:720px;width:100%;margin:0 auto;padding:12px 24px 0}
+.comp .box{border:1px solid var(--teal);border-radius:18px;padding:14px 16px 10px;font-size:16px;color:var(--muted)}
+.comp .meta{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px}
+.chip{background:var(--wash);border-radius:6px;padding:4px 8px;color:var(--ink);font-weight:500}
+.comp .meta .l{margin-left:auto}
+.send{width:32px;height:32px;border-radius:50%;background:var(--track,#C9D3D7)}
+
+/* ---------- rail, shared ---------- */
+.rail{display:flex;flex-direction:column;min-height:0;padding:20px 16px;gap:18px}
+.back{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:14px;color:var(--muted);padding:6px 8px;margin-left:-8px;border-radius:8px}
+.back:hover{color:var(--ink)}
+.lbl{font-size:12px;font-weight:600;color:var(--muted);margin:0;padding:0 10px}
+.help{font-size:12px;color:var(--muted);margin:2px 0 0;padding:0 10px;font-weight:400}
+.list{display:flex;flex-direction:column;gap:2px}
+.item{position:relative;display:block;padding:8px 10px;border-radius:8px;font-size:14px;line-height:1.45;color:var(--ink)}
+.item .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item .n{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.item.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--teal)}
+.st{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.45;color:var(--ink)}
+.st svg{margin-top:2px;margin-left:auto;color:var(--muted)}
+
+/* A — Quiet list (Primer NavList): wash rail, rows transparent, selected white + teal bar */
+.vA .rail{background:var(--wash);border-right:1px solid var(--hairline)}
+.vA .item:hover{background:#EEF2F3}
+.vA .item.on{background:#fff;box-shadow:0 0 0 1px var(--hairline)}
+.vA .all{margin-bottom:6px}
+.vA .divide{height:1px;background:var(--hairline);margin:2px 10px 8px}
+.vA .st{padding:8px 10px;border-radius:8px}
+.vA .st:hover{background:#EEF2F3}
+
+/* B — Inset cards: wash rail, groups sit in white cards with dividers, selected tint + bar */
+.vB .rail{background:var(--wash);border-right:1px solid var(--hairline)}
+.vB .card{background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--hairline);overflow:hidden}
+.vB .card .item{border-radius:0;padding:10px 14px}
+.vB .card .item+.item{box-shadow:inset 0 1px 0 var(--hairline)}
+.vB .card .item.on{background:var(--tint)}
+.vB .card .item.on::before{top:0;bottom:0;border-radius:0}
+.vB .list{gap:10px}
+.vB .st{padding:10px 14px}
+.vB .st+.st{box-shadow:inset 0 1px 0 var(--hairline)}
+
+/* C — Open rail: white, hairline divider only, selected tint fill + bar; starters as links */
+.vC .rail{background:#fff;border-right:1px solid var(--hairline)}
+.vC .item:hover{background:var(--wash)}
+.vC .item.on{background:var(--tint)}
+.vC .divide{height:1px;background:var(--hairline);margin:6px 10px}
+.vC .st{padding:6px 10px;color:var(--teal-text)}
+.vC .st svg{color:var(--teal-text)}
+</style>
+</head>
+<body>
+<div class="doc">
+<h1>Guide rail — three variants</h1>
+<p class="lede">The left panel of the Guide full view. All three use your four picks; they differ only in how the rail looks. The reading column, header and composer are unchanged and shown only for context.</p>
+
+<h3>Your picks, and where each one shows</h3>
+<table class="chk">
+<tr><th>Pick</th><th>On every variant</th></tr>
+<tr><td>Wrap + wider at 1280 and up</td><td>Titles wrap to 2 lines (tooltip after that); rail 320 px in the 1440 frames, 280 px in the 1024 frame. Nothing is cut mid-word.</td></tr>
+<tr><td>Quiet Back link</td><td>“Back to Home” / “Back to your task” as plain muted text with an arrow; no border, no fill. Collapse and × icons unchanged.</td></tr>
+<tr><td>Title + “2 questions”</td><td>Muted 12 px line under each title. Selected row: 3 px teal start bar (5.0:1 on white, above the 3:1 WCAG 1.4.11 needs). Weight does not change on select, so wrapping never shifts.</td></tr>
+<tr><td>All first, footer as helper</td><td>“All questions” at the top, set apart. “One conversation, on every device.” sits under the section label. Opened from a task, All shows no count until the full history has loaded.</td></tr>
+</table>
+
+<h3>Sources for the values</h3>
+<ul class="why">
+<li>Rail 320 px at ≥ 1280: Primer PageLayout pane “large” = 320 px (small 256, medium 296) — <a href="https://primer.style/product/components/page-layout/">primer.style/product/components/page-layout</a>. Below 1280 it stays 280 (current token).</li>
+<li>Section labels 12 px / 600 / muted: Primer NavList group heading — <a href="https://primer.style/product/components/nav-list/">primer.style/product/components/nav-list</a>. Rows 14 (type role “ui”), counts 12 (role “small”). No new sizes.</li>
+<li>Selected start bar: Primer NavList current item marker; contrast need from WCAG 2.2 SC 1.4.11 — <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">w3.org/WAI/WCAG22/Understanding/non-text-contrast</a>.</li>
+<li><span class="flag">Judgement</span>Bar width 3 px and 2-line clamp are my call; both are common practice, no system mandates the exact number.</li>
+</ul>
+<p class="note"><b>Starter text is the API’s real text</b>, shown as it comes (quotes included). The T28 naming mismatch (“Read your visa conditions on Immigration NZ” in starters vs “Check your visa conditions in your eVisa record” in the row) is a content issue outside this pass.</p>
+
+<div id="out"></div>
+</div>
+
+<script>
+const I = {
+  back:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+  arrow:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+  x:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  min:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>',
+  logo:'<span class="logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3FC9B7" stroke-width="2.5" stroke-linecap="round"><path d="M4 14c3-4 5 0 8-3s5-1 8-3"/></svg></span>'
+}
+const TASKS = [
+  ['Give your employer a tax code (IR330)', 2],
+  ['Check your visa conditions in your eVisa record', 1],
+  ['Apply for your IRD number', 2],
+]
+const HOME_STARTERS = ['What\'s involved in "Book temporary accommodation"?', 'What\'s involved in "Check your public health eligibility and cover"?']
+const TASK_STARTERS = ['What\'s involved in "Read your visa conditions on Immigration NZ"?', 'What do I need before I start "Read your visa conditions on Immigration NZ"?', 'How long does "Read your visa conditions on Immigration NZ" take?']
+const q = n => n + (n === 1 ? ' question' : ' questions')
+
+function item(title, n, on) {
+  return `<div class="item${on ? ' on' : ''}" title="${title}"><span class="t">${title}</span>${n == null ? '' : `<span class="n">${q(n)}</span>`}</div>`
+}
+function rail(v, s) {
+  const fromTask = s.from === 'task'
+  const tasks = fromTask ? [TASKS[1]] : TASKS
+  const allN = fromTask ? null : 5 // from a task: count hidden until full history loads
+  const allRow = item('All questions', allN, s.sel === 'all')
+  const taskRows = tasks.map(([t, n], i) => item(t, n, s.sel === (fromTask ? 1 : i))).join('')
+  const starters = (fromTask ? TASK_STARTERS : HOME_STARTERS).map(t => `<div class="st"><span>${t}</span>${I.arrow}</div>`).join('')
+  const head = `<div><p class="lbl">This conversation, by task</p><p class="help">One conversation, on every device.</p></div>`
+  const back = `<span class="back">${I.back}${fromTask ? 'Back to your task' : 'Back to Home'}</span>`
+  if (v === 'B') return `<div class="rail">${back}${head}
+    <div class="list"><div class="card">${allRow}</div><div class="card">${taskRows}</div></div>
+    <div><p class="lbl" style="margin-bottom:8px">Try asking</p><div class="card">${starters}</div></div></div>`
+  return `<div class="rail">${back}${head}
+    <div class="list">${allRow}<div class="divide"></div>${taskRows}</div>
+    <div><p class="lbl" style="margin-bottom:${v === 'C' ? 2 : 4}px">Try asking</p><div class="list">${starters}</div></div></div>`
+}
+function frame(v, s, w) {
+  const fromTask = s.from === 'task'
+  return `<div class="frame f${w} v${v}">
+  <div class="hdr"><div class="in"><span class="brand">${I.logo}LandedNZ</span>
+    <span class="tabs"><span class="tab">Home</span><span class="tab">Roadmap</span><span class="sep"></span><span class="tab mode">${I.logo}Guide<span class="x">${I.x}</span></span></span><span class="av">E</span></div></div>
+  <div class="page">${rail(v, s)}
+    <div class="col"><div class="colhd">${I.logo}Guide<span class="sp"></span>${fromTask ? `<span class="ib">${I.min}</span>` : ''}<span class="ib">${I.x}</span></div>
+      <div class="read"><p class="q">${fromTask ? 'How long does this take?' : s.sel === 'all' ? 'Is there a cost?' : 'What documents do I need?'}</p>
+        <div class="org"><b>Official sites, checked today</b> employment.govt.nz · 1 source</div>
+        <p>This is a mock reply from LandedNZ. It has a second sentence.</p>
+        <ol><li><span>1</span>Register for myIR first.</li><li><span>2</span>Then Get your IRD number gets easier.</li></ol></div>
+      <div class="comp"><div class="box">Ask anything about settling in<div class="meta"><span class="chip">${fromTask ? 'Check your visa conditions in your eVisa record' : 'Home'}</span><span class="l">15 left today</span><span class="send"></span></div></div></div>
+    </div></div>
+  <div class="ftr"><div class="in" style="margin:0 auto;display:flex;align-items:center">${'<span>General information, not legal or tax advice.</span><span>Privacy &nbsp; Terms</span>'}</div></div>
+</div>`
+}
+const V = [
+  ['A', 'Quiet list', 'Closest to today. Wash rail; rows are plain text until selected, then white with a teal start bar. “All questions” is split from the tasks by a hairline. Starters use the same row shape, with an arrow.', 'Most familiar (GitHub/Primer nav). Lowest risk. Least change in feel.'],
+  ['B', 'Inset cards', 'Wash rail; “All questions”, the task group and the starters each sit in their own white card with dividers, like Settings lists. Selected row gets a tint fill and teal bar.', 'Clearest grouping and the most “finished” look. Rows are a bit taller; three cards add more edges.'],
+  ['C', 'Open rail', 'White rail with only a hairline divider, so the full view reads as one surface. Selected row gets a tint fill and teal bar. Starters become teal text links with an arrow.', 'Lightest and most modern. Starters read clearly as “ask this”. Less separation between rail and reading column.'],
+]
+document.getElementById('out').innerHTML = V.map(([v, name, what, trade]) => `
+  <h2>Variant ${v} — ${name}</h2>
+  <p class="note">${what}</p><p class="note"><b>Trade-off:</b> ${trade}</p>
+  <h3>1440 · from Home · All questions selected</h3>${frame(v, { from: 'home', sel: 'all' }, 1440)}
+  <h3>1440 · from Home · a task selected (long title wraps)</h3>${frame(v, { from: 'home', sel: 1 }, 1440)}
+  <div class="row2">
+    <div><h3>1440 · opened from a task (All count hidden until loaded)</h3>${frame(v, { from: 'task', sel: 1 }, 1440)}</div>
+  </div>
+  <h3>1024 · rail stays 280 px · task selected</h3>${frame(v, { from: 'home', sel: 0 }, 1024)}
+  <p class="cap">At 280 px “Check your visa conditions in your eVisa record” takes two lines instead of cropping.</p>`).join('')
+</script>
+</body>
+</html>

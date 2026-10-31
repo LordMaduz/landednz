@@ -180,6 +180,12 @@
   transform: translateY(var(--drawer-swipe-movement-y, 0px));
 }
 
+/* Phone tab bar: 56 px of tabs above the home indicator (0 unless the page runs edge to edge) */
+@utility tabbar-safe {
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Guide sheet at full height: clear the notch */
 @utility guide-safe-top {
   padding-top: env(safe-area-inset-top, 0px);

@@ -49,7 +49,7 @@ test('the ask bar is on Home, Roadmap and Task only; no header Ask anywhere', as
     await expect(page.getByRole('banner').getByRole('button', { name: /^Ask/ })).toHaveCount(0)
   }
   await page.goto('/settings')
-  await expect(page.getByRole('heading', { level: 1, name: 'Settings' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Your details' })).toBeVisible()
   await expect(askBar(page)).toHaveCount(0)
   await expect(page.getByRole('banner').getByRole('button', { name: /^Ask/ })).toHaveCount(0)
 })
@@ -130,4 +130,27 @@ test('distress: the crisis card comes first with three tel: links', async ({ pag
   await expect(card).toBeVisible()
   await expect(card.getByRole('link')).toHaveCount(3)
   for (const tel of ['tel:1737', 'tel:0800543354', 'tel:111']) await expect(card.locator(`a[href="${tel}"]`)).toBeVisible()
+})
+
+// The full view belongs to the page it was opened on: a header link closes it, and while open the header shows Guide as current
+test('header links leave the full view; the Guide tab shows only while it is open', async ({ page }) => {
+  await signedIn(page)
+  const nav = page.getByRole('navigation', { name: 'Main' }).first()
+  await askFromBar(page, 'Where do I start?')
+  await expect(pane(page)).toBeVisible()
+  await expect(nav.getByText('Guide')).toHaveAttribute('aria-current', 'page')
+  await expect(nav.getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
+
+  await nav.getByRole('link', { name: 'Roadmap' }).click()
+  await expect(page).toHaveURL('/app/roadmap')
+  await expect(pane(page)).toBeHidden()
+  await expect(page.locator('main h1').first()).toBeVisible()
+  await expect(nav.getByText('Guide')).toHaveCount(0)
+  await expect(nav.getByRole('link', { name: 'Roadmap' })).toHaveAttribute('aria-current', 'page')
+
+  // the tab you are already on also leaves the full view
+  await page.getByRole('button', { name: 'Open conversation' }).click()
+  await expect(pane(page)).toBeVisible()
+  await nav.getByRole('link', { name: 'Roadmap' }).click()
+  await expect(pane(page)).toBeHidden()
 })

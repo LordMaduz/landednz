@@ -11,6 +11,13 @@ import { GuidePane } from "./guide-pane"
 
 const WIDE = "(width >= 1024px)" // --breakpoint-pane: below it the guide is a sheet (D11)
 
+// Home and Roadmap have no side pane: the guide always opens in the full view there (chat-window D3)
+export function useFullView() {
+  const { open, expanded, page } = useGuideStore()
+  const wide = useWide()
+  return open && wide && (expanded || page?.kind !== "task")
+}
+
 export function useWide() {
   return useSyncExternalStore(
     cb => {
@@ -79,6 +86,7 @@ export function GuideShell({
   children: ReactNode
 }) {
   const { open, expanded, unseen, page: current, setPage, openPane, close, prime } = useGuideStore()
+  const full = useFullView()
   const wide = useWide()
   const barRef = useRef<HTMLButtonElement | HTMLTextAreaElement>(null)
   const wasOpen = useRef(open)
@@ -118,8 +126,6 @@ export function GuideShell({
     if (e.key === "Escape" && e.currentTarget.contains(e.target as Node)) close()
   }
   const beside = open && wide
-  // Home and Roadmap have no side pane: the guide always opens in the full view there (chat-window D3)
-  const full = beside && (expanded || kind !== "task")
 
   return (
     <GuideTitles value={titles}>

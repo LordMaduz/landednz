@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
-import { AppHeader } from "@/components/chrome/app-header"
+import { AppHeader, type HeaderUser } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
 import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
@@ -189,7 +189,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
 type Loaded = { home: Home; route: RouteView; arrivalDate: string; now: Date }
 
 // Fetches profile and roadmap with the browser session, like the Roadmap page
-export function HomeScreen({ user }: { user: { name: string; initials: string } }) {
+export function HomeScreen({ user }: { user: HeaderUser }) {
   const router = useRouter()
   const [state, setState] = useState<Loaded | "loading" | "down">("loading")
 

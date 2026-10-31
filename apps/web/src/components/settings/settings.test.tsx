@@ -333,12 +333,12 @@ describe('SettingsScreen', () => {
     search = new URLSearchParams('edit=arrivalDate')
     render(<SettingsScreen user={user} />)
     expect(await screen.findByRole('grid')).toBeInTheDocument()
-    expect(document.querySelector('header a[href="/settings"]:not([aria-current])')).toHaveTextContent('Settings')
+    expect(document.querySelector('header a[href="/settings"]:not([aria-current])')).toHaveTextContent('Your details')
   })
 
   it('loads the profile into the answers list and editor', async () => {
     render(<SettingsScreen user={user} />)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Settings')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Your details')
     expect(await screen.findByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
     expect(getOnboardingProfile).toHaveBeenCalledWith('tok')
     expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
-import { AppHeader } from "@/components/chrome/app-header"
+import { AppHeader, type HeaderUser } from "@/components/chrome/app-header"
 import { PublicFooter } from "@/components/chrome/public-footer"
 import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
@@ -214,7 +214,7 @@ export function RoadmapView({
 type Loaded = { view: RouteView; arrivalDate: string; now: Date; firstUse: boolean }
 
 // Fetches the roadmap with the browser session; ?task=<id> is the open task, shown as a page in place of the route
-export function RoadmapScreen({ user }: { user: { name: string; initials: string } }) {
+export function RoadmapScreen({ user }: { user: HeaderUser }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedTaskId = searchParams.get("task") ?? undefined
