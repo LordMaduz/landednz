@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function Terms() {
-  return <LegalPage title="Terms" updated="24 October 2026" file="terms" />
+  return <LegalPage title="Terms" updated="31 October 2026" file="terms" />
 }

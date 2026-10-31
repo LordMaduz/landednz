@@ -16,12 +16,10 @@ describe('Privacy', () => {
     expect(privacyMeta.title).toBe('Privacy')
   })
 
-  it('marks the placeholders the owner fills in', () => {
+  it('has no placeholders left: production shows it', () => {
     render(<LegalLayout title="Privacy" updated="24 October 2026" file="privacy" user={null} />)
-    expect(Array.from(document.querySelectorAll('.ph')).map(el => el.textContent)).toEqual([
-      '[hosting provider and region]',
-      '[privacy contact email]',
-    ])
+    expect(document.querySelectorAll('.ph')).toHaveLength(0)
+    expect(screen.getByRole('link', { name: 'privacy@landednz.co.nz' })).toHaveAttribute('href', 'mailto:privacy@landednz.co.nz')
   })
 })
 
@@ -38,7 +36,7 @@ describe('Terms', () => {
       'Changes',
       'Contact',
     ])
-    expect(document.querySelectorAll('.ph').length).toBeGreaterThan(0)
+    expect(document.querySelectorAll('.ph')).toHaveLength(0)
     expect(termsMeta.title).toBe('Terms')
   })
 })

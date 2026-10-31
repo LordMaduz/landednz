@@ -1,6 +1,6 @@
 ## What LandedNZ is
 
-LandedNZ builds a settling-in roadmap for your first months in New Zealand from your five onboarding answers, and answers questions about it. It is run by `[operator name]`.
+LandedNZ builds a settling-in roadmap for your first months in New Zealand from your five onboarding answers, and answers questions about it. It is run by Ruchira Rajapaksha.
 
 ## General information, not advice
 
@@ -20,4 +20,4 @@ LandedNZ may change these terms. The date at the top shows when they last change
 
 ## Contact
 
-Questions about these terms: `[contact email]`.
+Questions about these terms: [hello@landednz.co.nz](mailto:hello@landednz.co.nz).

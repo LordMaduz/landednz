@@ -20,9 +20,9 @@ Source of truth for the API names: `apps/api/src/shared/config.ts`; for the web 
 
 `PORT` is set by Render. Never set `CONTENT_ALLOW_UNVERIFIED` or `RATE_LIMIT_PER_MINUTE` on a deployed API.
 
-## Railway: production API (`railway.json`)
+## Railway: production API (`.railway/railway.ts`)
 
-Same names as Render. Differences: set every value in the Railway dashboard, with `NODE_ENV=production`, `AI_MODE=live`, `ANTHROPIC_MODEL=claude-sonnet-5-5`, `TRUST_PROXY=true`, `BETA_MODE=true`.
+Same names as Render. Non-secret values (`NODE_ENV=production`, `AI_MODE=live`, `ANTHROPIC_MODEL=claude-sonnet-5-5`, `TRUST_PROXY=true`, `BETA_MODE=true`, `CORS_ORIGIN`, `SUPABASE_URL`) live in `.railway/railway.ts` and are applied with `railway config plan` / `railway config apply`. Secrets are `preserve()` there and set only in the Railway dashboard.
 Values come from the production side: `landednz-prod` Supabase project, the `landednz-prod` Anthropic key, the same OpenAI key, `CORS_ORIGIN` = the production web origin, `GUIDE_DAILY_CAP` if production should differ from the default 20.
 `PORT` is set by Railway.
 
