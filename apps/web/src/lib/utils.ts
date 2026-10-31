@@ -9,7 +9,10 @@ export const cn = createCn({
         "raised", "floating", "overlay", "overlay-up", "frame-top", "frame-bottom",
         "chosen", "error", "today", "rail", "pin",
       ],
-      spacing: ["page-gutter", "card-padding", "section-gap", "stack-gap", "tab-bar", "rail-indent", "sheet-clear"],
+      spacing: [
+        "page-gutter", "card-padding", "section-gap", "stack-gap", "tab-bar", "rail-indent", "sheet-clear",
+        "header", "footer", "control", "control-sm", "control-lg", "target", "touch", "row", "row-lg", "settings-row", "ask-bar-height", "avatar",
+      ],
     },
     classGroups: {
       "font-size": [{ text: ["hero", "title", "featured", "section", "body", "ui", "small", "reading"] }],

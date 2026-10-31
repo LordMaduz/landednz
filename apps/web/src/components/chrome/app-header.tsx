@@ -25,7 +25,7 @@ const TABS = [HOME, ROADMAP] as const
 const tab =
   "group flex flex-col items-center justify-center gap-0.5 text-small font-medium text-fg-muted no-underline state hover:no-underline aria-[current=page]:font-semibold aria-[current=page]:text-fg aria-[current=page]:[&_svg]:text-accent"
 const menuItem =
-  "flex min-h-10 w-full cursor-pointer items-center gap-2 rounded-control px-3 text-ui text-fg no-underline hover:no-underline data-highlighted:bg-surface-sunken [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-fg-muted"
+  "flex min-h-control w-full cursor-pointer items-center gap-2 rounded-control px-3 text-ui text-fg no-underline hover:no-underline data-highlighted:bg-surface-sunken [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-fg-muted"
 
 // Google's photo when there is one; initials when not, or when it fails to load
 export function Avatar({ user, className }: { user: HeaderUser; className: string }) {
@@ -60,9 +60,9 @@ export function AppHeader({
     <>
     {/* from 1024 px the header stays on screen while the page scrolls */}
     <header className="border-b border-border-subtle bg-surface pane:sticky pane:top-0 pane:z-40 pane:shadow-frame-top">
-      <div className="container-page container-app flex h-14 items-center gap-8 max-compact:gap-2">
+      <div className="container-page container-app flex h-header items-center gap-8 max-compact:gap-2">
         {back && (
-          <Link href={back.href} className="hidden min-h-11 items-center gap-1 font-medium text-fg no-underline hover:no-underline max-narrow:flex">
+          <Link href={back.href} className="hidden min-h-target items-center gap-1 font-medium text-fg no-underline hover:no-underline max-narrow:flex">
             <span aria-hidden="true">‹</span> {back.label}
           </Link>
         )}
@@ -101,7 +101,7 @@ export function AppHeader({
           <Menu.Root>
             <Menu.Trigger
               aria-label={`Account, ${user.name}`}
-              className="group flex size-11 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0"
+              className="group flex size-target cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0"
             >
               <Avatar
                 user={user}
@@ -112,7 +112,7 @@ export function AppHeader({
               <Menu.Positioner align="end" sideOffset={8} className="z-50">
                 <Menu.Popup className="w-66 rounded-card bg-surface p-2 shadow-floating outline-none">
                   <div className="flex items-center gap-3 px-3 pt-3 pb-3">
-                    <Avatar user={user} className="size-10 text-ui" />
+                    <Avatar user={user} className="size-avatar text-ui" />
                     <div className="min-w-0">
                       <p translate="no" className="truncate text-ui font-semibold text-fg">{user.name}</p>
                       {email && <p translate="no" className="truncate text-small text-fg-muted">{email}</p>}

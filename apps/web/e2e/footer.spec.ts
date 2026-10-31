@@ -13,7 +13,8 @@ async function expectFooterAtBottom(page: Page, path: string, width: number) {
     // From the footer line to the end of the page: the footer itself, nothing under it
     return { height: Math.round(document.documentElement.scrollHeight - top) }
   })
-  expect(m, `${path} at ${width}`).toEqual({ height: width > 561 ? 57 : 37 })
+  // footer role 36 / 56 / 44 (desktop) + its 1 px top border
+  expect(m, `${path} at ${width}`).toEqual({ height: width >= 1024 ? 45 : width > 561 ? 57 : 37 })
 }
 
 test.beforeAll(resetTestUser)
@@ -29,9 +30,12 @@ test('landing header sticks', async ({ page }) => {
 for (const [width, height] of SIZES) {
   test(`footer sits at the bottom at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height })
-    for (const path of ['/', '/signin', '/privacy', '/terms', '/onboarding?step=1']) await expectFooterAtBottom(page, path, width)
+    for (const path of ['/', '/signin', '/privacy', '/terms']) await expectFooterAtBottom(page, path, width)
+    // Onboarding question steps have no footer (owner, 2026-11-01); the preview keeps it
+    await page.goto('/onboarding?step=1')
+    await expect(page.locator('footer')).toHaveCount(0)
     await holdAnswers(page)
-    for (const path of ['/signin', '/onboarding/preview', '/onboarding?step=5']) await expectFooterAtBottom(page, path, width)
+    for (const path of ['/signin', '/onboarding/preview']) await expectFooterAtBottom(page, path, width)
     await page.goto('/signin')
     await signIn(page)
     await expect(page).toHaveURL('/app')

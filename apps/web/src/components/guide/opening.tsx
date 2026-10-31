@@ -23,7 +23,7 @@ export function Opening({ opening, onAsk }: { opening: GuideOpeningResponse | nu
               type="button"
               variant="ghost"
               onClick={() => onAsk(s)}
-              className="h-auto min-h-11 justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-1 py-3 text-left font-normal whitespace-normal text-ui last:border-b"
+              className="h-auto min-h-target justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-1 py-3 text-left font-normal whitespace-normal text-ui last:border-b"
             >
               {s}
               <ArrowRight className="ml-auto size-4 shrink-0 text-fg-muted" aria-hidden />

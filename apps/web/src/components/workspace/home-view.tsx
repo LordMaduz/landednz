@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 
 const ROW =
-  "flex min-h-10 items-center gap-3 px-5 py-2 text-fg no-underline hover:bg-surface-sunken hover:text-fg hover:no-underline max-narrow:min-h-11 max-narrow:px-4"
+  "flex min-h-row items-center gap-3 px-5 py-2 text-fg no-underline hover:bg-surface-sunken hover:text-fg hover:no-underline max-narrow:px-4"
 const LINK = "inline-flex min-h-6 items-center text-small font-medium"
 
 // Rows run edge to edge inside a card: the li cancels the card padding
@@ -78,14 +78,13 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 )}
               </div>
               <CardFoot className="flex gap-2 pt-1">
-                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "min-h-11 max-narrow:flex-1" })}>
+                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "max-narrow:flex-1" })}>
                   Start task<span className="sr-only">: {top.title}</span>
                 </Link>
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: top.taskId })}
-                  className="min-h-11"
                 >
                   <Wide>Ask about this</Wide>
                   <Phone>Ask</Phone>
@@ -122,7 +121,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                   <Link href={taskHref(t.taskId)} className={ROW}>
                     <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
                     <span title={t.title} className="min-w-0 flex-1 truncate font-medium max-narrow:whitespace-normal">{t.title}</span>
-                    <span className="flex-none text-small text-fg-muted max-narrow:hidden">{meta}</span>
+                    <span className="max-w-2/5 shrink-0 text-right text-small text-fg-muted max-narrow:hidden">{meta}</span>
                   </Link>
                 </li>
               ))}
@@ -164,7 +163,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                   i > 1 && "max-narrow:hidden",
                 )}
               >
-                <Link href={taskHref(d.taskId)} className="flex items-start gap-3 py-1 text-fg no-underline hover:text-fg hover:underline max-narrow:min-h-11 max-narrow:items-center">
+                <Link href={taskHref(d.taskId)} className="flex items-start gap-3 py-1 text-fg no-underline hover:text-fg hover:underline max-narrow:min-h-target max-narrow:items-center">
                   <Tick />
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span>{d.title}</span>

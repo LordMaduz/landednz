@@ -4,7 +4,6 @@ import { useEffect, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
-import { PublicFooter } from "@/components/chrome/public-footer"
 import { AnswerRail } from "@/components/onboarding/answer-rail"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -105,7 +104,6 @@ export function QuestionStep() {
           </div>
         </main>
       </div>
-      <PublicFooter />
     </div>
   )
 }

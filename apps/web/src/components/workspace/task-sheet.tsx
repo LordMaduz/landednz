@@ -29,7 +29,7 @@ async function sessionToken(): Promise<string> {
 
 const SOURCES_SHOWN = 5
 const tabClass =
-  "min-h-11 cursor-pointer border-b-2 border-transparent bg-transparent px-0 font-medium text-fg-muted data-active:border-fg data-active:text-fg"
+  "min-h-target cursor-pointer border-b-2 border-transparent bg-transparent px-0 font-medium text-fg-muted data-active:border-fg data-active:text-fg"
 
 // The visible one of two copies of an element (desktop and phone layouts); the first when none is laid out
 const visible = <T extends HTMLElement>(...els: (T | null)[]) => els.find(e => e?.offsetParent) ?? els[0]
@@ -265,7 +265,7 @@ export function TaskSheet({
         <span className="text-ui font-semibold">{status}</span>
         {bestBy && <span className="text-small font-semibold text-accent">Best done by {weekdayDay(task.bestBy!)}</span>}
       </div>
-      <div className="flex gap-2 *:min-h-9 *:flex-1 *:px-3 *:text-ui">
+      <div className="flex gap-2 *:min-h-control *:flex-1 *:px-3 *:text-ui">
         {doneControls}
         {actionLink}
       </div>
@@ -277,7 +277,7 @@ export function TaskSheet({
   return (
     <article aria-labelledby={titleId}>
       <div data-testid="task-desktop" className="max-narrow:hidden">
-        <nav aria-label="Tasks" className="flex min-h-14 items-center gap-2 pb-2">
+        <nav aria-label="Tasks" className="mb-2 flex min-h-header items-center gap-2">
           <Link href="/app/roadmap" className={cn(buttonVariants({ variant: "ghost" }), "-ml-4")}>
             <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
             Roadmap
@@ -293,7 +293,7 @@ export function TaskSheet({
               <Link
                 href={taskHref(previous.taskId)}
                 aria-label={`Previous task: ${previous.title}`}
-                className={buttonVariants({ variant: "secondary" })}
+                className={buttonVariants({ variant: "secondary", size: "sm" })}
               >
                 <ChevronLeft aria-hidden="true" size={14} strokeWidth={1.5} />
                 Previous
@@ -303,7 +303,7 @@ export function TaskSheet({
               <Link
                 href={taskHref(next.taskId)}
                 aria-label={`Next task: ${next.title}`}
-                className={buttonVariants({ variant: "secondary" })}
+                className={buttonVariants({ variant: "secondary", size: "sm" })}
               >
                 Next task
                 <ChevronRight aria-hidden="true" size={14} strokeWidth={1.5} />

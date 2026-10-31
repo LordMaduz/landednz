@@ -24,6 +24,8 @@ test.beforeAll(resetTestUser)
 
 for (const [width, height] of [[1440, 900], [390, 844]]) {
   test(`axe on every page at ${width}`, async ({ page }) => {
+    // ~18 page states at ~1.5s each run past the default 30s on 2-vCPU private CI runners
+    test.slow()
     await page.setViewportSize({ width, height })
     for (const path of PUBLIC) await expectNoViolations(page, path)
 

@@ -14,7 +14,7 @@ export function Logo({ size = 24, onInk = false }: { size?: number; onInk?: bool
 
 export function Brand({ href }: { href: string }) {
   return (
-    <Link href={href} aria-label="LandedNZ home" className="flex min-h-11 items-center gap-2 text-fg no-underline hover:text-fg hover:no-underline">
+    <Link href={href} aria-label="LandedNZ home" className="flex min-h-target items-center gap-2 text-fg no-underline hover:text-fg hover:no-underline">
       <Logo />
       <span translate="no" className="font-semibold tracking-brand">LandedNZ</span>
     </Link>
