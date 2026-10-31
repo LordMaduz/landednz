@@ -207,7 +207,7 @@ describe('TaskSheet', () => {
     const { onChanged } = sheet('T07')
     expect(desk().getByRole('img', { name: 'Done 22 Oct' })).toBeInTheDocument()
     expect(desk().queryByRole('button', { name: 'Mark as done' })).toBeNull()
-    expect(document.querySelectorAll('button.bg-ink')).toHaveLength(0)
+    expect(document.querySelectorAll('button.bg-surface-inverse')).toHaveLength(0)
     expect(desk().queryByRole('link', { name: /opens in a new tab/ })).toBeNull()
     fireEvent.click(desk().getByRole('button', { name: 'Mark as not done' }))
     await waitFor(() => expect(reopenTask).toHaveBeenCalledWith('T07', 'tok'))

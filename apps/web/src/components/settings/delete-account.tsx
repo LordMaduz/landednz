@@ -40,7 +40,7 @@ export function DeleteAccount() {
   return (
     <AlertDialog onOpenChange={open => !open && setError(null)}>
       <AlertDialogTrigger
-        render={<button type="button" className="min-h-11 cursor-pointer border-0 bg-transparent p-0 font-medium text-danger-on-ink hover:text-white max-narrow:basis-full max-narrow:text-left max-narrow:border-t max-narrow:border-hairline max-narrow:text-danger max-narrow:hover:text-danger" />}
+        render={<Button type="button" variant="danger-ghost" className="-mx-3 min-h-11 px-3 text-danger-on-inverse state-inverse hover:text-fg-on-action max-narrow:mx-0 max-narrow:basis-full max-narrow:justify-start max-narrow:rounded-none max-narrow:border-0 max-narrow:border-t max-narrow:border-border-subtle max-narrow:px-0 max-narrow:text-danger max-narrow:state max-narrow:hover:text-danger" />}
       >
         Delete account<span className="hidden max-narrow:inline">…</span>
       </AlertDialogTrigger>
@@ -55,7 +55,7 @@ export function DeleteAccount() {
           <AlertDialogAction
             onClick={confirm}
             disabled={deleting}
-            className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
+            className="border-danger bg-danger text-fg-on-action hover:bg-danger hover:text-fg-on-action"
           >
             Delete account
           </AlertDialogAction>

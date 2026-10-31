@@ -4,13 +4,14 @@ import { useState, type Ref } from "react"
 import { ArrowUp, Info } from "lucide-react"
 import type { GuideScreen } from "@landednz/types"
 import { useGuideStore } from "@/lib/stores/guideStore"
+import { Button } from "@/components/ui/button"
 import { TASK_COPY } from "@/lib/task-copy"
 import { cn } from "@/lib/utils"
 
 // The guide's mark: a mint wave on an ink tile (board .mark)
 export function GuideMark({ className }: { className?: string }) {
   return (
-    <span aria-hidden className={cn("grid size-5.5 shrink-0 place-items-center rounded-control bg-ink text-mark", className)}>
+    <span aria-hidden className={cn("grid size-5.5 shrink-0 place-items-center rounded-control bg-surface-inverse text-accent-bright", className)}>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round">
         <path d="M3 15c3-3 6-3 9 0s6 3 9 0" />
       </svg>
@@ -47,36 +48,37 @@ export function AskBar({
   // sticky, not fixed: it floats at the window bottom while scrolling, then rests right under the page content. From 1024 px it clears the fixed 65 px footer (92 = 65 + 27).
   // While hidden the wrapper keeps its height so the phone footer doesn't jump; beside the open pane it goes, so the pane fits; clicks pass through its empty sides
   return (
-    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-7 flex h-13 justify-center pane:bottom-23 max-narrow:bottom-17 max-narrow:h-12 max-narrow:px-3", wide && "h-auto min-h-13 items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
+    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-8 flex h-13 justify-center pane:bottom-23 max-narrow:bottom-17 max-narrow:h-12 max-narrow:px-3", wide && "h-auto min-h-13 items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
       {wide ? (
         <AskBox page={page} unseen={unseen} onOpen={onOpen} ref={ref as Ref<HTMLTextAreaElement>} />
       ) : (
-        <button
+        <Button
           ref={ref as Ref<HTMLButtonElement>}
           type="button"
+          variant="secondary"
           hidden={open}
           aria-expanded={open}
           aria-controls="guide-pane"
           onClick={onOpen}
           className={cn(
-            "pointer-events-auto relative flex h-full w-ask-bar cursor-pointer items-center gap-3 rounded-bar bg-white pr-2.5 pl-3 text-ui text-muted shadow-bar hover:ring-1 hover:ring-teal/35 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
+            "pointer-events-auto relative h-full min-h-0 w-ask-bar justify-start gap-3 rounded-floating border-0 pr-3 pl-3 font-normal text-ui text-fg-muted shadow-floating hover:text-fg-muted max-narrow:min-h-0 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
             // phone: full width above the tab bar; Task keeps its own bottom bar instead (D23)
             "max-narrow:w-full",
           )}
         >
           <GuideMark />
-          {unseen && <i aria-hidden className="absolute top-2.5 left-8.5 size-1.75 rounded-full bg-teal ring-2 ring-white" />}
+          {unseen && <i aria-hidden className="absolute top-2.5 left-8.5 size-1.75 rounded-full bg-accent ring-2 ring-surface" />}
           <span className="flex-1 truncate text-left">
             {askLabel(page)}
             {unseen && <span className="sr-only">, new answer</span>}
           </span>
-          <kbd aria-hidden className="rounded border border-border px-1.25 font-sans text-small text-muted max-narrow:hidden">
+          <kbd aria-hidden className="rounded border border-border px-1 font-sans text-small text-fg-muted max-narrow:hidden">
             /
           </kbd>
-          <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-control bg-ink text-white">
+          <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-control bg-surface-inverse text-fg-on-action">
             <ArrowUp className="size-4" />
           </span>
-        </button>
+        </Button>
       )}
     </div>
   )
@@ -99,28 +101,28 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
     <div
       data-ask-bar
       className={cn(
-        "pointer-events-auto relative flex w-ask-bar gap-3 rounded-bar py-2.5 pr-2.5 pl-3.5 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
+        "pointer-events-auto relative flex w-ask-bar gap-3 rounded-floating py-3 pr-3 pl-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
         typed ? "items-end" : "items-center",
-        limited ? "bg-wash ring-1 ring-hairline" : "bg-white shadow-bar focus-within:ring-1 focus-within:ring-teal focus-within:outline-4 focus-within:outline-teal/12",
+        limited ? "bg-surface-sunken ring-1 ring-border-subtle" : "bg-surface shadow-floating focus-within:ring-1 focus-within:ring-accent focus-within:outline-4 focus-within:outline-accent/12",
       )}
     >
-      <p role="status" className="absolute bottom-full left-0 mb-2.5 empty:hidden">
+      <p role="status" className="absolute bottom-full left-0 mb-3 empty:hidden">
         {empty && (
-          <span className="flex items-center gap-2 rounded-control bg-white px-3 py-2 text-ui text-ink shadow-bar">
-            <Info aria-hidden className="size-4 text-teal" />
+          <span className="flex items-center gap-2 rounded-control bg-surface px-3 py-2 text-ui text-fg shadow-floating">
+            <Info aria-hidden className="size-4 text-accent" />
             Type a question to start chatting.
           </span>
         )}
       </p>
       {hasConversation ? (
-        <button type="button" aria-label="Open conversation" title="Open conversation" onClick={onOpen} className={cn("relative grid cursor-pointer place-items-center rounded-control after:absolute after:-inset-1", typed ? "mt-0.75 self-start" : "self-center")}>
+        <Button type="button" variant="ghost" size="icon" aria-label="Open conversation" title="Open conversation" onClick={onOpen} className={cn("relative size-auto border-0 after:absolute after:-inset-1", typed ? "mt-1 self-start" : "self-center")}>
           <GuideMark />
-        </button>
+        </Button>
       ) : (
-        <GuideMark className={typed ? "mt-0.75 self-start" : "self-center"} />
+        <GuideMark className={typed ? "mt-1 self-start" : "self-center"} />
       )}
       {unseen && (
-        <i aria-hidden className="absolute top-3 left-7.75 size-1.75 rounded-full bg-teal ring-2 ring-white" />
+        <i aria-hidden className="absolute top-3 left-7.75 size-1.75 rounded-full bg-accent ring-2 ring-surface" />
       )}
       <textarea
         ref={ref}
@@ -143,7 +145,7 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
           e.preventDefault()
           send()
         }}
-        className={cn("field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted aria-disabled:cursor-not-allowed")}
+        className={cn("field-sizing-content max-h-18 min-h-6 flex-1 resize-none bg-transparent text-body text-fg outline-none placeholder:text-fg-muted aria-disabled:cursor-not-allowed")}
       />
       {limited && (
         <span id="guide-ask-limit" className="sr-only">
@@ -151,20 +153,21 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
         </span>
       )}
       {!typed && !limited && (
-        <kbd aria-hidden className="self-center rounded border border-border px-1.25 font-sans text-small text-muted">
+        <kbd aria-hidden className="self-center rounded border border-border px-1 font-sans text-small text-fg-muted">
           /
         </kbd>
       )}
       {!limited && (
-        <button
+        <Button
           type="button"
+          size="icon"
           aria-label="Send"
           disabled={!typed}
           onClick={send}
-          className={cn("grid size-8 shrink-0 cursor-pointer place-items-center rounded-control text-white disabled:cursor-default", typed ? "bg-ink hover:bg-ink-hover" : "bg-border")}
+          className="size-8 disabled:border-border disabled:bg-border disabled:text-fg-on-action"
         >
           <ArrowUp aria-hidden className="size-4" />
-        </button>
+        </Button>
       )}
     </div>
   )

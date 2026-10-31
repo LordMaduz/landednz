@@ -4,9 +4,9 @@ import { ApiDown } from '@/components/chrome/api-down'
 import { Skeleton } from './skeleton'
 
 describe('Skeleton', () => {
-  it('is a hidden-until-300ms wash block', () => {
+  it('is a hidden-until-300ms sunken block', () => {
     const { container } = render(<Skeleton className="h-4" />)
-    expect(container.firstChild).toHaveClass('skeleton', 'bg-wash', 'h-4')
+    expect(container.firstChild).toHaveClass('skeleton', 'bg-surface-sunken', 'h-4')
     expect(container.firstChild).toHaveAttribute('aria-hidden', 'true')
   })
 })
@@ -15,7 +15,7 @@ describe('ApiDown', () => {
   it('is a Card with role=alert and one way forward', () => {
     render(<ApiDown onRetry={() => {}} />)
     const alert = screen.getByRole('alert')
-    expect(alert).toHaveClass('bg-white', 'shadow-lift')
+    expect(alert).toHaveClass('bg-surface', 'shadow-raised')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Can't reach LandedNZ")
     expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
   })

@@ -49,13 +49,13 @@ export function SettingsScreen({ user }: { user: User }) {
     <div className="flex min-h-dvh flex-col">
       <AppHeader active="settings" back={editing ? { href: "/settings", label: "Your details" } : undefined} user={user} />
       <main className="container-page container-app py-6 max-narrow:py-4">
-        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-2.5">
+        <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-3">
           {profile === "loading" || profile === "down" ? (
             <div className="flex flex-col gap-4">
               {profile === "loading" ? (
                 <AnswersCard>
                   <span className="sr-only">Loading</span>
-                  <Skeleton className="mt-5 h-40 w-full bg-white/15" />
+                  <Skeleton className="mt-5 h-40 w-full bg-fg-on-action/15" />
                 </AnswersCard>
               ) : (
                 <>

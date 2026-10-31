@@ -28,9 +28,9 @@ const KEYS = Object.keys(COPY) as Key[]
 // The navy answers card; the account block joins it on desktop (children), stacks apart on phones
 export function AnswersCard({ children, joined }: { children: ReactNode; joined?: boolean }) {
   return (
-    <Card className={cn("flex-1 gap-0 border-ink bg-ink p-8 text-white max-narrow:p-4 max-narrow:pb-1", joined && "rounded-b-none max-narrow:rounded-b-surface")}>
+    <Card className={cn("flex-1 gap-0 border-fg bg-surface-inverse p-8 text-fg-on-action max-narrow:p-4 max-narrow:pb-1", joined && "rounded-b-none max-narrow:rounded-b-card")}>
       <h1 className="text-title">Your details</h1>
-      <p className="mt-1 text-rail-text">
+      <p className="mt-1 text-fg-on-inverse">
         Your answers build your roadmap.<span className="max-narrow:hidden"> Change one and it&apos;s rebuilt; done tasks stay done.</span>
       </p>
       {children}
@@ -126,24 +126,25 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
 
   return (
     <>
-      <div className={cn("flex flex-col max-narrow:gap-2.5", param && "max-narrow:hidden")}>
+      <div className={cn("flex flex-col max-narrow:gap-3", param && "max-narrow:hidden")}>
         <AnswersCard joined>
-          <ol aria-label="Your answers" className="m-0 mt-5 list-none p-0 max-narrow:mt-2.5">
+          <ol aria-label="Your answers" className="m-0 mt-5 list-none p-0 max-narrow:mt-3">
             {KEYS.map(k => (
-              <li key={k} className="flex min-h-14 items-center gap-3 border-t border-white/15 py-3 max-narrow:py-1">
+              <li key={k} className="flex min-h-14 items-center gap-3 border-t border-fg-on-action/15 py-3 max-narrow:py-1">
                 <span className="flex flex-1 flex-col leading-snug">
-                  <span className={cn("text-small font-medium", k !== editing || memoryOpen ? "text-rail-label" : param ? "text-toast-action" : "text-toast-action max-narrow:text-rail-label")}>
+                  <span className={cn("text-small font-medium", k !== editing || memoryOpen ? "text-fg-on-inverse-muted" : param ? "text-link-on-inverse" : "text-link-on-inverse max-narrow:text-fg-on-inverse-muted")}>
                     {COPY[k].label}{k === editing && !memoryOpen && <span className="max-narrow:hidden"> · changing</span>}
                   </span>
                   <span>{display(k, saved[k])}</span>
                 </span>
-                <button
+                <Button
                   type="button"
+                  variant="text"
                   onClick={() => router.push(`/settings?edit=${k}`)}
-                  className={cn("flex min-h-11 cursor-pointer items-center border-0 bg-transparent p-0 text-small font-medium text-toast-action hover:text-white", k === editing && !memoryOpen && "narrow:hidden")}
+                  className={cn("min-h-11 text-small text-link-on-inverse hover:text-fg-on-action", k === editing && !memoryOpen && "narrow:hidden")}
                 >
                   Change{" "}<span className="sr-only">{COPY[k].label}</span>
-                </button>
+                </Button>
               </li>
             ))}
           </ol>
@@ -155,15 +156,15 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
       {memoryOpen ? (
         <MemorySection />
       ) : (
-        <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-14 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
+        <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-16 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
           <form onSubmit={save} noValidate className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              <span className="text-small text-muted">{copy.label}</span>
+            <div className="flex flex-col gap-2">
+              <span className="text-small text-fg-muted">{copy.label}</span>
               <h2 id={titleId} className="text-section">{copy.ask}</h2>
-              <p className="m-0 text-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
+              <p className="m-0 text-fg-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
             </div>
             {editQuestion ? (
-              <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-2.5">
+              <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-3">
                 {editQuestion.options.map(([value, label]) => (
                   <OptionRow
                     key={`${editing}-${value}`}
@@ -182,10 +183,10 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
                 {dateError && <p role="alert" className="text-small text-danger">{dateError}</p>}
               </div>
             )}
-            {error && <p role="alert" className="text-ink">{error}</p>}
+            {error && <p role="alert" className="text-fg">{error}</p>}
             <div className="flex gap-3 max-narrow:[&>*]:flex-1">
-              <Button type="button" variant="quiet" onClick={cancel}>Cancel</Button>
-              <Button type="submit" disabled={!dirty} aria-busy={saving} className={cn(saving && "bg-ink-hover")}>
+              <Button type="button" variant="secondary" onClick={cancel}>Cancel</Button>
+              <Button type="submit" disabled={!dirty} aria-busy={saving} className={cn(saving && "bg-surface-inverse-raised")}>
                 {saving ? "Saving…" : "Save and rebuild"}
               </Button>
             </div>

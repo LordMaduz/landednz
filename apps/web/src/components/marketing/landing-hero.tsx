@@ -7,7 +7,7 @@ import { RoadmapPreviewFigure } from "./roadmap-preview-figure"
 function Topo() {
   return (
     <svg aria-hidden="true" viewBox="0 0 1440 640" preserveAspectRatio="xMaxYMid slice" className="absolute inset-0 size-full max-narrow:hidden">
-      <g fill="none" className="stroke-hairline" strokeWidth="1">
+      <g fill="none" className="stroke-border-subtle" strokeWidth="1">
         <path d="M760 640 C840 520 780 420 900 360 S1140 330 1210 210 S1360 80 1460 100" />
         <path d="M810 680 C890 560 840 460 950 400 S1180 380 1260 260 S1390 140 1480 160" />
         <path d="M860 720 C940 600 900 500 1000 440 S1220 430 1310 310 S1420 200 1500 220" />
@@ -21,17 +21,17 @@ function Topo() {
 
 export function LandingHero() {
   return (
-    <section aria-labelledby="hero-title" className="relative flex flex-1 flex-col justify-center overflow-hidden border-b border-hairline">
+    <section aria-labelledby="hero-title" className="relative flex flex-1 flex-col justify-center overflow-hidden border-b border-border-subtle">
       <Topo />
       <div className="container-page relative grid grid-cols-hero items-center gap-16 py-24 max-stack:grid-cols-1 max-stack:gap-12 max-stack:pt-12 max-stack:pb-16">
         <div className="flex flex-col items-start gap-6">
           <h1 id="hero-title" className="max-w-hero-title text-hero max-compact:text-title">Know what to do next in New Zealand</h1>
-          <p className="max-w-hero-lede text-body text-muted">
+          <p className="max-w-hero-lede text-body text-fg-muted">
             Answer five questions and get a settling-in roadmap built for your visa, your city and the people moving with you.
           </p>
           <div className="flex flex-wrap items-center gap-4 max-narrow:w-full max-narrow:flex-col max-narrow:items-stretch max-narrow:gap-4">
             <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>Build my roadmap <ChevronRight aria-hidden="true" size={16} /></Link>
-            <span className="text-small text-muted max-narrow:text-center">You see it before you sign up.</span>
+            <span className="text-small text-fg-muted max-narrow:text-center">You see it before you sign up.</span>
           </div>
         </div>
         <RoadmapPreviewFigure />

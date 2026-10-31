@@ -13,29 +13,29 @@ const ROWS: { state: WaypointState; name: string; meta: string }[] = [
 
 export function RoadmapPreviewFigure() {
   return (
-    <figure aria-label="Example: a roadmap on day 3" className="m-0 overflow-hidden rounded-surface border border-hairline bg-white shadow-lift">
-      <div aria-hidden="true" className="flex h-12 items-center gap-4 border-b border-hairline px-4">
+    <figure aria-label="Example: a roadmap on day 3" className="m-0 overflow-hidden rounded-card border border-border-subtle bg-surface shadow-raised">
+      <div aria-hidden="true" className="flex h-12 items-center gap-4 border-b border-border-subtle px-4">
         <Logo size={20} />
-        <span className="text-small text-muted">Home</span>
-        <span className="rounded-control bg-wash px-2 py-1 text-small font-medium">Roadmap</span>
+        <span className="text-small text-fg-muted">Home</span>
+        <span className="rounded-control bg-surface-sunken px-2 py-1 text-small font-medium">Roadmap</span>
       </div>
       <div aria-hidden="true" className="flex flex-col gap-4 p-6">
         <div className="flex items-baseline justify-between gap-4">
           <span className="text-section">Your roadmap</span>
-          <span className="text-small text-muted">7 of 20 tasks done</span>
+          <span className="text-small text-fg-muted">7 of 20 tasks done</span>
         </div>
         <div>
           {ROWS.map(row => (
             <div key={row.name} className="preview-row">
               <Waypoint state={row.state} />
-              <span className={cn("text-ui", row.state === "current" && "font-medium", row.state === "done" && "text-muted")}>{row.name}</span>
-              <span className="text-small text-muted">{row.meta}</span>
+              <span className={cn("text-ui", row.state === "current" && "font-medium", row.state === "done" && "text-fg-muted")}>{row.name}</span>
+              <span className="text-small text-fg-muted">{row.meta}</span>
             </div>
           ))}
         </div>
         <div className="ai">
           <div className="flex flex-col gap-2 p-4">
-            <span className="text-small text-muted">Read your roadmap, checked ird.govt.nz</span>
+            <span className="text-small text-fg-muted">Read your roadmap, checked ird.govt.nz</span>
             <p className="text-body">Your passport, your visa details and your NZ bank account number. Yours is open, so you have everything.</p>
           </div>
         </div>

@@ -54,19 +54,19 @@ export function QuestionStep() {
     setError("Couldn't build your roadmap. Your answers are still here; check your connection and try again.")
   }
 
-  const back = cn(buttonVariants({ variant: "quiet", size: "lg" }), "max-narrow:hidden")
+  const back = cn(buttonVariants({ variant: "secondary", size: "lg" }), "max-narrow:hidden")
 
   return (
     <div className="flex min-h-dvh flex-col">
       <div className="grid flex-1 grid-cols-rail max-split:grid-cols-1 max-split:content-start">
         <AnswerRail title="Build my roadmap" intro="Five questions. You see your roadmap before you sign up." answers={answers} current={step} />
-        <main className="flex flex-col gap-6 py-10 pr-10 pl-30 max-split:px-4 max-split:py-6 max-narrow:gap-5">
+        <main className="flex flex-col gap-6 py-10 pr-10 pl-rail-indent max-split:px-4 max-split:py-6 max-narrow:gap-5">
           <div className="flex w-full max-w-question flex-col gap-6 max-narrow:gap-5">
-            <span className="text-small font-medium text-muted max-narrow:hidden">Question {step} of {TOTAL}</span>
+            <span className="text-small font-medium text-fg-muted max-narrow:hidden">Question {step} of {TOTAL}</span>
             <fieldset className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0">
               <legend className="w-full pb-6 max-narrow:pb-5">
                 <h1 id="question-title" className="text-title">{q.title}</h1>
-                <span className="mt-2 block font-normal text-muted max-narrow:mt-1.5">
+                <span className="mt-2 block font-normal text-fg-muted max-narrow:mt-2">
                   {last ? "Already here? Pick the day you arrived." : "You can change any answer later in Settings."}
                 </span>
               </legend>
@@ -85,7 +85,7 @@ export function QuestionStep() {
                 <Calendar value={answers.arrivalDate ?? null} onChange={v => setAnswer("arrivalDate", v)} today={today} labelledBy="question-title" />
               )}
             </fieldset>
-            {error && <p role="alert" className="text-ink">{error}</p>}
+            {error && <p role="alert" className="text-fg">{error}</p>}
             <div className="flex gap-3">
               {step === 1 ? (
                 <Link href="/" className={back}>
@@ -93,7 +93,7 @@ export function QuestionStep() {
                   Home
                 </Link>
               ) : (
-                <Button variant="quiet" size="lg" className="max-narrow:hidden" onClick={() => router.push(stepUrl(step - 1))}>
+                <Button variant="secondary" size="lg" className="max-narrow:hidden" onClick={() => router.push(stepUrl(step - 1))}>
                   <ChevronLeft aria-hidden="true" size={16} strokeWidth={1.5} />
                   Back
                 </Button>

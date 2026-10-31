@@ -13,6 +13,9 @@ describe('AppHeader', () => {
     expect(within(nav).getAllByRole('link').map(l => l.textContent)).toEqual(['Home', 'Roadmap'])
     expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('aria-current', 'page')
     expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
+    // current page: a 2 px ink line, no fill; every link takes the state layer
+    expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveClass("aria-[current=page]:after:bg-fg", "state")
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveClass('state')
   })
 
   it('phone tab bar: Home, Roadmap, You; You is current on Your details', () => {

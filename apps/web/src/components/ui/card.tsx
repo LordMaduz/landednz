@@ -1,11 +1,16 @@
 import type { ComponentProps, ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
-// Every landing card: white, hairline, radius 12, shadow-lift; padding 20 (16 on phones)
-export function Card({ as: Tag = "section", className, ...props }: { as?: "section" | "div" | "aside" } & ComponentProps<"div">) {
+// One card: surface, subtle border, card radius, card padding (20; 16 on phones). `raised` (default) adds the raised shadow.
+export function Card({
+  as: Tag = "section",
+  variant = "raised",
+  className,
+  ...props
+}: { as?: "section" | "div" | "aside"; variant?: "plain" | "raised" } & ComponentProps<"div">) {
   return (
     <Tag
-      className={cn("flex min-w-0 flex-col gap-3.5 rounded-surface border border-hairline bg-white p-5 shadow-lift max-narrow:p-4", className)}
+      className={cn("flex min-w-0 flex-col gap-4 rounded-card border border-border-subtle bg-surface p-card-padding", variant === "raised" && "shadow-raised", className)}
       {...props}
     />
   )

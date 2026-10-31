@@ -17,22 +17,27 @@ Every visual value is a token in `apps/web/src/app/globals.css` `@theme`. Code u
 | `/settings` | `Settings.dc.html` (built by `build_settings_legal.py`) |
 | `/privacy`, `/terms` | `Legal.dc.html` |
 
-## Colour roles
+## Colour roles (palette + roles, `globals.css`)
 
-| Class | Use for |
+Raw values live once in the `/* palette */` block (`--palette-<hue>-<step>`); components use roles only. A new look = new palette values. `cw01.test.ts` fails on old names (`ink`, `wash`, `teal`, `white`…), palette names and Tailwind's default colours.
+
+| Role | Use for |
 |---|---|
-| `ink` | Text, primary button fill |
-| `muted` | Secondary text, meta, explanations |
-| `control` | Field and select borders, open waypoint rings (3:1 on white) |
-| `border` | Quiet buttons, option rows (interactive outlines) |
-| `hairline` | Dividers between rows, surfaces (`border border-hairline rounded-surface`), header and rail lines |
-| `wash` | Hover, selected row, disabled fill, side panels |
-| `teal` | The one accent: done waypoints, chosen option, focus ring |
-| `teal-text` / `teal-hover` | Links |
-| `avatar` | Avatar circle |
+| `fg` / `fg-muted` / `fg-subtle` | Text: normal, secondary, quietest |
+| `fg-accent` | Accent text that is not a link (stamps, chips, today label) |
+| `surface` / `surface-sunken` | Page and cards / grey wells, side panels |
+| `surface-selected` + `border-selected` | Chosen rows, current nav item, chosen calendar day (never hover) |
+| `surface-inverse` (+ `fg-on-inverse`, `fg-on-inverse-muted`, `link-on-inverse`, `danger-on-inverse`) | Dark rail, toast, crisis card |
+| `action` / `fg-on-action` | Primary button fill and its text (also white text on dark surfaces) |
+| `accent` / `accent-bright` | Brand teal: done waypoints, chosen edge / decorative marks |
+| `link` / `link-hover` | Links |
+| `border` / `border-subtle` / `border-strong` | Control outlines / dividers / input and radio edges (3:1) |
+| `track`, `focus`, `danger`, `avatar` | Progress track, focus ring, errors and delete, avatar circle |
 | `.ai` / `.ai-streaming` | Aurora hairline: AI-generated replies only, never decoration |
 
-Rows are divided by `hairline`, never `border`. No wash or cream cards: every card is white with a hairline and `shadow-lift`.
+## States: one state layer
+
+Hover and pressed mix a layer into the element's own background: `state` (ink, light surfaces: 6 % hover, 10 % pressed) or `state-inverse` (white, dark surfaces: 8/12 %). Name the base with `state-base-<colour role>` next to `bg-<role>` (`bg-surface state state-base-surface`). Phones have no hover, so every control gets pressed feedback from the same rule. Disabled takes no layer. A control whose surface flips with width overrides at the breakpoint (`state-inverse max-narrow:state`). Links change text (`link-hover` + underline), not the layer; header/footer nav uses `link-subtle`.
 
 ## Type: six roles, Geist 400/500/600
 
@@ -40,15 +45,19 @@ Rows are divided by `hairline`, never `border`. No wash or cream cards: every ca
 
 ## Space, shape, elevation
 
-Spacing only 0, 4, 8, 16, 24, 32, 48, 64, 96 (`1 2 4 6 8 12 16 24` steps). `rounded-control` (8) for controls, `rounded-surface` (12) for surfaces. Card padding 20 (16 under 561 px), gap 16, side column 360. Every card is white + 1 px hairline + `shadow-lift` (use `Card` from `@/components/ui/card`); no wash or cream card backgrounds. Page width: `container-page` (1120 + 24 side padding). Targets are 40 px on desktop and 44 px under 561 px: `Button`, `Field`, `Select` already have `min-h-10 max-narrow:min-h-11`; give other clickable rows the same. `Button size="sm"` is 32 px on desktop, 44 on phones.
+Spacing (padding, margin, gap, space, inset) on the 4 px grid only: Tailwind steps `0 0.5 1 2 3 4 5 6 8 10 12 16 24`, or a spacing role (`page-gutter`, `card-padding`, `section-gap`, `stack-gap`, `tab-bar`, `rail-indent`, `sheet-clear`); the guard fails on half steps. Radius roles: `rounded-control` (8), `rounded-card` (12), `rounded-floating` (16: ask bar, pane, sheet), `rounded-full`. Elevation: `shadow-raised` (cards), `shadow-floating` (ask bar, popovers), `shadow-overlay` / `shadow-overlay-up` (pane / phone sheet), `shadow-frame-top|bottom`; outline rings `shadow-chosen|error|today|rail|pin`. Card padding 20 (16 under 561 px), gap 16, side column 360. Every card is `Card` from `@/components/ui/card` (`variant="raised"` default, or `plain`); no wash or cream card backgrounds. Page width: `container-page` (1120 + 24 side padding). Targets are 40 px on desktop and 44 px under 561 px: `Button`, `Field`, `Select` already have `min-h-10 max-narrow:min-h-11`; give other clickable rows the same. `Button size="sm"` is 32 px on desktop, 44 on phones.
 
 ## Components (one file each: `@/components/ui/button`, `field`, `select`, `option-row`, `alert-dialog`, `toaster`; no barrel)
 
 | Need | Use |
 |---|---|
 | The screen's one main action | `<Button>` (primary). Exactly one per screen |
-| Secondary action, standalone or at a row's end (Ask, Edit, Cancel, Stop, Sign out) | `<Button variant="quiet">` |
-| Action inside a toast, or a fold toggle on the route rail (Undo, Show, Hide) | `<Button variant="ghost">` |
+| Secondary action, standalone or at a row's end (Ask, Edit, Cancel, Stop) | `<Button variant="secondary">` |
+| In-row or toolbar action, fold toggle (Undo, Show, Hide, Copy) | `<Button variant="ghost">` |
+| Delete | `variant="danger"` / `"danger-ghost"` |
+| Buttons on a dark surface | `variant="inverse"` |
+| Text-only action (Change, Sign out on the rail) | `variant="text"` |
+| Icon-only | `size="icon"` + `aria-label` (required by the type); small drawn icons keep their size and reach 44 px on phones with an `after:` extension |
 | Bigger hero CTA | `size="lg"` |
 | Link styled as button | `className={buttonVariants({ variant })}` on `<Link>` |
 | Text input / select | `Field` / `Select` (native, inline chevron) |
@@ -56,7 +65,7 @@ Spacing only 0, 4, 8, 16, 24, 32, 48, 64, 96 (`1 2 4 6 8 12 16 24` steps). `roun
 | Destructive confirm | `AlertDialog` |
 | Feedback after an action | `toast()` from sonner, naming the action again ("Marked as done", Undo) |
 
-Merge classes with `cn` from `@/lib/utils` (it knows the token groups).
+Every control is a kit component: a hand-written `<button>` outside `components/ui` fails `cw01.test.ts` (exceptions: the Google `.gsi` button, the `app/dev/` fixture). Merge classes with `cn` from `@/lib/utils` (it knows the role scales; register new radius/shadow/spacing roles there).
 
 A board value with no token yet (a column width, a breakpoint such as the board's 760 or 1100 px container query) gets a named token in `globals.css` `@theme` (`--container-*`, `--breakpoint-*`, `--grid-template-columns-*`) and is used by name. Never write `grid-cols-[…]` or `w-[…]`; `cw01.test.ts` fails on it.
 
@@ -71,7 +80,7 @@ CSS only, three moments: aurora flow while a reply streams (3 s), stamp in (200 
 ## Common mistakes
 
 - Picking `border` for a divider, or a grey filled card for grouping → `hairline`, white.
-- Two primaries on one screen (e.g. Save and Start) → one primary, the rest quiet.
+- Two primaries on one screen (e.g. Save and Start) → one primary, the rest secondary.
 - Aurora or teal used to decorate → teal marks state, aurora marks AI output.
 - A new size like 14 or 18 px, or `mt-[13px]` → nearest scale value.
 - Middle dots, ALL CAPS labels, "→" on links → plain sentence case.

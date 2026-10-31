@@ -7,7 +7,7 @@ export function ApiDown({ onRetry, heading: Heading = "h1" }: { onRetry: () => v
   return (
     <Card role="alert" className="items-start gap-3">
       <Heading className="text-section">Can&apos;t reach LandedNZ</Heading>
-      <p className="text-muted">Your progress is saved. Check your connection, then try again.</p>
+      <p className="text-fg-muted">Your progress is saved. Check your connection, then try again.</p>
       <Button onClick={onRetry}>Try again</Button>
     </Card>
   )
