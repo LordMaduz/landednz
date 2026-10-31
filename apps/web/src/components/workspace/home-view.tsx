@@ -119,8 +119,11 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
               {home.week.map(({ task: t, meta }) => (
                 <li key={t.taskId}>
                   {/* Title wraps (2 lines max) with the time under it, so long titles read in full */}
-                  <Link href={taskHref(t.taskId)} className={cn(ROW, "items-start py-2.5 [&>.wp]:mt-0.5 max-narrow:items-center max-narrow:[&>.wp]:mt-0")}>
-                    <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
+                  <Link href={taskHref(t.taskId)} className={cn(ROW, "items-start max-narrow:items-center")}>
+                    {/* one line tall, so the circle sits on the title's first line */}
+                    <span className="flex h-6 items-center">
+                      <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
+                    </span>
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span title={t.title} className="line-clamp-2 font-medium">{t.title}</span>
                       <span className="text-small text-fg-muted max-narrow:hidden">{meta}</span>

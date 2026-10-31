@@ -258,7 +258,7 @@
     --text-reading: 15px;
     --container-app: 1072px;
     --container-page: 1072px;
-    --grid-template-columns-home: minmax(0, 1fr) 360px;
+    --grid-template-columns-home: minmax(0, 7fr) minmax(0, 5fr); /* 7/5: most task titles fit one line */
     --grid-template-columns-settings: 360px minmax(0, 1fr);
     --grid-template-columns-task: minmax(0, 1fr) 360px;
   }
