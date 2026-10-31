@@ -31,7 +31,7 @@ describe('Landing', () => {
   })
 
   it('sets title, description and WebApplication JSON-LD', () => {
-    expect(metadata.title).toBe('LandedNZ: your settling-in roadmap for New Zealand')
+    expect(metadata.title).toEqual({ absolute: 'LandedNZ: your settling-in roadmap for New Zealand' })
     expect(metadata.description).toBe(
       'Answer five questions and get a step-by-step roadmap for your first months in New Zealand, checked against official sources.',
     )

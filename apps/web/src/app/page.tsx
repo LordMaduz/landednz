@@ -11,7 +11,7 @@ const description =
   "Answer five questions and get a step-by-step roadmap for your first months in New Zealand, checked against official sources."
 
 export const metadata: Metadata = {
-  title,
+  title: { absolute: title },
   description,
   alternates: { canonical: "/" },
   openGraph: { title, description, url: "/", siteName: "LandedNZ", locale: "en_NZ", type: "website" },

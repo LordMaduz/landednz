@@ -1,4 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+// The root layout loads Geist through next/font, which only runs inside the Next build
+vi.mock('geist/font/sans', () => ({ GeistSans: { variable: '' } }))
+
+import { BRAND } from '@/lib/brand'
+import { metadata as root } from './layout'
+import { metadata as home } from './page'
 import robots from './robots'
 import sitemap from './sitemap'
 
@@ -12,5 +18,15 @@ describe('SEO routes', () => {
     const rule = Array.isArray(rules) ? rules[0] : rules
     expect(rule.disallow).toEqual(['/app', '/settings', '/api'])
     expect(robots().sitemap).toMatch(/\/sitemap\.xml$/)
+  })
+
+  it('every page title carries the brand', () => {
+    expect(root.title).toEqual({ default: 'LandedNZ', template: '%s · LandedNZ' })
+    expect(root.applicationName).toBe('LandedNZ')
+    expect(root.description).toBe(BRAND.bioShort)
+  })
+
+  it('home title is not double-branded', () => {
+    expect(home.title).toEqual({ absolute: 'LandedNZ: your settling-in roadmap for New Zealand' })
   })
 })
