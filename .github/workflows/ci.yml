@@ -21,7 +21,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.122.0 # pinned: "latest" calls the GitHub API and hits its rate limit
       - run: supabase start
 
       - name: Write .env.local files from the local stack
