@@ -193,6 +193,13 @@
   --font-sans: var(--palette-font);
 }
 
+/* Guide rail: Primer PageLayout pane "large" 320 px at 1280 and up (board guide-rail C); 280 below */
+@media (width >= 1280px) {
+  :root {
+    --grid-template-columns-focus: 320px minmax(0, 1fr);
+  }
+}
+
 @media (width >= 561px) {
   :root {
     --spacing-page-gutter: 24px;
