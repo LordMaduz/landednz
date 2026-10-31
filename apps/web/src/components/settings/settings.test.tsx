@@ -279,7 +279,7 @@ describe('AccountSection', () => {
     expect(screen.getByText('priya@example.com')).toBeInTheDocument()
     expect(screen.getByText(/signs in with Google/i)).toBeInTheDocument()
     const out = screen.getByRole('button', { name: 'Sign out' })
-    expect(out).not.toHaveClass('bg-ink')
+    expect(out).not.toHaveClass('bg-action')
     fireEvent.click(out)
     expect(signOutAndLeave).toHaveBeenCalled()
   })

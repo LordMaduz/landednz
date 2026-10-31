@@ -7,8 +7,15 @@ const SIZES = [[1440, 900], [390, 844]] as const
 
 // Relative luminance of the element's background as drawn over its backdrop (handles translucent layers)
 async function luminance(page: Page, id: string) {
-  return page.getByTestId(id).evaluate((el) => {
-    const backdrop = getComputedStyle(el.parentElement!).backgroundColor
+  return lum(page.getByTestId(id))
+}
+
+function lum(target: ReturnType<Page['locator']>) {
+  return target.evaluate((el) => {
+    // the nearest ancestor that paints a background
+    let up = el.parentElement!
+    while (up.parentElement && getComputedStyle(up).backgroundColor === 'rgba(0, 0, 0, 0)') up = up.parentElement
+    const backdrop = getComputedStyle(up).backgroundColor
     const c = document.createElement('canvas').getContext('2d')!
     c.fillStyle = backdrop
     c.fillRect(0, 0, 1, 1)
@@ -90,5 +97,33 @@ test.describe('phone tap areas', () => {
     expect(await smallTargets(page), 'Home + guide sheet').toEqual([])
     const send = (await sheet.getByRole('button', { name: 'Send' }).boundingBox())!
     expect([Math.round(send.width), Math.round(send.height)], 'Send keeps its drawn 34 px').toEqual([34, 34])
+  })
+})
+
+// Review Focus 1: the delete trigger sits on the dark rail at desktop and on white on phones
+test.describe('delete account trigger', () => {
+  test.beforeAll(resetTestUser)
+
+  test('hover lightens on the rail at 1440; pressed darkens on white at 390', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await holdAnswers(page)
+    await page.goto('/signin')
+    await signIn(page)
+    await expect(page).toHaveURL('/app')
+    await page.goto('/settings')
+    const trigger = page.getByRole('button', { name: /^Delete account/ })
+    await page.mouse.move(0, 0)
+    const rest = await lum(trigger)
+    await trigger.hover()
+    expect(await lum(trigger), 'hover lighter on the rail').toBeGreaterThan(rest)
+
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.mouse.move(0, 0)
+    await trigger.scrollIntoViewIfNeeded()
+    const restPhone = await lum(trigger)
+    await trigger.hover()
+    await page.mouse.down()
+    expect(await lum(trigger), 'pressed darker on white').toBeLessThan(restPhone)
+    await page.mouse.up()
   })
 })

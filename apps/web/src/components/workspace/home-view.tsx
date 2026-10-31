@@ -10,7 +10,7 @@ import { PublicFooter } from "@/components/chrome/public-footer"
 import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardFoot, CardHead } from "@/components/ui/card"
 import { getOnboardingProfile, getRoadmap } from "@/lib/api"
 import { buildHomeView, type HomeView as Home } from "@/lib/home-view"
@@ -82,14 +82,15 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "min-h-11 max-narrow:flex-1" })}>
                   Start task<span className="sr-only">: {top.title}</span>
                 </Link>
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
                   onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: top.taskId })}
-                  className={buttonVariants({ variant: "quiet", className: "min-h-11 cursor-pointer" })}
+                  className="min-h-11"
                 >
                   <Wide>Ask about this</Wide>
                   <Phone>Ask</Phone>
-                </button>
+                </Button>
               </CardFoot>
             </>
           ) : (

@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { signOutAndLeave } from "@/lib/sign-out"
 import { cn } from "@/lib/utils"
@@ -18,13 +19,14 @@ export function AccountSection({ user, joined }: { user: { email: string; google
       <span className={cn("basis-full break-words text-rail-text max-narrow:min-w-0 max-narrow:flex-1 max-narrow:basis-0 max-narrow:py-2 max-narrow:text-ink", joined && "border-t border-white/15 pt-4 max-narrow:border-0 max-narrow:pt-2")}>
         {user.email}<span className="max-narrow:hidden"> · signs in with {user.google ? "Google" : "email"}</span>
       </span>
-      <button
+      <Button
         type="button"
+        variant="text"
         onClick={signOutAndLeave}
-        className="min-h-11 cursor-pointer rounded-control border-0 bg-transparent p-0 font-medium text-toast-action hover:text-white max-narrow:border max-narrow:border-border max-narrow:bg-white max-narrow:px-4 max-narrow:text-ink max-narrow:hover:bg-wash max-narrow:hover:text-ink"
+        className="min-h-11 rounded-control text-link-on-inverse hover:text-fg-on-action max-narrow:border max-narrow:border-border max-narrow:bg-surface max-narrow:px-4 max-narrow:text-fg max-narrow:state max-narrow:state-base-surface max-narrow:hover:text-fg max-narrow:hover:no-underline"
       >
         Sign out
-      </button>
+      </Button>
       <DeleteAccount />
     </Card>
   )

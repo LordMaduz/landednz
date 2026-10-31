@@ -125,13 +125,14 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <Link href={taskHref(today.task.taskId)} className={buttonVariants({ className: "max-narrow:w-full" })}>
                   Start task<span className="sr-only">: {today.task.title}</span>
                 </Link>
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
                   onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: today.task.taskId })}
-                  className={buttonVariants({ variant: "quiet", className: "cursor-pointer max-narrow:w-full" })}
+                  className="max-narrow:w-full"
                 >
                   Ask about this
-                </button>
+                </Button>
               </div>
             </div>
           </li>

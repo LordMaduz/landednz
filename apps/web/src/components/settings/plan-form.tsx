@@ -137,13 +137,14 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
                   </span>
                   <span>{display(k, saved[k])}</span>
                 </span>
-                <button
+                <Button
                   type="button"
+                  variant="text"
                   onClick={() => router.push(`/settings?edit=${k}`)}
-                  className={cn("flex min-h-11 cursor-pointer items-center border-0 bg-transparent p-0 text-small font-medium text-toast-action hover:text-white", k === editing && !memoryOpen && "narrow:hidden")}
+                  className={cn("min-h-11 text-small text-link-on-inverse hover:text-fg-on-action", k === editing && !memoryOpen && "narrow:hidden")}
                 >
                   Change{" "}<span className="sr-only">{COPY[k].label}</span>
-                </button>
+                </Button>
               </li>
             ))}
           </ol>
