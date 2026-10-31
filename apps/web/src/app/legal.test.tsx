@@ -52,6 +52,13 @@ describe('signed in', () => {
     expect(document.querySelector('footer')).toBeNull()
     expect(headings(1)).toEqual(['Privacy'])
   })
+
+  it('has a rail: section links and the other document', () => {
+    render(<LegalLayout title="Privacy" updated="24 October 2026" file="privacy" user={USER} />)
+    expect(screen.getByRole('link', { name: 'Your rights' })).toHaveAttribute('href', '#your-rights')
+    expect(document.getElementById('your-rights')?.tagName).toBe('H2')
+    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms')
+  })
 })
 
 describe('signed out', () => {
