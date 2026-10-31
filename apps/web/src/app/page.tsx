@@ -4,7 +4,7 @@ import { PublicFooter } from "@/components/chrome/public-footer"
 import { PublicHeader } from "@/components/chrome/public-header"
 import { LandingHero } from "@/components/marketing/landing-hero"
 import { buttonVariants } from "@/components/ui/button"
-import { SITE_URL } from "@/lib/site"
+import { homeGraph, jsonLdScript } from "@/lib/brand-schema"
 
 const title = "LandedNZ: your settling-in roadmap for New Zealand"
 const description =
@@ -17,16 +17,6 @@ export const metadata: Metadata = {
   openGraph: { title, description, url: "/", siteName: "LandedNZ", locale: "en_NZ", type: "website" },
 }
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: "LandedNZ",
-  url: SITE_URL,
-  description,
-  applicationCategory: "LifestyleApplication",
-  operatingSystem: "Any",
-}
-
 const FEATURES = [
   ["In the right order", "Tasks that depend on each other unlock in turn, so you never start one too early."],
   ["From official sources", "Each task links to the source it was checked against, such as tenancy.govt.nz or acc.co.nz, with the date."],
@@ -36,7 +26,7 @@ const FEATURES = [
 export default function Landing() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(homeGraph(description)) }} />
       <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "secondary" })}>Sign in</Link>} />
       <main className="flex flex-1 flex-col">
         <LandingHero />
