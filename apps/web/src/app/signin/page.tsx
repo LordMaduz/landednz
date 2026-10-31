@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import localFont from "next/font/local";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
@@ -8,8 +8,8 @@ import { PublicHeader } from "@/components/chrome/public-header";
 import { ANSWERS_COOKIE, decodeAnswers } from "@/lib/answers";
 import { SignIn } from "./sign-in-form";
 
-// Google's sign-in button must be Roboto 500
-const roboto = Roboto({ subsets: ["latin"], weight: "500", variable: "--font-roboto" });
+// Google's sign-in button must be Roboto 500; self-hosted because next/font/google flakes in CI (next.js issue 99114)
+const roboto = localFont({ src: "./fonts/roboto-500-latin.woff2", weight: "500", variable: "--font-roboto" });
 
 export const metadata: Metadata = { title: "Sign in" };
 

@@ -40,7 +40,7 @@
   --palette-ink-a25: rgba(15, 42, 58, 0.25);
   --palette-ink-a28: rgba(15, 42, 58, 0.28);
   --palette-teal-400-a18: rgba(63, 201, 183, 0.18);
-  --palette-font: var(--font-geist), system-ui, -apple-system, sans-serif;
+  --palette-font: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }
 /* end palette */
 
