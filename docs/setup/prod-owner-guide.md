@@ -274,7 +274,7 @@ The agent has already set every value that is not a secret, in Railway and in Ve
 
 Release: **Monday 2 November 2026**, with the LinkedIn post scheduled for **7:30 NZ time**. Everything except DNS is done before then, so release morning is only section 11b.
 
-Run each command by typing it into this Claude Code prompt with the `!` in front, so the output lands in the chat and the agent can read it. None of these commands print secrets.
+Run each command by typing it into the Claude Code prompt with the `!` in front: Claude Code runs it in its shell and the agent reads the output. (Or paste it without the `!` into the macOS Terminal app and paste the output back.) The paths are absolute, so it does not matter which folder the prompt is in. None of these commands print secrets or ask questions.
 
 ### 11a. Today (about 15 minutes; nothing public changes)
 
@@ -282,15 +282,15 @@ Run each command by typing it into this Claude Code prompt with the `!` in front
 2. **Add the domains to Vercel and Railway** (this only tells each platform which name to expect; nothing changes until DNS points there):
 
    ```
-   ! cd apps/web && vercel domains add landednz.co.nz landednz && vercel domains add www.landednz.co.nz landednz
-   ! railway domain api.landednz.co.nz --service api
+   ! cd /Users/ruchira/Development/NZ_Project/landednz-r0cloud/apps/web && vercel domains add landednz.co.nz landednz && vercel domains add www.landednz.co.nz landednz
+   ! cd /Users/ruchira/Development/NZ_Project/landednz-r0cloud && railway domain api.landednz.co.nz --service api
    ```
 
    Each prints the DNS records it needs. The agent copies them into 11b with the exact values.
 3. **Point the GitHub health check at the production API:**
 
    ```
-   ! gh variable set PROD_API_URL --body "https://api.landednz.co.nz"
+   ! cd /Users/ruchira/Development/NZ_Project/landednz-r0cloud && gh variable set PROD_API_URL --body "https://api.landednz.co.nz"
    ```
 
    Until DNS exists, the 6-hourly **Health** workflow fails and emails you. Ignore those emails until release day.
@@ -298,10 +298,10 @@ Run each command by typing it into this Claude Code prompt with the `!` in front
    - **Site URL** → `https://landednz.co.nz` → **Save**.
    - **Redirect URLs** → **Add URL** → `https://landednz.co.nz/**` → **Save**. Add `https://www.landednz.co.nz/**` the same way.
 5. **Vercel: send `www` to the main name.** <https://vercel.com/lordmaduzs-projects/landednz/settings/domains> → **www.landednz.co.nz** → **Edit** → **Redirect to** `landednz.co.nz` (308) → **Save**.
-6. **Ship the code to production** (from the main checkout, on `main`, after step 1):
+6. **Ship the code to production** (after step 1 and the green Staging run):
 
    ```
-   ! git switch main && git pull && scripts/release.sh 0
+   ! cd /Users/ruchira/Development/NZ_Project/landednz-r0cloud && git switch main && git pull --ff-only && scripts/release.sh 0
    ```
 
    This pushes `main` to `production` and tags `r0`. Railway and Vercel build the production site. The agent then checks both builds and the API.
