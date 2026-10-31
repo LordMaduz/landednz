@@ -5,7 +5,6 @@ import Link from "next/link"
 import type { OnboardingPreviewResponse } from "@landednz/types"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AnswerRail } from "@/components/onboarding/answer-rail"
-import { PublicFooter } from "@/components/chrome/public-footer"
 import { Waypoint } from "@/components/route/waypoint"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -175,7 +174,6 @@ export function PreviewRoute({ answers, saveFailed }: { answers: Answers; saveFa
           </div>
         </main>
       </div>
-      <PublicFooter />
     </div>
   )
 }

@@ -31,11 +31,13 @@ for (const [width, height] of SIZES) {
   test(`footer sits at the bottom at ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height })
     for (const path of ['/', '/signin', '/privacy', '/terms']) await expectFooterAtBottom(page, path, width)
-    // Onboarding question steps have no footer (owner, 2026-11-01); the preview keeps it
+    // Onboarding has no footer, question steps or preview (owner, 2026-11-01)
     await page.goto('/onboarding?step=1')
     await expect(page.locator('footer')).toHaveCount(0)
     await holdAnswers(page)
-    for (const path of ['/signin', '/onboarding/preview']) await expectFooterAtBottom(page, path, width)
+    await page.goto('/onboarding/preview')
+    await expect(page.locator('footer')).toHaveCount(0)
+    await expectFooterAtBottom(page, '/signin', width)
     await page.goto('/signin')
     await signIn(page)
     await expect(page).toHaveURL('/app')
