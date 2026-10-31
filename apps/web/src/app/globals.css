@@ -222,6 +222,50 @@
   }
 }
 
+/* State layer (spec §5): hover and pressed mix ink (light surfaces) or white (dark surfaces) into the element's own
+   background, named by state-base-<colour role>. Strength A, owner decision 1 (2026-10-31): 6/10 % light, 8/12 % dark.
+   Not ::after (small controls use it for tap areas) and not background-image (aurora, route legs). */
+:root {
+  --state-hover: 6%;
+  --state-press: 10%;
+  --state-hover-inverse: 8%;
+  --state-press-inverse: 12%;
+}
+
+@utility state-base-* {
+  --state-base: --value(--color-*);
+}
+
+@utility state {
+  --state-layer: var(--color-fg);
+  --state-hover-pct: var(--state-hover);
+  --state-press-pct: var(--state-press);
+  -webkit-tap-highlight-color: transparent;
+  @media (hover: hover) {
+    &:hover:not(:disabled, [data-disabled]) {
+      background-color: color-mix(in oklab, var(--state-base, transparent), var(--state-layer) var(--state-hover-pct));
+    }
+  }
+  &:active:not(:disabled, [data-disabled]) {
+    background-color: color-mix(in oklab, var(--state-base, transparent), var(--state-layer) var(--state-press-pct));
+  }
+}
+
+@utility state-inverse {
+  --state-layer: var(--color-surface);
+  --state-hover-pct: var(--state-hover-inverse);
+  --state-press-pct: var(--state-press-inverse);
+  -webkit-tap-highlight-color: transparent;
+  @media (hover: hover) {
+    &:hover:not(:disabled, [data-disabled]) {
+      background-color: color-mix(in oklab, var(--state-base, transparent), var(--state-layer) var(--state-hover-pct));
+    }
+  }
+  &:active:not(:disabled, [data-disabled]) {
+    background-color: color-mix(in oklab, var(--state-base, transparent), var(--state-layer) var(--state-press-pct));
+  }
+}
+
 /* Aurora hairline: AI-generated elements only */
 @utility ai {
   padding: 1px;
