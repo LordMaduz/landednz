@@ -2,6 +2,7 @@
 
 import { ArrowRight } from "lucide-react"
 import type { GuideOpeningResponse } from "@landednz/types"
+import { Button } from "@/components/ui/button"
 
 // Board "Opening" (D24): where you are (API copy, shown as it comes) and at most three starters
 export function Opening({ opening, onAsk }: { opening: GuideOpeningResponse | null; onAsk: (text: string) => void }) {
@@ -17,15 +18,16 @@ export function Opening({ opening, onAsk }: { opening: GuideOpeningResponse | nu
       {opening.starters.length > 0 && (
         <div className="mt-4.5 flex flex-col">
           {opening.starters.slice(0, 3).map(s => (
-            <button
+            <Button
               key={s}
               type="button"
+              variant="ghost"
               onClick={() => onAsk(s)}
-              className="flex min-h-11 cursor-pointer items-center gap-3 border-t border-hairline px-1 py-3 text-left text-ui text-ink last:border-b hover:bg-wash"
+              className="h-auto min-h-11 justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-1 py-3 text-left font-normal whitespace-normal text-ui last:border-b"
             >
               {s}
               <ArrowRight className="ml-auto size-4 shrink-0 text-muted" aria-hidden />
-            </button>
+            </Button>
           ))}
         </div>
       )}

@@ -6,6 +6,7 @@ import { ArrowRight, Check, CircleAlert, Copy, CornerUpLeft, Info, RotateCcw, Sh
 import type { ReplyPart } from "@landednz/types"
 import { groupBlocks, provenance, textCount, type TextPart, type Turn } from "@/lib/guide-turns"
 import { linkPhones } from "@/lib/tel-links"
+import { Button } from "@/components/ui/button"
 import { TASK_COPY } from "@/lib/task-copy"
 import type { GuideBanner } from "@/lib/stores/guideStore"
 import { cn } from "@/lib/utils"
@@ -47,25 +48,22 @@ function Note({ error, children, action }: { error?: boolean; children: ReactNod
 }
 
 const RetryButton = ({ onRetry }: { onRetry: () => void }) => (
-  <button
-    type="button"
-    onClick={onRetry}
-    className="inline-flex min-h-8 cursor-pointer items-center gap-1.5 self-start rounded-control bg-ink px-3 text-small font-medium text-white hover:bg-ink-hover max-narrow:min-h-11"
-  >
+  <Button type="button" size="sm" onClick={onRetry} className="gap-1.5 self-start text-small">
     <RotateCcw className="size-3.5" aria-hidden />
     Retry
-  </button>
+  </Button>
 )
 
 const FollowUp = ({ text, onFollowUp }: { text: string; onFollowUp: (text: string) => void }) => (
-  <button
+  <Button
     type="button"
+    variant="ghost"
     onClick={() => onFollowUp(text)}
-    className="flex min-h-11 cursor-pointer items-center gap-2.5 border-t border-hairline py-2.5 text-left text-ui text-ink"
+    className="h-auto min-h-11 justify-start gap-2.5 rounded-none border-0 border-t border-border-subtle px-0 py-2.5 text-left font-normal whitespace-normal text-ui"
   >
-    <CornerUpLeft className="size-4 shrink-0 text-teal" aria-hidden />
+    <CornerUpLeft className="size-4 shrink-0 text-accent" aria-hidden />
     {text}
-  </button>
+  </Button>
 )
 
 export function Banner({ banner, dailyCap }: { banner: BannerState; dailyCap: number }) {
@@ -262,26 +260,28 @@ export function Reply({
         <span key={m.memoryId} className="inline-flex items-center gap-2 self-start rounded-full bg-tint py-1.25 pr-1.5 pl-3 text-small text-teal-text">
           <Check className="size-3.5" aria-hidden />
           Remembered: {m.text}
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={() => onUndoMemory(m.memoryId)}
-            className="relative cursor-pointer rounded-full bg-white px-2.5 py-0.5 text-small font-medium text-ink ring-1 ring-tint-border ring-inset after:absolute after:-inset-2"
+            className="relative min-h-0 rounded-full border-0 px-2.5 py-0.5 text-small ring-1 ring-border-selected ring-inset after:absolute after:-inset-2 max-narrow:min-h-0"
           >
             Undo
-          </button>
+          </Button>
         </span>
       ))}
 
       {!streaming && hasText && (
         <div className="flex items-center gap-1 text-small text-muted">
-          <button type="button" onClick={() => navigator.clipboard.writeText(copyText(parts))} className={chipButton}>
+          <Button type="button" variant="ghost" size="sm" onClick={() => navigator.clipboard.writeText(copyText(parts))} className={chipButton}>
             <Copy className="size-3.5" aria-hidden />
             Copy
-          </button>
+          </Button>
           {sources.length > 0 && (
-            <button type="button" aria-expanded={showSources} onClick={() => setShowSources(v => !v)} className={chipButton}>
+            <Button type="button" variant="ghost" size="sm" aria-expanded={showSources} onClick={() => setShowSources(v => !v)} className={chipButton}>
               {showSources ? "Hide sources" : `${sources.length} ${sources.length === 1 ? "source" : "sources"}`}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -299,4 +299,4 @@ export function Reply({
 }
 
 const chipButton =
-  "inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-control px-2.5 text-small text-muted hover:bg-wash hover:text-ink max-narrow:min-h-11"
+  "gap-1.5 border-0 px-2.5 font-normal text-small text-fg-muted hover:text-fg"

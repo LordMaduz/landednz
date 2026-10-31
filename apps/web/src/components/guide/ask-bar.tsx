@@ -4,6 +4,7 @@ import { useState, type Ref } from "react"
 import { ArrowUp, Info } from "lucide-react"
 import type { GuideScreen } from "@landednz/types"
 import { useGuideStore } from "@/lib/stores/guideStore"
+import { Button } from "@/components/ui/button"
 import { TASK_COPY } from "@/lib/task-copy"
 import { cn } from "@/lib/utils"
 
@@ -51,15 +52,16 @@ export function AskBar({
       {wide ? (
         <AskBox page={page} unseen={unseen} onOpen={onOpen} ref={ref as Ref<HTMLTextAreaElement>} />
       ) : (
-        <button
+        <Button
           ref={ref as Ref<HTMLButtonElement>}
           type="button"
+          variant="secondary"
           hidden={open}
           aria-expanded={open}
           aria-controls="guide-pane"
           onClick={onOpen}
           className={cn(
-            "pointer-events-auto relative flex h-full w-ask-bar cursor-pointer items-center gap-3 rounded-bar bg-white pr-2.5 pl-3 text-ui text-muted shadow-bar hover:ring-1 hover:ring-teal/35 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
+            "pointer-events-auto relative h-full min-h-0 w-ask-bar justify-start gap-3 rounded-floating border-0 pr-2.5 pl-3 font-normal text-ui text-fg-muted shadow-floating hover:text-fg-muted max-narrow:min-h-0 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
             // phone: full width above the tab bar; Task keeps its own bottom bar instead (D23)
             "max-narrow:w-full",
           )}
@@ -76,7 +78,7 @@ export function AskBar({
           <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-control bg-ink text-white">
             <ArrowUp className="size-4" />
           </span>
-        </button>
+        </Button>
       )}
     </div>
   )
@@ -113,9 +115,9 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
         )}
       </p>
       {hasConversation ? (
-        <button type="button" aria-label="Open conversation" title="Open conversation" onClick={onOpen} className={cn("relative grid cursor-pointer place-items-center rounded-control after:absolute after:-inset-1", typed ? "mt-0.75 self-start" : "self-center")}>
+        <Button type="button" variant="ghost" size="icon" aria-label="Open conversation" title="Open conversation" onClick={onOpen} className={cn("relative size-auto border-0 after:absolute after:-inset-1", typed ? "mt-0.75 self-start" : "self-center")}>
           <GuideMark />
-        </button>
+        </Button>
       ) : (
         <GuideMark className={typed ? "mt-0.75 self-start" : "self-center"} />
       )}
@@ -156,15 +158,16 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
         </kbd>
       )}
       {!limited && (
-        <button
+        <Button
           type="button"
+          size="icon"
           aria-label="Send"
           disabled={!typed}
           onClick={send}
-          className={cn("grid size-8 shrink-0 cursor-pointer place-items-center rounded-control text-white disabled:cursor-default", typed ? "bg-ink hover:bg-ink-hover" : "bg-border")}
+          className="size-8 disabled:border-border disabled:bg-border disabled:text-fg-on-action"
         >
           <ArrowUp aria-hidden className="size-4" />
-        </button>
+        </Button>
       )}
     </div>
   )

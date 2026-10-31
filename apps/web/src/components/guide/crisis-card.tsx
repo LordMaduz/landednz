@@ -15,7 +15,7 @@ export function CrisisCard() {
         <a
           key={r.tel}
           href={`tel:${r.tel}`}
-          className="flex min-h-11 items-center gap-3 rounded-surface bg-white/7 px-3 py-2.5 text-white no-underline hover:bg-white/12 hover:text-white"
+          className="flex min-h-11 items-center gap-3 rounded-surface bg-white/7 px-3 py-2.5 text-white no-underline hover:bg-white/12 hover:text-white active:bg-white/16"
         >
           <Phone className="size-4 text-mark" aria-hidden />
           <span className="flex flex-1 flex-col">

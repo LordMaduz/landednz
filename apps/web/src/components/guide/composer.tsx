@@ -3,6 +3,7 @@
 import { ArrowUp, Route, Square, X } from "lucide-react";
 import type { GuideScreen } from "@landednz/types";
 import { useGuideStore } from "@/lib/stores/guideStore";
+import { Button } from "@/components/ui/button";
 import { TASK_COPY } from "@/lib/task-copy";
 import { cn } from "@/lib/utils";
 
@@ -90,14 +91,16 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
                   {label}
                 </span>
                 {!same(context, page) && (
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     aria-label={`Remove ${label}`}
                     onClick={clearContext}
-                    className="relative grid size-4.5 shrink-0 cursor-pointer place-items-center rounded-md text-muted after:absolute after:-inset-3.5 hover:bg-white hover:text-ink"
+                    className="relative size-4.5 border-0 text-fg-muted after:absolute after:-inset-3.5 hover:text-fg max-narrow:min-h-0 max-narrow:min-w-0"
                   >
                     <X className="size-3" aria-hidden />
-                  </button>
+                  </Button>
                 )}
               </span>
             )}
@@ -109,24 +112,21 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
                   {banner?.kind === "cap" ? 0 : opening.leftToday} left today
                 </span>
               )}
-              <button
+              <Button
                 type="button"
+                size="icon"
                 aria-label={streaming ? "Stop" : "Send"}
                 disabled={!streaming && !canSend}
                 onClick={streaming ? () => void stop() : send}
-                className={cn(
-                  "relative grid size-8.5 shrink-0 cursor-pointer place-items-center rounded-full text-white after:absolute after:-inset-1.5 disabled:cursor-default",
-                  streaming || canSend
-                    ? "bg-ink hover:bg-ink-hover"
-                    : "bg-track",
-                )}
+                // drawn 34 px; the ::after takes the tap area to 46
+                className="relative size-8.5 rounded-full after:absolute after:-inset-1.5 max-narrow:min-h-0 max-narrow:min-w-0 disabled:border-track disabled:bg-track disabled:text-fg-on-action"
               >
                 {streaming ? (
                   <Square className="size-3 fill-current" aria-hidden />
                 ) : (
                   <ArrowUp className="size-4" aria-hidden />
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

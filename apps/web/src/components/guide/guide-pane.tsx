@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react"
 import { ChevronLeft, Maximize2, X } from "lucide-react"
-import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { askedOn, type Turn } from "@/lib/guide-turns"
 import { useGuideStore } from "@/lib/stores/guideStore"
 import { cn } from "@/lib/utils"
@@ -16,14 +16,16 @@ const DEFAULT_CAP = 20
 
 export function IconButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon"
       aria-label={label}
       onClick={onClick}
-      className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-control text-muted hover:bg-wash hover:text-ink max-pane:size-11"
+      className="size-8 border-0 text-fg-muted hover:text-fg max-pane:size-11"
     >
       {children}
-    </button>
+    </Button>
   )
 }
 
@@ -67,9 +69,9 @@ export function Conversation({ turns, focus, className }: { turns: Turn[]; focus
       className={cn("guide-fade relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto overscroll-contain pb-9", focus && "gap-8", className)}
     >
       {historyLoaded === "task" && turns.length > 0 && (
-        <button type="button" onClick={() => void showAll()} className="min-h-8 cursor-pointer self-center text-small font-medium text-muted hover:text-ink max-narrow:min-h-11">
+        <Button type="button" variant="ghost" size="sm" onClick={() => void showAll()} className="self-center border-0 text-small text-fg-muted hover:text-fg">
           Show all messages
-        </button>
+        </Button>
       )}
       {turns.length === 0 ? (
         <Opening opening={opening} onAsk={text => void ask(text)} />
@@ -99,10 +101,10 @@ export function GuidePane({ titles, sheet, strip, onBack }: { titles: Record<str
     <>
       <div className={cn("flex shrink-0 items-center gap-1.5 pt-3.5 pr-3.5 pb-2.5 pl-5", sheet && "pt-2 pr-2.5 pl-4.5")}>
         {onBack ? (
-          <button type="button" onClick={onBack} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "-ml-2.5 gap-1.5 pr-2.5 pl-1.5")}>
+          <Button type="button" variant="ghost" size="sm" onClick={onBack} className="-ml-2.5 gap-1.5 pr-2.5 pl-1.5">
             <ChevronLeft aria-hidden className="size-3.5" strokeWidth={1.5} />
             Back to task
-          </button>
+          </Button>
         ) : (
           <GuideTitle />
         )}

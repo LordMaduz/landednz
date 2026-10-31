@@ -38,8 +38,8 @@ export function FocusedView({
 
   const row = (on: boolean) =>
     cn(
-      "flex min-h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-control px-2.5 py-2 text-left text-ui text-ink hover:bg-white",
-      on && "bg-white font-medium ring-1 ring-hairline",
+      "h-auto min-h-9 w-full justify-between gap-2 border-0 px-2.5 py-2 text-left font-normal text-ui",
+      on && "bg-surface font-medium ring-1 ring-border-subtle state-base-surface",
     )
 
   return (
@@ -53,14 +53,14 @@ export function FocusedView({
         <h2 className="px-2.5 text-small font-semibold text-muted">This conversation, by task</h2>
         <nav aria-label="This conversation, by task" className="flex min-h-0 flex-col gap-0.5 overflow-y-auto">
           {[...counts].map(([key, n]) => (
-            <button key={key} type="button" aria-pressed={group === key} onClick={() => setGroup(key)} className={row(group === key)}>
+            <Button key={key} type="button" variant="ghost" aria-pressed={group === key} onClick={() => setGroup(key)} className={row(group === key)}>
               <span className="truncate">{titles[key] ?? TASK_COPY[key]?.title ?? key}</span>
               <small className="text-small text-muted">{n}</small>
-            </button>
+            </Button>
           ))}
-          <button type="button" aria-pressed={group === null} onClick={everything} className={row(group === null)}>
-            Everything <small className="text-small text-muted">{turns.length}</small>
-          </button>
+          <Button type="button" variant="ghost" aria-pressed={group === null} onClick={everything} className={row(group === null)}>
+            Everything <small className="text-small text-fg-muted">{turns.length}</small>
+          </Button>
         </nav>
         {starters.length > 0 && (
           <div className="mt-2.5 flex flex-col">
@@ -68,14 +68,15 @@ export function FocusedView({
             <ul aria-labelledby="guide-try-asking" className="flex flex-col">
               {starters.map(s => (
                 <li key={s}>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={() => void ask(s)}
-                    className="flex w-full cursor-pointer items-center gap-2.5 border-t border-hairline p-2.5 text-left text-ui text-ink hover:bg-white"
+                    className="h-auto w-full justify-start gap-2.5 rounded-none border-0 border-t border-border-subtle p-2.5 text-left font-normal whitespace-normal text-ui"
                   >
                     {s}
                     <ArrowRight className="ml-auto size-4 shrink-0 text-muted" aria-hidden />
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>

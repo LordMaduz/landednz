@@ -16,7 +16,7 @@ export function Citation({ source }: { source: SourcePart }) {
         openOnHover
         delay={200}
         aria-label={`Source ${source.index}`}
-        className="ml-1 inline-flex h-4.5 min-w-4.5 cursor-pointer items-center justify-center rounded-md bg-tint px-1 relative -top-0.5 text-small font-semibold leading-none text-teal-text hover:bg-teal hover:text-white data-popup-open:bg-teal data-popup-open:text-white"
+        className="ml-1 inline-flex h-4.5 min-w-4.5 cursor-pointer items-center justify-center rounded-control bg-surface-selected px-1 relative -top-0.5 text-small font-semibold leading-none text-fg-accent state state-base-surface-selected data-popup-open:shadow-chosen"
       >
         {source.index}
       </Popover.Trigger>
