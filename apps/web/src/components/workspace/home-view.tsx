@@ -72,7 +72,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
               </h2>
               <div className="flex flex-col gap-2">
                 <h3 className="text-featured">{top.title}</h3>
-                {top.why && <p className="max-w-lede text-body text-fg-muted">{top.why}</p>}
+                {top.why && <p className="max-w-lede text-ui text-fg-muted">{top.why}</p>}
                 {home.unlocks.length > 0 && (
                   <p className="text-small text-fg-muted max-narrow:hidden">Unlocks: {home.unlocks.join(" · ")}</p>
                 )}

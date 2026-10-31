@@ -89,7 +89,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
           <li className={cn(ROW, "pt-0 max-narrow:pt-4")}>
             <WhenParts when={done.when} />
             <span className={DOT}><Waypoint state="done" /></span>
-            <div className={cn(BODY, "text-fg-muted")}>
+            <div className={cn(BODY, "text-ui text-fg-muted")}>
               <h2 className="inline text-ui font-semibold text-fg">Done so far</h2> ·{" "}
               <Wide>{done.summary}{done.topics && `: ${done.topics}`}</Wide>
               <Phone>{plural(done.count, "task")}</Phone>
@@ -112,7 +112,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
                 <Phone>Today · {today.meta.replace("You're here · ", "").replace(/^Up next/, "up next")}</Phone>
               </p>
               <h2 className="text-featured">{today.task.title}</h2>
-              {today.task.why && <p className="max-w-lede text-fg-muted max-narrow:hidden">{today.task.why}</p>}
+              {today.task.why && <p className="max-w-lede text-ui text-fg-muted max-narrow:hidden">{today.task.why}</p>}
               {today.unlocks.length > 0 && (
                 <p className="text-small text-fg-muted">
                   <b className="font-semibold">Unlocks {plural(today.unlocks.length, "task")}:</b>{" "}
@@ -164,7 +164,7 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
           <li key={l.name} className={cn(ROW, RULED, "max-narrow:hidden")}>
             <span className={WHEN}>{l.when}</span>
             <span className={DOT}><Waypoint state="available" /></span>
-            <div className={cn(BODY, "text-fg-muted")}>
+            <div className={cn(BODY, "text-ui text-fg-muted")}>
               <h2 className="inline text-ui font-semibold text-fg">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
             </div>
             <Show open={laterOpen === l.name} onClick={() => setLaterOpen(o => (o === l.name ? null : l.name))} label="" hidden={`${l.name} tasks`} />
