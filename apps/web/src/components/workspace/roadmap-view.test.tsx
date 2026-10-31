@@ -105,7 +105,7 @@ describe('RoadmapView', () => {
     expect(screen.getByRole('link', { name: /Start task/ })).toHaveAttribute('href', '/app/roadmap?task=T08')
     fireEvent.click(screen.getByRole('button', { name: 'Ask about this' }))
     expect(openPane).toHaveBeenCalledWith({ kind: 'task', taskKey: 'T08' })
-    expect(document.querySelectorAll('.bg-ink')).toHaveLength(1)
+    expect(document.querySelectorAll('.bg-action')).toHaveLength(1)
   })
 
   it('Week 1 shows 3 rows with meta; Show 4 more reveals 4 in place', () => {

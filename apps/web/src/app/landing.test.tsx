@@ -9,7 +9,7 @@ describe('Landing', () => {
     expect(screen.getAllByRole('link', { name: 'Build my roadmap' })).toHaveLength(1)
     expect(screen.getByRole('link', { name: 'Build my roadmap' })).toHaveAttribute('href', '/onboarding')
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/signin')
-    expect(document.querySelectorAll('a.bg-ink')).toHaveLength(1)
+    expect(document.querySelectorAll('a.bg-action')).toHaveLength(1)
   })
 
   it('has the three feature headings', () => {
