@@ -42,6 +42,7 @@ Browser ──> PostHog (page views, free tier)
 - [x] 7. `ADMIN_API_KEY` generated
 - [x] 8. Privacy page wording for analytics: A chosen 2026-10-31, wording approved and applied (plus OpenAI, Sentry, hosting and contact filled in; Terms operator + contact filled in)
 - [x] 9. Email forwarding for `privacy@` and `hello@landednz.co.nz` (section 9)
+- [ ] 10. Paste the production secrets into Railway and Vercel (section 10)
 
 Already done, nothing to do: OpenAI budget (staging guide §4), Sentry projects + token (§5), Vercel Branch Tracking = `production` (§6), CLI logins (`railway`, `vercel`, `supabase`, `gh` all checked 2026-10-31).
 
@@ -219,6 +220,49 @@ The Privacy page lists `privacy@landednz.co.nz` and the Terms page lists `hello@
 This receives mail only. Replying from `hello@` needs a mail provider (see "Later: Business email").
 
 **Send back:** "email done".
+
+---
+
+## 10. Paste the production secrets (about 10 minutes)
+
+The agent has already set every value that is not a secret, in Railway and in Vercel. Seven values are left; all of them are already in your password manager from earlier sections. Copy each one from the password manager and paste it straight into the field named. Nothing goes into chat.
+
+### 10a. Railway: 5 variables
+
+1. Open <https://railway.com/project/4d334943-61ff-40c0-a2e5-7e2fb16eaef7> (project **landednz-prod**, environment **production**).
+2. Click the **api** box → **Variables** tab.
+3. For each row below: click **+ New Variable** → type the **Name** exactly → paste the **Value** → **Add**.
+
+   | Name | Value (from your password manager) | Saved in |
+   | --- | --- | --- |
+   | `DATABASE_URL` | Supabase `landednz-prod` **Session pooler** URL, with the DB password filled in (starts `postgresql://postgres.cauaowrnsivggivsopad:`, port `5432`) | §4b |
+   | `SUPABASE_SECRET_KEY` | Supabase `landednz-prod` **Secret key** (starts `sb_secret_`). Not the Publishable key. | §4b |
+   | `ANTHROPIC_API_KEY` | `landednz-prod-railway` key (starts `sk-ant-`) | §5 |
+   | `OPENAI_API_KEY` | the same OpenAI key staging uses (starts `sk-`) | staging guide §4 |
+   | `ADMIN_API_KEY` | `LandedNZ prod ADMIN_API_KEY` (64 letters and digits) | §7 |
+
+4. Check the list: you should now see these 5 plus `SENTRY_DSN`, `SUPABASE_URL`, `CORS_ORIGIN`, `NODE_ENV`, `AI_MODE`, `ANTHROPIC_MODEL`, `TRUST_PROXY`, `BETA_MODE`. If a name has a typo, click the **⋮** on that row → **Delete**, and add it again.
+5. Railway shows a bar at the top: **Apply 5 changes** → click it → **Deploy**. The first deploy is safe: nothing points at it yet (the domain comes on release day). It may fail its health check until the agent fills the database in the next step; that is expected.
+
+### 10b. Vercel: 2 variables
+
+1. Open <https://vercel.com/lordmaduzs-projects/landednz/settings/environment-variables>.
+2. For each row below: **Add Environment Variable** → **Key** → **Value** → **Environments**: tick **Production only** (untick Preview and Development) → set **Sensitive** as shown → **Save**.
+
+   | Key | Value | Sensitive |
+   | --- | --- | --- |
+   | `SENTRY_AUTH_TOKEN` | the `vercel-sourcemaps` token (starts `sntrys_`, staging guide §5c) | **on** |
+   | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog `landednz-prod` **Project API key** (starts `phc_`, §6) | off (it is public by design) |
+
+3. Ignore Vercel's "Redeploy" prompt. The next production deploy picks the values up.
+
+### What the agent does after you send back
+
+1. Fills the production database: tables, the knowledge base, search embeddings and the search index (`railway run` from `apps/api`).
+2. Redeploys the API and checks `/health` returns 200.
+3. Reports back with the API URL and the result.
+
+**Send back:** "secrets done".
 
 ---
 
