@@ -251,8 +251,11 @@ The agent has already set every value that is not a secret, in Railway and in Ve
 
    | Key | Value | Sensitive |
    | --- | --- | --- |
-   | `SENTRY_AUTH_TOKEN` | the `vercel-sourcemaps` token (starts `sntrys_`, staging guide §5c) | **on** |
+   | `SENTRY_AUTH_TOKEN` | the `vercel-sourcemaps` token (starts `sntrys_`, staging guide §5c). Lost it? See below. | **on** |
    | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog `landednz-prod` **Project API key** (starts `phc_`, §6) | off (it is public by design) |
+
+**No Sentry token?** Sentry shows a token only once, so make a new one:
+<https://landednz.sentry.io/settings/auth-tokens/> → **Create New Token** → name `vercel-sourcemaps-prod` → **Create** → copy it (starts `sntrys_`) into your password manager, then paste it into Vercel as above. It is optional: without it the site works the same and still reports errors, but the stack traces show minified code instead of our real lines. You can add it any time before release.
 
 3. Ignore Vercel's "Redeploy" prompt. The next production deploy picks the values up.
 
