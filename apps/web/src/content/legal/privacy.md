@@ -1,19 +1,19 @@
 ## What LandedNZ keeps
 
-- Your name and email address, from Google when you sign in.
+- Your name and email address, from Google when you sign in. LandedNZ asks Google only for your basic profile and email address, never your contacts, files, calendar or mail.
 - Your five onboarding answers: visa, city, who is moving with you, your work and your arrival date.
 - Which tasks you have marked done, and when.
 - The questions you ask the assistant and its answers.
 
 ## How it is used
 
-To build your roadmap, keep your progress, and answer your questions about it. LandedNZ does not sell your information or use it for advertising.
+To build your roadmap, keep your progress, and answer your questions about it. Your email address identifies your account; your name lets the assistant address you. LandedNZ does not sell your information or use it for advertising.
 
 LandedNZ also counts page visits through PostHog: the page address, your browser and device type, and a rough location worked out from your internet address. This shows which parts of the app help people. It sets no cookies and is not linked to your name or email.
 
 ## Who else handles it
 
-- Anthropic: your questions and the parts of your roadmap they need, to write the assistant's answers.
+- Anthropic: your name, your questions and the parts of your roadmap they need, to write the assistant's answers. Never your email address.
 - OpenAI: the text of your question, to find the guide sections that match it.
 - Supabase (Sydney, Australia): stores your account and roadmap.
 - Vercel and Railway (Singapore): run the app.
