@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 const KEYS = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"]
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-const NAV = "grid size-9 cursor-pointer place-items-center rounded-control border border-border-subtle bg-surface text-fg state state-base-surface max-narrow:size-11"
+const NAV = "grid size-control cursor-pointer place-items-center rounded-control border border-border-subtle bg-surface text-fg state state-base-surface"
 
 // Month grid for picking a day (WAI-ARIA date grid): ISO dates in and out, no limits.
 export function Calendar({ value, onChange, today, labelledBy }: { value: string | null; onChange(v: string): void; today: string; labelledBy: string }) {
@@ -69,7 +69,7 @@ export function Calendar({ value, onChange, today, labelledBy }: { value: string
                   tabIndex={d === focus ? 0 : -1}
                   onClick={() => { refocus.current = true; setFocus(d); onChange(d) }}
                   className={cn(
-                    "grid h-11 cursor-pointer place-items-center rounded-control state data-outside:text-fg-muted data-today:font-semibold data-today:shadow-today",
+                    "grid h-target cursor-pointer place-items-center rounded-control state data-outside:text-fg-muted data-today:font-semibold data-today:shadow-today",
                     d === value && "bg-surface-selected font-semibold text-fg shadow-chosen state-base-surface-selected",
                   )}
                 >

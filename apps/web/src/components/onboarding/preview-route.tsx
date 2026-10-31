@@ -78,7 +78,7 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
   return (
     <Card aria-label="Your roadmap" className="gap-0 px-5 pt-2 pb-1">
       <ol className="m-0 list-none p-0">
-        <li className="grid min-h-11 grid-cols-itin items-center gap-3">
+        <li className="grid min-h-target grid-cols-itin items-center gap-3">
           <Waypoint state="available" />
           <h2 className="text-ui"><b className="font-semibold">{lead.name}</b> <span className="text-small font-normal text-fg-muted">· {count(lead.tasks.length)}</span></h2>
         </li>
@@ -104,7 +104,7 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
           const isOpen = open.includes(f.name)
           return (
             <li key={f.name} className="border-t border-border-subtle">
-              <div className="grid min-h-15 grid-cols-itin items-center gap-3">
+              <div className="grid min-h-row-lg grid-cols-itin items-center gap-3">
                 <span aria-hidden="true" className="size-3 justify-self-center rounded-full border-2 border-border-strong" />
                 <div className="leading-snug">
                   <h2 className="text-ui"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-fg-muted">· {count(f.tasks.length)}</span></h2>

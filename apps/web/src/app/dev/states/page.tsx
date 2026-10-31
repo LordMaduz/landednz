@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 
 // State-layer fixtures for e2e/design-states.spec.ts; never served in production
-const fixture = "min-h-11 rounded-control px-4"
+const fixture = "min-h-target rounded-control px-4"
 
 export default function StatesPage() {
   if (process.env.NODE_ENV === "production") notFound()

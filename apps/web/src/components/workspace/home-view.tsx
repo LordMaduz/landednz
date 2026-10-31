@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 
 const ROW =
-  "flex min-h-10 items-center gap-3 px-5 py-2 text-fg no-underline hover:bg-surface-sunken hover:text-fg hover:no-underline max-narrow:min-h-11 max-narrow:px-4"
+  "flex min-h-row items-center gap-3 px-5 py-2 text-fg no-underline hover:bg-surface-sunken hover:text-fg hover:no-underline max-narrow:px-4"
 const LINK = "inline-flex min-h-6 items-center text-small font-medium"
 
 // Rows run edge to edge inside a card: the li cancels the card padding
@@ -78,14 +78,13 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                 )}
               </div>
               <CardFoot className="flex gap-2 pt-1">
-                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "min-h-11 max-narrow:flex-1" })}>
+                <Link href={taskHref(top.taskId)} className={buttonVariants({ className: "max-narrow:flex-1" })}>
                   Start task<span className="sr-only">: {top.title}</span>
                 </Link>
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={() => useGuideStore.getState().openPane({ kind: "task", taskKey: top.taskId })}
-                  className="min-h-11"
                 >
                   <Wide>Ask about this</Wide>
                   <Phone>Ask</Phone>
@@ -117,23 +116,26 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
           />
           {home.week.length > 0 && (
             <Rows>
-              {home.week.map(({ task: t, meta }, i) => (
-                <li key={t.taskId} className={cn(i > 1 && "max-narrow:hidden")}>
-                  <Link href={taskHref(t.taskId)} className={ROW}>
-                    <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
-                    <span title={t.title} className="min-w-0 flex-1 truncate font-medium max-narrow:whitespace-normal">{t.title}</span>
-                    <span className="flex-none text-small text-fg-muted max-narrow:hidden">{meta}</span>
+              {home.week.map(({ task: t, meta }) => (
+                <li key={t.taskId}>
+                  {/* Title wraps (2 lines max) with the time under it, so long titles read in full */}
+                  <Link href={taskHref(t.taskId)} className={cn(ROW, "items-start max-narrow:items-center")}>
+                    {/* one line tall, so the circle sits on the title's first line */}
+                    <span className="flex h-6 items-center">
+                      <Waypoint size="mark" state={t.state === "blocked" ? "blocked" : "available"} />
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span title={t.title} className="line-clamp-2 font-medium">{t.title}</span>
+                      <span className="text-small text-fg-muted max-narrow:hidden">{meta}</span>
+                    </span>
                   </Link>
                 </li>
               ))}
             </Rows>
           )}
           {home.weekEmpty && <p className="text-fg-muted">{home.weekEmpty}</p>}
-          {home.nextLine ? (
-            <p className="mt-auto text-small text-fg-muted">{home.nextLine}</p>
-          ) : (
-            home.weekFoot && <Link href="/app/roadmap" className={cn(LINK, "mt-auto self-start max-narrow:hidden")}>{home.weekFoot}</Link>
-          )}
+          {home.weekFoot && <Link href="/app/roadmap" className={cn(LINK, "self-start max-narrow:hidden")}>{home.weekFoot}</Link>}
+          {home.nextLine && <p className="mt-auto text-small text-fg-muted">{home.nextLine}</p>}
         </Card>
       </div>
 
@@ -164,7 +166,7 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
                   i > 1 && "max-narrow:hidden",
                 )}
               >
-                <Link href={taskHref(d.taskId)} className="flex items-start gap-3 py-1 text-fg no-underline hover:text-fg hover:underline max-narrow:min-h-11 max-narrow:items-center">
+                <Link href={taskHref(d.taskId)} className="flex items-start gap-3 py-1 text-fg no-underline hover:text-fg hover:underline max-narrow:min-h-target max-narrow:items-center">
                   <Tick />
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span>{d.title}</span>

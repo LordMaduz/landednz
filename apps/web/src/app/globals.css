@@ -145,6 +145,36 @@
   --spacing-rail-indent: 120px;
   --spacing-sheet-clear: 160px;
 
+  /* Component size roles (owner-approved 2026-11-01). The only place control and bar heights live; components use
+     these roles only (size-roles.test.ts). Phone values here, tablet (561+) and desktop (1024+ with a mouse) in the media blocks below.
+     Desktop follows apple.com, measured 2026-11-01: nav bar 44, buttons 36, large buttons 44. Phones keep 44 px
+     touch targets (Apple HIG); desktop targets stay above WCAG 2.5.8's 24 px minimum.
+                   phone  tablet  desktop
+     header         56     56      44    app and public header bar, the task's Tasks bar
+     footer         36     56      44    public footer bar
+     control        44     40      36    buttons, inputs, icon buttons, menu items, toasts
+     control-sm     44     32      32    small buttons (source chips, Copy, Back to task)
+     control-lg     48     48      44    large buttons, onboarding options, Google sign-in
+     target         44     44      36    links and tap areas that are not buttons
+     touch          44     44      44    crisis help links: never shrink
+     row            44     40      36    list rows (Home week, roadmap tasks)
+     row-lg         60     60      52    onboarding preview itinerary rows
+     settings-row   64     56      48    Your details rows
+     ask-bar-height 48     52      44    the floating guide ask bar
+     avatar         40     40      40    account avatar (menu, Your details) */
+  --spacing-header: 56px;
+  --spacing-footer: 36px;
+  --spacing-control: 44px;
+  --spacing-control-sm: 44px;
+  --spacing-control-lg: 48px;
+  --spacing-target: 44px;
+  --spacing-touch: 44px;
+  --spacing-row: 44px;
+  --spacing-row-lg: 60px;
+  --spacing-settings-row: 64px;
+  --spacing-ask-bar-height: 48px;
+  --spacing-avatar: 40px;
+
 
   --container-app: 1248px; /* signed-in shell: 1200 content, edge at 120 px at 1440 */
   --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
@@ -183,10 +213,10 @@
   --container-guide-task: 720px;
   --container-guide-home: 900px;
   --grid-template-columns-focus: 280px minmax(0, 1fr);
-  /* Focused view height: the window under the 56 px header; it adds 24 px top and bottom inside */
-  --spacing-guide-pane: calc(100dvh - 3.5rem);
-  /* Keyboard focus never hides under the floating ask bar: its 52 px height + its 28 px offset from the window bottom (SC 2.4.11) */
-  --spacing-ask-bar-clear: 5rem;
+  /* Focused view height: the window under the header; it adds 24 px top and bottom inside */
+  --spacing-guide-pane: calc(100dvh - var(--spacing-header));
+  /* Keyboard focus never hides under the floating ask bar: its height + its 28 px offset from the window bottom (SC 2.4.11) */
+  --spacing-ask-bar-clear: calc(var(--spacing-ask-bar-height) + 28px);
 }
 
 @theme inline {
@@ -206,6 +236,47 @@
     --spacing-card-padding: 20px;
     --spacing-section-gap: 32px;
     --spacing-stack-gap: 16px;
+    --spacing-footer: 56px;
+    --spacing-control: 40px;
+    --spacing-control-sm: 32px;
+    --spacing-row: 40px;
+    --spacing-settings-row: 56px;
+    --spacing-ask-bar-height: 52px;
+  }
+}
+
+/* Desktop density (owner-approved 2026-11-01): calmer, Apple-like sizing from 1024 px; phones and tablets unchanged.
+   Type follows Apple's macOS type sizes (HIG Typography: Title 1 22, Title 2 17, Title 3 15, Body 13),
+   with paragraphs and guide answers at 15 for reading. Content column 1024 (apple.com keeps ~980), side columns 360. */
+@media (width >= 1024px) {
+  :root {
+    --text-title: 22px;
+    --text-featured: 17px;
+    --text-section: 15px;
+    --text-body: 15px;
+    --text-ui: 13px;
+    --text-reading: 15px;
+    --container-app: 1072px;
+    --container-page: 1072px;
+    --grid-template-columns-home: minmax(0, 7fr) minmax(0, 5fr); /* 7/5: most task titles fit one line */
+    --grid-template-columns-settings: 360px minmax(0, 1fr);
+    --grid-template-columns-task: minmax(0, 1fr) 360px;
+  }
+}
+
+/* Desktop control sizes need a mouse: touch screens at 1024+ (iPad landscape, touch laptops) keep the tablet sizes,
+   so tap targets stay 40–44 (Apple HIG 44 pt) */
+@media (width >= 1024px) and (pointer: fine) {
+  :root {
+    --spacing-header: 44px;
+    --spacing-footer: 44px;
+    --spacing-control: 36px;
+    --spacing-control-lg: 44px;
+    --spacing-target: 36px;
+    --spacing-row: 36px;
+    --spacing-row-lg: 52px;
+    --spacing-settings-row: 48px;
+    --spacing-ask-bar-height: 44px;
   }
 }
 
@@ -411,7 +482,7 @@
     font-family: var(--font-roboto), system-ui, sans-serif;
     font-weight: 500;
     font-size: 15px;
-    min-height: 48px;
+    min-height: var(--spacing-control-lg);
     padding: 0 16px;
     border-radius: var(--radius-control);
     border: 1px solid #747775;
@@ -450,7 +521,7 @@
     grid-template-columns: 24px minmax(0, 1fr) auto;
     column-gap: 12px;
     align-items: center;
-    min-height: 44px;
+    min-height: var(--spacing-target);
     border-top: 1px solid var(--color-border-subtle);
   }
   .preview-row > .wp { justify-self: center; width: 14px; height: 14px; border: 2px solid var(--color-border-strong); }

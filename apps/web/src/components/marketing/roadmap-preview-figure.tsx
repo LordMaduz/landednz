@@ -14,7 +14,7 @@ const ROWS: { state: WaypointState; name: string; meta: string }[] = [
 export function RoadmapPreviewFigure() {
   return (
     <figure aria-label="Example: a roadmap on day 3" className="m-0 overflow-hidden rounded-card border border-border-subtle bg-surface shadow-raised">
-      <div aria-hidden="true" className="flex h-12 items-center gap-4 border-b border-border-subtle px-4">
+      <div aria-hidden="true" className="flex h-control-lg items-center gap-4 border-b border-border-subtle px-4">
         <Logo size={20} />
         <span className="text-small text-fg-muted">Home</span>
         <span className="rounded-control bg-surface-sunken px-2 py-1 text-small font-medium">Roadmap</span>

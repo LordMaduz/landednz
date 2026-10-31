@@ -126,3 +126,4 @@ apps/api/content-review/
 
 # owner-only ops guide, kept local
 docs/setup/prod-owner-guide.md
+docs/setup/google-signin-branding-guide.md

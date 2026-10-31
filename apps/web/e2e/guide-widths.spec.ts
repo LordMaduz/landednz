@@ -2,13 +2,13 @@ import { test, expect, type Browser, type BrowserContext, type Page } from '@pla
 import { askFromBar, holdAnswers, resetTestUser, signIn } from './test-user'
 
 // Chat window (2026-10-31): the guide open on Task, Home and Roadmap at every width band. Task: the chat takes the
-// 400 px right column and the card never moves; Home and Roadmap: the full view. No sideways scroll, no clipped text,
+// 360 px right column and the card never moves; Home and Roadmap: the full view. No sideways scroll, no clipped text,
 // Mark as done in view, task steps ≥45 characters a line.
 test.beforeAll(resetTestUser)
 
 const PAGES = ['/app/roadmap?task=T08', '/app', '/app/roadmap']
 const WIDTHS = [1024, 1180, 1280, 1366, 1440, 1536, 1600, 1680, 1920]
-const COLUMN = 400 // --grid-template-columns-task, px at every width and root size
+const COLUMN = 360 // --grid-template-columns-task at 1024+, px at every width and root size
 const BACK: Record<string, string> = { '/app': 'Back to Home', '/app/roadmap': 'Back to your roadmap' }
 
 type Case = { width: number; height: number; rootPx?: number; zoom?: number }

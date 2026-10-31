@@ -3,9 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { Button } from './button'
 
 describe('Button', () => {
-  it('defaults to primary: action fill with the inverse state layer, 40 px target (44 on phones)', () => {
+  it('defaults to primary: action fill with the inverse state layer, control role height (44 phone, 40 tablet, 36 desktop)', () => {
     render(<Button>Start</Button>)
-    expect(screen.getByRole('button', { name: 'Start' })).toHaveClass('bg-action', 'text-fg-on-action', 'state-inverse', 'min-h-10', 'max-narrow:min-h-11')
+    expect(screen.getByRole('button', { name: 'Start' })).toHaveClass('bg-action', 'text-fg-on-action', 'state-inverse', 'min-h-control')
   })
 
   it('secondary is the surface with a border and the ink state layer', () => {
@@ -37,19 +37,19 @@ describe('Button', () => {
     expect(onClick).not.toHaveBeenCalled()
   })
 
-  it('size sm is 32 px tall', () => {
+  it('size sm takes the small control role', () => {
     render(<Button size="sm">Edit</Button>)
-    expect(screen.getByRole('button', { name: 'Edit' })).toHaveClass('min-h-8', 'px-3')
+    expect(screen.getByRole('button', { name: 'Edit' })).toHaveClass('min-h-control-sm', 'px-3')
   })
 
-  it('size lg is 48 px tall', () => {
+  it('size lg takes the large control role', () => {
     render(<Button size="lg">Build my roadmap</Button>)
-    expect(screen.getByRole('button', { name: 'Build my roadmap' })).toHaveClass('min-h-12', 'px-6')
+    expect(screen.getByRole('button', { name: 'Build my roadmap' })).toHaveClass('min-h-control-lg', 'px-6')
   })
 
-  it('size icon is square with a 44 px tap area on phones', () => {
+  it('size icon is a square control (44 px on phones)', () => {
     render(<Button size="icon" variant="ghost" aria-label="Close">×</Button>)
-    expect(screen.getByRole('button', { name: 'Close' })).toHaveClass('size-10', 'max-narrow:min-w-11', 'max-narrow:min-h-11')
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveClass('size-control')
   })
 
   it('render keeps the link it is given', () => {

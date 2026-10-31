@@ -1,8 +1,10 @@
 import { test, expect, type Page } from '@playwright/test'
 import { holdAnswers, resetTestUser, signIn } from './test-user'
 
-// globals.css roles, same at every width: hero 48, title 24, featured 18, section/body/reading 16, ui 14, small 12
+// globals.css roles: hero 48, title 24, featured 18, section/body/reading 16, ui 14, small 12;
+// desktop (1024+) steps down to title 22, featured 17, section/body/reading 15, ui 13
 export const TYPE_SET = ['48px', '24px', '18px', '16px', '14px', '12px']
+const DESKTOP_TYPE_SET = ['48px', '22px', '17px', '15px', '13px', '12px']
 const SIZES = [[1440, 900], [390, 844]]
 
 // Visible elements with their own text node whose font size is outside the type set
@@ -23,7 +25,7 @@ export async function expectTypeScale(page: Page, path: string) {
       out.push(`${el.tagName.toLowerCase()}.${String(el.className).slice(0, 60)} "${text}" ${cs.fontSize}`)
     }
     return out
-  }, TYPE_SET)
+  }, page.viewportSize()!.width >= 1024 ? DESKTOP_TYPE_SET : TYPE_SET)
   expect(offenders, `${path} font sizes outside the type set`).toEqual([])
 }
 

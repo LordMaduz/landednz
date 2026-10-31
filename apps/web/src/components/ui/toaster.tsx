@@ -24,7 +24,7 @@ export function Toaster() {
             "flex w-full items-center gap-3 rounded-card bg-surface-inverse py-2 pr-2 pl-4 text-ui text-fg-on-action shadow-raised",
           icon: "flex",
           actionButton:
-            "ml-auto inline-flex shrink-0 whitespace-nowrap min-h-10 cursor-pointer items-center rounded-control border-0 bg-transparent px-3 font-semibold text-link-on-inverse state-inverse state-base-surface-inverse max-narrow:min-h-11",
+            "ml-auto inline-flex shrink-0 whitespace-nowrap min-h-control cursor-pointer items-center rounded-control border-0 bg-transparent px-3 font-semibold text-link-on-inverse state-inverse state-base-surface-inverse",
         },
       }}
     />

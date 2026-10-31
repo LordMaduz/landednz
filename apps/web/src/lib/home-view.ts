@@ -17,7 +17,7 @@ export interface HomeView {
   nextMetaShort: string // "Your next move · 20–30 min"
   unlocks: string[] // titles of the tasks waiting on `top`
   weekAside: string // "Week 1 · 3 days left"
-  week: { task: RouteTask; meta: string }[] // open tasks after `top` in this week's stage, at most 3
+  week: { task: RouteTask; meta: string }[] // open tasks after `top` in this week's stage, at most 2
   weekFoot: string | null // "4 more in Week 1"
   weekTotal: number
   weekEmpty: string | null
@@ -35,7 +35,7 @@ export function homeSubline(route: RouteView, arrivalDate: string, now: Date, sh
 
 const and = new Intl.ListFormat('en-NZ', { type: 'conjunction' })
 
-const WEEK_CAP = 3
+const WEEK_CAP = 2 // two wrapped rows match the next-move card's height
 const RECENT_CAP = 4
 // The short name the greeting uses
 const CITY_NAME: Record<City, string> = { AUCKLAND: 'Auckland', WELLINGTON: 'Wellington', CHRISTCHURCH: 'Christchurch', OTHER: 'New Zealand' }

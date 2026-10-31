@@ -59,7 +59,7 @@ const FollowUp = ({ text, onFollowUp }: { text: string; onFollowUp: (text: strin
     type="button"
     variant="ghost"
     onClick={() => onFollowUp(text)}
-    className="h-auto min-h-11 justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-0 py-3 text-left font-normal whitespace-normal text-ui"
+    className="h-auto min-h-target justify-start gap-3 rounded-none border-0 border-t border-border-subtle px-0 py-3 text-left font-normal whitespace-normal text-ui"
   >
     <CornerUpLeft className="size-4 shrink-0 text-accent" aria-hidden />
     {text}

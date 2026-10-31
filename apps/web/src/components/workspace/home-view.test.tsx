@@ -81,7 +81,7 @@ describe('HomeView', () => {
     const week = screen.getByRole('region', { name: 'Then this week' })
     expect(week).toHaveTextContent('Week 1')
     expect(within(week).getByRole('link', { name: /Give your employer a tax code \(IR330\)\s*Waits on your IRD number/ })).toHaveAttribute('href', '/app/roadmap?task=T09')
-    expect(within(week).getAllByRole('listitem').length).toBeLessThanOrEqual(3)
+    expect(within(week).getAllByRole('listitem').length).toBeLessThanOrEqual(2)
     expect(within(week).queryByRole('link', { name: /more in/ })).not.toBeInTheDocument()
   })
 

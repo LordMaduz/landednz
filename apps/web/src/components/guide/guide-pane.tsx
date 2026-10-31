@@ -22,7 +22,7 @@ export function IconButton({ label, onClick, children }: { label: string; onClic
       size="icon"
       aria-label={label}
       onClick={onClick}
-      className="size-8 border-0 text-fg-muted hover:text-fg max-pane:size-11"
+      className="size-8 border-0 text-fg-muted hover:text-fg max-pane:size-target"
     >
       {children}
     </Button>

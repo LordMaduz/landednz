@@ -17,7 +17,7 @@ function answerText(i: number, answers: Partial<Answers>): string {
 }
 
 const Wordmark = () => (
-  <span translate="no" className="flex min-h-11 items-center gap-2 font-semibold tracking-brand text-fg-on-action">
+  <span translate="no" className="flex min-h-target items-center gap-2 font-semibold tracking-brand text-fg-on-action">
     <Logo onInk />
     LandedNZ
   </span>
@@ -62,7 +62,7 @@ export function AnswerRail({ title, intro, answers, current }: { title: string; 
                   )}
                 </span>
                 {state === "done" && (
-                  <Link href={stepUrl(i + 1)} className="ml-auto flex min-h-11 items-center text-small text-link-on-inverse no-underline hover:text-fg-on-action">
+                  <Link href={stepUrl(i + 1)} className="ml-auto flex min-h-target items-center text-small text-link-on-inverse no-underline hover:text-fg-on-action">
                     Change<span className="sr-only"> {NAMES[i]}</span>
                   </Link>
                 )}
@@ -91,7 +91,7 @@ export function AnswerRail({ title, intro, answers, current }: { title: string; 
         {prev !== null && (
           <div className="flex items-center justify-between">
             <span className="text-fg-on-inverse">{NAMES[prev]}: <span className="text-fg-on-action">{answerText(prev, answers)}</span></span>
-            <Link href={stepUrl(prev + 1)} className="flex min-h-11 items-center text-link-on-inverse no-underline hover:text-fg-on-action">
+            <Link href={stepUrl(prev + 1)} className="flex min-h-target items-center text-link-on-inverse no-underline hover:text-fg-on-action">
               Change<span className="sr-only"> {NAMES[prev]}</span>
             </Link>
           </div>

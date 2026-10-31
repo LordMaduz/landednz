@@ -68,11 +68,11 @@ function SignInForm({ saving }: { saving: boolean }) {
           <form action={signInWithPassword} className="flex flex-col gap-5 max-narrow:gap-4">
             <label className="flex flex-col gap-2 font-medium">
               Email
-              <Field name="email" type="email" autoComplete="email" spellCheck={false} required className="min-h-11 font-normal" />
+              <Field name="email" type="email" autoComplete="email" spellCheck={false} required className="min-h-target font-normal" />
             </label>
             <label className="flex flex-col gap-2 font-medium">
               Password
-              <Field name="password" type="password" autoComplete="current-password" required className="min-h-11 font-normal" />
+              <Field name="password" type="password" autoComplete="current-password" required className="min-h-target font-normal" />
             </label>
             <Button type="submit" size="lg" disabled={pending} className="w-full">
               {saving ? "Save and sign in" : "Sign in"}

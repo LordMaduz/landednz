@@ -15,12 +15,12 @@ export function AccountSection({ user }: { user: HeaderUser & { email: string; g
           <CardHead title="Account" titleId="account" />
         </div>
         <div className="flex items-center gap-3 max-narrow:flex-col max-narrow:gap-0">
-          <Avatar user={user} className="size-10 text-featured max-narrow:size-18" />
+          <Avatar user={user} className="size-avatar text-featured max-narrow:size-18" />
           <span className="flex min-w-0 flex-1 flex-col leading-snug">
             <span className="break-words max-narrow:mt-3 max-narrow:font-semibold">{user.email}</span>
             <span className="text-ui text-fg-muted">Signs in with {user.google ? "Google" : "email"}</span>
           </span>
-          <Button type="button" variant="secondary" onClick={signOutAndLeave} className="min-h-10 max-narrow:mt-5 max-narrow:min-h-12 max-narrow:w-full">
+          <Button type="button" variant="secondary" onClick={signOutAndLeave} className="max-narrow:mt-5 max-narrow:min-h-control-lg max-narrow:w-full">
             Sign out
           </Button>
         </div>

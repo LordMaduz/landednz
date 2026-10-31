@@ -48,7 +48,7 @@ export function AskBar({
   // sticky, not fixed: it floats at the window bottom while scrolling, then rests right under the page content.
   // While hidden the wrapper keeps its height so the phone footer doesn't jump; beside the open pane it goes, so the pane fits; clicks pass through its empty sides
   return (
-    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-8 flex h-13 justify-center max-narrow:bottom-17 max-narrow:h-12 max-narrow:px-3", wide && "h-auto min-h-13 items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
+    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-8 flex h-ask-bar-height justify-center max-narrow:bottom-17 max-narrow:px-3", wide && "h-auto min-h-ask-bar-height items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
       {wide ? (
         <AskBox page={page} unseen={unseen} onOpen={onOpen} ref={ref as Ref<HTMLTextAreaElement>} />
       ) : (
@@ -101,7 +101,7 @@ function AskBox({ page, unseen, onOpen, ref }: { page: GuideScreen; unseen: bool
     <div
       data-ask-bar
       className={cn(
-        "pointer-events-auto relative flex w-ask-bar gap-3 rounded-floating py-3 pr-3 pl-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
+        "pointer-events-auto relative flex min-h-ask-bar-height w-ask-bar gap-3 rounded-floating py-2 pr-3 pl-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2",
         typed ? "items-end" : "items-center",
         limited ? "bg-surface-sunken ring-1 ring-border-subtle" : "bg-surface shadow-floating focus-within:ring-1 focus-within:ring-accent focus-within:outline-4 focus-within:outline-accent/12",
       )}

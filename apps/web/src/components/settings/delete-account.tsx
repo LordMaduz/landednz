@@ -42,7 +42,7 @@ export function DeleteAccount() {
     <AlertDialog onOpenChange={open => !open && setError(null)}>
       <Card variant="plain" aria-label="Delete account" className="flex-row items-center gap-4 max-narrow:flex-col max-narrow:items-stretch max-narrow:gap-3">
         <p className="m-0 flex-1 text-ui text-fg-muted">{WHAT_GOES}</p>
-        <AlertDialogTrigger render={<Button type="button" variant="secondary" className="min-h-10 text-danger hover:text-danger max-narrow:min-h-12" />}>
+        <AlertDialogTrigger render={<Button type="button" variant="secondary" className="text-danger hover:text-danger max-narrow:min-h-control-lg" />}>
           Delete account…
         </AlertDialogTrigger>
       </Card>
