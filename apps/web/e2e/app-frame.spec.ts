@@ -57,6 +57,8 @@ test('Privacy and Terms keep the app frame; the title starts at the logo edge', 
     await page.setViewportSize({ width, height: 860 })
     for (const path of ['/privacy', '/terms']) {
       await page.goto(path)
+      // the page streams behind a Suspense fallback; the hidden streamed copy has no box until it swaps in
+      await expect(page.locator('h1')).toBeVisible()
       const logo = await page.locator('header a[href="/app"]').first().boundingBox()
       const title = await page.locator('h1').boundingBox()
       expect(Math.abs(title!.x - logo!.x), `${path} at ${width}`).toBeLessThanOrEqual(1)
