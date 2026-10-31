@@ -26,8 +26,8 @@ const offGrid = (line: string) => [...line.matchAll(SPACING)].some(m => !STEPS.h
 const handButton = (path: string, line: string) =>
   /<button\b/.test(line) && !path.startsWith('components/ui/') && !path.startsWith('app/dev/') && !/className="gsi\b/.test(line)
 
-// ImageResponse renders outside the page CSS, so the OG image can only take literal colours
-const EXEMPT = ['app/opengraph-image.tsx']
+// ImageResponse renders outside the page CSS, so the OG image and the logo mark can only take literal colours
+const EXEMPT = ['app/opengraph-image.tsx', 'lib/logo-mark.tsx']
 
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap(name => {
