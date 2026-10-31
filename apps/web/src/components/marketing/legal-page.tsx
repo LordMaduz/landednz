@@ -17,9 +17,9 @@ const components = {
   h2: ({ children }: { children?: React.ReactNode }) => <h2 id={slug(String(children))} className="scroll-mt-20">{children}</h2>,
 }
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-const OTHER = { privacy: { href: "/terms", label: "Terms" }, terms: { href: "/privacy", label: "Privacy" } } as const
+const OTHER = { about: { href: "/privacy", label: "Privacy" }, privacy: { href: "/terms", label: "Terms" }, terms: { href: "/privacy", label: "Privacy" } } as const
 
-type Props = { title: string; updated: string; file: "privacy" | "terms" }
+type Props = { title: string; updated: string; file: keyof typeof OTHER }
 
 // The session decides the frame; a blank fallback so neither header flashes
 export function LegalPage(props: Props) {

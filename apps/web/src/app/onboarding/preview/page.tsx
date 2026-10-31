@@ -8,7 +8,7 @@ import { ANSWERS_COOKIE, decodeAnswers } from "@/lib/answers"
 
 export const metadata: Metadata = {
   title: "Your roadmap is ready",
-  robots: { index: false },
+  robots: { index: false, follow: true },
 }
 
 // proxy.ts clears stale or tampered answers before this page; the check here is the backstop

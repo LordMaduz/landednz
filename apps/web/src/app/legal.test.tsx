@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { PublicFooter } from '@/components/chrome/public-footer'
 import { LegalLayout } from '@/components/marketing/legal-page'
 import { metadata as privacyMeta } from './privacy/page'
 import { metadata as termsMeta } from './terms/page'
@@ -64,5 +65,13 @@ describe('signed out', () => {
     render(<LegalLayout title="Privacy" updated="24 October 2026" file="privacy" user={null} />)
     expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'Main' })).toBeNull()
+  })
+})
+
+describe('footer', () => {
+  it('links About, Privacy and Terms', () => {
+    render(<PublicFooter />)
+    const links = screen.getByRole('navigation', { name: 'Legal' }).querySelectorAll('a')
+    expect([...links].map(a => [a.textContent, a.getAttribute('href')])).toEqual([['About', '/about'], ['Privacy', '/privacy'], ['Terms', '/terms']])
   })
 })

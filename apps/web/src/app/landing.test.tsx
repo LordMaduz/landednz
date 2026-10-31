@@ -30,13 +30,14 @@ describe('Landing', () => {
     expect(within(figure).getByText('7 of 20 tasks done')).toBeInTheDocument()
   })
 
-  it('sets title, description and WebApplication JSON-LD', () => {
-    expect(metadata.title).toBe('LandedNZ: your settling-in roadmap for New Zealand')
+  it('sets title, description and the brand JSON-LD graph', () => {
+    expect(metadata.title).toEqual({ absolute: 'LandedNZ: your settling-in roadmap for New Zealand' })
     expect(metadata.description).toBe(
       'Answer five questions and get a step-by-step roadmap for your first months in New Zealand, checked against official sources.',
     )
     render(<Landing />)
     const ld = document.querySelector('script[type="application/ld+json"]')
-    expect(JSON.parse(ld?.textContent ?? '{}')['@type']).toBe('WebApplication')
+    const graph = JSON.parse(ld?.textContent ?? '{}')['@graph'] as { '@type': string }[]
+    expect(graph.map(n => n['@type'])).toEqual(['Organization', 'WebSite', 'WebApplication'])
   })
 })
