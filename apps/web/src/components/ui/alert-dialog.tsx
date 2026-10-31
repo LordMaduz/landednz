@@ -18,11 +18,11 @@ function AlertDialogTrigger({ ...props }: AlertDialogPrimitive.Trigger.Props) {
 function AlertDialogContent({ className, ...props }: AlertDialogPrimitive.Popup.Props) {
   return (
     <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal">
-      <AlertDialogPrimitive.Backdrop data-slot="alert-dialog-overlay" className="fixed inset-0 z-50 bg-ink/40" />
+      <AlertDialogPrimitive.Backdrop data-slot="alert-dialog-overlay" className="fixed inset-0 z-50 bg-surface-inverse/40" />
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"
         className={cn(
-          "fixed inset-x-6 top-1/2 z-50 mx-auto flex max-w-md -translate-y-1/2 flex-col gap-6 rounded-surface border border-hairline bg-white p-6 text-ink outline-none",
+          "fixed inset-x-6 top-1/2 z-50 mx-auto flex max-w-md -translate-y-1/2 flex-col gap-6 rounded-card border border-border-subtle bg-surface p-6 text-fg outline-none",
           className,
         )}
         {...props}
@@ -56,7 +56,7 @@ function AlertDialogDescription({
   return (
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
-      className={cn("text-muted", className)}
+      className={cn("text-fg-muted", className)}
       {...props}
     />
   )
@@ -71,7 +71,7 @@ function AlertDialogCancel({ className, ...props }: AlertDialogPrimitive.Close.P
     <AlertDialogPrimitive.Close
       data-slot="alert-dialog-cancel"
       className={className}
-      render={<Button variant="quiet" />}
+      render={<Button variant="secondary" />}
       {...props}
     />
   )

@@ -49,6 +49,8 @@
   --color-fg: var(--palette-ink-900);
   --color-fg-muted: var(--palette-slate-600);
   --color-fg-subtle: var(--palette-slate-500);
+  /* accent-coloured text that is not a link (stamps, chips, today label) */
+  --color-fg-accent: var(--palette-teal-700);
   --color-fg-on-action: var(--palette-white);
   --color-fg-on-inverse: var(--palette-slate-300);
   --color-fg-on-inverse-muted: var(--palette-slate-400);
@@ -61,12 +63,16 @@
   --color-surface-sunken: var(--palette-slate-50);
   --color-surface-selected: var(--palette-teal-50);
   --color-surface-inverse: var(--palette-ink-900);
+  /* a lifted tile on the inverse surface (logo on the onboarding rail) */
+  --color-surface-inverse-raised: var(--palette-ink-700);
   --color-action: var(--palette-ink-900);
   --color-accent: var(--palette-teal-600);
   --color-accent-bright: var(--palette-teal-400);
   --color-border: var(--palette-slate-200);
   --color-border-subtle: var(--palette-slate-100);
   --color-border-selected: var(--palette-teal-200);
+  /* input and radio edges: 3:1 against white (WCAG 1.4.11) */
+  --color-border-strong: var(--palette-slate-500);
   --color-track: var(--palette-slate-250);
   --color-focus: var(--palette-teal-600);
   /* avatar keeps its own role: its redesign runs separately (owner, 2026-10-31) */
@@ -266,10 +272,19 @@
   }
 }
 
+/* Quiet links for header and footer nav: muted, ink with an underline on hover */
+@utility link-subtle {
+  color: var(--color-fg-muted);
+  &:hover {
+    color: var(--color-fg);
+    text-decoration-line: underline;
+  }
+}
+
 /* Aurora hairline: AI-generated elements only */
 @utility ai {
   padding: 1px;
-  border-radius: var(--radius-surface);
+  border-radius: var(--radius-card);
   background: linear-gradient(90deg, var(--palette-green-400), var(--palette-blue-400), var(--palette-violet-400), var(--palette-blue-400), var(--palette-green-400));
 }
 
@@ -361,33 +376,33 @@
     width: 20px;
     height: 20px;
     border-radius: 9999px;
-    border: 1.5px solid var(--color-control);
+    border: 1.5px solid var(--color-border-strong);
   }
   .radio::after { content: ""; width: 8px; height: 8px; border-radius: 9999px; }
-  .radio:checked { background: var(--color-teal); border-color: var(--color-teal); }
-  .radio:checked::after { background: var(--color-white); }
+  .radio:checked { background: var(--color-accent); border-color: var(--color-accent); }
+  .radio:checked::after { background: var(--color-surface); }
   @media (forced-colors: active) {
     .radio:checked { border-color: Highlight; }
     .radio:checked::after { background: CanvasText; }
   }
   .wp-mark { width: 20px; height: 20px; }
-  .wp-done { background: var(--color-teal); }
-  .wp-current { width: 16px; height: 16px; border: 2px solid var(--color-ink); }
-  .wp-leg-now { border: 2px solid var(--color-ink); }
-  .wp-available, .wp-blocked { border: 1.5px solid var(--color-control); }
-  .wp-locked { border: 1.5px dashed var(--color-control); }
-  .wp-blocked::after { content: ""; width: 6px; height: 1.5px; background: var(--color-muted); }
+  .wp-done { background: var(--color-accent); }
+  .wp-current { width: 16px; height: 16px; border: 2px solid var(--color-fg); }
+  .wp-leg-now { border: 2px solid var(--color-fg); }
+  .wp-available, .wp-blocked { border: 1.5px solid var(--color-border-strong); }
+  .wp-locked { border: 1.5px dashed var(--color-border-strong); }
+  .wp-blocked::after { content: ""; width: 6px; height: 1.5px; background: var(--color-fg-muted); }
   @media (width < 561px) {
     .wp-bead { width: 8px; height: 8px; }
     .wp-bead.wp-current { width: 12px; height: 12px; }
   }
 
   .route-legs > li {
-    --line: var(--color-hairline);
+    --line: var(--color-border-subtle);
     padding-bottom: 24px;
     background: linear-gradient(var(--line), var(--line)) 7px 0 / 2px 100% no-repeat;
   }
-  .route-legs > li.is-done { --line: var(--color-teal); }
+  .route-legs > li.is-done { --line: var(--color-accent); }
   .route-legs > li:last-child { padding-bottom: 0; }
   .route-legs > li:last-child.is-folded { background-size: 2px 22px; }
   .route-step {
@@ -398,11 +413,11 @@
   .route-dot { height: 44px; display: flex; align-items: center; justify-content: center; }
   .route-dot-card { height: 72px; }
   /* On a wash surface the locked dot is hollow on wash, not white */
-  .route-legs.on-wash .wp-locked { background: var(--color-wash); }
+  .route-legs.on-wash .wp-locked { background: var(--color-surface-sunken); }
 
   /* "or use email" divider: text between two hairlines */
   .or-rule { display: flex; align-items: center; gap: 12px; }
-  .or-rule::before, .or-rule::after { content: ""; flex: 1; height: 1px; background: var(--color-hairline); }
+  .or-rule::before, .or-rule::after { content: ""; flex: 1; height: 1px; background: var(--color-border-subtle); }
 
   /* Google sign-in button: Google's branding (Roboto 500, #747775 border, the four-colour G), the one CW01 exception */
   .gsi {
@@ -432,7 +447,7 @@
 
   /* Inside an aurora hairline: the white surface, 1 px inside the 10 px radius */
   .ai > * {
-    border-radius: calc(var(--radius-surface) - 1px);
+    border-radius: calc(var(--radius-card) - 1px);
     background: var(--color-surface);
   }
 
@@ -449,44 +464,44 @@
     column-gap: 12px;
     align-items: center;
     min-height: 44px;
-    border-top: 1px solid var(--color-hairline);
+    border-top: 1px solid var(--color-border-subtle);
   }
-  .preview-row > .wp { justify-self: center; width: 14px; height: 14px; border: 2px solid var(--color-control); }
-  .preview-row > .wp-done { border: 0; background: var(--color-teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 4.2 3.2 5.8 6.5 2.3' stroke='%23fff' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center / 8px no-repeat; }
-  .preview-row > .wp-current { width: 16px; height: 16px; border: 4px solid var(--color-teal); }
-  .preview-row > .wp-locked { border: 1.5px dashed var(--color-control); }
+  .preview-row > .wp { justify-self: center; width: 14px; height: 14px; border: 2px solid var(--color-border-strong); }
+  .preview-row > .wp-done { border: 0; background: var(--color-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1.5 4.2 3.2 5.8 6.5 2.3' stroke='%23fff' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center / 8px no-repeat; }
+  .preview-row > .wp-current { width: 16px; height: 16px; border: 4px solid var(--color-accent); }
+  .preview-row > .wp-locked { border: 1.5px dashed var(--color-border-strong); }
 
   /* Roadmap progress: 6 px hairline track, teal fill (width set inline from the done count) */
   .progress {
     height: 6px;
     border-radius: 3px;
-    background: var(--color-hairline);
+    background: var(--color-border-subtle);
     overflow: hidden;
   }
-  .progress > span { display: block; height: 100%; background: var(--color-teal); }
+  .progress > span { display: block; height: 100%; background: var(--color-accent); }
 
   .route-track {
     height: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(var(--color-hairline), var(--color-hairline)) center / 100% 2px no-repeat;
+    background: linear-gradient(var(--color-border-subtle), var(--color-border-subtle)) center / 100% 2px no-repeat;
   }
-  .route-track.is-done { background-image: linear-gradient(var(--color-teal), var(--color-teal)); }
+  .route-track.is-done { background-image: linear-gradient(var(--color-accent), var(--color-accent)); }
 
   .stamp {
     flex: none;
     width: 64px;
     height: 64px;
     border-radius: 9999px;
-    border: 2px solid var(--color-teal);
+    border: 2px solid var(--color-accent);
     box-sizing: border-box;
     transform: rotate(-10deg);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--color-teal-text);
+    color: var(--color-fg-accent);
     font-size: var(--text-small);
     font-weight: 600;
     line-height: 1.1;
@@ -501,8 +516,8 @@
     align-self: flex-end;
     max-width: 85%;
     padding: 8px 16px;
-    border-radius: var(--radius-surface);
-    background: var(--color-wash);
+    border-radius: var(--radius-card);
+    background: var(--color-surface-sunken);
   }
 
   /* Markdown in AI replies: paragraphs and lists on the 8 px rhythm */
@@ -517,7 +532,7 @@
   .legal h2 { margin-top: 32px; font-size: var(--text-section); line-height: var(--text-section--line-height); letter-spacing: var(--text-section--letter-spacing); font-weight: 600; }
   .legal p, .legal li { font-size: var(--text-body); line-height: 1.6; }
   .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
-  .ph { background: var(--color-wash); border-radius: 4px; padding: 0 4px; }
+  .ph { background: var(--color-surface-sunken); border-radius: 4px; padding: 0 4px; }
 
   /* Home track (docs/design/r0-polish/build.py ROUTE_CSS). The container query hides the labels and shows the summary under 561 px. */
   .track { container-type: inline-size; padding-inline: 6px; }
@@ -527,32 +542,32 @@
   .track-rv > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .track-rv path { vector-effect: non-scaling-stroke; }
   .track-pin { position: absolute; transform: translate(-50%, -50%); }
-  .track-contour { stroke: var(--color-hairline); stroke-width: 1; fill: none; }
+  .track-contour { stroke: var(--color-border-subtle); stroke-width: 1; fill: none; }
   .track-ahead { stroke: var(--color-track); stroke-width: 2; fill: none; stroke-dasharray: 4 5; }
-  .track-walked { stroke: var(--color-teal); stroke-width: 2.5; fill: none; }
-  .track-today { stroke: var(--color-teal); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
-  .track-today-label { position: absolute; top: 0; margin-left: 8px; font-size: var(--text-small); font-weight: 600; color: var(--color-teal-text); white-space: nowrap; }
+  .track-walked { stroke: var(--color-accent); stroke-width: 2.5; fill: none; }
+  .track-today { stroke: var(--color-accent); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+  .track-today-label { position: absolute; top: 0; margin-left: 8px; font-size: var(--text-small); font-weight: 600; color: var(--color-fg-accent); white-space: nowrap; }
   .track-today-label[data-edge="end"] { transform: translateX(calc(-100% - 16px)); }
-  .track-arc { stroke: var(--color-ink); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
-  .track-note { position: absolute; right: 0; bottom: 0; font-size: var(--text-small); color: var(--color-muted); }
+  .track-arc { stroke: var(--color-fg); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
+  .track-note { position: absolute; right: 0; bottom: 0; font-size: var(--text-small); color: var(--color-fg-muted); }
   .track-dot { position: absolute; width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; transform: translate(-50%, -50%); }
-  .track-dot[data-state="done"] { background: var(--color-teal); }
-  .track-dot[data-state="blocked"] { background: var(--color-white); border: 1.5px dashed var(--color-control); }
+  .track-dot[data-state="done"] { background: var(--color-accent); }
+  .track-dot[data-state="blocked"] { background: var(--color-surface); border: 1.5px dashed var(--color-border-strong); }
   .track-dot[data-state="open"] { width: 6px; height: 6px; background: var(--color-track); }
-  .track-grad { stop-color: var(--color-teal); }
-  .track-flag { fill: var(--color-white); stroke: var(--color-control); stroke-width: 1.5; stroke-linejoin: round; }
-  .track-flag-on { fill: var(--color-teal); stroke: var(--color-teal); }
+  .track-grad { stop-color: var(--color-accent); }
+  .track-flag { fill: var(--color-surface); stroke: var(--color-border-strong); stroke-width: 1.5; stroke-linejoin: round; }
+  .track-flag-on { fill: var(--color-accent); stroke: var(--color-accent); }
   .track-you { display: flex; flex-direction: column; align-items: center; gap: 4px; transform: translate(-50%, calc(-100% + 7px)); }
   /* Near either end the tag stays inside the track and the dot stays on its x */
   .track-you[data-edge="end"] { align-items: flex-end; transform: translate(calc(-100% + 7px), calc(-100% + 7px)); }
   .track-you[data-edge="start"] { align-items: flex-start; transform: translate(-7px, calc(-100% + 7px)); }
-  .track-you-tag { font-size: var(--text-small); font-weight: 600; color: var(--color-white); background: var(--color-ink); border-radius: 9999px; padding: 2px 10px; white-space: nowrap; }
-  .track-you-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--color-white); border: 3px solid var(--color-ink); box-sizing: border-box; box-shadow: var(--shadow-pin-halo); }
+  .track-you-tag { font-size: var(--text-small); font-weight: 600; color: var(--color-fg-on-action); background: var(--color-surface-inverse); border-radius: 9999px; padding: 2px 10px; white-space: nowrap; }
+  .track-you-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--color-surface); border: 3px solid var(--color-fg); box-sizing: border-box; box-shadow: var(--shadow-pin); }
   .track-stages { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; font-size: var(--text-small); line-height: var(--text-small--line-height); }
   .track-stage { display: flex; flex-direction: column; align-items: flex-start; padding-right: 4px; }
-  .track-stage-name { font-size: var(--text-ui); font-weight: 600; color: var(--color-ink); }
-  .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-muted); }
-  .track-stage:not(.track-stage-off) .track-stage-name { color: var(--color-teal-text); }
+  .track-stage-name { font-size: var(--text-ui); font-weight: 600; color: var(--color-fg); }
+  .track-stage-off .track-stage-name { font-weight: 500; color: var(--color-fg-muted); }
+  .track-stage:not(.track-stage-off) .track-stage-name { color: var(--color-fg-accent); }
   .track-phone { display: none; justify-content: space-between; gap: 8px; font-size: var(--text-small); line-height: var(--text-small--line-height); }
   /* Roadmap itinerary row: date, dot, content, action. On phones the date and dot go. */
   .itin { display: grid; grid-template-columns: 128px 24px minmax(0, 1fr) auto; align-items: baseline; }
@@ -570,7 +585,7 @@
 }
 
 @keyframes skeleton-in { to { opacity: 1; } }
-@keyframes skeleton-pulse { 50% { background-color: var(--color-hairline); } }
+@keyframes skeleton-pulse { 50% { background-color: var(--color-border-subtle); } }
 
 @keyframes stamp-in {
   from { transform: scale(1.2) rotate(0deg); opacity: 0; }
@@ -579,7 +594,7 @@
 
 @layer base {
   * {
-    @apply border-hairline;
+    @apply border-border-subtle;
   }
   html {
     @apply font-sans pane:scroll-pb-ask-bar-clear;
@@ -589,7 +604,7 @@
     scroll-padding-bottom: 0;
   }
   body {
-    @apply bg-white text-ui text-ink antialiased;
+    @apply bg-surface text-ui text-fg antialiased;
     font-feature-settings: 'tnum' 1;
   }
   /* paragraphs read at body size; inside guide answers they keep the reading leading */
@@ -605,13 +620,13 @@
     text-wrap: balance;
   }
   a {
-    @apply text-teal-text;
+    @apply text-link;
   }
   a:hover {
-    @apply text-teal-hover underline;
+    @apply text-link-hover underline;
   }
   :focus-visible {
-    outline: 2px solid var(--color-teal);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
 }

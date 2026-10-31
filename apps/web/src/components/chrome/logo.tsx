@@ -4,17 +4,17 @@ import Link from "next/link"
 export function Logo({ size = 24, onInk = false }: { size?: number; onInk?: boolean }) {
   return (
     <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" className="shrink-0">
-      <rect width="24" height="24" rx="6" className={onInk ? "fill-ink-hover" : "fill-ink"} />
-      <path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" className="stroke-white" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" className="stroke-white/55" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="16.5" cy="7.5" r="2" className="fill-mark" />
+      <rect width="24" height="24" rx="6" className={onInk ? "fill-surface-inverse-raised" : "fill-surface-inverse"} />
+      <path d="M4 15.5c2.6-.9 4.2-3.6 8-3.6s5.4 2.7 8 3.6" className="stroke-fg-on-action" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6.5 19c1.9-.6 3-2.2 5.5-2.2s3.6 1.6 5.5 2.2" className="stroke-fg-on-action/55" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="16.5" cy="7.5" r="2" className="fill-accent-bright" />
     </svg>
   )
 }
 
 export function Brand({ href }: { href: string }) {
   return (
-    <Link href={href} aria-label="LandedNZ home" className="flex min-h-11 items-center gap-2 text-ink no-underline hover:text-ink hover:no-underline">
+    <Link href={href} aria-label="LandedNZ home" className="flex min-h-11 items-center gap-2 text-fg no-underline hover:text-fg hover:no-underline">
       <Logo />
       <span translate="no" className="font-semibold tracking-brand">LandedNZ</span>
     </Link>

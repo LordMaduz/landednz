@@ -14,7 +14,7 @@ export function Select({ className, children, ...props }: React.ComponentProps<"
         height="16"
         viewBox="0 0 16 16"
         fill="none"
-        className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 stroke-muted"
+        className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 stroke-fg-muted"
       >
         <path d="m4 6 4 4 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>

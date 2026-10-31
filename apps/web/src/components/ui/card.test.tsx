@@ -3,9 +3,15 @@ import { describe, expect, it } from 'vitest'
 import { Card, CardHead } from './card'
 
 describe('Card', () => {
-  it('renders a section with the landing-card classes', () => {
+  it('is raised by default: card radius, subtle border, surface, raised shadow', () => {
     const { container } = render(<Card>x</Card>)
-    expect(container.firstChild).toHaveClass('rounded-surface', 'border-hairline', 'bg-white', 'shadow-lift')
+    expect(container.firstChild).toHaveClass('rounded-card', 'border-border-subtle', 'bg-surface', 'p-card-padding', 'shadow-raised')
+  })
+
+  it('plain drops the shadow', () => {
+    const { container } = render(<Card variant="plain">x</Card>)
+    expect(container.firstChild).toHaveClass('rounded-card', 'border-border-subtle', 'bg-surface')
+    expect(container.firstChild).not.toHaveClass('shadow-raised')
   })
 
   it('labels the section by its head title', () => {

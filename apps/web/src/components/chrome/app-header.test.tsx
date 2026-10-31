@@ -13,6 +13,9 @@ describe('AppHeader', () => {
     expect(within(nav).getAllByRole('link').map(l => l.textContent)).toEqual(['Home', 'Roadmap', 'Settings'])
     expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveAttribute('aria-current', 'page')
     expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
+    // current page: the selected surface; every link takes the state layer
+    expect(within(nav).getByRole('link', { name: 'Roadmap' })).toHaveClass('aria-[current=page]:bg-surface-selected', 'state')
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveClass('state')
   })
 
   it('Settings is current in both the header and the phone tab bar', () => {

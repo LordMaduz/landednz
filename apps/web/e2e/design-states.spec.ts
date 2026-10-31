@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { holdAnswers, resetTestUser, signIn } from './test-user'
 
 // State layer (design system spec §5): hover and pressed mix a layer into the element's own background.
 // Light surfaces darken, dark surfaces lighten; disabled controls never change. Fixtures: /dev/states (dev only).
@@ -52,3 +53,42 @@ for (const [width, height] of SIZES) {
     expect(d.pressed, 'disabled pressed unchanged').toBe(d.rest)
   })
 }
+
+// Phone tap areas (spec §7.1): every control is at least 44 × 44 px to the finger. Small controls keep their drawn
+// size and reach 44 through an invisible ::after (composer remove 18, send 34).
+async function smallTargets(page: Page) {
+  return page.evaluate(() => {
+    const out: string[] = []
+    for (const el of document.querySelectorAll<HTMLElement>('button, a[href], [role=button], input:not([type=radio]):not([type=hidden])')) {
+      const r = el.getBoundingClientRect()
+      const cs = getComputedStyle(el)
+      if (!r.width || !r.height || cs.visibility === 'hidden' || el.closest('[inert], [aria-hidden=true]')) continue
+      if (el.closest('p, li') && el.tagName === 'A') continue // inline links in a sentence: WCAG 2.5.8 inline exception
+      const a = getComputedStyle(el, '::after')
+      const ext = a.content !== 'none' && a.position === 'absolute'
+      const w = ext ? Math.max(r.width, r.width - parseFloat(a.left) - parseFloat(a.right)) : r.width
+      const h = ext ? Math.max(r.height, r.height - parseFloat(a.top) - parseFloat(a.bottom)) : r.height
+      if (w < 44 || h < 44) out.push(`${el.tagName.toLowerCase()} "${(el.getAttribute('aria-label') ?? el.textContent ?? '').trim().slice(0, 30)}" ${Math.round(w)}×${Math.round(h)}`)
+    }
+    return out
+  })
+}
+
+test.describe('phone tap areas', () => {
+  test.beforeAll(resetTestUser)
+
+  test('every control on Home with the guide open is at least 44 × 44 at 390', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await holdAnswers(page)
+    await page.goto('/signin')
+    await signIn(page)
+    await expect(page).toHaveURL('/app')
+    expect(await smallTargets(page), 'Home').toEqual([])
+    await page.getByRole('button', { name: /^Ask about your / }).click()
+    const sheet = page.getByRole('dialog', { name: 'Guide' })
+    await expect(sheet).toBeVisible()
+    expect(await smallTargets(page), 'Home + guide sheet').toEqual([])
+    const send = (await sheet.getByRole('button', { name: 'Send' }).boundingBox())!
+    expect([Math.round(send.width), Math.round(send.height)], 'Send keeps its drawn 34 px').toEqual([34, 34])
+  })
+})

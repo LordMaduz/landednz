@@ -4,13 +4,16 @@ import { cn } from "@/lib/utils"
 
 // One primary per screen; secondary for other actions; ghost for in-row actions; text for a link-like action.
 // Hover and pressed come from the state layer (globals.css `state`); disabled takes no layer.
+const secondary = "border-border bg-surface text-fg state state-base-surface hover:text-fg"
 const buttonVariants = cva(
   "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-control border font-medium whitespace-nowrap no-underline hover:no-underline [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         primary: "border-action bg-action text-fg-on-action state-inverse state-base-action hover:text-fg-on-action",
-        secondary: "border-border bg-surface text-fg state state-base-surface hover:text-fg",
+        secondary,
+        /** @deprecated `quiet` is `secondary`; removed with the old token names */
+        quiet: secondary,
         ghost: "border-transparent bg-transparent text-fg state hover:text-fg",
         danger: "border-danger bg-danger text-fg-on-action state-inverse state-base-danger hover:text-fg-on-action",
         "danger-ghost": "border-transparent bg-transparent text-danger state hover:text-danger",
@@ -34,9 +37,7 @@ const buttonVariants = cva(
   }
 )
 
-/** @deprecated `quiet` is `secondary`; removed with the old token names */
-type QuietVariant = "quiet"
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "danger-ghost" | "inverse" | "text" | QuietVariant
+type ButtonVariant = "primary" | "secondary" | "quiet" | "ghost" | "danger" | "danger-ghost" | "inverse" | "text"
 // An icon-only button has no visible text, so it must carry an accessible name
 type ButtonSize = { size?: "sm" | "default" | "lg" } | { size: "icon"; "aria-label": string }
 
@@ -47,7 +48,7 @@ function Button({
   disabled,
   ...props
 }: ButtonPrimitive.Props & { variant?: ButtonVariant } & ButtonSize) {
-  const v = disabled ? (variant === "text" ? "text" : "disabled") : variant === "quiet" ? "secondary" : variant
+  const v = disabled ? (variant === "text" ? "text" : "disabled") : variant
   return (
     <ButtonPrimitive
       data-slot="button"
