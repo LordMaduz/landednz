@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Geist } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import { Toaster } from "@/components/ui/toaster";
 import { SITE_URL } from "@/lib/site";
 import { Analytics } from "@/lib/analytics";
-
-const geist = Geist({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
 // Explicit type: TS 7 does not see the global LayoutProps from next typegen.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-NZ" className={geist.variable}>
+    <html lang="en-NZ" className={GeistSans.variable}>
       <body>
         {children}
         <Toaster />
