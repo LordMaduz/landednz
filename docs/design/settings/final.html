@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LandedNZ · Your details redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Every value maps to a role in apps/web/src/app/globals.css */
+:root{
+ --fg:#0F2A3A;--fg-muted:#4B6170;--fg-subtle:#7A8F99;--fg-on-action:#fff;
+ --surface:#fff;--sunken:#F6F8F8;--selected:#F3F9F8;--border-subtle:#E3E8EA;--border:#D5DFE2;
+ --link:#0A6463;--link-hover:#074B4A;--accent:#0E7C7B;--teal-100:#E8F2F1;--focus:#0E7C7B;--danger:#A3292B;
+ --state-hover:rgba(15,42,58,.06);--state-press:rgba(15,42,58,.10);
+ --text-title:24px;--text-featured:18px;--text-section:16px;--text-body:16px;--text-ui:14px;--text-small:12px;
+ --r-control:8px;--r-card:12px;--r-floating:16px;
+ --shadow-raised:0 1px 2px rgba(15,42,58,.04),0 16px 48px rgba(15,42,58,.08);
+ --shadow-chosen:inset 0 0 0 1px var(--accent);
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{margin:0;font:400 var(--text-body)/1.5 Roboto,system-ui,sans-serif;color:var(--fg);background:var(--sunken)}
+::selection{background:var(--teal-100);color:var(--fg)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+button{font:inherit;color:inherit}
+
+/* presentation frame (not part of the design) */
+.board{max-width:1520px;margin:0 auto;padding:40px 40px 80px}
+.board>h1{font-size:var(--text-title);font-weight:600;margin:0}
+.board>p{color:var(--fg-muted);margin:4px 0 0;max-width:72ch}
+.label{font-size:var(--text-ui);color:var(--fg-muted);margin:40px 0 12px;display:flex;gap:12px;align-items:baseline}
+.label b{color:var(--fg);font-weight:500}
+.screen{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-floating);overflow:hidden;box-shadow:var(--shadow-raised)}
+
+/* app header */
+.hdr{display:flex;align-items:center;gap:40px;height:56px;padding:0 120px;border-bottom:1px solid var(--border-subtle);background:var(--surface)}
+.logo{display:flex;gap:8px;align-items:center;font-weight:600;font-size:var(--text-ui)}
+.logo svg{width:24px;height:24px}
+.nav{display:flex;gap:28px;font-size:var(--text-ui);color:var(--fg-muted);height:100%}
+.nav span{display:flex;align-items:center}
+.av{width:32px;height:32px;border-radius:50%;background:var(--teal-100);color:var(--link);display:grid;place-items:center;font-weight:600;font-size:var(--text-ui);flex:none}
+.hdr .av{margin-left:auto;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+
+/* page */
+.page{padding:28px 120px 56px;background:linear-gradient(var(--sunken),var(--surface) 160px)}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:20px}
+.ph h2{font-size:var(--text-title);font-weight:600;line-height:1.25;margin:0;letter-spacing:-.01em}
+.ph p{margin:0;color:var(--fg-muted)}
+.split{display:grid;grid-template-columns:440px minmax(0,1fr);gap:16px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:16px}
+
+/* Card + CardHead, as components/ui/card.tsx */
+.card{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--r-card);box-shadow:var(--shadow-raised);overflow:hidden}
+.card.plain{box-shadow:none}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 20px 12px}
+.ch h3{font-size:var(--text-section);font-weight:600;margin:0}
+.ch span{font-size:var(--text-small);color:var(--fg-muted)}
+
+/* list row: whole row is the control */
+.row{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 20px;border-top:1px solid var(--border-subtle);cursor:pointer;position:relative;transition:background-color .15s cubic-bezier(.2,0,0,1)}
+.row:hover{background:var(--state-hover)}.row:active{background:var(--state-press)}
+.row:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.row .k{width:104px;flex:none;font-size:var(--text-ui);color:var(--fg-muted)}
+.row .v{flex:1;min-width:0;font-size:var(--text-body);line-height:1.35}
+.row .go{color:var(--fg-subtle);transition:transform .2s cubic-bezier(.2,0,0,1),color .15s}
+.row:hover .go{color:var(--fg-muted);transform:translateX(2px)}
+.row .tag{font-size:var(--text-small);font-weight:500;color:var(--link);display:none}
+.row[aria-current="true"]{background:var(--selected);box-shadow:var(--shadow-chosen)}
+.row[aria-current="true"] .tag{display:inline}.row[aria-current="true"] .go{display:none}
+
+/* identity + actions */
+.who{display:flex;align-items:center;gap:12px;padding:4px 20px 20px}
+.who .av{width:40px;height:40px;font-size:var(--text-section)}
+.who div{flex:1;min-width:0;line-height:1.35}
+.who small{display:block;font-size:var(--text-ui);color:var(--fg-muted)}
+.mail{overflow-wrap:anywhere}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:var(--r-control);border:1px solid var(--border);background:var(--surface);font-size:var(--text-ui);font-weight:500;cursor:pointer;white-space:nowrap;transition:background-color .15s}
+.btn:hover{background:linear-gradient(var(--state-hover),var(--state-hover)) var(--surface)}
+.btn.primary{background:var(--fg);border-color:var(--fg);color:var(--fg-on-action)}
+.btn.primary:disabled{opacity:.4;cursor:default}
+.btn.danger{color:var(--danger)}
+.drow{display:flex;align-items:center;gap:16px;padding:20px}
+.drow div{flex:1;line-height:1.35}.drow small{display:block;font-size:var(--text-ui);color:var(--fg-muted)}
+
+/* right column: calm state + editor */
+.calm{background:var(--sunken);box-shadow:none;padding:28px 32px}
+.calm h3{font-size:var(--text-featured);font-weight:600;margin:0 0 4px}
+.calm p{margin:0;color:var(--fg-muted);max-width:52ch}
+.calm ul{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:var(--text-ui);color:var(--fg-muted)}
+.calm li{display:flex;gap:10px;align-items:center}.calm li svg{width:16px;height:16px;color:var(--accent)}
+.link{display:inline-flex;align-items:center;gap:4px;margin-top:20px;font-size:var(--text-ui);font-weight:500;color:var(--link);text-decoration:none}
+.link:hover{color:var(--link-hover);text-decoration:underline;text-underline-offset:3px}.link svg{width:16px;height:16px}
+.editor{padding:40px 64px}
+.editor small{font-size:var(--text-small);color:var(--fg-muted)}
+.editor h3{font-size:var(--text-featured);font-weight:600;margin:4px 0}
+.editor>p{margin:0 0 20px;color:var(--fg-muted)}
+.opts{display:flex;flex-direction:column;gap:12px;max-width:640px}
+.opt{display:flex;align-items:center;gap:12px;min-height:60px;padding:0 16px;border:1px solid var(--border-subtle);border-radius:var(--r-card);cursor:pointer;font-size:var(--text-body);transition:background-color .15s}
+.opt:hover{background:var(--state-hover)}
+.opt input{appearance:none;width:20px;height:20px;margin:0;border-radius:50%;border:1.5px solid var(--fg-subtle);flex:none;transition:border .15s}
+.opt input:checked{border:6px solid var(--accent)}
+.opt:has(input:checked){background:var(--selected);box-shadow:var(--shadow-chosen);border-color:transparent}
+.acts{display:flex;gap:12px;margin-top:20px}
+[hidden]{display:none!important}
+
+/* phone */
+.phones{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.phone{width:390px;border-radius:32px}
+.phone .hdr{padding:0 16px}
+.phone .page{padding:16px 16px 24px}
+.phone .stack{gap:12px}
+.me{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 16px 24px}
+.me .av{width:72px;height:72px;font-size:var(--text-title)}
+.me b{display:block;margin-top:12px;font-size:var(--text-featured);font-weight:600;overflow-wrap:anywhere}
+.me small{font-size:var(--text-ui);color:var(--fg-muted)}
+.phone .ch{padding:16px 16px 8px}
+.phone .row{min-height:64px;padding:10px 16px}
+.phone .row .k{display:none}
+.phone .row .v b{display:block;font-weight:400;font-size:var(--text-small);color:var(--fg-muted);margin-bottom:2px}
+.phone .row.red{color:var(--danger)}
+.phone .row.first{border-top:0}
+.legal{display:flex;gap:24px;font-size:var(--text-ui);color:var(--fg-muted);padding:12px 4px 0}
+.tabs{display:flex;justify-content:space-around;border-top:1px solid var(--border-subtle);background:var(--surface);padding:8px 0 24px}
+.tabs>span{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:var(--text-small);color:var(--fg-muted);min-width:64px}
+.tabs .on{color:var(--fg);font-weight:600}
+.tabs .av{width:24px;height:24px;font-size:var(--text-small);box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent)}
+.phone .editor{padding:4px 0 0}
+.back{display:flex;align-items:center;gap:4px;font-size:var(--text-ui);color:var(--link);font-weight:500;margin-bottom:16px}
+.back svg{width:16px;height:16px}
+.phone .acts .btn{flex:1;min-height:48px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+ <symbol id="back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+ <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+ <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+ <symbol id="home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+ <symbol id="route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+ <symbol id="out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+ <symbol id="logo" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0F2A3A" stroke="none"/><path d="M5 15c2.5-2 4.5-2 7 0s4.5 2 7 0M5 18.5c2.5-2 4.5-2 7 0s4.5 2 7 0" stroke="#7CC4BF" stroke-width="1.6"/><circle cx="12" cy="8" r="2" fill="#7CC4BF" stroke="none"/></symbol>
+</svg>
+
+<div class="board">
+<h1>Your details · redesign</h1>
+<p>Settings rebuilt on the same cards, rows, type roles and colours as Home and Roadmap. No dark panel. Click any row on the desktop screen to see the editor; Cancel returns to the calm state.</p>
+
+<div class="label"><b>Desktop · 1440</b> Interactive: click a row</div>
+<div class="screen">
+ <div class="hdr"><span class="logo"><svg><use href="#logo"/></svg>LandedNZ</span><nav class="nav"><span>Home</span><span>Roadmap</span></nav><span class="av" title="Account menu">E</span></div>
+ <div class="page">
+  <div class="ph"><h2>Your details</h2><p>Your answers build your roadmap.</p></div>
+  <div class="split">
+   <div class="stack">
+    <section class="card" aria-labelledby="plan">
+     <div class="ch"><h3 id="plan">Your plan</h3><span>5 answers</span></div>
+     <div id="rows"></div>
+    </section>
+    <section class="card" aria-labelledby="g">
+     <div class="ch"><h3 id="g">Guide</h3></div>
+     <button class="row"><span class="k">Memory</span><span class="v">3 things the guide remembers</span><svg class="i go"><use href="#chev"/></svg></button>
+    </section>
+    <section class="card" aria-labelledby="acc">
+     <div class="ch"><h3 id="acc">Account</h3></div>
+     <div class="who"><span class="av">E</span><div><span class="mail">alex.chen@example.com</span><small>Signs in with Google</small></div><button class="btn">Sign out</button></div>
+    </section>
+    <section class="card plain" aria-label="Delete account">
+     <div class="drow"><div>Delete account<small>Removes your answers, your roadmap and your questions to the assistant. This can't be undone.</small></div><button class="btn danger">Delete…</button></div>
+    </section>
+   </div>
+
+   <section class="card calm" id="calm">
+    <h3>Pick an answer to change it</h3>
+    <p>Your roadmap is rebuilt around the new answer straight away.</p>
+    <ul><li><svg class="i"><use href="#check"/></svg>Tasks you've done stay done</li><li><svg class="i"><use href="#check"/></svg>You can undo a change right after saving</li></ul>
+    <a class="link" href="#">Open roadmap<svg class="i"><use href="#arrow"/></svg></a>
+   </section>
+   <section class="card editor" id="editor" hidden aria-labelledby="q">
+    <small id="ek"></small><h3 id="q"></h3><p id="en"></p>
+    <div class="opts" role="radiogroup" aria-labelledby="q" id="opts"></div>
+    <div class="acts"><button class="btn" id="cancel">Cancel</button><button class="btn primary" id="save" disabled>Save and rebuild</button></div>
+   </section>
+  </div>
+ </div>
+</div>
+
+<div class="label"><b>Phone · 390</b> You tab, and the editor page it opens</div>
+<div class="phones">
+ <div class="screen phone">
+  <div class="hdr"><span class="logo"><svg><use href="#logo"/></svg>LandedNZ</span></div>
+  <div class="page"><div class="stack">
+   <section class="card me"><span class="av">E</span><b>alex.chen@example.com</b><small>Signs in with Google</small></section>
+   <section class="card" aria-labelledby="pp">
+    <div class="ch"><h3 id="pp">Your plan</h3><span>Builds your roadmap</span></div>
+    <button class="row"><span class="v"><b>Visa</b>Accredited Employer Work Visa (AEWV)</span><svg class="i go"><use href="#chev"/></svg></button>
+    <button class="row"><span class="v"><b>City</b>Auckland</span><svg class="i go"><use href="#chev"/></svg></button>
+    <button class="row"><span class="v"><b>Who's moving</b>Just me</span><svg class="i go"><use href="#chev"/></svg></button>
+    <button class="row"><span class="v"><b>Work</b>Another job or profession</span><svg class="i go"><use href="#chev"/></svg></button>
+    <button class="row"><span class="v"><b>Arrival date</b>Sat 31 Oct 2026</span><svg class="i go"><use href="#chev"/></svg></button>
+   </section>
+   <section class="card" aria-labelledby="pg">
+    <div class="ch"><h3 id="pg">Guide</h3></div>
+    <button class="row"><span class="v"><b>Memory</b>3 things the guide remembers</span><svg class="i go"><use href="#chev"/></svg></button>
+   </section>
+   <section class="card" aria-label="Account">
+    <button class="row first"><span class="v">Sign out</span><svg class="i go"><use href="#out"/></svg></button>
+    <button class="row red"><span class="v">Delete account…</span></button>
+   </section>
+   <div class="legal"><span>Privacy</span><span>Terms</span></div>
+  </div></div>
+  <div class="tabs"><span><svg class="i"><use href="#home"/></svg>Home</span><span><svg class="i"><use href="#route"/></svg>Roadmap</span><span class="on"><span class="av">E</span>You</span></div>
+ </div>
+
+ <div class="screen phone">
+  <div class="hdr"><span class="logo"><svg><use href="#logo"/></svg>LandedNZ</span></div>
+  <div class="page">
+   <span class="back"><svg class="i"><use href="#back"/></svg>Your details</span>
+   <section class="editor">
+    <small>City</small><h3 style="font-size:var(--text-featured);font-weight:600;margin:4px 0">Where do you live?</h3>
+    <p style="margin:0 0 20px;color:var(--fg-muted)">Your roadmap is rebuilt for the new city. Tasks you've done stay done.</p>
+    <div class="opts" role="radiogroup">
+     <label class="opt"><input type="radio" name="pc" checked>Auckland</label>
+     <label class="opt"><input type="radio" name="pc">Wellington</label>
+     <label class="opt"><input type="radio" name="pc">Christchurch</label>
+     <label class="opt"><input type="radio" name="pc">Somewhere else in NZ</label>
+    </div>
+    <div class="acts"><button class="btn">Cancel</button><button class="btn primary" disabled>Save and rebuild</button></div>
+   </section>
+  </div>
+ </div>
+</div>
+</div>
+
+<script>
+const Q={
+ visa:{k:"Visa",ask:"What visa are you on?",noun:"visa",v:"Accredited Employer Work Visa (AEWV)",o:["Accredited Employer Work Visa (AEWV)","Straight to Residence Visa (Green List Tier 1)","Skilled Migrant Category Resident Visa","Partner work visa (your partner is working or studying in NZ)","Post-Study Work Visa","Another visa"]},
+ city:{k:"City",ask:"Where do you live?",noun:"city",v:"Auckland",o:["Auckland","Wellington","Christchurch","Somewhere else in NZ"]},
+ fam:{k:"Who's moving",ask:"Who's moving with you?",noun:"household",v:"Just me",o:["Just me","Me and my partner","Me, my partner and children"]},
+ work:{k:"Work",ask:"What work do you do?",noun:"work",v:"Another job or profession",o:["Healthcare","Engineering","IT and tech","Another job or profession"]},
+ date:{k:"Arrival date",ask:"When do you land?",noun:"arrival date",v:"Sat 31 Oct 2026",o:["Sat 31 Oct 2026","Sat 7 Nov 2026","Sat 14 Nov 2026"]}};
+const rows=document.getElementById("rows"),calm=document.getElementById("calm"),ed=document.getElementById("editor"),save=document.getElementById("save");
+rows.innerHTML=Object.entries(Q).map(([id,q])=>`<button class="row" data-id="${id}"><span class="k">${q.k}</span><span class="v">${q.v}</span><span class="tag">Changing</span><svg class="i go"><use href="#chev"/></svg></button>`).join("");
+function open(id){
+ rows.querySelectorAll(".row").forEach(r=>r.setAttribute("aria-current",r.dataset.id===id));
+ if(!id){calm.hidden=false;ed.hidden=true;return}
+ const q=Q[id];calm.hidden=true;ed.hidden=false;save.disabled=true;
+ ek.textContent=q.k;document.getElementById("q").textContent=q.ask;en.textContent=`Your roadmap is rebuilt for the new ${q.noun}. Tasks you've done stay done.`;
+ opts.innerHTML=q.o.map(o=>`<label class="opt"><input type="radio" name="o" ${o===q.v?"checked":""} value="${o}">${o}</label>`).join("");
+ opts.onchange=e=>save.disabled=e.target.value===q.v;
+}
+rows.onclick=e=>{const r=e.target.closest(".row");if(r)open(r.dataset.id)};
+document.getElementById("cancel").onclick=()=>open(null);
+save.onclick=()=>open(null);
+</script>
+</body></html>

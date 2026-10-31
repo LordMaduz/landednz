@@ -100,22 +100,23 @@ test.describe('phone tap areas', () => {
   })
 })
 
-// Review Focus 1: the delete trigger sits on the dark rail at desktop and on white on phones
+// The delete trigger sits on a white card at every width: hover and press darken it
 test.describe('delete account trigger', () => {
   test.beforeAll(resetTestUser)
 
-  test('hover lightens on the rail at 1440; pressed darkens on white at 390', async ({ page }) => {
+  test('hover darkens at 1440; pressed darkens at 390', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await holdAnswers(page)
     await page.goto('/signin')
     await signIn(page)
     await expect(page).toHaveURL('/app')
     await page.goto('/settings')
+    await expect(page.getByRole('list', { name: 'Your answers' })).toBeVisible()
     const trigger = page.getByRole('button', { name: /^Delete account/ })
     await page.mouse.move(0, 0)
     const rest = await lum(trigger)
     await trigger.hover()
-    expect(await lum(trigger), 'hover lighter on the rail').toBeGreaterThan(rest)
+    expect(await lum(trigger), 'hover darker on white').toBeLessThan(rest)
 
     await page.setViewportSize({ width: 390, height: 844 })
     await page.mouse.move(0, 0)

@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ApiDown } from "@/components/chrome/api-down"
-import { AppHeader, type HeaderUser } from "@/components/chrome/app-header"
-import { PublicFooter } from "@/components/chrome/public-footer"
+import { AppHeader, TabBarSpace, type HeaderUser } from "@/components/chrome/app-header"
+import { LegalLinks } from "@/components/chrome/public-footer"
 import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api"
 import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
-import { AnswersCard, PlanForm } from "./plan-form"
+import { PlanCard, PlanForm } from "./plan-form"
 import { Skeleton } from "@/components/ui/skeleton"
 
 type User = HeaderUser & { email: string; google: boolean }
@@ -49,28 +49,32 @@ export function SettingsScreen({ user }: { user: User }) {
     <div className="flex min-h-dvh flex-col">
       <AppHeader active="settings" back={editing ? { href: "/settings", label: "Your details" } : undefined} user={user} />
       <main className="container-page container-app py-6 max-narrow:py-4">
+        {/* phones: the identity card leads, so the title is for screen readers only */}
+        <section aria-labelledby="details" className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 max-narrow:sr-only">
+          <h1 id="details" className="text-title">Your details</h1>
+          <p className="text-fg-muted">Your answers build your roadmap.</p>
+        </section>
         <div className="grid grid-cols-settings gap-4 max-split:grid-cols-1 max-narrow:gap-3">
           {profile === "loading" || profile === "down" ? (
             <div className="flex flex-col gap-4">
               {profile === "loading" ? (
-                <AnswersCard>
+                <PlanCard>
                   <span className="sr-only">Loading</span>
-                  <Skeleton className="mt-5 h-40 w-full bg-fg-on-action/15" />
-                </AnswersCard>
+                  <div className="px-5 pb-5"><Skeleton className="h-64 w-full" /></div>
+                </PlanCard>
               ) : (
-                <>
-                  <h1 className="text-title">Your details</h1>
-                  <ApiDown heading="h2" onRetry={load} />
-                </>
+                <ApiDown heading="h2" onRetry={load} />
               )}
               <AccountSection user={user} />
             </div>
           ) : (
-            <PlanForm profile={profile} account={<AccountSection user={user} joined />} />
+            <PlanForm profile={profile} account={<AccountSection user={user} />} />
           )}
         </div>
+        {/* phones have no account menu: Privacy and Terms live here */}
+        <LegalLinks className="hidden pt-6 max-narrow:flex" />
       </main>
-      <PublicFooter app />
+      <TabBarSpace />
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from "react"
 import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import { create } from "zustand"
 import type { GuideMemoryDto } from "@landednz/types"
 import { Button } from "@/components/ui/button"
@@ -10,6 +11,7 @@ import { deleteMemory, listMemories, updateMemory } from "@/lib/api"
 import { shortDayNZ } from "@/lib/nz-date"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
+import { ROW, ROW_GO, ROW_LABEL, ROW_ON, ROW_PHONE_LABEL, ROW_TAG, ROW_VALUE } from "./settings-row"
 
 const MAX_KEPT = 50 // spec §8 remember rules
 
@@ -36,19 +38,20 @@ function useLoaded() {
   return { list, failed }
 }
 
-// The Memory row in the answers card (board "Memory")
+// The Memory row in the Guide card
 export function MemoryRow({ open }: { open: boolean }) {
   const { list } = useLoaded()
   return (
-    <div className="flex min-h-14 items-center gap-3 border-t border-fg-on-action/15 py-3 max-narrow:py-1">
-      <span className="flex flex-1 flex-col leading-snug">
-        <span className={cn("text-small font-medium", open ? "text-link-on-inverse" : "text-fg-on-inverse-muted")}>
-          Memory{open && <span className="max-narrow:hidden"> · open</span>}
-        </span>
-        {list && <span>{list.length} {list.length === 1 ? "thing" : "things"} the guide remembers</span>}
+    <div className={cn(ROW, open && ROW_ON)}>
+      <span className={ROW_LABEL}>Memory</span>
+      <span className={ROW_VALUE}>
+        <span className={ROW_PHONE_LABEL}>Memory</span>
+        {list ? `${list.length} ${list.length === 1 ? "thing" : "things"} the guide remembers` : "\u00a0"}
       </span>
-      <Link href="/settings?edit=memory" className={cn("flex min-h-11 items-center text-small font-medium text-link-on-inverse no-underline hover:text-fg-on-action", open && "narrow:hidden")}>
-        Manage<span className="sr-only"> memory</span>
+      {open && <span className={ROW_TAG}>Open</span>}
+      <Link href="/settings?edit=memory" className={cn(ROW_GO, open && "narrow:hidden")}>
+        <ChevronRight aria-hidden className="size-5" />
+        <span className="sr-only">Manage memory</span>
       </Link>
     </div>
   )

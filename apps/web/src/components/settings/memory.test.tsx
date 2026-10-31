@@ -95,7 +95,7 @@ describe('MemoryRow', () => {
   it('shows the count and a Manage link to the editor', async () => {
     render(<MemoryRow open={false} />)
     expect(await screen.findByText('3 things the guide remembers')).toBeInTheDocument()
-    expect(screen.getByText('Memory')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Manage/ })).toHaveAttribute('href', '/settings?edit=memory')
+    expect(screen.getAllByText('Memory')).toHaveLength(2) // desktop label column + phone label line
+    expect(screen.getByRole('link', { name: 'Manage memory' })).toHaveAttribute('href', '/settings?edit=memory')
   })
 })

@@ -55,7 +55,7 @@ describe('PlanForm', () => {
   it('the answers card has a Memory row; ?edit=memory opens the memory editor instead of an answer', async () => {
     view()
     expect(await screen.findByText('1 thing the guide remembers')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Manage/ })).toHaveAttribute('href', '/settings?edit=memory')
+    expect(screen.getByRole('link', { name: 'Manage memory' })).toHaveAttribute('href', '/settings?edit=memory')
     cleanup()
     search = new URLSearchParams('edit=memory')
     view()
@@ -65,6 +65,7 @@ describe('PlanForm', () => {
   })
 
   it('lists the five answers with a Change button each; no select remains', () => {
+    search = new URLSearchParams('edit=visaType')
     view()
     const items = within(screen.getByRole('list', { name: 'Your answers' })).getAllByRole('listitem')
     expect(items).toHaveLength(5)
@@ -76,30 +77,26 @@ describe('PlanForm', () => {
     expect(items[3]).toHaveTextContent('Another job or profession')
     expect(items[4]).toHaveTextContent('Arrival date')
     expect(items[4]).toHaveTextContent('Wed 21 Oct 2026')
-    // the edited row says "· changing" and drops its Change button on desktop (CSS keeps it for the phone list)
+    // the edited row says "Changing" and drops its Change button on desktop (CSS keeps it for the phone list)
     expect(within(items[0]).getByRole('button', { name: /^Change/ })).toHaveClass('narrow:hidden')
     expect(within(items[1]).getByRole('button', { name: /^Change/ })).not.toHaveClass('narrow:hidden')
-    expect(items[0]).toHaveTextContent('Visa · changing')
+    expect(items[0]).toHaveTextContent('Changing')
+    expect(items[1]).not.toHaveTextContent('Changing')
     expect(document.querySelector('select')).toBeNull()
   })
 
-  it('subline: full on desktop, shortened on phones', () => {
+  it('no edit param: a calm card, no editor and no row marked Changing', () => {
     view()
-    expect(screen.getByText(/Your answers build your roadmap\./).closest('p')).toHaveTextContent(
-      "Your answers build your roadmap. Change one and it's rebuilt; done tasks stay done.",
-    )
+    expect(screen.getByRole('heading', { level: 2, name: 'Pick an answer to change it' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Open roadmap' })).toHaveAttribute('href', '/app/roadmap')
+    expect(screen.queryAllByRole('radio')).toHaveLength(0)
+    expect(screen.queryByText('Changing')).toBeNull()
   })
 
-  it('no edit param: the editor shows Visa', () => {
-    view()
-    expect(screen.getByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
-    expect(screen.getAllByRole('radio').length).toBeGreaterThan(1)
-  })
-
-  it('?edit=nonsense falls back to Visa (Review Focus 5)', () => {
+  it('?edit=nonsense shows the calm card, like no param (Review Focus 5)', () => {
     search = new URLSearchParams('edit=nonsense')
     view()
-    expect(screen.getByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: 'Pick an answer to change it' })).toBeInTheDocument()
   })
 
   it('?edit=city: label, question, rebuild line, 4 options, Cancel and Save and rebuild', () => {
@@ -112,7 +109,7 @@ describe('PlanForm', () => {
     expect(within(editor).getByLabelText('Auckland')).toBeChecked()
     expect(within(editor).getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
     expect(saveBtn()).toBeDisabled()
-    expect(screen.getByRole('list', { name: 'Your answers' }).children[1]).toHaveTextContent('City · changing')
+    expect(screen.getByRole('list', { name: 'Your answers' }).children[1]).toHaveTextContent('Changing')
   })
 
   it('?edit=arrivalDate shows the calendar', () => {
@@ -152,7 +149,7 @@ describe('PlanForm', () => {
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/settings'))
   })
 
-  it('Cancel restores the saved value; on a phone it goes back to /settings', () => {
+  it('Cancel restores the saved value and closes the editor', () => {
     search = new URLSearchParams('edit=city')
     view()
     fireEvent.click(screen.getByLabelText('Wellington region'))
@@ -160,9 +157,6 @@ describe('PlanForm', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(screen.getByLabelText('Auckland')).toBeChecked()
     expect(saveBtn()).toBeDisabled()
-    expect(replace).not.toHaveBeenCalled()
-    phone = true
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(replace).toHaveBeenCalledWith('/settings') // replace, so Back does not return to the editor
     expect(push).not.toHaveBeenCalled()
   })
@@ -337,8 +331,10 @@ describe('SettingsScreen', () => {
   })
 
   it('loads the profile into the answers list and editor', async () => {
+    search = new URLSearchParams('edit=visaType')
     render(<SettingsScreen user={user} />)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Your details')
+    expect(screen.getByText('Your answers build your roadmap.')).toBeInTheDocument()
     expect(await screen.findByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
     expect(getOnboardingProfile).toHaveBeenCalledWith('tok')
     expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()
@@ -362,7 +358,7 @@ describe('SettingsScreen', () => {
     getOnboardingProfile.mockRejectedValueOnce(new Error('down'))
     render(<SettingsScreen user={user} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Try again' }))
-    expect(await screen.findByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 2, name: 'Pick an answer to change it' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
   })
 })

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,11 +40,12 @@ export function DeleteAccount() {
 
   return (
     <AlertDialog onOpenChange={open => !open && setError(null)}>
-      <AlertDialogTrigger
-        render={<Button type="button" variant="danger-ghost" className="-mx-3 min-h-11 px-3 text-danger-on-inverse state-inverse hover:text-fg-on-action max-narrow:mx-0 max-narrow:basis-full max-narrow:justify-start max-narrow:rounded-none max-narrow:border-0 max-narrow:border-t max-narrow:border-border-subtle max-narrow:px-0 max-narrow:text-danger max-narrow:state max-narrow:hover:text-danger" />}
-      >
-        Delete account<span className="hidden max-narrow:inline">…</span>
-      </AlertDialogTrigger>
+      <Card variant="plain" aria-label="Delete account" className="flex-row items-center gap-4 max-narrow:flex-col max-narrow:items-stretch max-narrow:gap-3">
+        <p className="m-0 flex-1 text-ui text-fg-muted">{WHAT_GOES}</p>
+        <AlertDialogTrigger render={<Button type="button" variant="secondary" className="min-h-10 text-danger hover:text-danger max-narrow:min-h-12" />}>
+          Delete account…
+        </AlertDialogTrigger>
+      </Card>
       <AlertDialogContent initialFocus={keep}>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete your account?</AlertDialogTitle>

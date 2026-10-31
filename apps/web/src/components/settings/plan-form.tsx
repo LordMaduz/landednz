@@ -1,11 +1,13 @@
 "use client"
 
 import { useId, useRef, useState, type ReactNode } from "react"
+import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { ArrowRight, Check, ChevronRight } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Card } from "@/components/ui/card"
+import { Card, CardHead } from "@/components/ui/card"
 import { OptionRow } from "@/components/ui/option-row"
 import { updateOnboardingProfile, type GetProfileResponse } from "@/lib/api"
 import { answerLabel, QUESTIONS, type Answers } from "@/lib/answers"
@@ -13,6 +15,7 @@ import { nzCalendarDate, weekdayDay } from "@/lib/nz-date"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { MemoryRow, MemorySection } from "./memory-section"
+import { ROW, ROW_GO, ROW_LABEL, ROW_ON, ROW_PHONE_LABEL, ROW_TAG, ROW_VALUE } from "./settings-row"
 
 type Key = keyof Answers
 // label: the answers list; ask: the editor's h2; noun: "Your roadmap is rebuilt for the new {noun}."
@@ -25,14 +28,13 @@ const COPY: Record<Key, { label: string; ask: string; noun: string }> = {
 }
 const KEYS = Object.keys(COPY) as Key[]
 
-// The navy answers card; the account block joins it on desktop (children), stacks apart on phones
-export function AnswersCard({ children, joined }: { children: ReactNode; joined?: boolean }) {
+// The "Your plan" card: header, then edge-to-edge rows
+export function PlanCard({ children }: { children: ReactNode }) {
   return (
-    <Card className={cn("flex-1 gap-0 border-fg bg-surface-inverse p-8 text-fg-on-action max-narrow:p-4 max-narrow:pb-1", joined && "rounded-b-none max-narrow:rounded-b-card")}>
-      <h1 className="text-title">Your details</h1>
-      <p className="mt-1 text-fg-on-inverse">
-        Your answers build your roadmap.<span className="max-narrow:hidden"> Change one and it&apos;s rebuilt; done tasks stay done.</span>
-      </p>
+    <Card aria-labelledby="plan" className="gap-0 overflow-hidden p-0">
+      <div className="px-5 pt-5 pb-3 max-narrow:px-4 max-narrow:pt-4 max-narrow:pb-2">
+        <CardHead title="Your plan" titleId="plan" aside={<span className="text-small text-fg-muted">Builds your roadmap</span>} />
+      </div>
       {children}
     </Card>
   )
@@ -44,8 +46,10 @@ const isPhone = () => typeof window.matchMedia === "function" && window.matchMed
 export function PlanForm({ profile, account }: { profile: GetProfileResponse; account: ReactNode }) {
   const router = useRouter()
   const param = useSearchParams().get("edit")
-  const editing: Key = KEYS.find(k => k === param) ?? "visaType"
+  const picked = KEYS.find(k => k === param) // no answer picked: desktop shows the calm card, not an editor
+  const editing: Key = picked ?? "visaType"
   const memoryOpen = param === "memory"
+  const open = picked !== undefined || memoryOpen
   const [saved, setSaved] = useState<Answers>({
     visaType: profile.visaType,
     city: profile.city,
@@ -78,6 +82,7 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
   const editQuestion = editing === "arrivalDate" ? null : QUESTIONS.find(q => q.key === editing)!
   // The phone editor is its own page (?edit=); desktop keeps the list beside it
   const leave = () => isPhone() && router.replace("/settings")
+  const close = () => router.replace("/settings") // replace, so Back does not return to the editor
 
   async function persist(next: Answers): Promise<boolean> {
     setError(null)
@@ -121,42 +126,58 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
     setError(null)
     setDateError(null)
     setSession(n => n + 1)
-    leave()
+    close()
   }
 
   return (
     <>
-      <div className={cn("flex flex-col max-narrow:gap-3", param && "max-narrow:hidden")}>
-        <AnswersCard joined>
-          <ol aria-label="Your answers" className="m-0 mt-5 list-none p-0 max-narrow:mt-3">
-            {KEYS.map(k => (
-              <li key={k} className="flex min-h-14 items-center gap-3 border-t border-fg-on-action/15 py-3 max-narrow:py-1">
-                <span className="flex flex-1 flex-col leading-snug">
-                  <span className={cn("text-small font-medium", k !== editing || memoryOpen ? "text-fg-on-inverse-muted" : param ? "text-link-on-inverse" : "text-link-on-inverse max-narrow:text-fg-on-inverse-muted")}>
-                    {COPY[k].label}{k === editing && !memoryOpen && <span className="max-narrow:hidden"> · changing</span>}
+      <div className={cn("flex flex-col gap-4 max-narrow:gap-3", open && "max-narrow:hidden")}>
+        <PlanCard>
+          <ol aria-label="Your answers" className="m-0 list-none p-0">
+            {KEYS.map(k => {
+              const on = k === picked
+              return (
+                <li key={k} className={cn(ROW, on && ROW_ON)}>
+                  <span className={ROW_LABEL}>{COPY[k].label}</span>
+                  <span className={ROW_VALUE}>
+                    <span className={ROW_PHONE_LABEL}>{COPY[k].label}</span>
+                    {display(k, saved[k])}
                   </span>
-                  <span>{display(k, saved[k])}</span>
-                </span>
-                <Button
-                  type="button"
-                  variant="text"
-                  onClick={() => router.push(`/settings?edit=${k}`)}
-                  className={cn("min-h-11 text-small text-link-on-inverse hover:text-fg-on-action", k === editing && !memoryOpen && "narrow:hidden")}
-                >
-                  Change{" "}<span className="sr-only">{COPY[k].label}</span>
-                </Button>
-              </li>
-            ))}
+                  {on && <span className={ROW_TAG}>Changing</span>}
+                  <Button type="button" variant="text" onClick={() => router.push(`/settings?edit=${k}`)} className={cn(ROW_GO, on && "narrow:hidden")}>
+                    <ChevronRight aria-hidden className="size-5" />
+                    <span className="sr-only">Change {COPY[k].label}</span>
+                  </Button>
+                </li>
+              )
+            })}
           </ol>
+        </PlanCard>
+        <Card aria-labelledby="guide-settings" className="gap-0 overflow-hidden p-0">
+          <div className="px-5 pt-5 pb-3 max-narrow:px-4 max-narrow:pt-4 max-narrow:pb-2">
+            <CardHead title="Guide" titleId="guide-settings" />
+          </div>
           <MemoryRow open={memoryOpen} />
-        </AnswersCard>
+        </Card>
         {account}
       </div>
 
       {memoryOpen ? (
         <MemorySection />
+      ) : !picked ? (
+        <Card variant="plain" aria-labelledby="calm" className="gap-0 bg-surface-sunken px-8 py-8 max-narrow:hidden">
+          <h2 id="calm" className="text-featured">Pick an answer to change it</h2>
+          <p className="mt-1 max-w-lede text-fg-muted">Your roadmap is rebuilt around the new answer straight away.</p>
+          <ul className="mt-5 flex list-none flex-col gap-2 p-0 text-ui text-fg-muted">
+            <li className="flex items-center gap-3"><Check aria-hidden className="size-4 text-fg-accent" />Tasks you&apos;ve done stay done</li>
+            <li className="flex items-center gap-3"><Check aria-hidden className="size-4 text-fg-accent" />You can undo a change right after saving</li>
+          </ul>
+          <Link href="/app/roadmap" className="mt-5 inline-flex min-h-6 items-center gap-1 self-start text-ui font-medium">
+            Open roadmap<ArrowRight aria-hidden className="size-4" />
+          </Link>
+        </Card>
       ) : (
-        <Card aria-labelledby={titleId} className={cn("gap-5 p-10 px-16 max-split:px-8 max-narrow:p-4", !param && "max-narrow:hidden")}>
+        <Card aria-labelledby={titleId} className="gap-5 p-8 max-narrow:p-4">
           <form onSubmit={save} noValidate className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <span className="text-small text-fg-muted">{copy.label}</span>
@@ -164,7 +185,7 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
               <p className="m-0 text-fg-muted">Your roadmap is rebuilt for the new {copy.noun}. Tasks you&apos;ve done stay done.</p>
             </div>
             {editQuestion ? (
-              <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-3">
+              <div role="radiogroup" aria-labelledby={titleId} className="flex max-w-lede flex-col gap-2">
                 {editQuestion.options.map(([value, label]) => (
                   <OptionRow
                     key={`${editing}-${value}`}
@@ -172,7 +193,6 @@ export function PlanForm({ profile, account }: { profile: GetProfileResponse; ac
                     value={value}
                     label={label}
                     checked={draft === value}
-                    className="min-h-15"
                     onChange={() => setDraft(value)}
                   />
                 ))}
