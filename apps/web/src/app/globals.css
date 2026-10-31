@@ -183,10 +183,10 @@
   --container-guide-task: 720px;
   --container-guide-home: 900px;
   --grid-template-columns-focus: 280px minmax(0, 1fr);
-  /* Pane and focused view height: the window between the fixed 64 px header and 64 px footer; each adds 24 px top and bottom inside */
-  --spacing-guide-pane: calc(100dvh - 8rem);
-  /* Keyboard focus never hides under the floating ask bar: its 52 px height + its 92 px offset from the window bottom (SC 2.4.11) */
-  --spacing-ask-bar-clear: 9rem;
+  /* Focused view height: the window under the 56 px header; it adds 24 px top and bottom inside */
+  --spacing-guide-pane: calc(100dvh - 3.5rem);
+  /* Keyboard focus never hides under the floating ask bar: its 52 px height + its 28 px offset from the window bottom (SC 2.4.11) */
+  --spacing-ask-bar-clear: 5rem;
 }
 
 @theme inline {

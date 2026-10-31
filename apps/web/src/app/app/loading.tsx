@@ -1,4 +1,4 @@
-import { PublicFooter } from "@/components/chrome/public-footer"
+import { TabBarSpace } from "@/components/chrome/app-header"
 import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -23,7 +23,7 @@ export default function Loading() {
           </Card>
         </div>
       </main>
-      <PublicFooter app />
+      <TabBarSpace />
     </div>
   )
 }

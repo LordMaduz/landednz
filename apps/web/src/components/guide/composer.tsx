@@ -131,6 +131,7 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
           </div>
         </div>
       </div>
+      <p className="px-1 text-center text-small text-fg-muted">General information, not legal or tax advice.</p>
     </div>
   );
 }

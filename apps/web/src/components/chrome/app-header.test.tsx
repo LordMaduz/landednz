@@ -31,9 +31,9 @@ describe('AppHeader', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Account, Priya Sharma' }))
     const menu = await screen.findByRole('menu')
     expect(within(menu).getByText('priya@example.com')).toBeInTheDocument()
-    expect(within(menu).getAllByRole('menuitem').map(i => i.textContent)).toEqual(['Your details', 'Memory', 'Sign out'])
+    expect(within(menu).getAllByRole('menuitem').map(i => i.textContent)).toEqual(['Your details', 'Memory', 'Privacy', 'Terms', 'Sign out'])
     expect(within(menu).getByRole('menuitem', { name: 'Memory' })).toHaveAttribute('href', '/settings?edit=memory')
-    expect(within(menu).getAllByRole('separator')).toHaveLength(2)
+    expect(within(menu).getAllByRole('separator')).toHaveLength(3)
   })
 
   it('an email-only account shows its email once', async () => {

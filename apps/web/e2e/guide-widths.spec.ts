@@ -87,8 +87,7 @@ async function check(page: Page, path: string, c: Case) {
   if (!task) {
     await expect.soft(page.getByRole('button', { name: BACK[path] }), `${label}: full view`).toBeVisible()
     const composer = (await page.locator('#guide-composer').boundingBox())!
-    const footer = (await page.locator('footer').boundingBox())!
-    expect.soft(composer.y + composer.height <= footer.y, `${label}: composer above the footer`).toBe(true)
+    expect.soft(composer.y + composer.height <= page.viewportSize()!.height, `${label}: composer on screen`).toBe(true)
     return
   }
 

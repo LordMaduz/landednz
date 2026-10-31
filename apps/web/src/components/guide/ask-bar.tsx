@@ -45,10 +45,10 @@ export function AskBar({
   onOpen: () => void
   ref?: Ref<HTMLButtonElement | HTMLTextAreaElement>
 }) {
-  // sticky, not fixed: it floats at the window bottom while scrolling, then rests right under the page content. From 1024 px it clears the fixed 65 px footer (92 = 65 + 27).
+  // sticky, not fixed: it floats at the window bottom while scrolling, then rests right under the page content.
   // While hidden the wrapper keeps its height so the phone footer doesn't jump; beside the open pane it goes, so the pane fits; clicks pass through its empty sides
   return (
-    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-8 flex h-13 justify-center pane:bottom-23 max-narrow:bottom-17 max-narrow:h-12 max-narrow:px-3", wide && "h-auto min-h-13 items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
+    <div className={cn("pointer-events-none sticky bottom-7 z-30 mb-8 flex h-13 justify-center max-narrow:bottom-17 max-narrow:h-12 max-narrow:px-3", wide && "h-auto min-h-13 items-end", page.kind === "task" && "max-narrow:hidden", open && "pane:hidden")}>
       {wide ? (
         <AskBox page={page} unseen={unseen} onOpen={onOpen} ref={ref as Ref<HTMLTextAreaElement>} />
       ) : (

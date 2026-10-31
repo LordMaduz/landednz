@@ -43,7 +43,7 @@ export function FocusedView({
     )
 
   return (
-    <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="container-page container-app sticky top-16 grid h-guide-pane grid-cols-focus self-start bg-surface py-6">
+    <aside id="guide-pane" aria-label="Guide" onKeyDown={onKeyDown} className="container-page container-app sticky top-14 grid h-guide-pane grid-cols-focus self-start bg-surface py-6">
       <div className="flex min-h-0 flex-col gap-5 border-r border-border-subtle bg-surface-sunken px-4 py-5">
         {/* Home and Roadmap have no side pane to go back to: Back closes the guide */}
         <Button variant="secondary" size="sm" className="self-start" onClick={onTask ? toggleExpanded : close}>

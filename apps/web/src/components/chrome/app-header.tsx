@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Menu } from "@base-ui/react/menu"
-import { Bookmark, IdCard, Power, X } from "lucide-react"
+import { Bookmark, FileText, IdCard, Power, Shield, X } from "lucide-react"
 import { GuideMark } from "@/components/guide/ask-bar"
 import { useFullView } from "@/components/guide/guide-shell"
 import { useGuideStore } from "@/lib/stores/guideStore"
@@ -28,7 +28,7 @@ const menuItem =
   "flex min-h-10 w-full cursor-pointer items-center gap-2 rounded-control px-3 text-ui text-fg no-underline hover:no-underline data-highlighted:bg-surface-sunken [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-fg-muted"
 
 // Google's photo when there is one; initials when not, or when it fails to load
-function Avatar({ user, className }: { user: HeaderUser; className: string }) {
+export function Avatar({ user, className }: { user: HeaderUser; className: string }) {
   const [failed, setFailed] = useState(false)
   return (
     <span aria-hidden="true" className={cn("flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-avatar font-semibold text-fg-accent", className)}>
@@ -60,7 +60,7 @@ export function AppHeader({
     <>
     {/* from 1024 px the header stays on screen while the page scrolls */}
     <header className="border-b border-border-subtle bg-surface pane:sticky pane:top-0 pane:z-40 pane:shadow-frame-top">
-      <div className="container-page container-app flex h-16 items-center gap-8 max-compact:gap-2 max-narrow:h-14">
+      <div className="container-page container-app flex h-14 items-center gap-8 max-compact:gap-2">
         {back && (
           <Link href={back.href} className="hidden min-h-11 items-center gap-1 font-medium text-fg no-underline hover:no-underline max-narrow:flex">
             <span aria-hidden="true">‹</span> {back.label}
@@ -130,6 +130,17 @@ export function AppHeader({
                     </Menu.Item>
                   </Menu.Group>
                   <Menu.Separator className="-mx-2 my-1 h-px bg-border-subtle" />
+                  <Menu.Group>
+                    <Menu.Item render={<Link href="/privacy" />} onClick={close} className={menuItem}>
+                      <Shield aria-hidden />
+                      Privacy
+                    </Menu.Item>
+                    <Menu.Item render={<Link href="/terms" />} onClick={close} className={menuItem}>
+                      <FileText aria-hidden />
+                      Terms
+                    </Menu.Item>
+                  </Menu.Group>
+                  <Menu.Separator className="-mx-2 my-1 h-px bg-border-subtle" />
                   <Menu.Item
                     onClick={signOutAndLeave}
                     className={cn(menuItem, "justify-between text-danger data-highlighted:bg-danger/5 [&_svg]:text-danger")}
@@ -164,4 +175,9 @@ export function AppHeader({
       </nav>
     </>
   )
+}
+
+// Signed-in pages end with this: on phones the content clears the fixed tab bar
+export function TabBarSpace() {
+  return <div aria-hidden className="mt-auto hidden h-tab-bar shrink-0 max-narrow:block" />
 }

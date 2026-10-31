@@ -5,8 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import Loading from "@/app/app/loading"
 import { ApiDown } from "@/components/chrome/api-down"
-import { AppHeader, type HeaderUser } from "@/components/chrome/app-header"
-import { PublicFooter } from "@/components/chrome/public-footer"
+import { AppHeader, TabBarSpace, type HeaderUser } from "@/components/chrome/app-header"
 import { GuideShell } from "@/components/guide/guide-shell"
 import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
@@ -264,9 +263,7 @@ export function RoadmapScreen({ user }: { user: HeaderUser }) {
               {selectedTaskId ? <TaskSheet taskId={selectedTaskId} route={state.view} onChanged={refetch} /> : <RoadmapView {...state} />}
             </GuideShell>
           )}
-          <div className={cn("mt-auto", selectedTaskId && "max-narrow:hidden")}>
-            <PublicFooter app />
-          </div>
+          <TabBarSpace />
         </>
       )}
     </div>

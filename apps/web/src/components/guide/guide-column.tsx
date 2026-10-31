@@ -14,14 +14,14 @@ export function GuideColumn({ strip, children }: { strip: ReactNode; children: R
   const ref = useRef<HTMLElement>(null)
   const chat = open && wide && !expanded
 
-  // Board: 24 px under the header and 24 px above the footer. At rest the column starts lower (under the
+  // Board: 24 px under the header and 24 px above the window bottom. At rest the column starts lower (under the
   // breadcrumb), so the height follows its top until it sticks
   useLayoutEffect(() => {
     const el = ref.current
     if (!chat || !el) return
     const fit = () => {
       const gap = parseFloat(getComputedStyle(el).top) || 0
-      el.style.height = `${window.innerHeight - gap - Math.max(el.getBoundingClientRect().top, gap)}px`
+      el.style.height = `${window.innerHeight - 24 - Math.max(el.getBoundingClientRect().top, gap)}px`
     }
     fit()
     window.addEventListener("scroll", fit, { passive: true })
@@ -48,7 +48,7 @@ export function GuideColumn({ strip, children }: { strip: ReactNode; children: R
           id="guide-pane"
           aria-label="Guide"
           onKeyDown={onKeyDown}
-          className="sticky top-22 flex min-h-0 flex-col overflow-hidden rounded-floating bg-surface shadow-overlay motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200"
+          className="sticky top-20 flex min-h-0 flex-col overflow-hidden rounded-floating bg-surface shadow-overlay motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200"
         >
           <GuidePane titles={titles} strip={strip} onBack={close} />
         </aside>
