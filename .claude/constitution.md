@@ -80,11 +80,14 @@ Cannot be expressed in Prisma schema syntax. Always raw SQL in migration file.
 
 ## WEB-SPECIFIC CONSTRAINTS
 
-**[CW01] Design Tokens via Tailwind Only**
+**[CW01] Design Roles Only**
 No raw hex values, px values, or arbitrary Tailwind classes in `apps/web/` component files.
-All colours, font sizes, spacing, and shadows MUST use Tailwind config token classes
-(e.g., `bg-primary`, `text-h2`, `shadow-card`, `rounded-card`).
-Exception: `tailwind.config.ts` itself defines the raw token values.
+Raw values live once in the `globals.css` palette block; components and pages use role tokens only
+(colour roles such as `bg-surface`, `text-fg-muted`; type roles `text-title`; radius `rounded-card`; elevation `shadow-raised`;
+spacing on the 4 px grid or a spacing role; hover/pressed via the `state` layer). Every control is a kit component from `components/ui`.
+`cw01.test.ts` guards it: hex/arbitrary values, old token names, palette and Tailwind default colours, off-grid spacing,
+non-role radius/shadow, hand-written `<button>` outside `components/ui`, and raw colours in `globals.css` outside the palette.
+Exceptions: Google's `.gsi` sign-in button, `opengraph-image.tsx`, `favicon.ico`.
 VIOLATION: `className="bg-[#1B6B6D]"` or `style={{ color: '#1B6B6D' }}` anywhere in `apps/web/src/`.
 
 **[CW02′] UI Matches Its Approved Artifact**
