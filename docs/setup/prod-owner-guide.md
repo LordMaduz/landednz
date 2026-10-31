@@ -316,7 +316,10 @@ Do this by **6:30** Monday at the latest, so there is an hour before the post go
 
    | Type | Name | Content |
    | --- | --- | --- |
-   | *(the agent fills these in from the 11a step 2 output)* | | |
+   | CNAME | `@` | `153a46d5a5673a44.vercel-dns-017.com` |
+   | CNAME | `www` | `153a46d5a5673a44.vercel-dns-017.com` |
+   | CNAME | `api` | `ztko1sek.up.railway.app` |
+   | TXT | `_railway-verify.api` | `railway-verify=bb1ae8dd4809d536748591e26a42b50702eec2b0a725ef0c6278db32243c1578` |
 
 2. Don't touch the existing MX and TXT rows (email forwarding, section 9).
 3. Tell the agent "DNS added". It checks HTTPS on `landednz.co.nz`, `www` and `api`, signs in with Google, asks the Guide one question, and records the result in `deploy-runbook.md`.
