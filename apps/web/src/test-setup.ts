@@ -7,5 +7,5 @@ afterEach(cleanup)
 
 // sonner removes a closed toast on an uncancelled 200ms timer; let it fire while jsdom still exists
 afterEach(async () => {
-  if (document.querySelector('[data-sonner-toast]')) await new Promise(r => setTimeout(r, 300))
+  if (typeof document !== 'undefined' && document.querySelector('[data-sonner-toast]')) await new Promise(r => setTimeout(r, 300))
 })
