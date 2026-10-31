@@ -11,7 +11,7 @@ import { SignIn } from "./sign-in-form";
 // Google's sign-in button must be Roboto 500; self-hosted because next/font/google flakes in CI (next.js issue 99114)
 const roboto = localFont({ src: "./fonts/roboto-500-latin.woff2", weight: "500", variable: "--font-roboto" });
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = { title: "Sign in", robots: { index: false, follow: true } };
 
 async function Body() {
   await connection(); // decodeAnswers reads the clock
