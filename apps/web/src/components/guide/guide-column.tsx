@@ -48,7 +48,7 @@ export function GuideColumn({ strip, children }: { strip: ReactNode; children: R
           id="guide-pane"
           aria-label="Guide"
           onKeyDown={onKeyDown}
-          className="sticky top-22 flex min-h-0 flex-col overflow-hidden rounded-pane bg-white shadow-pane motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200"
+          className="sticky top-22 flex min-h-0 flex-col overflow-hidden rounded-floating bg-surface shadow-overlay motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200"
         >
           <GuidePane titles={titles} strip={strip} onBack={close} />
         </aside>

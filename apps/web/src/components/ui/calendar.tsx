@@ -81,13 +81,13 @@ export function Calendar({ value, onChange, today, labelledBy }: { value: string
         </div>
       </div>
       {value && (
-        <div className="flex items-center justify-between gap-3 rounded-card border border-avatar bg-surface-sunken px-4 py-3.5">
+        <div className="flex items-center justify-between gap-3 rounded-card border border-avatar bg-surface-sunken px-4 py-4">
           <span>
             <span className="text-small text-fg-muted">You land on</span>
             <br />
             <b className="font-semibold">{fullDay(value)}</b>
           </span>
-          <span className="inline-flex h-6.5 items-center rounded-full border border-avatar bg-surface px-2.5 text-small font-semibold text-fg-accent">{landChip(value, today)}</span>
+          <span className="inline-flex h-6.5 items-center rounded-full border border-avatar bg-surface px-3 text-small font-semibold text-fg-accent">{landChip(value, today)}</span>
         </div>
       )}
     </div>

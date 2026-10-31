@@ -42,9 +42,9 @@ type Tasks = OnboardingPreviewResponse["tasks"]
 type Task = Tasks[number]
 
 const NEXT_SHOWN = 3
-const ROW = "grid grid-cols-itin items-baseline gap-3 border-t border-hairline py-2.5"
+const ROW = "grid grid-cols-itin items-baseline gap-3 border-t border-border-subtle py-3"
 const ShowBtn = ({ open, label, name, controls, onClick }: { open: boolean; label: string; name: string; controls: string; onClick(): void }) => (
-  <Button variant="ghost" size="sm" className="-mr-3 font-semibold text-teal-text" aria-expanded={open} aria-controls={controls} aria-label={`${open ? "Hide" : "Show"} ${name}`} onClick={onClick}>
+  <Button variant="ghost" size="sm" className="-mr-3 font-semibold text-fg-accent" aria-expanded={open} aria-controls={controls} aria-label={`${open ? "Hide" : "Show"} ${name}`} onClick={onClick}>
     {open ? "Hide" : "Show"}{label && ` ${label}`}
   </Button>
 )
@@ -52,9 +52,9 @@ const ShowBtn = ({ open, label, name, controls, onClick }: { open: boolean; labe
 function TaskRows({ tasks }: { tasks: Task[] }) {
   return tasks.map(t => (
     <li key={t.taskId} className={ROW}>
-      <span aria-hidden="true" className="size-2.5 justify-self-center rounded-full border-2 border-control" />
+      <span aria-hidden="true" className="size-2.5 justify-self-center rounded-full border-2 border-border-strong" />
       <span>{previewTitle(t.taskId, t.name)}</span>
-      <span className="text-small text-muted max-narrow:hidden">{PREVIEW_META[t.taskId]}</span>
+      <span className="text-small text-fg-muted max-narrow:hidden">{PREVIEW_META[t.taskId]}</span>
     </li>
   ))
 }
@@ -80,21 +80,21 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
       <ol className="m-0 list-none p-0">
         <li className="grid min-h-11 grid-cols-itin items-center gap-3">
           <Waypoint state="available" />
-          <h2 className="text-ui"><b className="font-semibold">{lead.name}</b> <span className="text-small font-normal text-muted">· {count(lead.tasks.length)}</span></h2>
+          <h2 className="text-ui"><b className="font-semibold">{lead.name}</b> <span className="text-small font-normal text-fg-muted">· {count(lead.tasks.length)}</span></h2>
         </li>
         <li className="my-1 mb-2">
-          <section className="grid grid-cols-itin gap-3 rounded-surface border border-avatar bg-wash py-4 pr-4">
+          <section className="grid grid-cols-itin gap-3 rounded-card border border-avatar bg-surface-sunken py-4 pr-4">
             <span className="mt-1 justify-self-center"><Waypoint state="current" /></span>
             <div className="flex flex-col gap-1">
-              <p className="m-0 text-small font-semibold text-teal-text">Start here{PREVIEW_META[first.taskId] && ` · ${PREVIEW_META[first.taskId].replace(/^./, c => c.toLowerCase())}`}</p>
+              <p className="m-0 text-small font-semibold text-fg-accent">Start here{PREVIEW_META[first.taskId] && ` · ${PREVIEW_META[first.taskId].replace(/^./, c => c.toLowerCase())}`}</p>
               <p className="m-0 text-featured">{previewTitle(first.taskId, first.name)}</p>
-              {hasDependants(first, tasks) && <p className="m-0 text-small text-muted">The next task waits on this one.</p>}
+              {hasDependants(first, tasks) && <p className="m-0 text-small text-fg-muted">The next task waits on this one.</p>}
             </div>
           </section>
         </li>
         <li><ul id="next-tasks" className="m-0 list-none p-0"><TaskRows tasks={shown} /></ul></li>
         {others.length > NEXT_SHOWN && (
-          <li className="grid grid-cols-itin gap-3 border-t border-hairline">
+          <li className="grid grid-cols-itin gap-3 border-t border-border-subtle">
             <span />
             <span className="-ml-3"><ShowBtn open={moreOpen} label={moreOpen ? "" : `${others.length - NEXT_SHOWN} more`} name={`${others.length - NEXT_SHOWN} more ${lead.name} tasks`} controls="next-tasks" onClick={() => setMoreOpen(o => !o)} /></span>
           </li>
@@ -103,12 +103,12 @@ function Itinerary({ tasks }: { tasks: Tasks }) {
           const topics = f.tasks.flatMap(t => TASK_COPY[t.taskId]?.topic ?? [])
           const isOpen = open.includes(f.name)
           return (
-            <li key={f.name} className="border-t border-hairline">
+            <li key={f.name} className="border-t border-border-subtle">
               <div className="grid min-h-15 grid-cols-itin items-center gap-3">
-                <span aria-hidden="true" className="size-3 justify-self-center rounded-full border-2 border-control" />
+                <span aria-hidden="true" className="size-3 justify-self-center rounded-full border-2 border-border-strong" />
                 <div className="leading-snug">
-                  <h2 className="text-ui"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-muted">· {count(f.tasks.length)}</span></h2>
-                  <p className="m-0 text-small text-muted">{topics.slice(0, 3).join(", ")}{topics.length > 3 && " and more"}</p>
+                  <h2 className="text-ui"><b className="font-semibold">{f.name}</b> <span className="text-small font-normal text-fg-muted">· {count(f.tasks.length)}</span></h2>
+                  <p className="m-0 text-small text-fg-muted">{topics.slice(0, 3).join(", ")}{topics.length > 3 && " and more"}</p>
                 </div>
                 <ShowBtn open={isOpen} label="" name={f.name} controls={`fold-${f.id}`} onClick={() => toggle(f.name)} />
               </div>
@@ -140,17 +140,17 @@ export function PreviewRoute({ answers, saveFailed }: { answers: Answers; saveFa
     <div className="flex min-h-dvh flex-col">
       <div className="grid flex-1 grid-cols-rail max-split:grid-cols-1 max-split:content-start">
         <AnswerRail title="Your answers" intro="All five answered. Change any of them and the roadmap updates." answers={answers} current={null} />
-        <main className="py-8 pr-10 pl-30 max-split:px-4 max-split:py-6">
+        <main className="py-8 pr-10 pl-rail-indent max-split:px-4 max-split:py-6">
           <div className="flex w-full max-w-preview flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-2">
               <h1 className="text-title">Your roadmap is ready</h1>
-              <p className="m-0 text-muted">
+              <p className="m-0 text-fg-muted">
                 {answersSummary(answers)}.{" "}
                 <Link href="/onboarding?step=1" className="font-medium underline">Change my answers</Link>
               </p>
             </div>
             {saveFailed && (
-              <p role="alert" className="rounded-surface border border-ink p-4">
+              <p role="alert" className="rounded-card border border-fg p-4">
                 Your roadmap wasn&apos;t saved. Your answers are kept, so try Save my roadmap again.
               </p>
             )}
@@ -159,13 +159,13 @@ export function PreviewRoute({ answers, saveFailed }: { answers: Answers; saveFa
             ) : tasks ? (
               <Itinerary tasks={tasks} />
             ) : (
-              <p className="text-muted" aria-live="polite">Building your roadmap…</p>
+              <p className="text-fg-muted" aria-live="polite">Building your roadmap…</p>
             )}
             <Card className="flex-row flex-wrap items-center justify-between gap-4 max-narrow:flex-col max-narrow:items-stretch">
               <span>
                 <b className="font-semibold">Save it to tick tasks off and ask questions.</b>
                 <br />
-                <span className="text-small text-muted">Sign in with Google or email on the next screen.</span>
+                <span className="text-small text-fg-muted">Sign in with Google or email on the next screen.</span>
               </span>
               {/* A full navigation: /auth/complete is a route handler */}
               <a href="/auth/complete?redirect=%2Fapp" className={cn(buttonVariants({ size: "lg" }), "max-narrow:w-full")}>

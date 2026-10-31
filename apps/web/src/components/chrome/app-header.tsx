@@ -16,7 +16,7 @@ const TABS = [
 const tab =
   "flex flex-col items-center justify-center gap-0.5 text-small font-medium text-fg-muted no-underline state hover:no-underline aria-[current=page]:text-fg aria-[current=page]:[&_svg]:text-accent"
 const menuItem =
-  "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-ink no-underline outline-none hover:no-underline data-highlighted:bg-hairline"
+  "flex min-h-11 w-full cursor-pointer items-center rounded-control px-4 text-fg no-underline outline-none hover:no-underline data-highlighted:bg-border-subtle"
 
 export function AppHeader({
   active,
@@ -55,14 +55,14 @@ export function AppHeader({
             >
               <span
                 aria-hidden="true"
-                className="flex size-8 items-center justify-center rounded-full bg-avatar text-small font-semibold text-teal-text"
+                className="flex size-8 items-center justify-center rounded-full bg-avatar text-small font-semibold text-fg-accent"
               >
                 {user.initials}
               </span>
             </Menu.Trigger>
             <Menu.Portal>
               <Menu.Positioner align="end" sideOffset={8} className="z-50">
-                <Menu.Popup className="min-w-48 rounded-surface border border-hairline bg-white p-1 outline-none">
+                <Menu.Popup className="min-w-48 rounded-card border border-border-subtle bg-surface p-1 outline-none">
                   <Menu.Item render={<Link href="/settings" />} className={menuItem}>
                     Settings
                   </Menu.Item>

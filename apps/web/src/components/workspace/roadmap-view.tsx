@@ -27,9 +27,9 @@ const taskHref = (taskId: string) => `/app/roadmap?task=${taskId}`
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`
 
 // Desktop: one itinerary card, rows ruled. Phone: each row is its own card (the board's stack).
-const ROW = "itin py-2.5 max-narrow:rounded-surface max-narrow:border max-narrow:border-hairline max-narrow:bg-white max-narrow:p-4 max-narrow:shadow-lift"
-const RULED = "border-t border-hairline max-narrow:border-t-0"
-const WHEN = "m-0 text-small text-muted max-narrow:hidden"
+const ROW = "itin py-3 max-narrow:rounded-card max-narrow:border max-narrow:border-border-subtle max-narrow:bg-surface max-narrow:p-4 max-narrow:shadow-raised"
+const RULED = "border-t border-border-subtle max-narrow:border-t-0"
+const WHEN = "m-0 text-small text-fg-muted max-narrow:hidden"
 const DOT = "flex items-center max-narrow:hidden"
 const BODY = "min-w-0"
 const Wide = ({ children }: { children: ReactNode }) => <span className="max-narrow:hidden">{children}</span>
@@ -55,7 +55,7 @@ function usePhone() {
 
 function Show({ open, onClick, label, hidden, className }: { open: boolean; onClick(): void; label: ReactNode; hidden: string; className?: string }) {
   return (
-    <Button variant="ghost" size="sm" className={cn("-mr-3 font-semibold text-teal-text", className)} aria-expanded={open} onClick={onClick}>
+    <Button variant="ghost" size="sm" className={cn("-mr-3 font-semibold text-fg-accent", className)} aria-expanded={open} onClick={onClick}>
       {open ? "Hide" : "Show"} {label}
       <span className="sr-only"> {hidden}</span>
     </Button>
@@ -66,9 +66,9 @@ function TaskList({ label, tasks, meta }: { label: string; tasks: RouteTask[]; m
   return (
     <ul aria-label={label} className="m-0 list-none p-0">
       {tasks.map(t => (
-        <li key={t.taskId} className="flex min-h-9 items-baseline gap-3 border-t border-hairline py-1.5 max-narrow:min-h-11 max-narrow:items-center">
-          <Link href={taskHref(t.taskId)} className="min-h-6 min-w-0 flex-1 text-ink hover:text-ink">{t.title}</Link>
-          <span className="flex-none text-small text-muted">{meta(t)}</span>
+        <li key={t.taskId} className="flex min-h-9 items-baseline gap-3 border-t border-border-subtle py-2 max-narrow:min-h-11 max-narrow:items-center">
+          <Link href={taskHref(t.taskId)} className="min-h-6 min-w-0 flex-1 text-fg hover:text-fg">{t.title}</Link>
+          <span className="flex-none text-small text-fg-muted">{meta(t)}</span>
         </li>
       ))}
     </ul>
@@ -85,13 +85,13 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
   const shown = moreOpen ? stageTasks : stageTasks.slice(0, phone ? PHONE_ROWS : DESKTOP_ROWS)
   return (
     <Card aria-label="Itinerary" className="gap-0 max-narrow:contents">
-      <ol className="m-0 flex list-none flex-col p-0 max-narrow:gap-2.5">
+      <ol className="m-0 flex list-none flex-col p-0 max-narrow:gap-3">
         {done && (
           <li className={cn(ROW, "pt-0 max-narrow:pt-4")}>
             <WhenParts when={done.when} />
             <span className={DOT}><Waypoint state="done" /></span>
-            <div className={cn(BODY, "text-muted")}>
-              <h2 className="inline text-ui font-semibold text-ink">Done so far</h2> ·{" "}
+            <div className={cn(BODY, "text-fg-muted")}>
+              <h2 className="inline text-ui font-semibold text-fg">Done so far</h2> ·{" "}
               <Wide>{done.summary}{done.topics && `: ${done.topics}`}</Wide>
               <Phone>{plural(done.count, "task")}</Phone>
             </div>
@@ -101,21 +101,21 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
         )}
 
         {today && (
-          <li className="itin -mx-4 rounded-surface border border-avatar bg-wash px-4 py-4 max-narrow:mx-0 max-narrow:gap-y-1.5">
-            <p className="m-0 text-small font-semibold text-teal-text max-narrow:hidden">
+          <li className="itin -mx-4 rounded-card border border-avatar bg-surface-sunken px-4 py-4 max-narrow:mx-0 max-narrow:gap-y-2">
+            <p className="m-0 text-small font-semibold text-fg-accent max-narrow:hidden">
               Today<br />{today.date}
-              {today.day !== null && <><br /><span className="font-normal text-muted">day {today.day}</span></>}
+              {today.day !== null && <><br /><span className="font-normal text-fg-muted">day {today.day}</span></>}
             </p>
             <span className={cn(DOT, "self-start pt-1")}><Waypoint state="current" /></span>
             <div className="itin-wide flex min-w-0 flex-col gap-1">
-              <p className="m-0 text-small font-semibold text-teal-text">
+              <p className="m-0 text-small font-semibold text-fg-accent">
                 <Wide>{today.meta}</Wide>
                 <Phone>Today · {today.meta.replace("You're here · ", "").replace(/^Up next/, "up next")}</Phone>
               </p>
               <h2 className="text-featured">{today.task.title}</h2>
-              {today.task.why && <p className="max-w-lede text-muted max-narrow:hidden">{today.task.why}</p>}
+              {today.task.why && <p className="max-w-lede text-fg-muted max-narrow:hidden">{today.task.why}</p>}
               {today.unlocks.length > 0 && (
-                <p className="text-small text-muted">
+                <p className="text-small text-fg-muted">
                   <b className="font-semibold">Unlocks {plural(today.unlocks.length, "task")}:</b>{" "}
                   <Wide>{today.unlocks.map(u => `${u.title} (${u.stage})`).join(" · ")}</Wide>
                   <Phone>{today.unlocks.map(u => u.topic).join(", ")}</Phone>
@@ -144,14 +144,14 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
               {current.when}
               {current.daysLeft !== null && <><br />{plural(current.daysLeft, "day")} left</>}
             </p>
-            <span className={cn(DOT, "self-start pt-1.5")}><Waypoint state="leg-now" /></span>
+            <span className={cn(DOT, "self-start pt-2")}><Waypoint state="leg-now" /></span>
             <div className={cn(BODY, "itin-wide")}>
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="text-section">
                   {current.name} · {plural(current.count, "task")}
-                  {current.carried.map(c => <span key={c.stage} className="text-small font-normal text-muted max-narrow:block"><span className="max-narrow:hidden">,</span> {c.count} still open from {c.stage}</span>)}
+                  {current.carried.map(c => <span key={c.stage} className="text-small font-normal text-fg-muted max-narrow:block"><span className="max-narrow:hidden">,</span> {c.count} still open from {c.stage}</span>)}
                 </h2>
-                <span className="hidden text-small text-muted max-narrow:inline">{current.when}</span>
+                <span className="hidden text-small text-fg-muted max-narrow:inline">{current.when}</span>
               </div>
               <TaskList label={`${current.name} tasks`} tasks={shown} meta={t => [current.carriedFrom[t.taskId], t.state === "blocked" ? waitsOn(t) : t.time].filter(Boolean).join(" · ")} />
               {stageTasks.length > shown.length || moreOpen ? (
@@ -165,8 +165,8 @@ function Itinerary({ it, startOpen }: { it: ItineraryData; startOpen: boolean })
           <li key={l.name} className={cn(ROW, RULED, "max-narrow:hidden")}>
             <span className={WHEN}>{l.when}</span>
             <span className={DOT}><Waypoint state="available" /></span>
-            <div className={cn(BODY, "text-muted")}>
-              <h2 className="inline text-ui font-semibold text-ink">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
+            <div className={cn(BODY, "text-fg-muted")}>
+              <h2 className="inline text-ui font-semibold text-fg">{l.name}</h2> · {plural(l.count, "task")}{l.wait}
             </div>
             <Show open={laterOpen === l.name} onClick={() => setLaterOpen(o => (o === l.name ? null : l.name))} label="" hidden={`${l.name} tasks`} />
             {laterOpen === l.name && (
@@ -198,13 +198,13 @@ export function RoadmapView({
     <div className="flex min-w-0 flex-col gap-4">
       <section aria-labelledby="rm-title" className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h1 id="rm-title" className="text-title">Your roadmap</h1>
-        <p className="text-muted max-narrow:w-full">
+        <p className="text-fg-muted max-narrow:w-full">
           <Phone>{homeSubline(view, arrivalDate, now, true)}</Phone>
           <Wide>{homeSubline(view, arrivalDate, now, false)}</Wide>
         </p>
-        {firstUse && <p className="basis-full text-muted">Done some already? Open a task and mark it done.</p>}
+        {firstUse && <p className="basis-full text-fg-muted">Done some already? Open a task and mark it done.</p>}
       </section>
-      <Card aria-label="Where you are" className="max-narrow:gap-1.5">
+      <Card aria-label="Where you are" className="max-narrow:gap-2">
         <RouteTrack route={view} arrivalDate={arrivalDate} now={now} variant="tall" />
       </Card>
       <Itinerary it={it} startOpen={startOpen} />
@@ -259,7 +259,7 @@ export function RoadmapScreen({ user }: { user: { name: string; initials: string
             <GuideShell
               page={selectedTaskId ? { kind: "task", taskKey: selectedTaskId } : { kind: "roadmap" }}
               titles={taskTitles(state.view)}
-              className={cn("container-page container-app", selectedTaskId ? "max-narrow:pb-40" : "pt-6")}
+              className={cn("container-page container-app", selectedTaskId ? "max-narrow:pb-sheet-clear" : "pt-6")}
             >
               {selectedTaskId ? <TaskSheet taskId={selectedTaskId} route={state.view} onChanged={refetch} /> : <RoadmapView {...state} />}
             </GuideShell>

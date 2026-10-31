@@ -12,8 +12,6 @@ const buttonVariants = cva(
       variant: {
         primary: "border-action bg-action text-fg-on-action state-inverse state-base-action hover:text-fg-on-action",
         secondary,
-        /** @deprecated `quiet` is `secondary`; removed with the old token names */
-        quiet: secondary,
         ghost: "border-transparent bg-transparent text-fg state hover:text-fg",
         danger: "border-danger bg-danger text-fg-on-action state-inverse state-base-danger hover:text-fg-on-action",
         "danger-ghost": "border-transparent bg-transparent text-danger state hover:text-danger",
@@ -37,7 +35,7 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonVariant = "primary" | "secondary" | "quiet" | "ghost" | "danger" | "danger-ghost" | "inverse" | "text"
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "danger-ghost" | "inverse" | "text"
 // An icon-only button has no visible text, so it must carry an accessible name
 type ButtonSize = { size?: "sm" | "default" | "lg" } | { size: "icon"; "aria-label": string }
 

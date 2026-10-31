@@ -13,11 +13,6 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Ask' })).toHaveClass('bg-surface', 'border-border', 'state')
   })
 
-  it('quiet is still secondary until the old name goes', () => {
-    render(<Button variant="quiet">Ask</Button>)
-    expect(screen.getByRole('button', { name: 'Ask' })).toHaveClass('bg-surface', 'border-border', 'state')
-  })
-
   it('danger fills with the danger colour and the inverse layer', () => {
     render(<Button variant="danger">Delete</Button>)
     expect(screen.getByRole('button', { name: 'Delete' })).toHaveClass('bg-danger', 'state-inverse')

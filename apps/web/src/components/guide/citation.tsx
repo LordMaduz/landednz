@@ -22,8 +22,8 @@ export function Citation({ source }: { source: SourcePart }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={6} className="z-50">
-          <Popover.Popup className="flex w-75 flex-col gap-1.5 rounded-surface bg-white p-3.5 shadow-pop outline-none">
-            <small className="text-small text-muted">
+          <Popover.Popup className="flex w-75 flex-col gap-2 rounded-card bg-surface p-4 shadow-floating outline-none">
+            <small className="text-small text-fg-muted">
               {domain} · checked {shortDate(source.checkedAt.slice(0, 10))}
             </small>
             <Popover.Title className="text-section">{source.title}</Popover.Title>

@@ -42,7 +42,7 @@ function GuideSheet({ titles, barRef }: { titles: Record<string, string>; barRef
     <Drawer.Root open={open} onOpenChange={o => !o && close()}>
       <Drawer.VirtualKeyboardProvider>
         <Drawer.Portal>
-          <Drawer.Backdrop className="fixed inset-0 z-50 bg-ink/20 transition-opacity duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none" />
+          <Drawer.Backdrop className="fixed inset-0 z-50 bg-surface-inverse/20 transition-opacity duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none" />
           <Drawer.Viewport className="fixed inset-0 z-50 flex items-end">
             <Drawer.Popup
               id="guide-pane"
@@ -50,8 +50,8 @@ function GuideSheet({ titles, barRef }: { titles: Record<string, string>; barRef
               initialFocus={composer}
               finalFocus={barRef}
               className={cn(
-                "guide-sheet-swipe flex w-full flex-col bg-white shadow-sheet outline-none transition-all duration-300 data-ending-style:translate-y-full data-starting-style:translate-y-full motion-reduce:transition-none",
-                full ? "guide-safe-top h-full" : "max-h-5/6 rounded-t-pane",
+                "guide-sheet-swipe flex w-full flex-col bg-surface shadow-overlay-up outline-none transition-all duration-300 data-ending-style:translate-y-full data-starting-style:translate-y-full motion-reduce:transition-none",
+                full ? "guide-safe-top h-full" : "max-h-5/6 rounded-t-floating",
               )}
             >
               {!full && <div aria-hidden className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-border" />}

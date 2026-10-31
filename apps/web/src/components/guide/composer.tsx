@@ -54,15 +54,15 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
 
   return (
     <div className="flex flex-col gap-2">
-      {note && <p className="px-1 text-small text-muted">{note}</p>}
-      <div className={cn("rounded-pane! p-px", streaming && "ai ai-streaming")}>
+      {note && <p className="px-1 text-small text-fg-muted">{note}</p>}
+      <div className={cn("rounded-floating! p-px", streaming && "ai ai-streaming")}>
         <div
           className={cn(
-            "flex flex-col gap-2.5 rounded-pane pt-3 pr-3 pb-2.5 pl-4",
-            disabled ? "bg-wash ring-1 ring-hairline" : "bg-white",
+            "flex flex-col gap-3 rounded-floating pt-3 pr-3 pb-3 pl-4",
+            disabled ? "bg-surface-sunken ring-1 ring-border-subtle" : "bg-surface",
             !disabled &&
               !streaming &&
-              "ring-1 ring-border focus-within:ring-teal focus-within:outline-4 focus-within:outline-teal/12",
+              "ring-1 ring-border focus-within:ring-accent focus-within:outline-4 focus-within:outline-accent/12",
           )}
         >
           <textarea
@@ -81,12 +81,12 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
               send();
             }}
             // 16 px below 1024 so iOS does not zoom into the field
-            className="field-sizing-content max-h-40 min-h-6 w-full resize-none bg-transparent text-body text-ink outline-none placeholder:text-muted disabled:cursor-not-allowed"
+            className="field-sizing-content max-h-40 min-h-6 w-full resize-none bg-transparent text-body text-fg outline-none placeholder:text-fg-muted disabled:cursor-not-allowed"
           />
           <div data-row className="flex min-w-0 flex-nowrap items-center gap-2">
             {label && (
-              <span className="inline-flex h-7 min-w-0 items-center gap-1.5 rounded-control bg-wash pr-1.5 pl-2.5 text-small font-medium text-ink">
-                <Route className="size-3.5 shrink-0 text-muted" aria-hidden />
+              <span className="inline-flex h-7 min-w-0 items-center gap-2 rounded-control bg-surface-sunken pr-2 pl-3 text-small font-medium text-fg">
+                <Route className="size-3.5 shrink-0 text-fg-muted" aria-hidden />
                 <span title={label} className="truncate">
                   {label}
                 </span>
@@ -97,7 +97,7 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
                     size="icon"
                     aria-label={`Remove ${label}`}
                     onClick={clearContext}
-                    className="relative size-4.5 border-0 text-fg-muted after:absolute after:-inset-3.5 hover:text-fg max-narrow:min-h-0 max-narrow:min-w-0"
+                    className="relative size-4.5 border-0 text-fg-muted after:absolute after:-inset-4 hover:text-fg max-narrow:min-h-0 max-narrow:min-w-0"
                   >
                     <X className="size-3" aria-hidden />
                   </Button>
@@ -108,7 +108,7 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
             <div className="ml-auto flex shrink-0 items-center gap-3">
               {opening && (
                 // D9: no count on the phone composer
-                <span className="shrink-0 text-small whitespace-nowrap text-muted max-narrow:hidden">
+                <span className="shrink-0 text-small whitespace-nowrap text-fg-muted max-narrow:hidden">
                   {banner?.kind === "cap" ? 0 : opening.leftToday} left today
                 </span>
               )}
@@ -119,7 +119,7 @@ export function Composer({ titles }: { titles: Record<string, string> }) {
                 disabled={!streaming && !canSend}
                 onClick={streaming ? () => void stop() : send}
                 // drawn 34 px; the ::after takes the tap area to 46
-                className="relative size-8.5 rounded-full after:absolute after:-inset-1.5 max-narrow:min-h-0 max-narrow:min-w-0 disabled:border-track disabled:bg-track disabled:text-fg-on-action"
+                className="relative size-8.5 rounded-full after:absolute after:-inset-2 max-narrow:min-h-0 max-narrow:min-w-0 disabled:border-track disabled:bg-track disabled:text-fg-on-action"
               >
                 {streaming ? (
                   <Square className="size-3 fill-current" aria-hidden />

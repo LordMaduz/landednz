@@ -31,7 +31,7 @@ export function IconButton({ label, onClick, children }: { label: string; onClic
 
 export function GuideTitle() {
   return (
-    <span className="flex items-center gap-2 text-section text-ink">
+    <span className="flex items-center gap-2 text-section text-fg">
       <GuideMark />
       Guide
     </span>
@@ -66,7 +66,7 @@ export function Conversation({ turns, focus, className }: { turns: Turn[]; focus
   return (
     <div
       ref={ref}
-      className={cn("guide-fade relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto overscroll-contain pb-9", focus && "gap-8", className)}
+      className={cn("guide-fade relative flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto overscroll-contain pb-10", focus && "gap-8", className)}
     >
       {historyLoaded === "task" && turns.length > 0 && (
         <Button type="button" variant="ghost" size="sm" onClick={() => void showAll()} className="self-center border-0 text-small text-fg-muted hover:text-fg">
@@ -99,9 +99,9 @@ export function GuidePane({ titles, sheet, strip, onBack }: { titles: Record<str
   const { turns, toggleExpanded, close } = useGuideStore()
   return (
     <>
-      <div className={cn("flex shrink-0 items-center gap-1.5 pt-3.5 pr-3.5 pb-2.5 pl-5", sheet && "pt-2 pr-2.5 pl-4.5")}>
+      <div className={cn("flex shrink-0 items-center gap-2 pt-4 pr-4 pb-3 pl-5", sheet && "pt-2 pr-3 pl-5")}>
         {onBack ? (
-          <Button type="button" variant="ghost" size="sm" onClick={onBack} className="-ml-2.5 gap-1.5 pr-2.5 pl-1.5">
+          <Button type="button" variant="ghost" size="sm" onClick={onBack} className="-ml-3 gap-2 pr-3 pl-2">
             <ChevronLeft aria-hidden className="size-3.5" strokeWidth={1.5} />
             Back to task
           </Button>
@@ -121,9 +121,9 @@ export function GuidePane({ titles, sheet, strip, onBack }: { titles: Record<str
         )}
       </div>
       {/* flat, hairline under it: never a box, so the Task page keeps two surfaces (card + chat) */}
-      {strip && <div className="mr-4 mb-2 ml-5 flex shrink-0 flex-col gap-2.5 border-b border-hairline pt-0.5 pb-3.5">{strip}</div>}
-      <Conversation turns={turns} className={sheet ? "px-4.5 pt-1" : "px-6 pt-2"} />
-      <div className={cn("shrink-0", sheet ? "guide-keyboard-pad px-2.5 pt-2" : "px-3.5 pt-2.5 pb-3.5")}>
+      {strip && <div className="mr-4 mb-2 ml-5 flex shrink-0 flex-col gap-3 border-b border-border-subtle pt-0.5 pb-4">{strip}</div>}
+      <Conversation turns={turns} className={sheet ? "px-5 pt-1" : "px-6 pt-2"} />
+      <div className={cn("shrink-0", sheet ? "guide-keyboard-pad px-3 pt-2" : "px-4 pt-3 pb-4")}>
         <Composer titles={titles} />
       </div>
     </>

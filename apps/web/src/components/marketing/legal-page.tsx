@@ -13,11 +13,11 @@ export function LegalPage({ title, updated, file }: { title: string; updated: st
   const markdown = readFileSync(join(process.cwd(), "src/content/legal", `${file}.md`), "utf8")
   return (
     <div className="flex min-h-dvh flex-col">
-      <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "quiet" })}>Sign in</Link>} />
+      <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "secondary" })}>Sign in</Link>} />
       <main className="legal">
         <div className="flex flex-col gap-2">
           <h1 className="text-title">{title}</h1>
-          <p className="text-muted">Last updated {updated}</p>
+          <p className="text-fg-muted">Last updated {updated}</p>
         </div>
         <ReactMarkdown components={components}>{markdown}</ReactMarkdown>
       </main>

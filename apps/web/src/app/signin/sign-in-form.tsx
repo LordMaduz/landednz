@@ -53,24 +53,24 @@ function SignInForm({ saving }: { saving: boolean }) {
 
   return (
     <>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <h1 className="text-title">{saving ? "Save your roadmap" : "Sign in"}</h1>
-        <p className="text-muted">Sign in to tick tasks off, pick up where you left off on any device, and ask about any task. New here? Continue with Google to create your account.</p>
+        <p className="text-fg-muted">Sign in to tick tasks off, pick up where you left off on any device, and ask about any task. New here? Continue with Google to create your account.</p>
       </div>
-      {error && <p role="alert" className="rounded-surface border border-ink p-4">{error}</p>}
+      {error && <p role="alert" className="rounded-card border border-fg p-4">{error}</p>}
       {/* Google's branding rules, not Precise tokens: see .gsi in globals.css */}
       <button type="button" className="gsi w-full" onClick={signInWithGoogle}>
         Continue with Google
       </button>
       {passwordEnabled && (
         <>
-          <div className="or-rule text-small text-muted">or use email</div>
+          <div className="or-rule text-small text-fg-muted">or use email</div>
           <form action={signInWithPassword} className="flex flex-col gap-5 max-narrow:gap-4">
-            <label className="flex flex-col gap-1.5 font-medium">
+            <label className="flex flex-col gap-2 font-medium">
               Email
               <Field name="email" type="email" autoComplete="email" spellCheck={false} required className="min-h-11 font-normal" />
             </label>
-            <label className="flex flex-col gap-1.5 font-medium">
+            <label className="flex flex-col gap-2 font-medium">
               Password
               <Field name="password" type="password" autoComplete="current-password" required className="min-h-11 font-normal" />
             </label>
@@ -80,7 +80,7 @@ function SignInForm({ saving }: { saving: boolean }) {
           </form>
         </>
       )}
-      <p className="text-center text-small text-muted">
+      <p className="text-center text-small text-fg-muted">
         <span translate="no">LandedNZ</span> gets your name and email from Google, nothing else. By continuing you agree to the{" "}
         {/* Underlined: inside muted text, colour alone does not mark a link (axe link-in-text-block) */}
         <Link href="/terms" className="underline">terms</Link> and <Link href="/privacy" className="underline">privacy policy</Link>.
@@ -99,11 +99,11 @@ function SaveChip({ answers }: { answers: Answers }) {
   }, [answers]);
 
   return (
-    <div className="flex items-center gap-3 rounded-control border border-tint-border bg-tint px-3.5 py-3">
-      <span aria-hidden="true" className="size-4 flex-none rounded-full border-4 border-teal bg-white" />
+    <div className="flex items-center gap-3 rounded-control border border-border-selected bg-surface-selected px-4 py-3">
+      <span aria-hidden="true" className="size-4 flex-none rounded-full border-4 border-accent bg-surface" />
       <div className="flex min-w-0 flex-col">
         <span className="text-small font-semibold">Saving your roadmap{count !== null && ` · ${count} tasks`}</span>
-        <span className="text-small text-muted">{answersShort(answers)}</span>
+        <span className="text-small text-fg-muted">{answersShort(answers)}</span>
       </div>
     </div>
   );
@@ -113,10 +113,10 @@ function SaveChip({ answers }: { answers: Answers }) {
 export function SignIn({ answers }: { answers: Answers | null }) {
   return (
     <main className="container-page flex flex-1 items-center justify-center py-12 max-narrow:pt-6 max-narrow:pb-8">
-      <Card as="div" className="w-full max-w-auth gap-5 p-8 max-narrow:gap-4.5 max-narrow:px-5 max-narrow:py-6">
+      <Card as="div" className="w-full max-w-auth gap-5 p-8 max-narrow:gap-5 max-narrow:px-5 max-narrow:py-6">
         {answers && (
           <>
-            <Link href="/onboarding/preview" className="-mb-1 inline-flex h-8 items-center gap-1.5 self-start font-medium text-muted no-underline hover:text-ink">
+            <Link href="/onboarding/preview" className="-mb-1 inline-flex h-8 items-center gap-2 self-start font-medium text-fg-muted no-underline hover:text-fg">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

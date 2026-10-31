@@ -4,13 +4,12 @@ import { createCn } from "cn/config"
 export const cn = createCn({
   extend: {
     theme: {
-      radius: ["control", "card", "floating", "surface", "pane", "bar"],
+      radius: ["control", "card", "floating"],
       shadow: [
         "raised", "floating", "overlay", "overlay-up", "frame-top", "frame-bottom",
         "chosen", "error", "today", "rail", "pin",
-        "lift", "pane", "bar", "pop", "sheet", "field-error", "rail-ring", "pin-halo",
       ],
-      spacing: ["page-gutter", "card-padding", "section-gap", "stack-gap"],
+      spacing: ["page-gutter", "card-padding", "section-gap", "stack-gap", "tab-bar", "rail-indent", "sheet-clear"],
     },
     classGroups: {
       "font-size": [{ text: ["hero", "title", "featured", "section", "body", "ui", "small", "reading"] }],

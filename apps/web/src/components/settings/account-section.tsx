@@ -12,11 +12,11 @@ export function AccountSection({ user, joined }: { user: { email: string; google
     <Card
       aria-label="Account"
       className={cn(
-        "flex-row flex-wrap items-center gap-x-5 gap-y-1.5 border-ink bg-ink px-8 pt-4 pb-8 text-white max-narrow:gap-x-3 max-narrow:gap-y-0 max-narrow:border-hairline max-narrow:bg-white max-narrow:px-4 max-narrow:py-0 max-narrow:text-ink",
-        joined && "rounded-t-none border-t-0 max-narrow:rounded-t-surface max-narrow:border-t",
+        "flex-row flex-wrap items-center gap-x-5 gap-y-2 border-fg bg-surface-inverse px-8 pt-4 pb-8 text-fg-on-action max-narrow:gap-x-3 max-narrow:gap-y-0 max-narrow:border-border-subtle max-narrow:bg-surface max-narrow:px-4 max-narrow:py-0 max-narrow:text-fg",
+        joined && "rounded-t-none border-t-0 max-narrow:rounded-t-card max-narrow:border-t",
       )}
     >
-      <span className={cn("basis-full break-words text-rail-text max-narrow:min-w-0 max-narrow:flex-1 max-narrow:basis-0 max-narrow:py-2 max-narrow:text-ink", joined && "border-t border-white/15 pt-4 max-narrow:border-0 max-narrow:pt-2")}>
+      <span className={cn("basis-full break-words text-fg-on-inverse max-narrow:min-w-0 max-narrow:flex-1 max-narrow:basis-0 max-narrow:py-2 max-narrow:text-fg", joined && "border-t border-fg-on-action/15 pt-4 max-narrow:border-0 max-narrow:pt-2")}>
         {user.email}<span className="max-narrow:hidden"> · signs in with {user.google ? "Google" : "email"}</span>
       </span>
       <Button

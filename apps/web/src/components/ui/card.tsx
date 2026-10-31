@@ -10,7 +10,7 @@ export function Card({
 }: { as?: "section" | "div" | "aside"; variant?: "plain" | "raised" } & ComponentProps<"div">) {
   return (
     <Tag
-      className={cn("flex min-w-0 flex-col gap-3.5 rounded-card border border-border-subtle bg-surface p-card-padding", variant === "raised" && "shadow-raised", className)}
+      className={cn("flex min-w-0 flex-col gap-4 rounded-card border border-border-subtle bg-surface p-card-padding", variant === "raised" && "shadow-raised", className)}
       {...props}
     />
   )

@@ -78,24 +78,6 @@
   /* avatar keeps its own role: its redesign runs separately (owner, 2026-10-31) */
   --color-avatar: var(--palette-teal-100);
 
-  /* Old names: aliases of the roles until every use is sorted (removed in plan Task 8) */
-  --color-ink: var(--color-fg);
-  --color-muted: var(--color-fg-muted);
-  --color-control: var(--color-fg-subtle);
-  --color-hairline: var(--color-border-subtle);
-  --color-wash: var(--color-surface-sunken);
-  --color-teal: var(--color-accent);
-  --color-teal-text: var(--color-link);
-  --color-teal-hover: var(--color-link-hover);
-  --color-ink-hover: var(--palette-ink-700);
-  --color-tint: var(--color-surface-selected);
-  --color-tint-border: var(--color-border-selected);
-  --color-mark: var(--color-accent-bright);
-  --color-white: var(--color-surface);
-  --color-toast-action: var(--color-link-on-inverse);
-  --color-rail-text: var(--color-fg-on-inverse);
-  --color-rail-label: var(--color-fg-on-inverse-muted);
-  --color-danger-on-ink: var(--color-danger-on-inverse);
 
   /* Type roles (owner-approved 2026-10-30, docs/design/type/type-board.html; sources in docs/design/type/standards.md).
      The only place type sizes live. Same sizes at every width. Components use these roles only (type-roles.test.ts).
@@ -158,19 +140,11 @@
   --spacing-card-padding: 16px;
   --spacing-section-gap: 24px;
   --spacing-stack-gap: 12px;
+  /* fixed layout offsets: the 56 px phone tab bar, the onboarding content indent (120), room under the phone sheet (160) */
+  --spacing-tab-bar: 56px;
+  --spacing-rail-indent: 120px;
+  --spacing-sheet-clear: 160px;
 
-  /* Old names: aliases (removed in plan Task 8) */
-  --radius-surface: var(--radius-card);
-  --radius-pane: var(--radius-floating);
-  --radius-bar: var(--radius-floating);
-  --shadow-lift: var(--shadow-raised);
-  --shadow-pane: var(--shadow-overlay);
-  --shadow-bar: var(--shadow-floating);
-  --shadow-pop: var(--shadow-floating);
-  --shadow-sheet: var(--shadow-overlay-up);
-  --shadow-field-error: var(--shadow-error);
-  --shadow-rail-ring: var(--shadow-rail);
-  --shadow-pin-halo: var(--shadow-pin);
 
   --container-app: 1248px; /* signed-in shell: 1200 content, edge at 120 px at 1440 */
   --container-page: 1168px; /* 1120 content + 24 padding each side: the edge sits at 160 px at 1440 */
@@ -317,7 +291,7 @@
 
 /* Guide: the conversation fades out above the composer (board .pn-body mask) */
 @utility guide-fade {
-  mask-image: linear-gradient(#000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(black calc(100% - 36px), transparent);
 }
 
 /* Guide sheet footer: clear the home indicator and lift above the software keyboard

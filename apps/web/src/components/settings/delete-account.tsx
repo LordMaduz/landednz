@@ -55,7 +55,7 @@ export function DeleteAccount() {
           <AlertDialogAction
             onClick={confirm}
             disabled={deleting}
-            className="border-danger bg-danger text-white hover:bg-danger hover:text-white"
+            className="border-danger bg-danger text-fg-on-action hover:bg-danger hover:text-fg-on-action"
           >
             Delete account
           </AlertDialogAction>
