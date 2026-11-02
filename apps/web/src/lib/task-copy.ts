@@ -1,4 +1,4 @@
-// Task titles and topics as the approved boards show them (docs/design/r0-boards/build_roadmap.py).
+// Task titles and topics as the roadmap shows them.
 // title: the task as an action; topic: "Ask about <topic>", "Needs <topic> first";
 // brief: the noun phrase in Home's next line ("Month 1 brings a rental, a GP, …").
 export interface TaskCopy {
