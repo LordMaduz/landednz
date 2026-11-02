@@ -31,7 +31,7 @@ for (const { width, height, title } of SIZES) {
 
 // Next sends 200 when the page streams first and 404 when cached (docs: not-found); both carry noindex, so search engines drop it
 test('an unknown guide is not indexed and shows no guide', async ({ page }) => {
-  await page.goto('/guides/nope')
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
+  const html = await (await page.goto('/guides/nope'))!.text()
+  expect(html).toMatch(/<meta name="robots" content="noindex"/)
   await expect(page.getByRole('heading', { level: 1, name: 'Get your IRD number' })).toHaveCount(0)
 })
