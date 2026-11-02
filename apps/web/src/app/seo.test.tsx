@@ -15,12 +15,13 @@ import { metadata as onboarding } from './onboarding/page'
 import { metadata as preview } from './onboarding/preview/page'
 import { metadata as home } from './page'
 import { metadata as signin } from './signin/page'
+import { guides } from '@/lib/guides'
 import robots from './robots'
 import sitemap from './sitemap'
 
 describe('SEO routes', () => {
   it('sitemap lists the public pages', () => {
-    expect(sitemap().map(entry => new URL(entry.url).pathname)).toEqual(['/', '/onboarding', '/about', '/privacy', '/terms'])
+    expect(sitemap().map(entry => new URL(entry.url).pathname)).toEqual(['/', '/onboarding', '/guides', ...guides().map(g => `/guides/${g.slug}`), '/about', '/privacy', '/terms'])
   })
 
   it('robots keeps the signed-in app and the API out', () => {
