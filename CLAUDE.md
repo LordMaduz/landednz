@@ -1,7 +1,7 @@
 # LandedNZ
 
 Personalised settlement roadmap + AI assistant for skilled migrants in NZ. Monorepo: `apps/api` (Fastify), `apps/web` (Next 16), `packages/types`.
-Current work: R0 rebuild — spec `docs/superpowers/specs/2026-10-24-r0-foundation-design.md`, plans in `docs/superpowers/plans/`.
+Live at landednz.co.nz. Read first: `docs/product.md` (what it does), `docs/architecture.md` (how it works), `docs/design-system.md` (UI rules). Working plans go in `.plans/` (local, gitignored); lasting decisions go in `docs/architecture.md`.
 
 ## Stack
 
@@ -16,11 +16,19 @@ Use `make` targets (run `make` to list): `make setup`, `make dev`, `make check`,
 
 ## Workflow
 
-superpowers: spec → design board approved (impeccable critique, no P0/P1) → plan → execute with TDD → review. A UI change needs its approved board first (CW02′).
+superpowers: spec → design reviewed (impeccable critique, no P0/P1) → plan → execute with TDD → review. A UI change is designed and reviewed before it is built (CW02′), and follows `docs/design-system.md`.
 
 Rules: `.claude/constitution.md` (C01–C16, CW01–CW08) is non-negotiable. Domain skills in `.claude/skills/`.
 
 Commits: Conventional Commits with scope — `feat(guide):`, `fix(web):`, `chore(deps):`, `chore(repo):`, `test(core):`, `docs:`, `ci:`. Never commit `.env.local`.
+
+## Boundaries
+
+Structure follows Cal.diy's `CLAUDE.md` (github.com/calcom/cal.diy).
+
+**Always:** run `make check` before pushing; write the failing test first; keep PRs small and single-purpose; cite a source and a checked date for every content item.
+**Ask first:** adding a dependency; Prisma schema changes; changing a prompt in `core/prompts/registry.ts`; anything that touches deployment settings or live services; deleting tracked files.
+**Never:** commit secrets or `.env.local`; edit `src/generated/`; use `prisma db push`; mock auth in API integration tests; add an open-source licence (the repo is all rights reserved); present a design board, plan or spec as a shipped feature in the docs.
 
 ## AI_MODE
 

@@ -1,5 +1,5 @@
 {
-  "plansDirectory": "./docs/superpowers/plans",
+  "plansDirectory": "./.plans",
   "permissions": {
     "allow": [
       "Bash(npm test*)",

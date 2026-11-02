@@ -4,7 +4,7 @@
 
 /* palette */
 /* Raw values, named by hue and step: the only place they live (CW01). Components never use these; they use the roles in @theme.
-   A new look changes this block (docs/superpowers/specs/2026-10-31-design-system-design.md §4). */
+   A new look changes this block (docs/design-system.md). */
 :root {
   --palette-white: #FFFFFF;
   --palette-ink-900: #0F2A3A;
@@ -79,7 +79,7 @@
   --color-avatar: var(--palette-teal-100);
 
 
-  /* Type roles (owner-approved 2026-10-30, docs/design/type/type-board.html; sources in docs/design/type/standards.md).
+  /* Type roles (owner-approved 2026-10-30; see docs/design-system.md).
      The only place type sizes live. Same sizes at every width. Components use these roles only (type-roles.test.ts).
      hero      48  landing hero only
      title     24  page title, one per page
@@ -202,7 +202,7 @@
   /* Sign in, Home and Settings ≤860: the side column drops under the main one */
   --breakpoint-split: 861px;
 
-  /* Guide (board D, docs/design/guide/direction-d.html; owner-approved values, ledger S2). No new colours. */
+  /* Guide (owner-approved values). No new colours. */
   --text-reading: 16px;
   --text-reading--line-height: 1.65;
   --container-ask-bar: 640px; /* Material 3 search bar range 360–720 */
@@ -594,7 +594,7 @@
   .legal ul { display: flex; flex-direction: column; gap: 8px; padding-left: 24px; list-style: disc; }
   .ph { background: var(--color-surface-sunken); border-radius: 4px; padding: 0 4px; }
 
-  /* Home track (docs/design/r0-polish/build.py ROUTE_CSS). The container query hides the labels and shows the summary under 561 px. */
+  /* Home track. The container query hides the labels and shows the summary under 561 px. */
   .track { container-type: inline-size; padding-inline: 6px; }
   .track-rv { position: relative; margin-top: 18px; }
   .track[data-variant="compact"] .track-rv { height: 112px; }

@@ -125,5 +125,7 @@ apps/api/content-review/
 .impeccable/
 
 # owner-only ops guide, kept local
-docs/setup/prod-owner-guide.md
-docs/setup/google-signin-branding-guide.md
+docs/setup/
+
+# working plans from the planning workflow, local only
+.plans/

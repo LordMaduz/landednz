@@ -2,7 +2,7 @@
 
 <!-- impeccable:product-schema 1 -->
 
-Scope: this record covers the settlement guide (the chat) only. The rest of the app keeps its approved r1-final design (`docs/design/r1-final`) and is not redesigned from this file.
+Scope: this record covers the settlement guide (the chat) only. The rest of the app follows `docs/design-system.md` and is not redesigned from this file.
 
 ## Platform
 
