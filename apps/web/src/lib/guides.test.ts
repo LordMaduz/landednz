@@ -56,6 +56,7 @@ describe('guides', () => {
     expect(g).toBeDefined()
     if (!g) return
     expect(g.name).toBe('Get your IRD number')
+    expect(g.checkedAtIso).toMatch(/^\d{4}-\d{2}-\d{2}$/)
     expect(g.why.length).toBeGreaterThan(0)
     expect(g.steps.length).toBeGreaterThan(0)
     expect(g.sources.length).toBeGreaterThan(0)

@@ -69,9 +69,9 @@ describe('signed out', () => {
 })
 
 describe('footer', () => {
-  it('links About, Privacy and Terms', () => {
+  it('links Guides, About, Privacy and Terms', () => {
     render(<PublicFooter />)
     const links = screen.getByRole('navigation', { name: 'Legal' }).querySelectorAll('a')
-    expect([...links].map(a => [a.textContent, a.getAttribute('href')])).toEqual([['About', '/about'], ['Privacy', '/privacy'], ['Terms', '/terms']])
+    expect([...links].map(a => [a.textContent, a.getAttribute('href')])).toEqual([['Guides', '/guides'], ['About', '/about'], ['Privacy', '/privacy'], ['Terms', '/terms']])
   })
 })

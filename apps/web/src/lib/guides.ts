@@ -34,6 +34,7 @@ export interface GuideDetail {
   slug: string
   name: string
   checkedAt: string
+  checkedAtIso: string
   why: ResolvedItem[]
   steps: ResolvedItem[]
   documents: ResolvedItem[]
@@ -94,6 +95,7 @@ export function guide(slug: string): GuideDetail | undefined {
     slug,
     name: task.name,
     checkedAt: shortDate(task.checkedAt!),
+    checkedAtIso: task.checkedAt!,
     why: filterItems(task.why),
     steps: filterItems(task.steps),
     documents: filterItems(task.documents),
