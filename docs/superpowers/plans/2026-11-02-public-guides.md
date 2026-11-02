@@ -34,7 +34,7 @@
 
 ---
 
-### Task 1: Prove `buildBundle` import works; add `content:build` fallback to web build
+### Task 1 (DONE f41fd53): Prove `buildBundle` import works; add `content:build` fallback to web build
 
 **Files:**
 - Modify: `apps/web/package.json` (build script)
@@ -45,7 +45,7 @@
 - Consumes: `buildBundle(dir, { now, allowUnverified: false })` from `apps/api/src/content/build.ts`
 - Produces: `apps/api/content-bundle.json` (Bundle) for `guides.ts` to read
 
-- [ ] **Step 1: Write the failing test** — `guides.test.ts` imports `buildBundle` from `apps/api/src/content/build.ts` and calls it with the content dir and a fixed `now`, asserting it returns `{ bundle }` (not `{ errors }`).
+- [x] **Step 1: Write the failing test** — `guides.test.ts` imports `buildBundle` from `apps/api/src/content/build.ts` and calls it with the content dir and a fixed `now`, asserting it returns `{ bundle }` (not `{ errors }`).
 
 ```ts
 import { buildBundle } from '@landednz/api/content/build'
@@ -57,28 +57,30 @@ expect('bundle' in result).toBe(true)
 expect(result.bundle.tasks.length).toBeGreaterThan(0)
 ```
 
-- [ ] **Step 2: Run** `npm test -w apps/web -- guides.test.ts` — FAIL (Turbopack cannot resolve `.js` imports from `apps/api`).
+- [x] **Step 2: Run** `npm test -w apps/web -- guides.test.ts` — FAIL (Turbopack cannot resolve `.js` imports from `apps/api`).
 
-- [ ] **Step 3: Add fallback to web `package.json`** — change `build` to run `npm run content:build -w @landednz/api` first, which writes `apps/api/content-bundle.json`. Then `guides.ts` will read that JSON file instead of importing `buildBundle`.
+- [x] **Step 3: Add fallback to web `package.json`** — change `build` to run `npm run content:build -w @landednz/api` first, which writes `apps/api/content-bundle.json`. Then `guides.ts` will read that JSON file instead of importing `buildBundle`.
 
 ```json
 "build": "npm run content:build -w @landednz/api && next build"
 ```
 
-- [ ] **Step 4: Update `apps/api/package.json` `content:build`** — write the bundle to `content-bundle.json` in the api root.
+- [x] **Step 4: Update `apps/api/package.json` `content:build`** — write the bundle to `content-bundle.json` in the api root.
 
 ```json
 "content:build": "node --env-file-if-exists=.env.local --import=tsx/esm scripts/content-build.ts"
 ```
 (`scripts/content-build.ts` already writes `content-bundle.json` — verify it does.)
 
-- [ ] **Step 5: Run** `npm run build -w @landednz/web` — PASS (content bundle built, Next build succeeds).
+- [x] **Step 5: Run** `npm run build -w @landednz/web` — PASS (content bundle built, Next build succeeds).
 
-- [ ] **Step 6: Commit** `feat(web): add content:build step to web build for guides`
+- [x] **Step 6: Commit** `feat(web): add content:build step to web build for guides`
+
+**Result:** Direct import not tried; used the fallback. `guides.ts` reads `apps/api/content-bundle.json` and imports types with `import type` (relative path, erased at build). Web `build` runs `content:build -w @landednz/api` first. Still to confirm: full `next build` passes (Task 5 Step 0b).
 
 ---
 
-### Task 2: Create `guides.ts` with `GUIDE_SLUGS`, `guides()`, `guide(slug)`; unit tests
+### Task 2 (DONE f41fd53): Create `guides.ts` with `GUIDE_SLUGS`, `guides()`, `guide(slug)`; unit tests
 
 **Files:**
 - Create: `apps/web/src/lib/guides.ts`
@@ -231,7 +233,7 @@ export function guide(slug: string): GuideDetail | undefined {
 }
 ```
 
-- [ ] **Step 1: Write failing unit tests** in `guides.test.ts`:
+- [x] **Step 1: Write failing unit tests** in `guides.test.ts`:
   - Every active task has a slug in `GUIDE_SLUGS`; slugs are unique and URL-safe (lowercase, hyphens only).
   - Retired tasks are excluded from `guides()`.
   - Items with `when` are filtered out by `guides()` and `guide()`.
@@ -240,19 +242,45 @@ export function guide(slug: string): GuideDetail | undefined {
   - `guide(slug)` returns the correct sections and sources.
   - `guide(slug)` throws if `content-bundle.json` has errors (expired content).
 
-- [ ] **Step 2: Run** `npm test -w apps/web -- guides.test.ts` — FAIL (files don't exist).
+- [x] **Step 2: Run** `npm test -w apps/web -- guides.test.ts` — FAIL (files don't exist).
 
-- [ ] **Step 3: Implement** `guides.slugs.ts`, `guides.ts` as above.
+- [x] **Step 3: Implement** `guides.slugs.ts`, `guides.ts` as above.
 
-- [ ] **Step 4: Run** `npm test -w apps/web -- guides.test.ts` — PASS.
+- [x] **Step 4: Run** `npm test -w apps/web -- guides.test.ts` — PASS.
 
-- [ ] **Step 5: Run** `npm run typecheck -w apps/web` — PASS.
+- [x] **Step 5: Run** `npm run typecheck -w apps/web` — PASS.
 
-- [ ] **Step 6: Commit** `feat(web): add guides.ts with slug map, index and detail functions`
+- [x] **Step 6: Commit** `feat(web): add guides.ts with slug map, index and detail functions`
+
+**Result:** Sources = each item's own `source` plus the source of every fact in its text. 27 slugs match the 27 active tasks. `guides.ts` re-exports `GUIDE_SLUGS`.
 
 ---
 
-### Task 3: Build `/guides` index page (static, grouped by leg)
+### Task 3: Design boards for guide page and /guides index; run impeccable critique
+
+**Files:**
+- Create: `docs/design/guide/board.html` (guide page board)
+- Create: `docs/design/guides-index/board.html` (index page board)
+- Run: `impeccable critique` on both — no P0/P1.
+
+**Must pass before Tasks 4 and 5 start.** Save the critique output to `docs/design/guides/gate/critique.md`.
+
+**Notes:**
+- Guide page board: H1 + "Last checked", Why it matters, Steps (numbered), Documents, Common mistakes, Watch out for, Cost, When to get advice, Sources, CTA. Public frame (same as About/Privacy/Terms).
+- Index page board: H1 "Guides", grouped by leg with leg names from `legName(id, true)`, each guide as link. Public frame. Footer has Guides link.
+- Mobile first; 390px and 1440px boards.
+- Use `text-title`, `text-section`, `text-body`, `text-fg-muted`, `link-subtle`, `button-secondary`, `max-w-legal`, `container-page` tokens.
+- No behaviour change — this is UI only.
+
+- [ ] **Step 1: Create boards** in `docs/design/guide/` and `docs/design/guides-index/` at 390 and 1440.
+
+- [ ] **Step 2: Run** `impeccable critique` on each — fix all P0/P1.
+
+- [ ] **Step 3: Commit** `docs: add guide page and guides index boards (design gate passed)`
+
+---
+
+### Task 4: Build `/guides` index page (static, grouped by leg)
 
 **Files:**
 - Create: `apps/web/src/app/guides/page.tsx`
@@ -312,7 +340,7 @@ export default function GuidesIndex() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbGraph) }} />
       <div className="flex min-h-dvh flex-col">
-        <PublicHeader right={<Link href="/signin" className="button-secondary">Sign in</Link>} />
+        <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "secondary" })}>Sign in</Link>} />
         <main className="flex-1 mx-auto w-full max-w-legal px-6 pt-16 pb-24">
           <h1 className="text-title">Guides</h1>
           <p className="text-fg-muted mt-2">Every settlement task, checked against official New Zealand sources.</p>
@@ -350,7 +378,7 @@ export default function GuidesIndex() {
 
 ---
 
-### Task 4: Build `/guides/[slug]` page (static, one template, JSON-LD Article + Breadcrumb)
+### Task 5: Build `/guides/[slug]` page (static, one template, JSON-LD Article + Breadcrumb)
 
 **Files:**
 - Create: `apps/web/src/app/guides/[slug]/page.tsx`
@@ -360,12 +388,14 @@ export default function GuidesIndex() {
 **Interfaces:**
 - Consumes: `guide(slug)`, `GUIDE_SLUGS`, `SITE_URL`, `ORG_ID`, `jsonLdScript`, `PublicHeader`, `PublicFooter`, `shortDate`, metadata template `%s · LandedNZ`
 
+- [ ] **Step 0: Add `checkedAtIso: string` (raw `YYYY-MM-DD`) to `GuideDetail` in `guides.ts`, with a test.**
+- [ ] **Step 0b: Run `npm run build -w @landednz/web` once to confirm the content:build step works end to end.**
 - [ ] **Step 1: Write failing render test** — `page.test.tsx` renders one guide (e.g., `get-ird-number`), checks:
   - H1 = task `name`; "Last checked 27 Oct 2026" under it.
   - Sections rendered only when non-empty: Why it matters, Steps (numbered), Documents you'll need, Common mistakes, Watch out for, Cost, When to get advice.
   - Sources list: unique source ids → title, agency, url.
   - CTA: "This is 1 of 27 things to sort out when you move. Some steps depend on your visa or family. Get your plan in the right order → Start free" linking to `/onboarding`.
-  - JSON-LD `Article`: `headline`, `dateModified` = `checkedAt`, `author`/`publisher` = `#org`.
+  - JSON-LD `Article`: `headline`, `dateModified` = `checkedAtIso`, `author`/`publisher` = `#org`.
   - JSON-LD `BreadcrumbList`: Home › Guides › task name (3 items).
   - Canonical URL = `${SITE_URL}/guides/<slug>`.
   - Unknown slug → 404 (page has `export const dynamicParams = false` and returns `notFound()`).
@@ -394,7 +424,7 @@ function articleGraph(g: GuideDetail) {
         '@type': 'Article',
         '@id': `${SITE_URL}/guides/${g.slug}#article`,
         headline: g.name,
-        dateModified: g.checkedAt, // "27 Oct 2026"
+        dateModified: g.checkedAtIso, // ISO date for Google; the screen shows g.checkedAt
         author: { '@id': ORG_ID },
         publisher: { '@id': ORG_ID },
         mainEntityOfPage: { '@id': `${SITE_URL}/guides/${g.slug}` },
@@ -439,7 +469,7 @@ export default async function GuidePage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(articleGraph(g)) }} />
       <div className="flex min-h-dvh flex-col">
-        <PublicHeader right={<Link href="/signin" className="button-secondary">Sign in</Link>} />
+        <PublicHeader right={<Link href="/signin" className={buttonVariants({ variant: "secondary" })}>Sign in</Link>} />
         <main className="flex-1 mx-auto w-full max-w-legal px-6 pt-16 pb-24">
           <article className="guide flex flex-col gap-8">
             <header className="flex flex-col gap-1">
@@ -548,27 +578,7 @@ export default async function GuidePage({ params }: Props) {
 
 - [ ] **Step 7: Commit** `feat(web): add /guides/[slug] page with Article + Breadcrumb JSON-LD`
 
----
-
-### Task 5: Design boards for guide page and /guides index; run impeccable critique
-
-**Files:**
-- Create: `docs/design/guide/board.html` (guide page board)
-- Create: `docs/design/guides-index/board.html` (index page board)
-- Run: `impeccable critique` on both — no P0/P1.
-
-**Notes:**
-- Guide page board: H1 + "Last checked", Why it matters, Steps (numbered), Documents, Common mistakes, Watch out for, Cost, When to get advice, Sources, CTA. Public frame (same as About/Privacy/Terms).
-- Index page board: H1 "Guides", grouped by leg with leg names from `legName(id, true)`, each guide as link. Public frame. Footer has Guides link.
-- Mobile first; 390px and 1440px boards.
-- Use `text-title`, `text-section`, `text-body`, `text-fg-muted`, `link-subtle`, `button-secondary`, `max-w-legal`, `container-page` tokens.
-- No behaviour change — this is UI only.
-
-- [ ] **Step 1: Create boards** in `docs/design/guide/` and `docs/design/guides-index/` at 390 and 1440.
-
-- [ ] **Step 2: Run** `impeccable critique` on each — fix all P0/P1.
-
-- [ ] **Step 3: Commit** `docs: add guide page and guides index boards (design gate passed)`
+**Decision:** the guide page is public-only (the signed-out frame of `LegalLayout`); no signed-in variant, so no `Suspense`/`connection()`.
 
 ---
 
@@ -615,13 +625,11 @@ export default async function GuidePage({ params }: Props) {
 
 ## Execution Order
 
-1. **Task 1** — proves the build works (blocker for all later tasks).
-2. **Task 2** — core data layer (`guides.ts`, tests).
-3. **Task 3** — `/guides` index (needs Task 2).
-4. **Task 4** — `/guides/[slug]` page (needs Task 2).
-5. **Task 5** — design boards + gate (can start after Task 3/4 code exists, must pass before merge).
-6. **Task 6** — e2e + sitemap (needs Tasks 3–5).
-7. **Task 7** — deploy + SEO verification (after merge to main, separate from this branch).
+1. Tasks 1–2 done (`f41fd53`).
+2. **Task 3** boards + impeccable gate (no P0/P1) — blocks 4 and 5.
+3. **Task 4** `/guides` index, **Task 5** `/guides/[slug]`.
+4. **Task 6** e2e + sitemap.
+5. **Task 7** after release: Rich Results + validator on a guide URL, recorded in the PR. Also PR #22's Task 7 Step 3 on `https://landednz.co.nz` (home + `/about`) once v1.2.0 is live.
 
 ## Notes for Implementer
 
