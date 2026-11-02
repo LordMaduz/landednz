@@ -15,38 +15,39 @@ body{margin:0;background:#E9EEF0;font-family:'Geist',system-ui,sans-serif;color:
 .board p.note{margin:0;font-size:13px;color:var(--muted);max-width:900px}
 .art{background:#fff;overflow:hidden;display:flex;flex-direction:column;border:1px solid #cdd7db}
 .art.d{width:1440px;min-height:900px}.art.m{width:390px;min-height:844px}
-.m{--title:22px;--sec:15px;--body:15px}.d{--title:24px;--sec:16px;--body:16px}
+.m{--title:24px;--sec:16px;--body:16px;--hh:56px}.d{--title:22px;--sec:15px;--body:15px;--hh:44px}
 .art{font-size:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased}
 .art h1,.art h2,.art p,.art ol,.art ul{margin:0}
 .art a{color:var(--link);text-decoration:none}.art a:hover{color:var(--link-h);text-decoration:underline}
 .art :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.hdr{height:56px;border-bottom:1px solid #F1F4F5;display:flex;align-items:center}
+.hdr{height:var(--hh);border-bottom:1px solid #F1F4F5;display:flex;align-items:center}
 .wrap{width:100%;max-width:1168px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
 .m .wrap{padding:0 16px}
 .brand{font-weight:600;font-size:17px;letter-spacing:-.01em;color:var(--fg)!important}
-.btn{font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;border:1px solid transparent;background:var(--fg);color:#fff!important;text-decoration:none!important}
+.btn{white-space:nowrap;flex-shrink:0;font:inherit;font-weight:500;min-height:44px;padding:0 16px;border-radius:6px;display:inline-flex;align-items:center;border:1px solid transparent;background:var(--fg);color:#fff!important;text-decoration:none!important}
 .btn.quiet{background:#fff;color:var(--fg)!important;border-color:#D5DFE2}
 .ftr{margin-top:auto;border-top:1px solid #F1F4F5}
 .ftr .wrap{min-height:48px;font-size:12px;color:var(--muted);gap:16px}
 .ftr nav{display:flex;gap:24px}.m .ftr nav{gap:16px}.ftr nav a{color:var(--muted);min-height:44px;display:inline-flex;align-items:center;margin:-8px 0}
 .m .ftr .long{display:none}.d .ftr .short{display:none}
 .crumbs{font-size:12px;color:var(--muted);display:flex;gap:8px;margin-bottom:16px}.crumbs a{color:var(--muted)}
-main{width:100%;padding:56px 24px 80px;display:flex;gap:64px}
-.m main{padding:24px 16px 48px}
-.col{width:100%;max-width:680px;display:flex;flex-direction:column;gap:32px}
+main{width:100%;padding:64px 24px 96px;display:flex;gap:64px}
+.col{width:100%;max-width:680px;display:flex;flex-direction:column;gap:16px}
 .a main{justify-content:center}
 .b main{max-width:1168px;margin:0 auto}
 .head{display:flex;flex-direction:column;gap:4px}
 .title{font-size:var(--title);line-height:1.25;letter-spacing:-.015em;font-weight:600;text-wrap:balance}
 .muted{color:var(--muted)}
-.sec{display:flex;flex-direction:column;gap:12px}
+.sec{display:flex;flex-direction:column;gap:16px;margin-top:16px}
 .sec h2{font-size:var(--sec);line-height:1.35;font-weight:600;letter-spacing:-.005em}
-.sec ul{padding-left:20px;display:flex;flex-direction:column;gap:8px}
-.sec ol{padding-left:24px;display:flex;flex-direction:column;gap:12px}
+.sec ul{padding-left:24px;display:flex;flex-direction:column;gap:8px}
+.sec li{line-height:1.6}
+.sec ol{padding-left:24px;display:flex;flex-direction:column;gap:8px}
 .sec li::marker{color:var(--muted)}
 .sec ol li::marker{font-weight:600;color:var(--fg)}
-.srcs{list-style:none!important;padding:0!important}.srcs li{display:flex;flex-direction:column}
-.srcs small{font-size:12px;color:var(--muted)}
+.grp{display:flex;flex-direction:column;gap:4px}.grp small{font-size:12px;color:var(--muted)}
+.sec ul.srcs{list-style:none;padding:0;flex-direction:row;flex-wrap:wrap;gap:0 16px}.srcs li{min-height:24px;display:flex;align-items:center;font-size:var(--body)}
+.strip{background:var(--sunken);border-radius:10px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px}.strip p{line-height:1.5}.m .strip{flex-direction:column;align-items:flex-start}
 .cta{border:1px solid var(--border);border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
 .m .cta{padding:16px}
 .cta p.big{font-weight:600;font-size:var(--sec);line-height:1.35}
@@ -76,11 +77,12 @@ function guide(variant){
    ["documents","Documents you'll need",`<ul>${li(["Your passport details","Your Immigration New Zealand application number (not needed if you have an Australian passport)","If you hold a work or student visa: your most recent overseas tax number, if you have one"])}</ul>`],
    ["mistakes","Common mistakes",`<ul>${li(["Applying again when you've had an IRD number before. You keep the same number for life, so find your old one instead."])}</ul>`],
    ["watch","Watch out for",`<ul>${li(["Applying is free. Inland Revenue doesn't charge for an IRD number.","If the new-arrival application doesn't work, Inland Revenue explains the other ways to apply.","Inland Revenue's phone number for personal customers is 0800 227 774, or +64 4 832 5223 from overseas.","If you apply as living in New Zealand instead, you take your identity documents to an AA Driver Licensing Agent within 14 days of applying online."])}</ul>`],
-   ["sources","Sources",`<ul class="srcs">${SRC.map(s=>`<li><a href="#">${s[0]}</a><small>${s[1]}</small></li>`).join("")}</ul>`]
+   ["sources","Sources",Object.entries(SRC.reduce((g,s)=>((g[s[1]]??=[]).push(s[0]),g),{})).map(([ag,ls])=>`<div class="grp"><small>${ag}</small><ul class="srcs">${ls.map(t=>`<li><a href="#">${t}</a></li>`).join("")}</ul></div>`).join("")]
   ];
+  const strip=`<aside class="strip" aria-label="Your plan"><p><strong>This is 1 of 27 things to sort out when you move.</strong> Get your plan in the right order.</p><a class="btn" href="#">Start free</a></aside>`;
   const cta=`<aside class="cta" aria-label="Your plan"><p class="big">This is 1 of 27 things to sort out when you move.</p><p class="muted">Some steps depend on your visa or family. Get your plan in the right order.</p><a class="btn" href="#">Start free</a></aside>`;
   const rail=`<aside class="rail" aria-label="On this page"><p>On this page</p><nav>${parts.map(p=>`<a href="#${p[0]}">${p[1]}</a>`).join("")}</nav></aside>`;
-  return `${hdr}<main><div class="col"><div class="head"><nav class="crumbs" aria-label="Breadcrumb"><a href="#">Guides</a><span>/</span><span>Get your IRD number</span></nav><h1 class="title">Get your IRD number</h1><p class="muted">Last checked 25 Oct 2026</p></div>${parts.map(p=>sec(...p)).join("")}${cta}</div>${variant==="b"?rail:""}</main>${ftr}`;
+  return `${hdr}<main><div class="col"><div class="head"><nav class="crumbs" aria-label="Breadcrumb"><a href="#">Guides</a><span>/</span><span>Get your IRD number</span></nav><h1 class="title">Get your IRD number</h1><p class="muted">Last checked 25 Oct 2026</p></div>${parts.map(p=>sec(...p)+(p[0]==="steps"?strip:"")).join("")}${cta}</div>${variant==="b"?rail:""}</main>${ftr}`;
 }
 function index(){
   const L=[["Before you fly",["Choose where to live","Book temporary accommodation","Check whether you need a qualification assessment (IQA)","Prepare an NZ-style CV and start your job search","Check your public health eligibility and cover","Confirm your occupational registration before you start work","Gather and carry your key documents","Check what you can bring and how to ship it","If you're bringing a cat or dog","Complete your NZ Traveller Declaration"]],["Arrival",["Get an NZ SIM card","Open an NZ bank account","Get your IRD number","Read your visa conditions on Immigration NZ"]],["Week 1",["Give your employer a tax code (IR330)","Sign a rental and protect your bond","Enrol with a GP","Know your employment rights","Enrol your child in school"]],["Month 1",["Join KiwiSaver or review your fund","Convert your overseas driver licence","Find early childhood education and 20 Hours ECE","Enrol your child in Well Child, immunisations and free dental care","Find settlement support and English classes","Understand your NZ tax residency and foreign-income exemption"]],["Later",["Check Working for Families","Make a household emergency plan"]]];
