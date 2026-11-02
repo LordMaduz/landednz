@@ -45,7 +45,7 @@ type Item = { id: string; text: string }
 const List = ({ title, items }: { title: string; items: Item[] }) =>
   items.length === 0 ? null : (
     <section className="flex flex-col gap-4">
-      <h2>{title}</h2>
+      <h2 className="mt-0">{title}</h2>
       <ul>{items.map(i => <li key={i.id}>{i.text}</li>)}</ul>
     </section>
   )
@@ -73,10 +73,10 @@ export default async function GuidePage({ params }: Props) {
           </div>
           <List title="Why it matters" items={g.why} />
           <section className="flex flex-col gap-4">
-            <h2>Steps</h2>
+            <h2 className="mt-0">Steps</h2>
             <ol className="flex list-decimal flex-col gap-2 pl-6 marker:font-semibold">{g.steps.map(i => <li key={i.id}>{i.text}</li>)}</ol>
           </section>
-          <aside aria-label="Your plan" className="mt-4 flex items-center justify-between gap-4 rounded-card bg-surface-sunken p-4 max-narrow:flex-col max-narrow:items-start">
+          <aside aria-label="Your plan" className="flex items-center justify-between gap-4 rounded-card bg-surface-sunken p-4 max-narrow:flex-col max-narrow:items-start">
             <p><strong className="font-semibold">This is 1 of {total} things to sort out when you move.</strong> Some steps depend on your visa or family. Get your plan in the right order.</p>
             <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>Start free</Link>
           </aside>
@@ -86,7 +86,7 @@ export default async function GuidePage({ params }: Props) {
           {g.cost && <List title="Cost" items={[g.cost]} />}
           {g.advice && <List title="When to get advice" items={[g.advice]} />}
           <section className="flex flex-col gap-4">
-            <h2>Sources</h2>
+            <h2 className="mt-0">Sources</h2>
             {byAgency.map(([agency, list]) => (
               <div key={agency} className="flex flex-col gap-1">
                 <span className="text-small text-fg-muted">{agency}</span>
