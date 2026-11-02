@@ -28,7 +28,7 @@ function graph(g: GuideDetail) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Article", "@id": `${url}#article`, headline: g.name, dateModified: g.checkedAtIso, author: { "@id": ORG_ID }, publisher: { "@id": ORG_ID }, mainEntityOfPage: { "@id": url } },
+      { "@type": "Article", "@id": `${url}#article`, headline: g.name, dateModified: g.checkedAtIso, author: { "@id": ORG_ID }, publisher: { "@id": ORG_ID }, mainEntityOfPage: { "@id": url }, citation: g.sources.map(s => ({ "@type": "CreativeWork", name: s.title, url: s.url })) },
       {
         "@type": "BreadcrumbList",
         itemListElement: [

@@ -36,6 +36,8 @@ describe("/guides/[slug]", () => {
     const [article, crumbs] = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.textContent!)["@graph"]
     expect(article).toMatchObject({ "@type": "Article", headline: "Get your IRD number", author: { "@id": ORG_ID }, publisher: { "@id": ORG_ID } })
     expect(article.dateModified).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(article.citation).toEqual(guide("get-ird-number")!.sources.map(s => ({ "@type": "CreativeWork", name: s.title, url: s.url })))
+    for (const c of article.citation) expect(c.url).toMatch(/^https:\/\//)
     expect(crumbs.itemListElement.map((i: { name: string }) => i.name)).toEqual(["Home", "Guides", "Get your IRD number"])
     for (const i of crumbs.itemListElement) expect(i.item).toMatch(/^https?:\/\//)
   })
