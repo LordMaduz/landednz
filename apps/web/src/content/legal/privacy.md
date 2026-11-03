@@ -9,7 +9,7 @@
 
 To build your roadmap, keep your progress, and answer your questions about it. Your email address identifies your account; your name lets the assistant address you. LandedNZ does not sell your information or use it for advertising.
 
-LandedNZ also counts page visits through PostHog: the page address, your browser and device type, and a rough location worked out from your internet address. This shows which parts of the app help people. It sets no cookies and is not linked to your name or email.
+LandedNZ also counts page visits through PostHog: the page address and your browser and device type. To tell visits apart without cookies, PostHog mixes your internet address and browser into a code that changes every day, then discards the internet address. This shows which parts of the app help people. It sets no cookies, stores nothing on your device, and is not linked to your name or email.
 
 ## Who else handles it
 

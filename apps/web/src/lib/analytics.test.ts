@@ -23,7 +23,7 @@ describe("initAnalytics", () => {
       api_host: "https://eu.i.posthog.com",
       capture_pageview: "history_change",
       autocapture: false,
-      persistence: "memory",
+      cookieless_mode: "always",
     });
   });
 });
