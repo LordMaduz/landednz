@@ -11,7 +11,7 @@ import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { getOnboardingProfile, getRoadmap } from "@/lib/api"
+import { getOnboardingProfile, getRoadmap, getTaskDetail, lastProfile, lastRoadmap, type GetProfileResponse, type RoadmapApiResponse } from "@/lib/api"
 import { homeSubline } from "@/lib/home-view"
 import { buildItinerary, type Itinerary as ItineraryData } from "@/lib/roadmap-itinerary"
 import { buildRouteView, taskTitles, waitsOn, type RouteTask, type RouteView } from "@/lib/route-view"
@@ -213,28 +213,49 @@ export function RoadmapView({
 
 type Loaded = { view: RouteView; arrivalDate: string; now: Date; firstUse: boolean }
 
+function toLoaded(profile: Pick<GetProfileResponse, "arrivalDate">, roadmap: RoadmapApiResponse): Loaded {
+  const now = new Date()
+  const view = buildRouteView(roadmap, profile.arrivalDate, now)
+  return { view, arrivalDate: profile.arrivalDate, now, firstUse: view.doneCount === 0 }
+}
+
+// What was fetched last, so the Roadmap opened again draws at once
+function remembered(): Loaded | "loading" {
+  const profile = lastProfile()
+  const roadmap = lastRoadmap()
+  return profile && roadmap ? toLoaded(profile, roadmap) : "loading"
+}
+
 // Fetches the roadmap with the browser session; ?task=<id> is the open task, shown as a page in place of the route
 export function RoadmapScreen({ user }: { user: HeaderUser }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedTaskId = searchParams.get("task") ?? undefined
-  const [state, setState] = useState<Loaded | "loading" | "down">("loading")
-  // A refetch after marking a task keeps the page (and the sheet) up; a failed one keeps what is shown
+  const [state, setState] = useState<Loaded | "loading" | "down">(remembered)
+  // A refetch (after marking a task, or behind what was fetched last) keeps the page and the sheet up; a failed one
+  // keeps what is shown
   const load = useCallback(async (refetch = false) => {
-    if (!refetch) setState("loading")
+    if (!refetch) setState(s => (typeof s === "string" ? "loading" : s))
     try {
       const { data } = await createClient().auth.getSession()
       const token = data.session?.access_token
       if (!token) return router.replace("/signin?redirect=%2Fapp%2Froadmap")
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
-      const now = new Date()
-      const view = buildRouteView(roadmap, profile.arrivalDate, now)
-      setState({ view, arrivalDate: profile.arrivalDate, now, firstUse: view.doneCount === 0 })
+      setState(toLoaded(profile, roadmap))
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
-      if (!refetch) setState("down")
+      if (!refetch) setState(s => (typeof s === "string" ? "down" : s))
     }
   }, [router])
+
+  // The open task's steps load alongside the route; the sheet picks up the same request
+  useEffect(() => {
+    if (!selectedTaskId) return
+    createClient()
+      .auth.getSession()
+      .then(({ data }) => data.session && getTaskDetail(selectedTaskId, data.session.access_token))
+      .catch(() => {}) // the sheet asks again and handles a failure
+  }, [selectedTaskId])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch on mount; load sets state after awaiting

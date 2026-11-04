@@ -3,8 +3,8 @@
 // Used by all authenticated routes as a preHandler.
 
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
-import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { config } from '../config.js';
+import { jwtVerify } from 'jose';
+import { JWKS } from '../jwks.js';
 import { logger } from '../logger.js';
 import { AppError } from '../errors.js';
 
@@ -14,8 +14,6 @@ declare module 'fastify' {
     userId: string;
   }
 }
-
-const JWKS = createRemoteJWKSet(new URL(`${config.supabaseUrl}/auth/v1/.well-known/jwks.json`));
 
 // Registers the request decoration — must be called once on the Fastify instance
 export function registerAuthDecoration(app: FastifyInstance): void {
