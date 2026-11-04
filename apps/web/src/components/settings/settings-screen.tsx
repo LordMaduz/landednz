@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { ApiDown } from "@/components/chrome/api-down"
 import { AppHeader, TabBarSpace, type HeaderUser } from "@/components/chrome/app-header"
 import { LegalLinks } from "@/components/chrome/public-footer"
-import { getOnboardingProfile, type GetProfileResponse } from "@/lib/api"
+import { getOnboardingProfile, lastProfile, type GetProfileResponse } from "@/lib/api"
 import { useGuideStore } from "@/lib/stores/guideStore"
 import { createClient } from "@/lib/supabase/client"
 import { AccountSection } from "./account-section"
@@ -18,10 +18,11 @@ type User = HeaderUser & { email: string; google: boolean }
 export function SettingsScreen({ user }: { user: User }) {
   const router = useRouter()
   const editing = useSearchParams().get("edit") !== null
-  const [profile, setProfile] = useState<GetProfileResponse | "loading" | "down">("loading")
+  // What was fetched last draws at once; it stays while it refetches, and stays if that fails
+  const [profile, setProfile] = useState<GetProfileResponse | "loading" | "down">(() => lastProfile() ?? "loading")
 
   const load = useCallback(async () => {
-    setProfile("loading")
+    setProfile(p => (typeof p === "string" ? "loading" : p))
     try {
       const { data } = await createClient().auth.getSession()
       const token = data.session?.access_token
@@ -29,7 +30,7 @@ export function SettingsScreen({ user }: { user: User }) {
       setProfile(await getOnboardingProfile(token))
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
-      setProfile("down")
+      setProfile(p => (typeof p === "string" ? "down" : p))
     }
   }, [router])
 

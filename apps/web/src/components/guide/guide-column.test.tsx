@@ -6,6 +6,7 @@ import { priya } from '@/test/roadmap-fixtures'
 
 const completeTask = vi.fn()
 vi.mock('@/lib/api', () => ({
+  lastTaskDetail: () => undefined,
   getTaskDetail: async (id: string) => ({ taskId: id, governmentSourceUrl: 'https://www.ird.govt.nz/', steps: ['Apply online.'], documentsRequired: [], commonMistakes: [], watchOuts: [] }) as unknown as TaskDetailApiResponse,
   completeTask: (id: string, token: string) => completeTask(id, token),
   reopenTask: vi.fn(async () => {}),

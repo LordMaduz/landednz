@@ -6,6 +6,9 @@ import { apiTask, board, priya } from '@/test/roadmap-fixtures'
 
 const getRoadmap = vi.fn()
 const getOnboardingProfile = vi.fn()
+const lastProfile = vi.fn()
+const lastRoadmap = vi.fn()
+const getTaskDetail = vi.fn()
 const replace = vi.fn()
 const push = vi.fn()
 const back = vi.fn()
@@ -16,7 +19,10 @@ const reopenTask = vi.fn()
 vi.mock('@/lib/api', () => ({
   getRoadmap: (token: string) => getRoadmap(token),
   getOnboardingProfile: (token: string) => getOnboardingProfile(token),
-  getTaskDetail: async (taskId: string) => ({
+  lastProfile: () => lastProfile(),
+  lastRoadmap: () => lastRoadmap(),
+  lastTaskDetail: () => undefined,
+  getTaskDetail: async (taskId: string) => (getTaskDetail(taskId), {
     taskId,
     steps: [],
     governmentSourceUrl: 'https://www.ird.govt.nz',
@@ -50,6 +56,8 @@ const user = { name: 'Priya Sharma', initials: 'PS' }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  lastProfile.mockReset()
+  lastRoadmap.mockReset()
   params = new URLSearchParams()
   getOnboardingProfile.mockResolvedValue({ arrivalDate: '2026-10-21' })
   getRoadmap.mockResolvedValue(priyaWithWhy())
@@ -177,6 +185,21 @@ describe('RoadmapScreen', () => {
     fireEvent.click(within(alert).getByRole('button', { name: 'Try again' }))
     expect(await screen.findByRole('region', { name: 'Itinerary' })).toBeInTheDocument()
     expect(getRoadmap).toHaveBeenCalledTimes(2)
+  })
+
+  it('opened again: what was fetched last draws at once, then refetches behind it', async () => {
+    lastProfile.mockReturnValue({ arrivalDate: '2026-10-21' })
+    lastRoadmap.mockReturnValue(priyaWithWhy())
+    render(<RoadmapScreen user={user} />)
+    expect(screen.getByRole('region', { name: 'Itinerary' })).toBeInTheDocument()
+    await waitFor(() => expect(getRoadmap).toHaveBeenCalledWith('tok'))
+  })
+
+  it('?task=: the task detail starts with the route, not after it', async () => {
+    params = new URLSearchParams('task=T08')
+    getRoadmap.mockReturnValue(new Promise(() => {}))
+    render(<RoadmapScreen user={user} />)
+    await waitFor(() => expect(getTaskDetail).toHaveBeenCalledWith('T08'))
   })
 
   it('no profile: back to onboarding', async () => {

@@ -6,11 +6,13 @@ import { Toaster } from '@/components/ui/toaster'
 const updateOnboardingProfile = vi.fn()
 const deleteAccount = vi.fn()
 const getOnboardingProfile = vi.fn()
+const lastProfile = vi.fn()
 const signOutAndLeave = vi.fn()
 vi.mock('@/lib/api', () => ({
   updateOnboardingProfile: (p: unknown, t: string) => updateOnboardingProfile(p, t),
   deleteAccount: (t: string) => deleteAccount(t),
   getOnboardingProfile: (t: string) => getOnboardingProfile(t),
+  lastProfile: () => lastProfile(),
   listMemories: async () => [{ id: 'm1', text: 'You start work on 9 November.', createdAt: '2026-10-30T01:00:00.000Z', updatedAt: '2026-10-30T01:00:00.000Z' }],
 }))
 vi.mock('@/lib/sign-out', () => ({ signOutAndLeave: () => signOutAndLeave() }))
@@ -41,6 +43,7 @@ const user = { name: 'Priya Sharma', email: 'priya@example.com', initials: 'PS',
 
 beforeEach(() => {
   vi.clearAllMocks()
+  lastProfile.mockReset()
   search = new URLSearchParams()
   phone = false
   window.matchMedia = (q: string) => ({ matches: phone, media: q, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList
@@ -338,6 +341,14 @@ describe('SettingsScreen', () => {
     expect(await screen.findByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
     expect(getOnboardingProfile).toHaveBeenCalledWith('tok')
     expect(within(screen.getByRole('banner')).queryByRole('button', { name: /^Ask/ })).toBeNull()
+  })
+
+  it('opened again: the profile fetched last draws at once', () => {
+    search = new URLSearchParams('edit=visaType')
+    lastProfile.mockReturnValue(profile)
+    getOnboardingProfile.mockReturnValue(new Promise(() => {}))
+    render(<SettingsScreen user={user} />)
+    expect(screen.getByRole('heading', { level: 2, name: 'What visa are you on?' })).toBeInTheDocument()
   })
 
   it('mounting closes the guide and clears its page, so there is no ask bar (D21)', async () => {
