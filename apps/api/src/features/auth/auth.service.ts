@@ -1,7 +1,7 @@
-import { createRemoteJWKSet, jwtVerify } from 'jose'
+import { jwtVerify } from 'jose'
 import { Prisma } from '../../generated/prisma/client.js'
-import { config } from '../../shared/config.js'
 import { db } from '../../shared/db.js'
+import { JWKS } from '../../shared/jwks.js'
 import { logger } from '../../shared/logger.js'
 import { AppError } from '../../shared/errors.js'
 
@@ -11,9 +11,6 @@ interface AuthVerifyResult {
   isNewUser: boolean
   hasProfile: boolean
 }
-
-// JWKS endpoint for JWT verification
-const JWKS = createRemoteJWKSet(new URL(`${config.supabaseUrl}/auth/v1/.well-known/jwks.json`))
 
 export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResult> {
   let payload: any // any: jose jwtVerify returns JWTPayload which needs extension access for email/sub
@@ -36,33 +33,8 @@ export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResu
     throw new AppError('INVALID_TOKEN', 'JWT missing required claims (sub, email)', 401)
   }
 
-  // Attempt to create user — if exists, catch Prisma P2002
-  let isNewUser = false
-  try {
-    await db.user.create({
-      data: {
-        id: userId,
-        email: email,
-      },
-    })
-    isNewUser = true
-    logger.info({ userId, email }, 'New user created from JWT')
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-      // Unique constraint violation — user already exists
-      isNewUser = false
-      logger.debug({ userId }, 'User already exists')
-    } else {
-      // Unexpected DB error
-      logger.error({ err, userId }, 'User creation failed')
-      throw err
-    }
-  }
-
-  // Check if user has profile
-  const profileCount = await db.userProfile.count({
-    where: { userId },
-  })
+  // The two do not depend on each other; together they cost one database round trip, not two
+  const [isNewUser, profileCount] = await Promise.all([createUser(userId, email), db.userProfile.count({ where: { userId } })])
   const hasProfile = profileCount > 0
 
   return {
@@ -70,5 +42,20 @@ export async function verifyAndUpsertUser(token: string): Promise<AuthVerifyResu
     email,
     isNewUser,
     hasProfile,
+  }
+}
+// Creates the user; false when it already exists (Prisma P2002)
+async function createUser(userId: string, email: string): Promise<boolean> {
+  try {
+    await db.user.create({ data: { id: userId, email } })
+    logger.info({ userId, email }, 'New user created from JWT')
+    return true
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      logger.debug({ userId }, 'User already exists')
+      return false
+    }
+    logger.error({ err, userId }, 'User creation failed')
+    throw err
   }
 }
