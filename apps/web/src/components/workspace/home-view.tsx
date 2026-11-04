@@ -11,7 +11,7 @@ import { RouteTrack } from "@/components/route/route-track"
 import { Waypoint } from "@/components/route/waypoint"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardFoot, CardHead } from "@/components/ui/card"
-import { getOnboardingProfile, getRoadmap } from "@/lib/api"
+import { getOnboardingProfile, getRoadmap, lastProfile, lastRoadmap, type GetProfileResponse, type RoadmapApiResponse } from "@/lib/api"
 import { buildHomeView, type HomeView as Home } from "@/lib/home-view"
 import { buildRouteView, taskTitles, type RouteView } from "@/lib/route-view"
 import { useGuideStore } from "@/lib/stores/guideStore"
@@ -190,24 +190,36 @@ export function HomeView({ home, route, arrivalDate, now }: { home: Home; route:
 
 type Loaded = { home: Home; route: RouteView; arrivalDate: string; now: Date }
 
+function toLoaded(profile: GetProfileResponse, roadmap: RoadmapApiResponse): Loaded {
+  const now = new Date()
+  const route = buildRouteView(roadmap, profile.arrivalDate, now)
+  return { route, home: buildHomeView(route, profile, now), arrivalDate: profile.arrivalDate, now }
+}
+
+// What was fetched last, so Home opened again draws at once
+function remembered(): Loaded | "loading" {
+  const profile = lastProfile()
+  const roadmap = lastRoadmap()
+  return profile && roadmap ? toLoaded(profile, roadmap) : "loading"
+}
+
 // Fetches profile and roadmap with the browser session, like the Roadmap page
 export function HomeScreen({ user }: { user: HeaderUser }) {
   const router = useRouter()
-  const [state, setState] = useState<Loaded | "loading" | "down">("loading")
+  const [state, setState] = useState<Loaded | "loading" | "down">(remembered)
 
+  // What is shown stays while it refetches, and stays if that fails
   const load = useCallback(async () => {
-    setState("loading")
+    setState(s => (typeof s === "string" ? "loading" : s))
     try {
       const { data } = await createClient().auth.getSession()
       const token = data.session?.access_token
       if (!token) return router.replace("/signin?redirect=%2Fapp")
       const [profile, roadmap] = await Promise.all([getOnboardingProfile(token), getRoadmap(token)])
-      const now = new Date()
-      const route = buildRouteView(roadmap, profile.arrivalDate, now)
-      setState({ route, home: buildHomeView(route, profile, now), arrivalDate: profile.arrivalDate, now })
+      setState(toLoaded(profile, roadmap))
     } catch (err) {
       if ((err as { status?: number }).status === 404) return router.replace("/onboarding?step=1")
-      setState("down")
+      setState(s => (typeof s === "string" ? "down" : s))
     }
   }, [router])
 

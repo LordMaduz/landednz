@@ -6,10 +6,12 @@ import { buildRouteView } from '@/lib/route-view'
 import { apiTask, priya, roadmap } from '@/test/roadmap-fixtures'
 
 const getTaskDetail = vi.fn()
+const lastTaskDetail = vi.fn()
 const completeTask = vi.fn()
 const reopenTask = vi.fn()
 vi.mock('@/lib/api', () => ({
   getTaskDetail: (id: string, token: string) => getTaskDetail(id, token),
+  lastTaskDetail: (id: string) => lastTaskDetail(id),
   completeTask: (id: string, token: string) => completeTask(id, token),
   reopenTask: (id: string, token: string) => reopenTask(id, token),
 }))
@@ -66,6 +68,7 @@ function sheet(taskId: string, props: Partial<{ onChanged(): void }> = {}) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  lastTaskDetail.mockReset()
   vi.useFakeTimers({ toFake: ['Date'] })
   vi.setSystemTime(new Date('2026-10-24T01:00:00.000Z')) // 24 Oct in NZ
   getTaskDetail.mockImplementation(async (id: string) => detail({ taskId: id }))
@@ -437,5 +440,14 @@ describe('TaskSheet, Task details C', () => {
     fireEvent.click(within(phone().getByRole('group', { name: 'Task actions' })).getByRole('button', { name: 'Ask' }))
     expect(openPane).toHaveBeenCalledWith({ kind: 'task', taskKey: 'T08' })
     expect(phone().queryByRole('textbox')).toBeNull()
+  })
+})
+
+describe('TaskSheet opened again', () => {
+  it('the steps fetched last draw at once', () => {
+    lastTaskDetail.mockImplementation((id: string) => detail({ taskId: id, steps: ['Remembered step'] }))
+    getTaskDetail.mockReturnValue(new Promise(() => {}))
+    sheet('T08')
+    expect(desk().getByText('Remembered step')).toBeInTheDocument()
   })
 })

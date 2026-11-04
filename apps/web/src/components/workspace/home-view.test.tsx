@@ -6,12 +6,16 @@ import { firstUse, priya } from '@/test/roadmap-fixtures'
 
 const getRoadmap = vi.fn()
 const getOnboardingProfile = vi.fn()
+const lastProfile = vi.fn()
+const lastRoadmap = vi.fn()
 const replace = vi.fn()
 const push = vi.fn()
 const router = { replace, push } // stable, like Next's
 vi.mock('@/lib/api', () => ({
   getRoadmap: (token: string) => getRoadmap(token),
   getOnboardingProfile: (token: string) => getOnboardingProfile(token),
+  lastProfile: () => lastProfile(),
+  lastRoadmap: () => lastRoadmap(),
 }))
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } }),
@@ -44,6 +48,8 @@ const homeFor = (r = priyaWithWhy()) => {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  lastProfile.mockReset()
+  lastRoadmap.mockReset()
   getOnboardingProfile.mockResolvedValue(profile)
   getRoadmap.mockResolvedValue(priyaWithWhy())
 })
@@ -114,6 +120,26 @@ describe('HomeScreen', () => {
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Welcome to Auckland')
     expect(getRoadmap).toHaveBeenCalledWith('tok')
     expect(getOnboardingProfile).toHaveBeenCalledWith('tok')
+  })
+
+  it('opened again: what was fetched last draws at once, then refetches behind it', async () => {
+    lastProfile.mockReturnValue(profile)
+    lastRoadmap.mockReturnValue(priyaWithWhy())
+    render(<HomeScreen user={user} />)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Welcome to Auckland')
+    expect(screen.queryByText('Loading')).toBeNull()
+    await vi.waitFor(() => expect(getRoadmap).toHaveBeenCalledWith('tok'))
+  })
+
+  it('opened again and the refetch fails: what is shown stays', async () => {
+    lastProfile.mockReturnValue(profile)
+    lastRoadmap.mockReturnValue(priyaWithWhy())
+    getRoadmap.mockRejectedValueOnce(new Error('down'))
+    render(<HomeScreen user={user} />)
+    await vi.waitFor(() => expect(getRoadmap).toHaveBeenCalled())
+    await new Promise(r => setTimeout(r, 0))
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Welcome to Auckland')
+    expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull()
   })
 
   it('no profile: back to onboarding', async () => {

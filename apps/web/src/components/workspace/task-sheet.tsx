@@ -9,7 +9,7 @@ import { Stamp } from "@/components/route/stamp"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { GuideColumn } from "@/components/guide/guide-column"
-import { completeTask, getTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
+import { completeTask, getTaskDetail, lastTaskDetail, reopenTask, type TaskDetailApiResponse } from "@/lib/api"
 import { longDay, shortDate, shortDayNZ, weekdayDay } from "@/lib/nz-date"
 import type { RouteView } from "@/lib/route-view"
 import { useGuideStore } from "@/lib/stores/guideStore"
@@ -68,7 +68,7 @@ export function TaskSheet({
   const phoneTitleRef = useRef<HTMLHeadingElement>(null)
   const [allSources, setAllSources] = useState(false)
   const [shown, setShown] = useState(taskId)
-  const [detail, setDetail] = useState<TaskDetailApiResponse | null>(null)
+  const [detail, setDetail] = useState<TaskDetailApiResponse | null>(() => lastTaskDetail(taskId) ?? null)
   // A mark or undo shows at once; the refetched route agrees with it after onChanged
   const [override, setOverride] = useState<{ taskId: string; doneOn: string | null } | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -76,6 +76,7 @@ export function TaskSheet({
   if (shown !== taskId) {
     setShown(taskId)
     setError(null)
+    setDetail(d => lastTaskDetail(taskId) ?? d)
   }
 
   useEffect(() => {

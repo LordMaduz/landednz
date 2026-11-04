@@ -8,6 +8,37 @@ import type {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+// The last answer to each signed-in GET in this tab, so a screen opened again draws at once and refetches behind it,
+// and one request in flight is shared (the open task starts loading with the route). Any write forgets it all;
+// sign-out reloads the page. Browser only: a server-side cache would be shared between users.
+const last = new Map<string, unknown>()
+const inFlight = new Map<string, Promise<unknown>>()
+let generation = 0
+const forget = () => {
+  generation++
+  last.clear()
+  inFlight.clear()
+}
+
+function getJson<T>(path: string, token: string, what: string): Promise<T> {
+  const browser = typeof window !== 'undefined'
+  const running = browser && inFlight.get(path)
+  if (running) return running as Promise<T>
+  const gen = generation
+  const request = fetch(`${API_URL}${path}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' })
+    .then(async res => {
+      if (!res.ok) throw Object.assign(new Error(`${what} fetch failed`), { status: res.status })
+      const body = (await res.json()) as T
+      if (gen === generation && browser) last.set(path, body)
+      return body
+    })
+    .finally(() => {
+      if (inFlight.get(path) === request) inFlight.delete(path)
+    })
+  if (browser) inFlight.set(path, request) // on the server a shared request could hand one user's answer to another
+  return request
+}
+
 // ─── Onboarding ───────────────────────────────────────────────────────────────
 
 // Web-specific request type — mirrors API's CreateProfileRequest but cannot import
@@ -59,7 +90,7 @@ export async function submitOnboardingProfile(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
-  })
+  }).finally(forget)
 
   if (res.ok) {
     return { success: true }
@@ -89,7 +120,7 @@ export async function updateOnboardingProfile(
       'X-Request-Source': 'settings-page', // Simple restriction check
     },
     body: JSON.stringify(payload),
-  })
+  }).finally(forget)
 
   if (res.ok) {
     return { success: true }
@@ -112,20 +143,10 @@ export async function updateOnboardingProfile(
   throw new Error(`Profile update failed: ${res.status}`)
 }
 
-export async function getOnboardingProfile(token: string): Promise<GetProfileResponse> {
-  const res = await fetch(`${API_URL}/onboarding/profile`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    throw Object.assign(new Error('Profile fetch failed'), { status: res.status })
-  }
-
-  return res.json()
+export function getOnboardingProfile(token: string): Promise<GetProfileResponse> {
+  return getJson('/onboarding/profile', token, 'Profile')
 }
+export const lastProfile = () => last.get('/onboarding/profile') as GetProfileResponse | undefined
 
 // ─── Roadmap ──────────────────────────────────────────────────────────────────
 
@@ -153,20 +174,10 @@ export interface RoadmapApiResponse {
   lastComputedAt: string
 }
 
-export async function getRoadmap(token: string): Promise<RoadmapApiResponse> {
-  const res = await fetch(`${API_URL}/roadmap`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    throw Object.assign(new Error('Roadmap fetch failed'), { status: res.status })
-  }
-
-  return res.json()
+export function getRoadmap(token: string): Promise<RoadmapApiResponse> {
+  return getJson('/roadmap', token, 'Roadmap')
 }
+export const lastRoadmap = () => last.get('/roadmap') as RoadmapApiResponse | undefined
 
 // ─── Task Detail ─────────────────────────────────────────────────────────────
 
@@ -194,26 +205,16 @@ export interface TaskDetailApiResponse {
   sources?: Record<string, { itemId: string; title: string; url: string; checked: string }[]>;
 }
 
-export async function getTaskDetail(taskId: string, token: string): Promise<TaskDetailApiResponse> {
-  const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    throw Object.assign(new Error('Task detail fetch failed'), { status: res.status })
-  }
-
-  return res.json()
+export function getTaskDetail(taskId: string, token: string): Promise<TaskDetailApiResponse> {
+  return getJson(`/roadmap/tasks/${taskId}`, token, 'Task detail')
 }
+export const lastTaskDetail = (taskId: string) => last.get(`/roadmap/tasks/${taskId}`) as TaskDetailApiResponse | undefined
 
 export async function completeTask(taskId: string, token: string): Promise<void> {
   const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}/complete`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
-  })
+  }).finally(forget)
   if (!res.ok) throw new Error(`Complete task failed: ${res.status}`)
 }
 
@@ -221,7 +222,7 @@ export async function reopenTask(taskId: string, token: string): Promise<void> {
   const res = await fetch(`${API_URL}/roadmap/tasks/${taskId}/reopen`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
-  })
+  }).finally(forget)
   if (!res.ok) throw new Error(`Reopen task failed: ${res.status}`)
 }
 
@@ -231,7 +232,7 @@ export async function deleteAccount(token: string): Promise<void> {
   const res = await fetch(`${API_URL}/account`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
-  })
+  }).finally(forget)
   if (!res.ok) throw Object.assign(new Error(`Delete account failed: ${res.status}`), { status: res.status })
 }
 
