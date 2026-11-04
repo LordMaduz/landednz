@@ -31,6 +31,15 @@ describe('SEO routes', () => {
     expect(robots().sitemap).toMatch(/\/sitemap\.xml$/)
   })
 
+  it('robots has one wildcard group, so AI crawlers can read the guides and llms files', () => {
+    const rules = robots().rules
+    expect(Array.isArray(rules)).toBe(false)
+    const rule = rules as { userAgent: string; allow: string; disallow: string[] }
+    expect(rule.userAgent).toBe('*')
+    expect(rule.allow).toBe('/')
+    for (const open of ['/guides', '/llms.txt', '/llms-full.txt']) expect(rule.disallow.some(d => open.startsWith(d))).toBe(false)
+  })
+
   it('every page title carries the brand', () => {
     expect(root.title).toEqual({ default: 'LandedNZ', template: '%s · LandedNZ' })
     expect(root.applicationName).toBe('LandedNZ')
