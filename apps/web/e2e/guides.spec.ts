@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-// Public guides (approved board docs/design/guides/board.html): no sideways scroll, the app's type roles,
+// Public guides: no sideways scroll, the app's type roles,
 // a Guides link in the footer, and the one Start free link reachable within two screens.
 const SIZES = [{ width: 390, height: 844, title: 24 }, { width: 1440, height: 900, title: 22 }]
 

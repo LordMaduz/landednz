@@ -10,7 +10,7 @@ export const TRACK_FLAGS = [150, 270, 530, 820, 1000]
 // The x span of stage i: from the previous flag to its own
 export const stageSpan = (i: number): [number, number] => [i ? TRACK_FLAGS[i - 1] : 0, TRACK_FLAGS[i]]
 
-// The hill profile, shared with the board (docs/design/r0-polish/build.py terrain_y)
+// The hill profile
 export const terrainY = (x: number) =>
   54 - 20 * Math.sin((x / 1000) * Math.PI * 2.6 + 0.3) - 9 * Math.sin((x / 1000) * Math.PI * 6.3)
 

@@ -11,7 +11,7 @@
 features/roadmap/ and features/guide/ NEVER import from each other.
 Shared types go in packages/types/ only.
 The AI never touches task sequencing, dependency resolution, or priority scoring.
-*Holds for R0; to be rewritten in R2.*
+*Holds for the current release; revisit if the roadmap and guide are ever combined.*
 
 **[C02] core/ Contains Only Pure Functions**
 Zero Fastify, zero Prisma, zero Anthropic SDK in core/.
@@ -90,10 +90,10 @@ non-role radius/shadow, hand-written `<button>` outside `components/ui`, and raw
 Exceptions: Google's `.gsi` sign-in button, `opengraph-image.tsx`, `favicon.ico`.
 VIOLATION: `className="bg-[#1B6B6D]"` or `style={{ color: '#1B6B6D' }}` anywhere in `apps/web/src/`.
 
-**[CW02′] UI Matches Its Approved Artifact**
-Every UI change matches its approved design artifact (spec §7.4) and has no P0/P1
+**[CW02′] UI Is Designed and Reviewed Before It Is Built**
+Every UI change is designed first, follows `docs/design-system.md`, and has no P0/P1
 findings from the impeccable skill (`critique`, `audit`).
-VIOLATION: A page or component built before its board is approved, or differing from it.
+VIOLATION: A page or component built before its design is reviewed, or that breaks the design system.
 
 **[CW03] Reduced Motion Respected**
 Every CSS transition and JS animation in `apps/web/` MUST check `prefers-reduced-motion`.
@@ -105,16 +105,16 @@ Implementation: use `@media (prefers-reduced-motion: reduce)` in CSS or the
 
 **[CW04] API Types from packages/types/ Only**
 `apps/web/` imports all API contract types (enums, request/response shapes) from
-`@landednz/types` — the same package used by `apps/api/` and `apps/mobile/`.
+`@landednz/types` — the same package used by `apps/api/`.
 Web-specific types (component props, UI state, TaskCardState) live in
 `apps/web/src/types/web.ts` and may import from `@landednz/types`.
 VIOLATION: Redefining `VisaType`, `TaskStatus`, or any shared enum
 inside `apps/web/src/`. These already exist in `packages/types/index.ts`.
 
 **[CW05] Mock Data Shape Matches API Response**
-All mock data used in Web Stage 3 (static screens) MUST conform to the exact TypeScript
-interfaces returned by the Fastify API endpoints. Mock data files in `apps/web/src/mocks/`
-MUST import and satisfy types from `@landednz/types` or `apps/web/src/types/web.ts`.
+All mock data in `apps/web/` (test fixtures, the `app/dev/` states page) MUST conform to the exact
+TypeScript interfaces returned by the Fastify API endpoints, importing and satisfying types from
+`@landednz/types` or `apps/web/src/types/web.ts`.
 VIOLATION: Mock data with fields, types, or shapes that differ from the real API response.
 Drift between mock and real = rework in Stage 4.
 
